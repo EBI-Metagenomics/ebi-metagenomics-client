@@ -1,5 +1,11 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import axios from 'axios';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from 'react';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import Plot from 'react-plotly.js';
 import CobsSearch from 'components/Genomes/Cobs';
 import SourmashSearch from 'components/Genomes/Sourmash';
@@ -7,10 +13,13 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix Leaflet marker icon issue
-// This is needed because Leaflet's default icon paths are based on CSS which doesn't work well with bundlers
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import CANIFilter from 'components/Search/Filter/CANI';
+import TextSearch from 'components/Search/Filter/Text';
+import LocalMultipleOptionFilter from 'components/Branchwater/LocalMultipleOptionFilter';
+import axios from 'axios';
+import DetailedResultsTable from './DetailedResultsTable';
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -42,14 +51,9 @@ interface MapSample {
   attributes: {
     latitude: number;
     longitude: number;
-    'sample-desc': string;
-  };
-  relationships: {
-    biome: {
-      data: {
-        id: string;
-      };
-    };
+    organism: string;
+    assay_type: string;
+    country: string;
   };
 }
 
@@ -64,7 +68,7 @@ interface Filters {
   acc: string;
   assay_type: string;
   bioproject: string;
-  cANI: string;
+  // cANI: string;
   collection_date_sam: string;
   containment: string;
   geo_loc_name_country_calc: string;
@@ -78,27 +82,42 @@ interface Signature {
 const Branchwater = () => {
   const [showMgnifySourmash, setShowMgnifySourmash] = useState<boolean>(false);
   const [, setUploadedFile] = useState<File | null>(null);
-  const [targetDatabase, setTargetDatabase] = useState<string>('MAGs');
+  // const [targetDatabase, setTargetDatabase] = useState<string>('MAGs');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [availableGeoData, setAvailableGeoData] = useState<[]>([]);
+  const [countryCounts, setCountryCounts] = useState<Record<string, number>>(
+    {}
+  );
+
+  const [, , { param: locationNameParam }] = useQueryParamState(
+    'location_name',
+    ''
+  );
+
+  const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage] = useState<number>(10);
+  const [itemsPerPage] = useState<number>(25);
 
-  // Sorting state
+  // Sorting state (legacy/local)
   const [sortField, setSortField] = useState<string>('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  // Read ordering from EMGTable's sortable integration via query param
+  const [detailedOrder] = useQueryParamState('branchwater-detailed-order', '');
 
   const [activeTab, setActiveTab] = useState('vf-tabs__section--1');
+  const [selectedExample, setSelectedExample] = useState<
+    'example-mag-1st' | 'example-mag-2nd' | 'example-mag-3rd'
+  >('example-mag-1st');
 
   // Filtering state
   const [filters, setFilters] = useState<Filters>({
     acc: '',
     assay_type: '',
     bioproject: '',
-    cANI: '',
+    // cANI: '',
     collection_date_sam: '',
     containment: '',
     geo_loc_name_country_calc: '',
@@ -115,127 +134,115 @@ const Branchwater = () => {
   // State for map samples
   const [mapSamples, setMapSamples] = useState<MapSample[]>([]);
 
-  // Mock data for testing the map
-  const mockMapSamples: MapSample[] = [
-    {
-      id: 'sample_1',
-      attributes: {
-        latitude: 51.5074,
-        longitude: -0.1278,
-        'sample-desc': 'London Sample - Marine metagenome',
-      },
-      relationships: {
-        biome: {
-          data: {
-            id: 'WGS',
-          },
-        },
-      },
-    },
-    {
-      id: 'sample_2',
-      attributes: {
-        latitude: 48.8566,
-        longitude: 2.3522,
-        'sample-desc': 'Paris Sample - Marine metagenome',
-      },
-      relationships: {
-        biome: {
-          data: {
-            id: 'WGS',
-          },
-        },
-      },
-    },
-    {
-      id: 'sample_3',
-      attributes: {
-        latitude: 40.7128,
-        longitude: -74.006,
-        'sample-desc': 'New York Sample - Marine metagenome',
-      },
-      relationships: {
-        biome: {
-          data: {
-            id: 'WGS',
-          },
-        },
-      },
-    },
-  ];
+  // Global text query (from generic TextSearch component)
+  const [textQuery] = useQueryParamState('query', '');
 
-  // // Helper function to convert search results to SamplesMap format
-  // const convertToMapSamples = useCallback(
-  //   (data: SearchResult[]): MapSample[] => {
-  //     if (!data || !Array.isArray(data)) return [];
-  //
-  //     return data
-  //       .map((item, index) => {
-  //         // Check if we have lat_lon data
-  //         if (!item.lat_lon || item.lat_lon === 'NP') return null;
-  //
-  //         try {
-  //           // Parse lat_lon string format like "40.7128N, 74.0060W"
-  //           // const match = item.lat_lon.match(
-  //           //   /([0-9.-]+)([NS]),\s*([0-9.-]+)([EW])/
-  //           // );
-  //           // if (!match) return null;
-  //           //
-  //           // const lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
-  //           // const lng = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
-  //
-  //           const lat = item.lat_lon[0];
-  //           const lng = item.lat_lon[1];
-  //
-  //           // Return in MGnifyDatum format expected by SamplesMap
-  //           return {
-  //             id: item.acc || `sample_${index}`,
-  //             attributes: {
-  //               latitude: lat,
-  //               longitude: lng,
-  //               'sample-desc': `${item.organism || 'Unknown organism'} - ${
-  //                 item.geo_loc_name_country_calc || 'Unknown location'
-  //               }`,
-  //             },
-  //             relationships: {
-  //               biome: {
-  //                 data: {
-  //                   id: item.assay_type || 'unknown',
-  //                 },
-  //               },
-  //             },
-  //           };
-  //         } catch (error) {
-  //           console.error('Error parsing lat_lon:', item.lat_lon, error);
-  //           return null;
-  //         }
-  //       })
-  //       .filter(Boolean) as MapSample[]; // Remove null entries and cast to MapSample[]
-  //   },
-  //   []
-  // );
+  // cANI range from query param (format: "min,max")
+  const [caniRange] = useQueryParamState('cani', '');
 
-  // Helper functions for visualizations
-  const countUniqueValuesAndOccurrences = (
-    valueList: any[]
-  ): { uniqueValues: any[]; countVal: number[] } => {
-    const counts: Record<string, number> = {};
-    const uniqueValues = [...new Set(valueList)];
-
-    for (let i = 0; i < uniqueValues.length; i++) {
-      const val = uniqueValues[i];
-      // Convert val to string to use as object key
-      const key = String(val);
-      counts[key] = valueList.filter((value) => value === val).length;
+  const parseLatLon = (raw: unknown): [number, number] | null => {
+    if (raw == null) return null;
+    if (Array.isArray(raw)) {
+      const [lat, lon] = raw;
+      const latNum = Number(lat);
+      const lonNum = Number(lon);
+      return Number.isFinite(latNum) && Number.isFinite(lonNum)
+        ? [latNum, lonNum]
+        : null;
     }
+    let s = String(raw).trim();
+    if (!s || s === 'NP') return null;
+    s = stripQuotes(s).toUpperCase();
 
-    const countVal = uniqueValues.map((val) => counts[String(val)]);
+    // invalid markers
+    const bad = ['MISSING', 'NOT APPLICABLE', 'NA', 'N/A', 'NULL', 'NONE'];
+    if (bad.includes(s)) return null;
 
-    return {
-      uniqueValues,
-      countVal,
-    };
+    // Examples we want: "39.5886 N 20.1382 E", "12 N 32 W", "54.1883 N 7.9000 E"
+    // Allow commas or spaces between the pairs.
+    const re =
+      /^\s*([0-9]+(?:\.[0-9]+)?)\s*([NS])[\s,]+([0-9]+(?:\.[0-9]+)?)\s*([EW])\s*$/i;
+    const m = s.match(re);
+    if (!m) return null;
+
+    const lat = parseFloat(m[1]) * (m[2] === 'S' ? -1 : 1);
+    const lon = parseFloat(m[3]) * (m[4] === 'W' ? -1 : 1);
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
+
+    return [lat, lon];
   };
+
+  // Helper function to convert search results to map samples with valid lat/lng
+
+  const convertToMapSamples = useCallback(
+    (data: SearchResult[]): MapSample[] => {
+      if (!Array.isArray(data)) return [];
+
+      return data
+        .map((item, index) => {
+          // Skip missing/placeholder accessions
+          if (!item.acc || item.acc === 'NP') return null;
+
+          const coords = parseLatLon(item.lat_lon);
+          if (!coords) return null;
+
+          const [lat, lng] = coords;
+
+          // Clean up country label: hide NP/uncalculated
+          const countryRaw = (item.geo_loc_name_country_calc || '').trim();
+          const country =
+            !countryRaw ||
+            ['np', 'uncalculated'].includes(countryRaw.toLowerCase())
+              ? 'Unspecified'
+              : countryRaw;
+
+          const organism = item.organism || 'Unknown organism';
+
+          return {
+            id: item.acc,
+            attributes: {
+              latitude: lat,
+              longitude: lng,
+              assay_type: item.assay_type,
+              organism,
+              country,
+            },
+          } as MapSample;
+        })
+        .filter(Boolean) as MapSample[];
+    },
+    []
+  );
+
+  const getCountryCountsFromResults = useCallback((results: SearchResult[]) => {
+    const countryCounts: Record<string, number> = {};
+
+    results.forEach((item) => {
+      if (
+        item.geo_loc_name_country_calc &&
+        item.geo_loc_name_country_calc !== 'NP'
+      ) {
+        const country = item.geo_loc_name_country_calc;
+        countryCounts[country] = (countryCounts[country] || 0) + 1;
+      }
+    });
+
+    return countryCounts;
+  }, []);
+
+  const getCountryColor = useCallback((count: number, maxCount: number) => {
+    if (count === 0) return '#FFEDA0';
+
+    const intensity = count / maxCount;
+
+    if (intensity > 0.8) return '#BD0026';
+    if (intensity > 0.6) return '#E31A1C';
+    if (intensity > 0.4) return '#FC4E2A';
+    if (intensity > 0.2) return '#FD8D3C';
+    return '#FEB24C';
+  }, []);
 
   const createPlotData = (
     stringKeys: string[],
@@ -269,174 +276,168 @@ const Branchwater = () => {
     return plotData;
   };
 
-  // Apply filters to search results
-  const getFilteredResults = useCallback((): SearchResult[] => {
-    // Ensure searchResults is an array before filtering
-    if (!Array.isArray(searchResults)) {
-      console.error('searchResults is not an array:', searchResults);
-      return [];
+  const countUniqueValuesAndOccurrences = (
+    valueList: any[]
+  ): { uniqueValues: any[]; countVal: number[] } => {
+    // Single-pass frequency map to avoid O(n^2) behavior
+    const counts = new Map<string, number>();
+    for (const v of valueList) {
+      const key = String(v ?? '');
+      counts.set(key, (counts.get(key) ?? 0) + 1);
     }
+    const uniqueValues = Array.from(counts.keys());
+    const countVal = uniqueValues.map((k) => counts.get(k) as number);
+    return { uniqueValues, countVal };
+  };
 
-    return searchResults.filter((item) => {
-      return Object.keys(filters).every((key) => {
-        if (!filters[key]) return true; // Skip empty filters
-
-        const itemValue = String(item[key] || '').toLowerCase();
-        const filterValue = filters[key].toLowerCase();
-
-        return itemValue.includes(filterValue);
-      });
-    });
-  }, [searchResults, filters]);
-
-  // Prepare data for visualizations
   const prepareVisualizationData = useCallback(
     (data: SearchResult[]): VisualizationData | null => {
       if (!data || data.length === 0) return null;
 
-      const commonKeys = Object.keys(data[0]);
-      const values: any[][] = Array.from(
-        { length: commonKeys.length },
-        () => []
-      );
+      // Use the union of keys across all rows (not just the first row)
+      const commonKeys = Array.from(new Set(data.flatMap(Object.keys)));
 
-      commonKeys.forEach((key, j) => {
-        values[j] = data.map((obj) => obj[key]);
-      });
+      // Build a columnar array (values[kIndex] -> array of values for that key)
+      const values: any[][] = commonKeys.map((k) => data.map((row) => row[k]));
 
-      // Filter string keys for bar plots
+      // ----- Categorical bar plots: only include true string-like cols, skip IDs/links/coords
       const stringKeys: string[] = [];
       const stringValues: any[][] = [];
 
       for (let i = 0; i < values.length; i++) {
-        if (
-          values[i].every(
-            (val) =>
-              typeof val === 'string' &&
-              commonKeys[i] !== 'acc' &&
-              commonKeys[i] !== 'biosample_link'
-          )
-        ) {
-          stringKeys.push(commonKeys[i]);
-          stringValues.push(values[i]);
+        const key = commonKeys[i];
+        if (['acc', 'biosample_link', 'lat_lon'].includes(key)) continue;
+
+        const col = values[i];
+        // Treat null/undefined as empty strings for the "every" check
+        const isAllStrings = col.every(
+          (v) => typeof v === 'string' || v == null
+        );
+        if (isAllStrings) {
+          stringKeys.push(key);
+          stringValues.push(col.map((v) => (v == null ? '' : String(v))));
         }
       }
 
-      // Create bar plot data
       const barPlotData = createPlotData(stringKeys, stringValues);
 
-      // Create histogram data
+      // ----- Histograms (containment, cANI): coerce to numbers and filter NaN
+      const numCol = (idx: number) =>
+        idx === -1
+          ? []
+          : (values[idx]
+              .map((v) => (typeof v === 'number' ? v : Number(v)))
+              .filter((n) => Number.isFinite(n)) as number[]);
+
       const containmentIndex = commonKeys.indexOf('containment');
       const cANIIndex = commonKeys.indexOf('cANI');
 
-      const containmentHist: any = {
-        x: values[containmentIndex],
-        type: 'histogram',
-        autobinx: false,
-        xbins: { size: 0.1 },
-        name: 'containment',
-        visible: true,
-        marker: {
-          color: 'rgba(100, 200, 102, 0.7)',
-          line: {
-            color: 'rgba(100, 200, 102, 1)',
-            width: 1,
-          },
-        },
-      };
+      const hist: any[] = [];
 
-      const cANIHist: any = {
-        x: values[cANIIndex],
-        type: 'histogram',
-        autobinx: false,
-        xbins: { size: 0.02 },
-        name: 'cANI',
-        visible: false,
-        marker: {
-          color: 'rgba(100, 200, 102, 0.7)',
-          line: {
-            color: 'rgba(100, 200, 102, 1)',
-            width: 1,
-          },
-        },
-      };
-
-      // Create map data
-      let countryMap: Record<string, any> = {};
-      let latLonMap: Record<string, any> = {};
-
-      const countryIndex = commonKeys.indexOf('geo_loc_name_country_calc');
-      const latLonIndex = commonKeys.indexOf('lat_lon');
-
-      if (countryIndex !== -1) {
-        const countryCounts = countUniqueValuesAndOccurrences(
-          values[countryIndex]
-        );
-        const countryData = countryCounts.uniqueValues.map((country, index) => {
-          return {
-            country: country,
-            count: countryCounts.countVal[index],
-          };
-        });
-
-        countryMap = {
-          name: 'geo_loc_name_country_calc',
-          type: 'choropleth',
-          locationmode: 'country names',
-          locations: countryData.map((d) => d.country),
-          z: countryData.map((d) => d.count),
-          text: countryData.map((d) => `${d.country}: ${d.count}`),
-          autocolorscale: true,
-          marker: {
-            line: {
-              color: 'rgb(255,255,255)',
-              width: 2,
+      if (containmentIndex !== -1) {
+        const xs = numCol(containmentIndex);
+        if (xs.length) {
+          hist.push({
+            x: xs,
+            type: 'histogram',
+            autobinx: false,
+            xbins: { size: 0.1 },
+            name: 'containment',
+            visible: true,
+            marker: {
+              color: 'rgba(100, 200, 102, 0.7)',
+              line: { color: 'rgba(100, 200, 102, 1)', width: 1 },
             },
-          },
-        };
+          });
+        }
       }
 
-      if (latLonIndex !== -1) {
-        // Process lat_lon data
-        const latLonData = values[latLonIndex]
-          .map((item, index) => {
-            if (item === 'NP') return null;
+      if (cANIIndex !== -1) {
+        const xs = numCol(cANIIndex);
+        if (xs.length) {
+          hist.push({
+            x: xs,
+            type: 'histogram',
+            autobinx: false,
+            xbins: { size: 0.02 },
+            name: 'cANI',
+            visible: hist.length === 0, // show if only one
+            // visible: hist.length === 0 ? true : false, // show if only one
+            marker: {
+              color: 'rgba(100, 200, 102, 0.7)',
+              line: { color: 'rgba(100, 200, 102, 1)', width: 1 },
+            },
+          });
+        }
+      }
 
-            // Try to parse lat_lon string
-            try {
-              const match = item.match(/([0-9.-]+)([NS]),\s*([0-9.-]+)([EW])/);
-              if (match) {
-                const lat = parseFloat(match[1]) * (match[2] === 'S' ? -1 : 1);
-                const lon = parseFloat(match[3]) * (match[4] === 'W' ? -1 : 1);
-                return [lat, lon, data[index].acc];
-              }
-              return null;
-            } catch (e) {
-              return null;
-            }
+      // ----- Map data: choropleth by country (skip NP/uncalculated)
+      const countryIndex = commonKeys.indexOf('geo_loc_name_country_calc');
+      let countryMap: Record<string, any> = {};
+
+      if (countryIndex !== -1) {
+        const cleanedCountries = values[countryIndex]
+          .map((v) => (v == null ? '' : String(v).trim()))
+          .filter((v) => {
+            const lc = v.toLowerCase();
+            return v && lc !== 'np' && lc !== 'uncalculated';
+          });
+
+        const uniqueCountryCounts =
+          countUniqueValuesAndOccurrences(cleanedCountries);
+        if (uniqueCountryCounts.uniqueValues.length > 0) {
+          const countryData = uniqueCountryCounts.uniqueValues.map(
+            (country, i) => ({
+              country,
+              count: uniqueCountryCounts.countVal[i],
+            })
+          );
+
+          countryMap = {
+            name: 'geo_loc_name_country_calc',
+            type: 'choropleth',
+            locationmode: 'country names',
+            locations: countryData.map((d) => d.country),
+            z: countryData.map((d) => d.count),
+            text: countryData.map((d) => `${d.country}: ${d.count}`),
+            autocolorscale: true,
+            marker: { line: { color: 'rgb(255,255,255)', width: 2 } },
+          };
+        }
+      }
+
+      // ----- Map data: scattergeo from lat_lon using parseLatLon
+      const latLonIndex = commonKeys.indexOf('lat_lon');
+      let latLonMap: Record<string, any> = {};
+
+      if (latLonIndex !== -1) {
+        const latLonData = values[latLonIndex]
+          .map((raw, i) => {
+            const coords = parseLatLon(raw);
+            const acc = data[i]?.acc;
+            if (!coords || !acc || acc === 'NP') return null;
+            return [coords[0], coords[1], acc] as [number, number, string];
           })
-          .filter((item) => item !== null) as [number, number, string][];
+          .filter(Boolean) as [number, number, string][];
 
         if (latLonData.length > 0) {
           latLonMap = {
             name: 'lat_lon',
             type: 'scattergeo',
             mode: 'markers',
-            marker: {
-              color: 'rgba(100, 200, 102, 1)',
-            },
-            lat: latLonData.map((item) => item[0]),
-            lon: latLonData.map((item) => item[1]),
-            text: latLonData.map((item) => `acc: ${item[2]}`),
+            marker: { color: 'rgba(100, 200, 102, 1)' },
+            lat: latLonData.map((t) => t[0]),
+            lon: latLonData.map((t) => t[1]),
+            text: latLonData.map((t) => `acc: ${t[2]}`),
           };
         }
       }
 
       return {
         barPlotData,
-        histogramData: [containmentHist, cANIHist],
+        histogramData: hist,
         mapData: [countryMap, latLonMap].filter(
-          (item) => Object.keys(item).length > 0
+          (obj) => obj && Object.keys(obj).length > 0
         ),
         stringKeys,
       };
@@ -444,10 +445,422 @@ const Branchwater = () => {
     [createPlotData, countUniqueValuesAndOccurrences]
   );
 
+  // TODO: bring back request button
+  const handleRequestAnalysis = (entry: SearchResult) => {
+    const submitUrl = `https://www.ebi.ac.uk/metagenomics/submit?accession=${entry.acc}&bioproject=${entry.bioproject}`;
+    window.open(submitUrl, '_blank');
+  };
+
+  const [locationFilter] = useQueryParamState('geo_loc_name_country_calc', '');
+  const [organismFilter] = useQueryParamState('organism', '');
+  const [assayTypeFilter] = useQueryParamState('assay_type', '');
+
+  // Update getFilteredResults to include faceted filters
+  const getFilteredResults = useCallback((): SearchResult[] => {
+    if (!Array.isArray(searchResults)) {
+      console.error('searchResults is not an array:', searchResults);
+      return [];
+    }
+
+    const globalQuery = (textQuery || '').toString().trim().toLowerCase();
+
+    return searchResults.filter((item) => {
+      // Apply global text query across common fields (if provided)
+      if (globalQuery) {
+        const haystack = [
+          item.acc,
+          item.assay_type,
+          item.bioproject,
+          item.collection_date_sam,
+          item.geo_loc_name_country_calc,
+          item.organism,
+        ]
+          .map((v) => (v == null ? '' : String(v).toLowerCase()))
+          .join(' ');
+        if (!haystack.includes(globalQuery)) return false;
+      }
+
+      // Apply text-based field-specific filters first
+      const matchesTextFilters = Object.keys(filters).every((key) => {
+        if (!filters[key]) return true;
+        const itemValue = String(item[key] || '').toLowerCase();
+        const filterValue = filters[key].toLowerCase();
+        return itemValue.includes(filterValue);
+      });
+      if (!matchesTextFilters) return false;
+
+      // Apply faceted filters from query params
+      if (locationFilter) {
+        const selectedLocations = locationFilter.split(',').filter(Boolean);
+        if (
+          selectedLocations.length > 0 &&
+          !selectedLocations.includes(item.geo_loc_name_country_calc)
+        ) {
+          return false;
+        }
+      }
+
+      if (organismFilter) {
+        const selectedOrganisms = organismFilter.split(',').filter(Boolean);
+        if (
+          selectedOrganisms.length > 0 &&
+          !selectedOrganisms.includes(item.organism)
+        ) {
+          return false;
+        }
+      }
+
+      if (assayTypeFilter) {
+        const selectedTypes = assayTypeFilter.split(',').filter(Boolean);
+        if (
+          selectedTypes.length > 0 &&
+          !selectedTypes.includes(item.assay_type)
+        ) {
+          return false;
+        }
+      }
+
+      // Apply cANI numeric range filter
+      if (caniRange) {
+        const [minStr, maxStr] = caniRange.split(',');
+        const min = Number(minStr);
+        const max = Number(maxStr);
+
+        if (!Number.isNaN(min) && !Number.isNaN(max)) {
+          const val = item.cANI;
+          const num = typeof val === 'number' ? val : Number(val);
+
+          if (Number.isNaN(num)) return false;
+
+          const EPSILON = 0.0001;
+          if (num < min - EPSILON || num > max + EPSILON) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    });
+  }, [
+    searchResults,
+    filters,
+    caniRange,
+    locationFilter,
+    organismFilter,
+    assayTypeFilter,
+    textQuery,
+  ]);
+
+  // Apply sorting to filtered results
+  const getSortedResults = (
+    filteredResults: SearchResult[]
+  ): SearchResult[] => {
+    // Prefer ordering from EMGTable's sortable query param if present
+    const orderStr = typeof detailedOrder === 'string' ? detailedOrder : '';
+    const effectiveField = orderStr ? orderStr.replace(/^-/, '') : sortField;
+    const effectiveDirection: 'asc' | 'desc' = orderStr
+      ? orderStr.startsWith('-')
+        ? 'desc'
+        : 'asc'
+      : sortDirection;
+
+    if (!effectiveField) return filteredResults;
+
+    return [...filteredResults].sort((a, b) => {
+      const aValue = a[effectiveField] ?? '';
+      const bValue = b[effectiveField] ?? '';
+
+      // Handle numeric values
+      // eslint-disable-next-line no-restricted-globals
+      if (!isNaN(Number(aValue)) && !isNaN(Number(bValue))) {
+        return effectiveDirection === 'asc'
+          ? Number(aValue) - Number(bValue)
+          : Number(bValue) - Number(aValue);
+      }
+
+      // Handle string values (including dates treated as strings)
+      const comparison = String(aValue).localeCompare(String(bValue));
+      return effectiveDirection === 'asc' ? comparison : -comparison;
+    });
+  };
+
+  // Get paginated results
+  const getPaginatedResults = (
+    sortedResults: SearchResult[]
+  ): SearchResult[] => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return sortedResults.slice(startIndex, startIndex + itemsPerPage);
+  };
+
+  // Calculate total pages
+  const getTotalPages = (filteredResults: SearchResult[]): number => {
+    return Math.ceil(filteredResults.length / itemsPerPage);
+  };
+
+  // Memoized processed results to avoid recomputation on every render
+  const processedResults = useMemo(() => {
+    const filteredResults = getFilteredResults();
+    const sortedResults = getSortedResults(filteredResults);
+    const paginatedResults = getPaginatedResults(sortedResults);
+    const totalPages = getTotalPages(filteredResults);
+    return { filteredResults, sortedResults, paginatedResults, totalPages };
+  }, [
+    getFilteredResults,
+    sortField,
+    sortDirection,
+    detailedOrder,
+    currentPage,
+    itemsPerPage,
+  ]);
+
+  // Keep existing API for children expecting a function
+  const processResults = useCallback(
+    () => processedResults,
+    [processedResults]
+  );
+
+  // Containment histogram bins/counts memoized
+  const containmentHistogram = useMemo(() => {
+    const binsAsc = Array.from(
+      { length: 10 },
+      (_, i) => `${(i / 10).toFixed(1)}-${((i + 1) / 10).toFixed(1)}`
+    );
+    const countsAsc = new Array(10).fill(0) as number[];
+    for (const r of searchResults) {
+      if (typeof r.containment === 'number') {
+        const idx = Math.min(Math.floor(r.containment * 10), 9);
+        countsAsc[idx]++;
+      }
+    }
+    return {
+      binsDesc: [...binsAsc].reverse(),
+      countsDesc: [...countsAsc].reverse(),
+    };
+  }, [searchResults]);
+
+  // Scatter plot data: single pass + downsampling, memoized
+  const scatterData = useMemo(() => {
+    const xs: number[] = [];
+    const ys: number[] = [];
+    const texts: string[] = [];
+    const colors: string[] = [];
+    for (const r of searchResults) {
+      const hasNums =
+        typeof r.containment === 'number' && typeof r.cANI === 'number';
+      if (!hasNums) continue;
+      xs.push(r.containment as number);
+      ys.push(r.cANI as number);
+      texts.push(
+        `${r.acc}\nCountry: ${
+          r.geo_loc_name_country_calc || 'Unknown'
+        }\nOrganism: ${r.organism || 'Unknown'}`
+      );
+      colors.push(
+        r.assay_type === 'WGS'
+          ? 'rgba(255, 99, 132, 0.8)'
+          : 'rgba(54, 162, 235, 0.8)'
+      );
+    }
+    const MAX_POINTS = 20000;
+    if (xs.length <= MAX_POINTS) {
+      return { xs, ys, texts, colors, sampled: false, total: xs.length };
+    }
+    // Downsample by deterministic stride to keep distribution without RNG
+    const stride = Math.ceil(xs.length / MAX_POINTS);
+    const sxs: number[] = [];
+    const sys: number[] = [];
+    const stexts: string[] = [];
+    const scols: string[] = [];
+    for (let i = 0; i < xs.length; i += stride) {
+      sxs.push(xs[i]);
+      sys.push(ys[i]);
+      stexts.push(texts[i]);
+      scols.push(colors[i]);
+    }
+    return {
+      xs: sxs,
+      ys: sys,
+      texts: stexts,
+      colors: scols,
+      sampled: true,
+      total: xs.length,
+    };
+  }, [searchResults]);
+
+  // Country totals memoized for stats table
+  const totalCountryCount = useMemo(
+    () => Object.values(countryCounts).reduce((sum, c) => sum + c, 0),
+    [countryCounts]
+  );
+
+  // Limit number of map pins rendered; allow progressive loading
+  const [mapPinsLimit, setMapPinsLimit] = useState<number>(1000);
+  const displayedMapSamples = useMemo(
+    () => (Array.isArray(mapSamples) ? mapSamples.slice(0, mapPinsLimit) : []),
+    [mapSamples, mapPinsLimit]
+  );
+
+  // Reset pin limit when new samples arrive
+  useEffect(() => {
+    setMapPinsLimit(1000);
+  }, [searchResults]);
+
+  const handleSearchClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void => {
+    event.preventDefault();
+    setShowMgnifySourmash(true);
+
+    if (signature) {
+      setIsLoading(true);
+      axios
+        .post(
+          'http://branchwater-dev.mgnify.org/',
+          // 'https://branchwater.jgi.doe.gov/',
+          {
+            // signatures: signature,
+            signatures: JSON.stringify(signature[0]),
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: '*/*',
+            },
+          }
+        )
+        .then((response) => {
+          const resultsArray = Array.isArray(response.data)
+            ? (response.data as SearchResult[])
+            : [];
+          setSearchResults(resultsArray);
+
+          const vizData = prepareVisualizationData(resultsArray);
+          setVisualizationData(vizData);
+          const mapData = convertToMapSamples(resultsArray);
+          setMapSamples(mapData);
+
+          const counts = getCountryCountsFromResults(resultsArray);
+          setCountryCounts(counts);
+
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching search results:', error);
+          setIsLoading(false);
+          setVisualizationData(null);
+          setMapSamples([]);
+          setCountryCounts({});
+        });
+    } else {
+      console.log(
+        'No signature available yet. Please upload and sketch a file first.'
+      );
+    }
+
+    // if (signature) {
+    //   setIsLoading(true);
+    //   fetch('http://branchwater-dev.mgnify.org/', {
+    //     headers: {
+    //       accept: '*/*',
+    //       'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
+    //       'content-type': 'application/json',
+    //     },
+    //     referrer: 'http://localhost:9000/',
+    //     body: '{"signatures":"{\\"class\\":\\"sourmash_signature\\",\\"email\\":\\"\\",\\"hash_function\\":\\"0.murmur64\\",\\"filename\\":null,\\"license\\":\\"CC0\\",\\"signatures\\":[{\\"num\\":0,\\"ksize\\":21,\\"seed\\":42,\\"max_hash\\":18446744073709550,\\"mins\\":[267064886367,3526049174663,14698202488132,18979342333991,26441617103395,29931851894601,55226171007027,66223633499839,68198932927057,73446745180146,76760199720018,87351744075658,92381009468454,96040725364984,104245656357880,113354424305968,114739254510110,120926193723568,128632580056712,133658744658333,135107599038743,140236484995126,140326843601333,140599996672120,164415240368684,174062846286520,178650592886278,182305338098856,190696611670826,193054816875171,213453184445088,214345601801520,215467081740676,215735607146226,216052391620991,216773246304999,224093154624104,226442985025841,229982762815106,234460685033626,234982480980552,239345083769113,250383671257756,268347584868540,276463075359399,280285185952267,295709193003025,299579829860472,299840523479111,307795644912445,324489721336255,329161145748018,330356969399392,336498086454687,344896703078344,352148174967533,354987384578039,356914261735524,358841279051024,369323287198373,370047269304726,386828948648086,388895299939107,391832395969551,392639366937769,404868303707773,410045401737069,416805952881278,418332648060571,430086351826101,431032701080933,456857353611775,474407546401205,476859962339887,477701442112305,480909555983548,486413881755407,486721633334678,489290779990063,502317734605757,533490532956229,537676239749733,549877516157520,551939796637088,577254433972813,578787310150540,584021623180238,586497784939743,587419871952306,591870377654107,596102558446425,597561099426683,612661753165636,622300814867836,626966836736722,634217517551340,647198610417803,669156655175948,669268385482703,670844179772299,672289982164668,707893928624504,717005074155920,727803717327188,739346769033355,766289446022970,772392687917574,780475661358854,781011969658406,784910078400946,811579941807401,846877377418865,849432358381544,854608873501061,858690799154232,869346113743601,875740398345981,887616612751798,888385413914448,888885190564182,899799083770730,902194861180164,921537821796267,925698258760702,934780547703787,937705184930551,939917551883065,947639656688609,948179498600868,968374317904532,969721474421000,980277299290197,984311515647359,992273639250755,1002510059474135,1005790803514044,1012363861945488,1015341910690048,1020820955978484,1036145854364488,1048486366857395,1051202336682768,1052129436934063,1057415724793068,1067159677401970,1074005782722514,1076833496380801,1082681357432601,1093716291120237,1100649854572916,1108439040708639,1135175417406215,1146631513244330,1151990943697954,1155958419139791,1160329461096577,1169693230679998,1180758770424284,1191551080645766,1194667761059336,1221115481847837,1223269574126728,1234657094002156,1248087952392353,1250116579851353,1252762600135050,1253156077772665,1254292063954749,1254576296533344,1255808036705421,1264074061577165,1265388797241175,1279174214876471,1283380420681567,1283845087352122,1285844982672412,1286363432008624,1293163907968485,1299003220863586,1300404705422773,1301873212379499,1306210711553419,1308070080370681,1311897625372863,1313231522424684,1317140330322591,1320043004962495,1327332342044626,1338613524112492,1346106478147433,1366303107529498,1370122708185299,1395761442681520,1407385523360552,1408654028440905,1410733402545786,1416978360318489,1419110223907021,1434350498649722,1445800229108922,1446123374254096,1449035669424569,1450980759211039,1451741808129487,1457672472098530,1458296969626973,1464484476160793,1472524219143421,1488216981001738,1492134865761375,1495661769632420,1498436727525889,1508627318765170,1509390664420136,1510133776884695,1515842440715122,1528544678699838,1532355792533585,1533447126107157,1535772839730913,1543011230492960,1545641458117558,1548921826970380,1556389369107614,1578569679215493,1581491022887527,1582457083222772,1585184196323829,1590710614379174,1592020976655603,1602916851364538,1604808250762620,1642280065248902,1652498347269931,1657341686014049,1659916998472126,1663331134249663,1671665765684748,1674574350103795,1676267131136249,1676685863389081,1687235410604688,1687945507248649,1694040706943274,1694694875829417,1695168745857972,1700068155872182,1702293578693930,1707630922460318,1721066596398273,1743528709146808,1750368307424620,1761206567067761,1767774365106759,1770610443135233,1778806854590991,1787105820974140,1788238749641841,1807763168078428,1815953729923222,1818157714672536,1824521719537837,1827264771082337,1828114656711212,1833589446048946,1834170723478799,1846949649390288,1849901889966354,1863607997505959,1865674585467903,1873819647242546,1884283725717740,1887418871455954,1894068804022196,1912465375685721,1912466160879932,1914317573753524,1916176124700416,1920095429700962,1922270673983553,1922752696179713,1923568532831726,1924166994563509,1933520810881204,1934707332448400,1937030310773309,1937372571185370,1943791067726654,1962491182966798,1964418546696422,1970261610630978,1971247297871591,1974593790281033,1979504848153441,1981518404834799,1983124351990030,1994536994392896,1999582980851725,2003841213541533,2027989341718273,2030020448680460,2037508046045994,2041091748910105,2042518981203701,2056835703140472,2057708617604806,2065025497989521,2065111981501954,2082456219842021,2084505256027945,2091224721775853,2093440831989190,2095162244340554,2097288135746865,2097511029246243,2124444637120179,2126287413813510,2134156079297264,2137014418537922,2138914214520507,2141612911259137,2146322277826795,2161043491535100,2164001573489247,2173527538114261,2175947119118852,2181530043931413,2185722403595505,2198466957483670,2202901221122557,2203846409586494,2209660108844259,2219786077567498,2231981019008184,2236540268637219,2244541792060751,2250256207195750,2255834516951722,2265784479127505,2268000615800849,2268201177676242,2272840700962749,2282699451188161,2285640992755932,2288475291650265,2305962281887004,2307969621031948,2312648226991831,2319676572527025,2320048931994264,2323405553982348,2330404190745474,2336795954192656,2339053772277061,2346493217369674,2363528137313254,2366360076498574,2382734371183567,2383121618510772,2401083166601327,2413996594850046,2414274497215419,2420003225884510,2420058412529684,2420266657232690,2433200317140524,2446805847416301,2459598506674202,2470930332951717,2473679755510658,2474499206897219,2475807732245246,2480549054819357,2482880667300030,2488061102248183,2488813099642621,2498037814946715,2500827252949352,2501080859039531,2501433024548796,2502027203300471,2502219327948440,2506059622680648,2526618768230354,2528590701581558,2529740397144349,2549984841629259,2576346117534691,2576499464520163,2593199962370221,2595198895126232,2599939842751958,2601405139154926,2601823682545556,2607443535241702,2614547556068324,2616663883073063,2639713826555877,2647478442650819,2652371461746186,2663519666943219,2668386388046472,2669503626322372,2670689483993631,2676633212962334,2679699418415014,2687149726327486,2693939907682573,2710373764453414,2716684144489198,2719592469357668,2728681659289191,2739081045880871,2748896312712278,2758454934378853,2759206355866389,2759695429553713,2799563373538204,2804374355189689,2816467972621588,2818062100530451,2819885787714193,2825526492165324,2831456855803681,2833070915495798,2833083040283916,2846238243530298,2852334977505361,2868063233946848,2869888467784130,2880070556412910,2882762812095122,2888183081858965,2893101035990595,2898325498912414,2918140621397405,2918984835322306,2923182250597524,2926668879977343,2931926017261486,2933020991787921,2936854708698003,2937464305582919,2938999535644710,2944899127633006,2947725947606558,2948776025829065,2949031878449293,2951399189093387,2954129650357045,2958189144629349,2974568816004005,2977452473452687,2982247392525490,2983710550099669,2992901824450011,2999363259086997,3002704294888026,3008295143289619,3009577794897103,3026645342880391,3031239911738169,3032277788323894,3037494845917096,3043713023450329,3045252428590382,3051371559746640,3052500578371080,3053056639855751,3057766263340316,3058221633927706,3072217387916134,3083008239440936,3106379650932855,3108916204898356,3126455378430410,3131750386832130,3132988905379301,3133172165912090,3141168584826277,3147766372228346,3151796866972788,3157271154696629,3163085533176975,3177283094816809,3180682087662637,3183208733339466,3193545310940151,3194630458001683,3201267961809908,3204929598556954,3209531611737899,3213132668840416,3213600656207249,3214446772151153,3220293822351954,3237005180925459,3240208099268721,3248267897050351,3250645988743544,3253502642859175,3254086427472803,3254092061826777,3257541366445529,3267680899214393,3270121211085811,3270718215452584,3279134333294196,3287970351369814,3290529721790846,3295936035482266,3296198422538689,3299341934464685,3310112633264023,3312368685426971,3326986948437752,3328913576639728,3353673677620380,3360577526632826,3371102049116378,3373578642464476,3384614903622610,3386805708222141,3389736738075866,3391402658050805,3398976157829739,3402937800242493,3403763270646568,3406358242820605,3417289433016936,3426753469596254,3433465871616215,3433902271878345,3438555857928776,3449355699645270,3457789919574478,3462136626674409,3468407927157555,3476667141035581,3478530725349883,3478699028209104,3490756740380303,3494187972702569,3495694902799940,3498616907277256,3498787606114368,3517319139178029,3538608837474250,3557564528246086,3563613759190665,3566398436181619,3574829816388511,3596411062635476,3597018570818903,3607655100373865,3618787974156176,3619417178036911,3624379472493028,3632539249089335,3638941546774320,3640927609335867,3644400095689396,3645392085943434,3659312466735626,3661912271982019,3662630533573563,3668973227072652,3677243420992255,3679847726113380,3686165386585104,3693215878841529,3693624670218918,3704764705716806,3717063240722086,3727501332381656,3742609587828525,3748893166732057,3754801335523985,3769393752408543,3772653553495502,3776523285625201,3802019032902231,3807999950354017,3810158831284864,3811813134144954,3812370089268486,3825456561931038,3831485785203407,3858322254257473,3861467228760591,3864147737417697,3864484722024362,3866856550846417,3879958739888545,3880580897483067,3882890637539975,3904549752434102,3907236281711014,3921481333413125,3924084971618883,3928679372798200,3929754696374003,3936413410558090,3945255940386270,3946201796653649,3952691917730397,3952748641989915,3956028819169833,3963732476042037,3983950497976106,3987659616126931,4002187303158622,4008140001118822,4012818934722692,4013593922468360,4020425233130391,4021278804280018,4022647531217153,4024064906464073,4025502325024029,4035578631949070,4037372425679736,4038601795348842,4039513673978303,4045201058313088,4046426374799629,4047405653133189,4057209301943808,4071411242197610,4072542204269127,4080649723193475,4091474945565496,4099673686960908,4110999051881704,4118602388373548,4137220979716262,4144541793511897,4149163133025981,4153695404960313,4162376246972408,4166112703713203,4172294199088439,4186615225375177,4190821614715378,4190984945571976,4202960854405576,4205699013953265,4206332975727505,4211270801655851,4231309189764340,4235397071566767,4237510507900110,4249142089754997,4256593530203872,4259108143475325,4260092057567957,4276663935068868,4279638621071260,4280296491281264,4303085383223117,4333184551985500,4337301662689845,4338288217676283,4340108376749011,4342629174213245,4344556318080961,4349103774432983,4361228364544883,4365654241387939,4366558619466765,4381523324521721,4390887829892518,4404210114413540,4407041600712456,4418248948054473,4418513347489131,4424482813500401,4425737024248200,4436380603857654,4436511445323371,4449340512396286,4462916627692525,4467091671692276,4477603950417778,4490454148211543,4502285738561354,4507468819439850,4510580242073816,4510736507616481,4514212877334669,4514436659935434,4516212907468754,4523818387298190,4531199754266565,4550901248760281,4568833277900055,4581006409997894,4590727390279467,4595685468156697,4597366620077554,4601515028000382,4608827314875359,4615159709608276,4617769020594466,4619936707280105,4621084367678791,4625905441728335,4626673788719941,4631726335298217,4633800641616713,4640199081165701,4654295246562356,4657872781368640,4661132478210282,4666457671209619,4669787776228409,4671369723057941,4674492980496685,4683849932781943,4692347119547742,4692951508928745,4692959214054142,4702682151436158,4703466937951498,4705426698181321,4714061354603004,4723560178309079,4737321221669091,4749425292583261,4752214846306539,4761194281522373,4761470113782646,4765089272687219,4769312053521729,4792325262854365,4798350455886058,4805362420184327,4825852625235333,4828101639909320,4842730202646123,4846654818914159,4861255450128282,4862230190698341,4878795099471005,4889293052025290,4900191161452110,4902942691232941,4904212906129086,4911731082077561,4913994909518289,4923395428979594,4934141608092679,4944732072871726,4945022710755681,4959030714333307,4959766600998247,4969818884678936,4978704885132633,4983704263307655,4986026413208966,4990503003817045,4993300349906282,5011157250938179,5020077032504354,5028745670443408,5029867280086418,5038512681068165,5055106612714871,5059387701857142,5061654350944522,5075589471419906,5080038748774034,5082381997856310,5085018327697967,5091180097246920,5102320787798689,5102851766146146,5105454117957181,5110014014354840,5112009772226118,5119542640386574,5122628788952333,5122839136608687,5123376903333207,5127039949771510,5138134756618099,5143563435578262,5144170204572273,5162037435367968,5177897366766501,5183377329673879,5184717353874771,5196146858782851,5197041272796857,5203661339006180,5206824190112827,5208344302442887,5208638560250779,5212366765271947,5214534321040774,5217661474855495,5221919934204818,5222634914712298,5223560967399641,5223568100405626,5226611559461133,5255230183981999,5256974899765282,5272785813246600,5289223566757218,5296712497088786,5296845877800441,5305310758668808,5311958039344400,5315801773970134,5322404778174876,5324646989961620,5335834765797024,5354141207566164,5364677138004421,5371841304235309,5377434077404951,5379156214164199,5389230994956193,5395996909697039,5412172336891113,5413297219534179,5422591988452753,5429531051525252,5439565374252101,5442414563536312,5453152853825196,5455459785659026,5456487451695990,5464231100438893,5480265213376655,5486603626329590,5486814802589751,5488186634173268,5506663972918662,5518215850539325,5518337833494097,5524088215501093,5537300855775392,5543364555231473,5545868140022188,5555018994141580,5557692138562193,5563977190130887,5564260586628788,5571213747504294,5585474351692525,5585771672008036,5593035803857736,5593713310878797,5598083111823847,5600398048423669,5611074728349593,5617867371754211,5618654706467085,5632477040223919,5633771580668259,5635829018277506,5639823522204467,5639855573031355,5649534586488405,5657788060664521,5659457162667379,5661220580632696,5668280842253147,5670973529192401,5674648265122245,5690555518222528,5692543324869324,5695118238998218,5695141772676356,5699872021694284,5700634963518601,5706514564144136,5709554286174395,5710622200962365,5727039764736806,5747681950192040,5755028503647625,5756952238221630,5758862516308976,5759532864060921,5762723095642832,5764533802710622,5777026690683120,5784464144977929,5785395340049078,5787489181326531,5790350051615400,5810573586359017,5812934075061339,5817108820100969,5824513782156545,5833848390869138,5835250513750367,5836037301522863,5838822288463445,5839555786533904,5849520875532366,5863665639718032,5890228162985314,5902086786425057,5914268685663831,5917035161766047,5919914194680583,5919978290429356,5922171478250971,5923532984173803,5931514387968018,5932717838556206,5938263688671848,5939567076490661,5985590305139853,5996624466936668,5997554707861125,6003432068956444,6005763994610719,6008942735093207,6009147543968630,6010393548611231,6026335198431591,6050285636914237,6052473791698575,6053607804995478,6059410131699164,6067824060203388,6073349599643298,6077605129575089,6079326672888748,6082399118469833,6086722089865182,6090795252568112,6091184568956996,6092719062875593,6101351466537255,6101822997363446,6110084735418138,6123230958045937,6128890325612532,6136262681879883,6139340310151074,6140858346616001,6144717453761105,6170065107672589,6176325467833490,6178301843995665,6181447461797678,6185218147463590,6186544278838797,6192469923668530,6204855599363100,6205927122375216,6207384571189194,6210882515872852,6211266240619008,6213801740203050,6228082270024634,6231555672527648,6242708022497941,6243290840604368,6244720770065791,6245527106875065,6251641796572287,6257544227395042,6260911207834703,6264116531168898,6265838302257305,6287442935757881,6288129940646199,6289818505174533,6309707931250758,6317423979743826,6344537581067420,6350295400939335,6351198697102667,6364968914035678,6373341544418571,6373423435431429,6383953772474654,6395987107829355,6396157750572723,6396458954115365,6401919077976123,6408442695600842,6408811519514711,6414452276268395,6423114039324897,6427943667756564,6430377589692067,6431101091995729,6462768335868739,6468986865498271,6469440250267137,6470373011304820,6474355318121907,6474491520876828,6475559448178704,6478919478460574,6484376654950725,6496189102350047,6496712703023801,6500708193703815,6501942161756420,6509914935983600,6511543899994729,6513288901852289,6530067353706573,6530451401928742,6549037699170999,6550730451127253,6557522288962216,6557531202407186,6558322017194459,6571739126548434,6580505712397031,6598397185045178,6602603095883795,6608255644723386,6619876698183376,6620338214000190,6623542241265475,6628855109748647,6633877360707926,6639185249103234,6639724474934102,6645055446305257,6645814647770869,6671129961062636,6676551782384336,6681587233391029,6683615112503595,6687737379098633,6690345385027479,6694139242926254,6697423490073328,6719140703662352,6719292320747056,6725508735680454,6726108117261792,6727192910648138,6763499695774054,6767161552105367,6769024573293439,6770134771159605,6776733414553396,6777367120385088,6780525677364482,6783645023947197,6783860697519994,6784939106959851,6792934804356922,6794677946703249,6798217515116278,6800717849550264,6814891039709077,6816249268069989,6823924295969746,6825210771381950,6838684558492067,6839450572119253,6844833275627045,6852308899340451,6853108878434452,6857260900437568,6858844304549889,6861154784621069,6862582675235315,6866010386504180,6868383581250948,6880466738755650,6880620875700479,6883312268076995,6887644027891131,6890092666962112,6893963958285107,6896891465630989,6899474512330212,6903966259508083,6906774581654601,6917518402346537,6920228776111240,6927759147158845,6929222454215738,6932237438942071,6938611858734010,6940983939150773,6955492033976711,6957355915155415,6957409812904860,6958158092057155,6964953182979839,6971845506322922,6973849894533127,6975775253948514,6980673968780541,6982461381827807,6984518527379424,6994672575016773,7005997300005087,7009467044395519,7009956396850660,7017041897785883,7031235064890701,7036699697496580,7045972126708334,7047626986296692,7049463893747111,7054333966820335,7063121244533437,7065282359958197,7074001543863372,7077600629380765,7095918378689563,7113753243497361,7113880267836788,7118051816506356,7120233391889756,7126788262904843,7128977445324019,7134668009262494,7136298404921629,7144191852160422,7151963843997602,7153119447578149,7163098216978529,7165734687064184,7166692002238855,7178913667136664,7187143119811785,7190867850927375,7192771575578674,7198828598035712,7216737595830537,7217363072607251,7233402332827927,7236471534378568,7241108228249588,7249867367364749,7250057595933971,7281464985518526,7287638720175409,7289081361216595,7298635105533509,7299764448781635,7308839821538208,7310710940411174,7315055306082672,7320616593184400,7331638917055154,7333274649071511,7341754340657633,7343665683230088,7345511493873568,7348237079969536,7348273141050123,7356699463495525,7362693912018987,7367749483684913,7368579113931270,7379360775002348,7379887997577518,7381552929344958,7383564155775652,7393142399508005,7397703662314130,7405329540193659,7406630599603251,7407577789542880,7410300486575663,7410813221906389,7422188421434099,7422823482085116,7423898164810365,7435754612356738,7439085578172008,7439852037642003,7442381224323320,7448565519403222,7450516087279320,7450897719621050,7454522226838672,7457966268358511,7459370669412569,7483652515393214,7490503104891027,7494712525530999,7499501635125617,7504976904287673,7508009705563826,7512241776025769,7517968324545975,7518976977726817,7545322034401558,7546576096710795,7549957087035319,7551402205120807,7554095269160757,7560950424675240,7561780238279712,7574328018084455,7574957565363519,7585716917258740,7586764823559384,7588632718341726,7595441651681795,7607848228556618,7612580276135361,7623351894355044,7624577706129285,7628079857326312,7632355216557742,7636606778752404,7644254514531142,7647638535465987,7652590187036693,7658032607512798,7672331734643023,7672562686401228,7678016918758128,7678719017119351,7681155551129534,7684345564858927,7687996113123983,7691560136976489,7708831171704847,7710624349269203,7714203378007913,7725859011517137,7729445148851574,7737149790700340,7751784018915517,7752425172140200,7754672210289021,7756157419056283,7760734855155386,7761665626170291,7787055069948556,7787346124969131,7789162808785785,7796488882750278,7796708619943630,7805808897469892,7810100749944299,7811584684757759,7813119186127417,7813544421596950,7819467221224253,7822774433222336,7826406653048946,7827485301764935,7830789141901716,7831614154253229,7852561193992782,7857111996581293,7860564614543871,7870447250844082,7875660262925973,7884036337351714,7885098665494058,7892380978111107,7901578908584988,7912348119358888,7918788583570209,7929020368484326,7937024034933850,7943899889767188,7960694476798166,7979836733744154,7985777454213842,7989758322330771,7998588882906672,7999512248011133,8004503493277828,8008779693197166,8011893168850692,8018902586023486,8019782506113949,8028252920813391,8035134738017902,8036109382779130,8037341629450963,8044844062485753,8049740554508439,8049910782186159,8051950343026490,8063527126789525,8075302218828164,8087787591165253,8092140059129261,8093828954066598,8099983908513605,8101409556353704,8114821258354910,8128642722032908,8139338903159695,8146511381064095,8146724107492648,8152629373589136,8152890848387502,8157625518719183,8158932493681951,8160387191155832,8162093313044490,8163360139644577,8163886946021420,8166597184307370,8169828773775725,8176071088785633,8181171831754439,8181932831749736,8187837613040495,8191520415628083,8217108502173474,8218287492912770,8230821357795499,8243146034811315,8255358033263126,8266349981495069,8267304758660847,8268266587854532,8272373122028813,8275071316315435,8276131100753693,8283190457605341,8290533273947821,8315059040750762,8317411749488520,8318740232468854,8320974477582524,8321166551225075,8347102684135350,8349925332458792,8350061097610417,8351789552302364,8353785196103482,8358965206435953,8362289111784936,8378406131349582,8380583589350278,8414767800209456,8428388765780719,8435300597475812,8448839938006051,8450580158644414,8462413441173890,8474318085007237,8491615703163644,8498961113892709,8509927962456322,8524124024515991,8526821409446047,8536567733398656,8538049359859780,8542514498280165,8545507529639024,8546918063994669,8549151625710130,8550979301286806,8554862355971444,8559499433422855,8566486093314379,8570535277299096,8576898435810708,8579088829606687,8590218724482812,8599864442317608,8600601956871339,8604871792319389,8606558168173457,8610036470680783,8610619796951074,8611991418689669,8612659640075668,8614680102294072,8614829450398820,8619946193362826,8620058734434085,8636264547803618,8636859569781603,8640216564377796,8644407611670377,8647335038209880,8656489438589106,8659839107227701,8684772328025067,8686901317251013,8690872067954709,8697522208362332,8697690334984817,8702100234137519,8710425726240176,8715973316183997,8719682292116184,8722426916946003,8722471963763387,8732462556449853,8740373294564512,8742853165408225,8744416818270991,8747900587432574,8748766142197568,8760849775111413,8764934810724258,8777692348599761,8780418430091418,8784855962570429,8790921050746125,8797209079200634,8799125419277526,8817871203006015,8821939571877026,8826742651392566,8827462234698241,8836750356893564,8838454968523848,8838693457616593,8840935320555623,8857658730895130,8865420275174268,8867253827428258,8867409445456483,8870822228839044,8879328453828094,8881748516684847,8889188654708297,8890429397587916,8891226055027839,8903648335081528,8907277521965682,8915624647595587,8924988771626683,8928994634680699,8945564282181590,8954597313994678,8956830135875359,8959704699271040,8969881540835998,8976048630771784,8977084690925313,9002162249939257,9007218279701052,9014006794723628,9027097351004412,9032050078180736,9041112332107680,9044227069726296,9052909486020534,9061466131556828,9061885952176360,9069821385897916,9071212439410526,9092028672356414,9095215163358580,9095275311216440,9113487407909842,9133728802889948,9134692014099768,9136114602810876,9138929571984080,9139455077771634,9156052289895948,9158856450609838,9160455129580468,9163878977561596,9172654266462396,9174133864574580,9180479646083196,9195826342470936,9196747073633996,9200594490609080,9208654133417858,9215289538415900,9225340076872348,9225403435261250,9227764116397056,9234382264537926,9238184998296964,9238730315757600,9238894159275652,9239140595443896,9242493593271354,9249521914439050,9250441155999076,9251077186173892,9251458247774640,9254280981275698,9262675693581652,9264696747038456,9267867224753836,9283905991177988,9286392397032440,9293944425331300,9294143859600586,9297442120669668,9302011178059364,9303589412869060,9307200548102472,9307714902456096,9315393495614920,9322161413843728,9326861000176024,9334770233614340,9356991669898500,9364107184474712,9370788101281036,9390710227334608,9395751616230052,9396033944654210,9396168442667248,9399559307543144,9400683641953936,9406015856833312,9420737327411372,9430672408138398,9438998346296662,9440995247278304,9447044667166380,9458279523330580,9459632239034316,9465983508257198,9467768614331532,9468291636390504,9472733773931366,9480715846815492,9483402211460972,9496328214496116,9497643082894292,9497945657240444,9510039362021580,9526962427512484,9535085202224912,9548519651215080,9555119559546464,9559220064143720,9569909832550442,9572321510271780,9576087325730576,9577103066245492,9579008503626260,9581720677878396,9582735652546624,9589501329485140,9597239152103168,9601357143681850,9607558399827628,9617906311214232,9624704656634184,9629445135601592,9633737256594236,9637976764545582,9646135515176468,9661227741259384,9665070579797686,9685836830100556,9688496147128488,9698207854579498,9708137105085936,9718231283178672,9728277989246440,9730088856589724,9733083680529678,9761804762652316,9762972125589524,9765406177350912,9768026716723596,9780870889500014,9800153905997292,9801206720386040,9809590330810336,9813494240390490,9816347684218574,9829376652500456,9839720718611148,9849883211611172,9860626678543768,9866291865782152,9872443335022692,9884010865567480,9888397571237094,9892294368900836,9915870874121898,9918349094975376,9921836036554824,9925299584026090,9927629714822636,9928723047303896,9929210737499788,9937716884138436,9953274733871410,9956110834562096,9958260412909412,9958526370105352,9961230710212520,9965797955577244,9969427138195076,9969712004759160,9976429818744950,9977116225982896,9978259730657754,9979503158143608,9980228867327898,9984764170887144,9998214371651968,10005995627936404,10006300747626122,10016355828595792,10018670103613218,10020789297538776,10020998337712936,10028385723111258,10057990606348412,10058293341463358,10066597217478344,10075792206607248,10080418058981304,10081797977153896,10091986419075284,10097720409740216,10099265031619720,10120791665756072,10124857654046744,10126534301872220,10127022492301708,10138246721297276,10151143241879544,10151369017332796,10154885378407016,10163256706883610,10163538628369686,10164859408844708,10175662500909732,10198825326804322,10202212646420698,10209298293056084,10210149386984458,10228212900125168,10229882420652244,10231234628772700,10231732654669262,10261329017112688,10263002941732796,10272253212474828,10274875519634516,10274915168494518,10282022063390052,10285894712837148,10290792106118904,10296274748633906,10298286637654760,10307768010606048,10308891095985038,10311620746835384,10314363153978116,10320800978185150,10322775962399092,10324143250714170,10325173420245960,10325818907457552,10344284936559794,10349881421374536,10353398560979556,10361638275171560,10362080429246452,10377959670046980,10388528874808876,10396776524025790,10402229625733290,10414411326405836,10419252320013692,10419792433247176,10422067623377636,10424870673434244,10433085049874440,10437590841119852,10446422428977742,10451193462699462,10460862206958678,10466595974550648,10466814596953364,10468556514719404,10468653025426044,10470095489333896,10471366784310572,10475108414650028,10478169958812080,10486797669577622,10501547037522400,10513495767469276,10516676338108848,10519480945896388,10519680915451750,10523694510485720,10531441549974176,10531937392814168,10538731059568420,10583736536899200,10589858669169204,10592197984735740,10594282232621406,10595898556909660,10601025835509912,10655396295642340,10658356843488300,10658609794119436,10658619216673790,10660429736536100,10671080336464036,10678993728260088,10685774849812468,10688437123264692,10695083121226096,10707012299648640,10711153833297184,10713487642186332,10716657928827750,10719578999985878,10720355626351546,10721420922180360,10727235402759472,10740570134247868,10748266867882030,10748976371611372,10755437565666732,10755885637117596,10756281433354136,10765873656865306,10770565199694332,10773543073275808,10786689517096026,10793244144786222,10799547516806338,10802354215776688,10809258543108080,10814209041550522,10823538262600432,10824893537214786,10842444596466872,10844193313004952,10856238950714296,10858330351486276,10865969413614924,10874259805568272,10878225251262378,10888644990303588,10907131997298272,10922664037313170,10925164681722506,10928697370450756,10933220188455392,10934027956172096,10938372393510712,10943851682216922,10944564531895152,10951522212420944,10956511831945812,10984796238065036,10985377296269936,10987004835339952,10989837597008948,11011222470419528,11013609193297476,11028031048251564,11040715671685696,11048466341895048,11054763352934838,11058532998844178,11060167583298300,11065652818412914,11068402244795362,11070352154682922,11072659755461328,11078029962984538,11080493484395614,11090866374869508,11095051859068652,11096812079942756,11102067171877160,11102999749150048,11106512226853800,11108559706856784,11112008116027564,11112482120162420,11115036669332236,11118567428469332,11134520887420712,11137899996337168,11139404275594390,11145364870549916,11147365915573232,11150914006031888,11152227499932628,11157373962647328,11163505061996580,11166335791635670,11175870473102768,11179017295961604,11187421074062384,11192383827887452,11225863132774232,11229005625073564,11249738172467036,11265971379200948,11280623037280464,11281452327780618,11285264566300132,11290354116478952,11296415636645464,11305946547309124,11308272527263558,11308332760233220,11315168384918648,11316719437136638,11323005093643748,11326859646301978,11328194975352584,11329509121572196,11331267399162220,11347632256438508,11380015465264512,11381330972779864,11383100924523792,11389643178059872,11399312596448000,11402878707358892,11404892922524846,11411739946785228,11418967780886320,11424758669434990,11431789496987422,11448097427436342,11454708992551944,11458750221557596,11459504189062724,11466541077521058,11468751042170202,11472388947958730,11476859725967150,11477852166729228,11481138028503276,11500114813330144,11503056726808300,11519342289922652,11519808810870296,11525165038639332,11528008663600700,11532361019206776,11543340805312652,11553683755079760,11554792095119524,11555746147664432,11566315979454600,11575858570029616,11578624095616772,11582650659281560,11586729853195224,11601481286147764,11601899898036676,11602256837341702,11603150227471942,11608094718311912,11615729309991836,11619689578950758,11624293182857922,11624544993280106,11635006358151984,11645593022152542,11651482483543396,11662534346827158,11664105016888582,11666678970427012,11668503494956840,11674745226209084,11679178548609074,11686145871210872,11689899896242160,11694712692333966,11695229429699704,11699803836975892,11701078573734872,11710174358884948,11712321093397960,11713174131482292,11718204327121292,11719948419341128,11733529606290588,11733856428490582,11749120207805788,11758124224999926,11759155042280182,11759632360209992,11762721294639296,11789402028266570,11803888895140630,11808432172469572,11808677120038076,11822284400880292,11823833270377998,11835049711704392,11852262611387780,11874586424066576,11877780351789864,11878561819350910,11879964422556496,11881350103968138,11887532755955374,11891901082216058,11892846073259560,11893480230501484,11895644930353812,11907431294460312,11912167420161444,11912535614444308,11912596190380622,11917680135230674,11921482716809116,11922318660990902,11926783256028788,11927312706420028,11938253467456976,11938487837060018,11939433837736390,11941377508200764,11944897148719032,11946057805659630,11954167335510836,11966515417886858,11967177969696326,11969270983768204,11972491066843824,11975021092787770,11991579931661464,11996681224586602,11999941145947168,12001265313067112,12003694815283190,12005264635132620,12007737622687824,12035849588414652,12037204972357924,12040863607311074,12042516568037860,12045428359765202,12046059447238300,12057277685219310,12063296041411516,12068704280901120,12069307632954000,12081092462631794,12086224274961382,12086510410894504,12092967520953700,12099186682204064,12108547568301272,12110756388481412,12117437028771932,12118988334060736,12146468924745520,12147422179657696,12154636502605294,12158360193151552,12159789949843596,12178916806499706,12190590319457116,12194123766538152,12211415115726688,12216068068497544,12226673227058948,12237933656546584,12242808604117988,12248275609666608,12248471481546398,12252410010445680,12254123594043504,12254359995640612,12266932794592494,12268647468486874,12269120906421244,12272568345080744,12278909480371916,12283940318157590,12286630957820208,12303544360626096,12305094885073954,12310100968343096,12315316594597206,12332005249300660,12332364725984204,12334912948133058,12337772378551712,12351788468756014,12355068002221000,12357533856711344,12365136146179658,12369964374887776,12372752902831856,12374133103752844,12379626787675440,12382417417495548,12383445793405510,12385261186745988,12387929976624868,12388566641985120,12395643417184934,12417505821360964,12424415757776352,12444299711271744,12451944629532868,12454411354515750,12459793931007482,12471757627341492,12482874844366692,12483104409106486,12486990476438136,12513074116241798,12516410651391202,12528964093483970,12535404888323848,12535432398195416,12537604251845700,12539504995870710,12550301488195514,12565833975317004,12566256000084036,12568740079611010,12570272701427188,12579510171653288,12584823102482880,12596226915312184,12598773484811172,12608777746838132,12612825756215230,12615003189749792,12617234448891768,12618310790618544,12620211766552468,12624077053858168,12637410101066380,12641721742508356,12673887950234482,12676906656489692,12680605350813842,12681746894145684,12698065696412122,12698770769178288,12703953955943444,12712553034438752,12718984158908308,12734250937665386,12744275941477632,12752051378236810,12759351564510480,12763084732642034,12768818926617948,12780727635621798,12792863038343864,12797923705492548,12804426712798264,12826918737383608,12827398133198312,12831795207421728,12833213360332340,12833595436132096,12833724044304608,12834704229271650,12858248497080468,12858426052892084,12859642635081800,12859868772761576,12862807310068576,12864907273884516,12870776709860206,12871512873709206,12877398363896368,12878760609859460,12879104571873516,12885895283138596,12888957047286212,12891914122856740,12894661519671440,12895419945134500,12908288338765040,12911240234988914,12915064015692434,12925746340266754,12927741315126950,12935817001762636,12942579402028948,12942675272239956,12944827373237492,12946380209599940,12955631117024504,12962034047922668,12967336234328420,12969355271582444,12969850933749260,12971698983067460,12977290947081842,13017466902016444,13019662270486086,13031867966003612,13035534714200668,13043885016985628,13045502556849388,13082156120250908,13099416222945196,13104088068433398,13110902128849452,13114017553377530,13118258284001038,13118624579502662,13126287733553514,13126648857004068,13127018639814928,13127641914670620,13129754096080152,13139573754943426,13142738570741542,13144086370976472,13146044525779508,13151782603211560,13152866329879212,13159186873506926,13159674132483884,13161089032161842,13161895161732996,13163449168487468,13165783524768096,13169699929124692,13176018156331424,13177801313876208,13178326087499118,13192123705845812,13207919082894818,13217495343648912,13218959923076456,13222609941013342,13237245858222486,13241897040466404,13242785676138520,13250813039092824,13252598151461564,13253392674357148,13276909361666696,13278781832607912,13279580273190748,13279927979717984,13284573866529148,13291332534778160,13293114022711152,13307846572424248,13313116484460716,13317363037529310,13319652306361072,13322474822628144,13338909720705380,13349834350740320,13351409970603824,13355620086202578,13357665956179682,13371894245855394,13374397426284292,13378590116897556,13386522813128738,13395484334888192,13411613014888092,13417263420420760,13434243150949852,13442015300066442,13448588230723860,13448715208780374,13452693450000488,13461025763937672,13466509021747436,13485189322885222,13488623691921960,13498321549906482,13501411260913204,13522278655584260,13531234137078012,13554984747295880,13555651175449052,13568552470704828,13574257140904968,13576345055912636,13581376789048028,13582038261109420,13584777064713884,13605010260999268,13608122773582976,13608211139665664,13610383737838208,13614917649307158,13618078733071492,13620267950245716,13636448611894404,13644420273140678,13654276900110480,13667106833907520,13677551572656388,13684271429025192,13685297341355734,13705799643982596,13707666325593200,13713478824250540,13714734230620996,13716879543137952,13718728878151910,13733255171380138,13741507154764744,13742478043841388,13746521524748144,13760371235614210,13761509731105552,13763077457004666,13768070330666298,13770768093408032,13771586624654836,13772395559834488,13773198795242844,13774901441814532,13774922110680128,13777481113917316,13778080297325468,13781995907743592,13782286973657048,13782683406913660,13785420857164502,13796524105316784,13812736944921664,13816014416913582,13826396071719836,13833123664824486,13837797045100306,13842755490619920,13858027805951420,13866647953236610,13869254047147178,13872708044839396,13884113353858700,13892034308509130,13898870224002700,13900228939529286,13925881030825996,13946008735609294,13968226284849022,13969038571761960,13970927105921452,13977797216265436,13978552584468700,13981287129880656,13981536635586336,13986106195623272,13988893087858948,13990414850712084,14009215845999754,14014155130507882,14028776429294844,14030875745981116,14032299964552580,14037325077802032,14043152388382940,14058396853696500,14065732506046054,14072081835758452,14081585246981100,14085911707533720,14088687698899160,14088752117353946,14096755521512120,14102600595382844,14110911759744336,14111911184445052,14120810170870888,14136589313024300,14136858149404714,14138574813987456,14149643949206382,14162706047575172,14166548471016942,14169997119978352,14171681742605446,14172414518168508,14173806395919658,14177444622018864,14181914076332258,14187921443804896,14194792872533604,14199013164240556,14208564031766816,14212094498157476,14215318123464764,14226858020282996,14227151197673984,14233342560110136,14245505826674622,14259534070751188,14260468621825932,14264857146734736,14267736363398098,14275411102861412,14280181431659420,14299280942514286,14300217865972334,14304386201174892,14305638380042772,14314884485414976,14322455272908816,14324858973605778,14326237008908622,14342388949537590,14342713463559476,14344361227758716,14344639517183304,14346553662196314,14347678940701014,14353707410964572,14360185872137532,14366446769998720,14368220273623944,14368778457435576,14371955246669940,14373086846850390,14374913882208076,14376996871385166,14379634497268948,14394294834695274,14394815769121420,14399043227160692,14402211700876216,14418019649131948,14420689162682474,14437666055421568,14438377285606812,14451251001482524,14455310264076216,14460248344113694,14481461019178832,14484858681208984,14485004800203092,14487810384758056,14491089949247658,14493903974525952,14510934169652050,14511753739775812,14515406379214284,14521948815666992,14522449796435706,14527743883164136,14530040796447200,14530264771563724,14540892959051160,14540916417262604,14541188912385840,14544216567067688,14546796114818672,14550428514699190,14556432751053532,14575995011315708,14586069104433076,14587500258455282,14598668433830104,14599556977835960,14605576028028388,14613322543558992,14614412194391120,14615024796720140,14629135390292068,14640110523294600,14646258133189016,14648766866939442,14663412701617686,14668350031553276,14685351710744926,14695331577616376,14701584610672096,14707837442320404,14716261537833730,14722174319794562,14728043701644580,14747627461918094,14763255832125442,14766426770385946,14770933534270682,14775634903955036,14785695109383486,14816239965302840,14816361738373420,14819187317141476,14827009856096304,14828017230112196,14832210451507572,14832607860747140,14832793698162612,14834114801666224,14837004658738564,14842432753497740,14845925667370544,14849045297424236,14851803819250116,14854635570864476,14856644214716072,14863561275514612,14864978618638668,14870697401906788,14875502904533332,14884844892558738,14890899724782050,14896827436587872,14897664727652486,14905212087207028,14912295785582716,14913871826241534,14914719669690240,14919969532993986,14923054253359996,14935747387459252,14941943390991316,14943074829937200,14972455329084356,14973644710375402,14977640868629592,14978109842419292,14989040281355192,14992395956539264,14994345454465280,14996981066688376,15000198776544356,15003966282604648,15005451770887550,15011470759394224,15036361051943010,15053801560168414,15054006645463284,15054775345669968,15093515976330520,15104235660087896,15109547471763358,15114800309173296,15115077606726394,15131416162035728,15151182934206080,15152563608862008,15154015473174740,15157314144559848,15161412062677684,15173628072842370,15174159589646594,15179423543399722,15196096076070926,15206501147861872,15226747633160118,15228371094821316,15240332964235452,15240968327449076,15252595332491888,15257712766871016,15258331077776722,15261062662829082,15264288045435586,15267015180539712,15274623669487652,15276063801060134,15277784321422548,15281659483346766,15281688632667844,15282778970354054,15283383082319048,15284764617207200,15285828335377836,15297031683608322,15306289087876920,15312274403436972,15314547086913680,15317393628480340,15318539625374752,15322045709500546,15322717708622984,15345596512129984,15352323506907112,15356068351467280,15363411439639634,15368882102427186,15369763521589184,15374802843000712,15380414993791764,15383944179124278,15384160688200196,15386257730944048,15391772843609776,15397047023774280,15418047344402380,15419370381005500,15425477516444410,15431268442792806,15441335138509900,15443468740469602,15454471810885094,15469539432041584,15470707127582748,15476555162609012,15497439416378604,15511873919403822,15523218474477720,15523967971833052,15527813389771374,15538778175184688,15541104975512968,15551689795871812,15552679448165444,15556912307814016,15560393512974172,15565684067139472,15570344758308036,15577550284542720,15583031565015548,15583800277870644,15589095928607640,15596526160200924,15601536857203720,15604244191749064,15604292282937898,15607002150661532,15610384462722550,15611069497782032,15615820524654464,15637338360769626,15638006653170360,15638871055187944,15644029820276668,15644633114222750,15653485945488652,15653632456107776,15654398382379660,15666894099602876,15672363355288936,15686428615872368,15687456576553178,15687557012666868,15687730447257608,15707185914141600,15729473966426450,15731950439842668,15766985577505196,15777811916761940,15778347507423158,15788879961967488,15800231386130056,15811135721705600,15816408322841406,15821585480694608,15831622222880902,15851758597836196,15852083879790424,15856720306707412,15863544960826736,15870558953580566,15880225197231508,15881804043732666,15885821733189632,15893761696494090,15898387305928646,15909221128133336,15909787937045412,15911115191227600,15913117630728684,15917444911920924,15919288447894884,15919549273963936,15921732111504088,15927721488814840,15940449251591302,15947341744738716,15948826295948476,15961311415462572,15966177046973512,15971134053246440,15971374147713420,15989123292659200,15989779475967770,15996372747839902,15998583255895160,16005752967233152,16014122573139832,16022542091731388,16028843714143272,16031311598972844,16036478572652540,16049043361660784,16057202351417736,16063805595543516,16066765340355146,16071652709914998,16074795405455008,16092366525402404,16097678964399322,16104092820838992,16107317271550706,16123042268458476,16123549800057856,16126218379420338,16128749857477374,16128988291167846,16130033703888782,16133414755379904,16135674770305420,16140088390029620,16160567128925378,16161016291517620,16161789950876232,16162926598012212,16169374781327252,16175489348725132,16183062663131376,16190784181168182,16199622646992400,16202033036073592,16206069857154536,16210298280615932,16215726719246016,16217394504248796,16218615301471276,16219094187744156,16225151565204066,16229308754035434,16236343286791228,16285310867013012,16289730247643706,16295680495911372,16296936441981860,16307253625625816,16320707984397076,16321481821041796,16321882058862498,16323374038447992,16324549256881600,16326481017900630,16350221544895390,16360006866625512,16360467865290692,16368824736979944,16369335781544304,16374680629739506,16380188917825052,16399984256980368,16415839425466042,16416074263834592,16426763806445356,16428321295930764,16440725262660036,16462408501564916,16468261024853760,16476307122011848,16476937942856636,16480777214175422,16482509001735176,16502365228637084,16502457629719022,16504298307128202,16510761010234680,16513459485148560,16519463241354536,16521843914002104,16546281951509068,16548474354611948,16550929054876508,16560403504774038,16578357491467912,16582707435282670,16586756741358064,16605127649138370,16609876185135556,16611927608147288,16624798445185090,16630094605895900,16639907778581852,16651489141329772,16651596652497160,16659368366393960,16668576737460694,16680246557324360,16688951860856488,16691272898046160,16692018211882722,16692275849107994,16695498859117718,16704764623572988,16705693318052932,16712774021054616,16713686220219200,16722219342722472,16726818994521960,16743982992147690,16749374505649168,16761658775814704,16774327613331618,16781125826436964,16782605111751524,16785606440059276,16798980056251868,16803390248179828,16813828341802752,16813850917105408,16817861038282400,16821032705392158,16825325783885160,16826179150281964,16830347247326578,16845046417908760,16845773708660822,16854875957575522,16864143845448316,16870157007457524,16873108011506628,16878169741916572,16879047682262790,16885778825562788,16888570679626628,16908939470925944,16911010122455380,16916100613833016,16919119825941240,16926732919418304,16930665040251324,16930951994319216,16940737914423228,16945109307932848,16955735945189198,16960083040427820,16984436010232172,16990421364703918,17006165896966824,17008020442543408,17009339848508728,17011107101691432,17014176537119416,17016523449240496,17023632496194928,17027771531203420,17039559001100860,17042510871936170,17052851194940724,17053822264677792,17063927348275876,17066677715572492,17075114396193756,17084158261394982,17087416091202780,17088251484038012,17089559918797656,17102077878457780,17102294072885080,17112840774101512,17115181382693940,17115280802524392,17119189611876650,17121951870541832,17122583391656580,17124199104954880,17130775523609712,17137905730506680,17146776030813470,17152683184050608,17153723876213366,17175561515108732,17179273333443650,17184863073699290,17202186074046668,17205047577407400,17207698871633944,17210696732657762,17231708451701898,17237970364679708,17242883932378216,17244476928416348,17272620079525716,17275160291405410,17279586325867364,17321802519457212,17334953325578494,17337671504899420,17339399287814080,17340945591227432,17347117194341400,17350211852889736,17351431427340230,17364246039011648,17366744707791010,17369312479904414,17372106843994970,17373703901221018,17376729405967072,17400008382535724,17426365140630494,17427125566196124,17431714286366628,17436882878126884,17443114926942462,17452707649327012,17461965101976864,17489573374743044,17524144630919988,17527873337952368,17535005818873556,17551287895642532,17553185904967104,17553860014526860,17554245071279310,17554778564009552,17567748717274948,17571981253665704,17587122731377504,17587702086143938,17588064452355464,17597794777777160,17603791467492804,17605072602226292,17605441911663412,17615785190882820,17624674238052204,17649428853641722,17654073046188396,17669245495565522,17684589388563728,17686965224338728,17689654701449712,17693140045546672,17693603448823928,17693815098039752,17697540333748932,17697658785057482,17700754608025092,17701382392032922,17702070591816308,17706136234415534,17707031178109104,17709607573658808,17712906839385830,17724387050674690,17729252668219030,17738660980248092,17744242020867816,17761836800996728,17764735509350900,17765540369988900,17772060730520554,17772638261487924,17785570908371758,17789346360240648,17793637185676886,17797748143462680,17797840215707544,17797918171623826,17798089632541708,17801667902725032,17803379158338004,17804699182902336,17817397112872300,17821803635772306,17822541729890772,17826593867928084,17828981498493208,17837124573295566,17837530706021764,17844858315492044,17844874351832368,17847570591090636,17853245019860212,17859738620606332,17869282949692454,17870128982402648,17870747365449692,17871600144530386,17874235602945728,17898794551703292,17906003324655704,17906253828146726,17919102916446972,17919671321358722,17924803660595224,17927011640330704,17927373007523604,17932587168360496,17935236422466236,17935582999313064,17961074324958060,17968352963412912,17969657580883608,17979964568021980,17982511307210574,17983556899409000,17987500899095194,17988320727025256,17990339965543916,17991119212376588,17992751117564356,18007528942878340,18021268029728876,18021273823362740,18022461072879376,18024689762143324,18028549590719876,18034681310366456,18044378566089340,18051623757584536,18072830341483452,18076230334426490,18087301473035040,18095367761915990,18098213983017924,18104934733045004,18108042480033356,18112174856644496,18112653159983268,18112865716541530,18132943072908110,18135196196653290,18150688968788560,18154077525619764,18157322369810810,18162760734097750,18170685124352784,18174883261383092,18177553881696560,18184571232215856,18187618290929950,18195644515815612,18214845280442530,18223317215142880,18233425835503680,18250133401172960,18261093651485024,18270290157715410,18271671093373424,18275757050957880,18284313369105504,18286971626301480,18307697090221504,18309542005828256,18311790293173988,18322198132800800,18322956993741544,18335853846627868,18349709103395704,18363178275892644,18369334588997504,18370293394562210,18377328825351776,18378613283970370,18387350286994700,18388027589940850,18388159691544976,18398402319592176,18405464536553600,18406535809287064,18430490777386680,18437212643447644,18444120304209900],\\"md5sum\\":\\"02663165b6ad8e4652691998c4f53356\\",\\"molecule\\":\\"dna\\"}],\\"version\\":0.4}"}',
+    //     method: 'POST',
+    //     mode: 'cors',
+    //     credentials: 'omit',
+    //   });
+    //
+    //   fetch('http://branchwater-dev.mgnify.org/', {
+    //     headers: {
+    //       accept: '*/*',
+    //       'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
+    //       'content-type': 'application/json',
+    //     },
+    //     referrer: 'http://branchwater-dev.mgnify.org/',
+    //     body: '{"signatures":"{\\"class\\":\\"sourmash_signature\\",\\"email\\":\\"\\",\\"hash_function\\":\\"0.murmur64\\",\\"filename\\":null,\\"license\\":\\"CC0\\",\\"signatures\\":[{\\"num\\":0,\\"ksize\\":21,\\"seed\\":42,\\"max_hash\\":18446744073709552,\\"mins\\":[267064886367,3526049174663,14698202488132,18979342333991,26441617103395,29931851894601,55226171007027,66223633499839,68198932927057,73446745180146,76760199720018,87351744075658,92381009468454,96040725364984,104245656357880,113354424305968,114739254510110,120926193723568,128632580056712,133658744658333,135107599038743,140236484995126,140326843601333,140599996672120,164415240368684,174062846286520,178650592886278,182305338098856,190696611670826,193054816875171,213453184445088,214345601801520,215467081740676,215735607146226,216052391620991,216773246304999,224093154624104,226442985025841,229982762815106,234460685033626,234982480980552,239345083769113,250383671257756,268347584868540,276463075359399,280285185952267,295709193003025,299579829860472,299840523479111,307795644912445,324489721336255,329161145748018,330356969399392,336498086454687,344896703078344,352148174967533,354987384578039,356914261735524,358841279051024,369323287198373,370047269304726,386828948648086,388895299939107,391832395969551,392639366937769,404868303707773,410045401737069,416805952881278,418332648060571,430086351826101,431032701080933,456857353611775,474407546401205,476859962339887,477701442112305,480909555983548,486413881755407,486721633334678,489290779990063,502317734605757,533490532956229,537676239749733,549877516157520,551939796637088,577254433972813,578787310150540,584021623180238,586497784939743,587419871952306,591870377654107,596102558446425,597561099426683,612661753165636,622300814867836,626966836736722,634217517551340,647198610417803,669156655175948,669268385482703,670844179772299,672289982164668,707893928624504,717005074155920,727803717327188,739346769033355,766289446022970,772392687917574,780475661358854,781011969658406,784910078400946,811579941807401,846877377418865,849432358381544,854608873501061,858690799154232,869346113743601,875740398345981,887616612751798,888385413914448,888885190564182,899799083770730,902194861180164,921537821796267,925698258760702,934780547703787,937705184930551,939917551883065,947639656688609,948179498600868,968374317904532,969721474421000,980277299290197,984311515647359,992273639250755,1002510059474135,1005790803514044,1012363861945488,1015341910690048,1020820955978484,1036145854364488,1048486366857395,1051202336682768,1052129436934063,1057415724793068,1067159677401970,1074005782722514,1076833496380801,1082681357432601,1093716291120237,1100649854572916,1108439040708639,1135175417406215,1146631513244330,1151990943697954,1155958419139791,1160329461096577,1169693230679998,1180758770424284,1191551080645766,1194667761059336,1221115481847837,1223269574126728,1234657094002156,1248087952392353,1250116579851353,1252762600135050,1253156077772665,1254292063954749,1254576296533344,1255808036705421,1264074061577165,1265388797241175,1279174214876471,1283380420681567,1283845087352122,1285844982672412,1286363432008624,1293163907968485,1299003220863586,1300404705422773,1301873212379499,1306210711553419,1308070080370681,1311897625372863,1313231522424684,1317140330322591,1320043004962495,1327332342044626,1338613524112492,1346106478147433,1366303107529498,1370122708185299,1395761442681520,1407385523360552,1408654028440905,1410733402545786,1416978360318489,1419110223907021,1434350498649722,1445800229108922,1446123374254096,1449035669424569,1450980759211039,1451741808129487,1457672472098530,1458296969626973,1464484476160793,1472524219143421,1488216981001738,1492134865761375,1495661769632420,1498436727525889,1508627318765170,1509390664420136,1510133776884695,1515842440715122,1528544678699838,1532355792533585,1533447126107157,1535772839730913,1543011230492960,1545641458117558,1548921826970380,1556389369107614,1578569679215493,1581491022887527,1582457083222772,1585184196323829,1590710614379174,1592020976655603,1602916851364538,1604808250762620,1642280065248902,1652498347269931,1657341686014049,1659916998472126,1663331134249663,1671665765684748,1674574350103795,1676267131136249,1676685863389081,1687235410604688,1687945507248649,1694040706943274,1694694875829417,1695168745857972,1700068155872182,1702293578693930,1707630922460318,1721066596398273,1743528709146808,1750368307424620,1761206567067761,1767774365106759,1770610443135233,1778806854590991,1787105820974140,1788238749641841,1807763168078428,1815953729923222,1818157714672536,1824521719537837,1827264771082337,1828114656711212,1833589446048946,1834170723478799,1846949649390288,1849901889966354,1863607997505959,1865674585467903,1873819647242546,1884283725717740,1887418871455954,1894068804022196,1912465375685721,1912466160879932,1914317573753524,1916176124700416,1920095429700962,1922270673983553,1922752696179713,1923568532831726,1924166994563509,1933520810881204,1934707332448400,1937030310773309,1937372571185370,1943791067726654,1962491182966798,1964418546696422,1970261610630978,1971247297871591,1974593790281033,1979504848153441,1981518404834799,1983124351990030,1994536994392896,1999582980851725,2003841213541533,2027989341718273,2030020448680460,2037508046045994,2041091748910105,2042518981203701,2056835703140472,2057708617604806,2065025497989521,2065111981501954,2082456219842021,2084505256027945,2091224721775853,2093440831989190,2095162244340554,2097288135746865,2097511029246243,2124444637120179,2126287413813510,2134156079297264,2137014418537922,2138914214520507,2141612911259137,2146322277826795,2161043491535100,2164001573489247,2173527538114261,2175947119118852,2181530043931413,2185722403595505,2198466957483670,2202901221122557,2203846409586494,2209660108844259,2219786077567498,2231981019008184,2236540268637219,2244541792060751,2250256207195750,2255834516951722,2265784479127505,2268000615800849,2268201177676242,2272840700962749,2282699451188161,2285640992755932,2288475291650265,2305962281887004,2307969621031948,2312648226991831,2319676572527025,2320048931994264,2323405553982348,2330404190745474,2336795954192656,2339053772277061,2346493217369674,2363528137313254,2366360076498574,2382734371183567,2383121618510772,2401083166601327,2413996594850046,2414274497215419,2420003225884510,2420058412529684,2420266657232690,2433200317140524,2446805847416301,2459598506674202,2470930332951717,2473679755510658,2474499206897219,2475807732245246,2480549054819357,2482880667300030,2488061102248183,2488813099642621,2498037814946715,2500827252949352,2501080859039531,2501433024548796,2502027203300471,2502219327948440,2506059622680648,2526618768230354,2528590701581558,2529740397144349,2549984841629259,2576346117534691,2576499464520163,2593199962370221,2595198895126232,2599939842751958,2601405139154926,2601823682545556,2607443535241702,2614547556068324,2616663883073063,2639713826555877,2647478442650819,2652371461746186,2663519666943219,2668386388046472,2669503626322372,2670689483993631,2676633212962334,2679699418415014,2687149726327486,2693939907682573,2710373764453414,2716684144489198,2719592469357668,2728681659289191,2739081045880871,2748896312712278,2758454934378853,2759206355866389,2759695429553713,2799563373538204,2804374355189689,2816467972621588,2818062100530451,2819885787714193,2825526492165324,2831456855803681,2833070915495798,2833083040283916,2846238243530298,2852334977505361,2868063233946848,2869888467784130,2880070556412910,2882762812095122,2888183081858965,2893101035990595,2898325498912414,2918140621397405,2918984835322306,2923182250597524,2926668879977343,2931926017261486,2933020991787921,2936854708698003,2937464305582919,2938999535644710,2944899127633006,2947725947606558,2948776025829065,2949031878449293,2951399189093387,2954129650357045,2958189144629349,2974568816004005,2977452473452687,2982247392525490,2983710550099669,2992901824450011,2999363259086997,3002704294888026,3008295143289619,3009577794897103,3026645342880391,3031239911738169,3032277788323894,3037494845917096,3043713023450329,3045252428590382,3051371559746640,3052500578371080,3053056639855751,3057766263340316,3058221633927706,3072217387916134,3083008239440936,3106379650932855,3108916204898356,3126455378430410,3131750386832130,3132988905379301,3133172165912090,3141168584826277,3147766372228346,3151796866972788,3157271154696629,3163085533176975,3177283094816809,3180682087662637,3183208733339466,3193545310940151,3194630458001683,3201267961809908,3204929598556954,3209531611737899,3213132668840416,3213600656207249,3214446772151153,3220293822351954,3237005180925459,3240208099268721,3248267897050351,3250645988743544,3253502642859175,3254086427472803,3254092061826777,3257541366445529,3267680899214393,3270121211085811,3270718215452584,3279134333294196,3287970351369814,3290529721790846,3295936035482266,3296198422538689,3299341934464685,3310112633264023,3312368685426971,3326986948437752,3328913576639728,3353673677620380,3360577526632826,3371102049116378,3373578642464476,3384614903622610,3386805708222141,3389736738075866,3391402658050805,3398976157829739,3402937800242493,3403763270646568,3406358242820605,3417289433016936,3426753469596254,3433465871616215,3433902271878345,3438555857928776,3449355699645270,3457789919574478,3462136626674409,3468407927157555,3476667141035581,3478530725349883,3478699028209104,3490756740380303,3494187972702569,3495694902799940,3498616907277256,3498787606114368,3517319139178029,3538608837474250,3557564528246086,3563613759190665,3566398436181619,3574829816388511,3596411062635476,3597018570818903,3607655100373865,3618787974156176,3619417178036911,3624379472493028,3632539249089335,3638941546774320,3640927609335867,3644400095689396,3645392085943434,3659312466735626,3661912271982019,3662630533573563,3668973227072652,3677243420992255,3679847726113380,3686165386585104,3693215878841529,3693624670218918,3704764705716806,3717063240722086,3727501332381656,3742609587828525,3748893166732057,3754801335523985,3769393752408543,3772653553495502,3776523285625201,3802019032902231,3807999950354017,3810158831284864,3811813134144954,3812370089268486,3825456561931038,3831485785203407,3858322254257473,3861467228760591,3864147737417697,3864484722024362,3866856550846417,3879958739888545,3880580897483067,3882890637539975,3904549752434102,3907236281711014,3921481333413125,3924084971618883,3928679372798200,3929754696374003,3936413410558090,3945255940386270,3946201796653649,3952691917730397,3952748641989915,3956028819169833,3963732476042037,3983950497976106,3987659616126931,4002187303158622,4008140001118822,4012818934722692,4013593922468360,4020425233130391,4021278804280018,4022647531217153,4024064906464073,4025502325024029,4035578631949070,4037372425679736,4038601795348842,4039513673978303,4045201058313088,4046426374799629,4047405653133189,4057209301943808,4071411242197610,4072542204269127,4080649723193475,4091474945565496,4099673686960908,4110999051881704,4118602388373548,4137220979716262,4144541793511897,4149163133025981,4153695404960313,4162376246972408,4166112703713203,4172294199088439,4186615225375177,4190821614715378,4190984945571976,4202960854405576,4205699013953265,4206332975727505,4211270801655851,4231309189764340,4235397071566767,4237510507900110,4249142089754997,4256593530203872,4259108143475325,4260092057567957,4276663935068868,4279638621071260,4280296491281264,4303085383223117,4333184551985500,4337301662689845,4338288217676283,4340108376749011,4342629174213245,4344556318080961,4349103774432983,4361228364544883,4365654241387939,4366558619466765,4381523324521721,4390887829892518,4404210114413540,4407041600712456,4418248948054473,4418513347489131,4424482813500401,4425737024248200,4436380603857654,4436511445323371,4449340512396286,4462916627692525,4467091671692276,4477603950417778,4490454148211543,4502285738561354,4507468819439850,4510580242073816,4510736507616481,4514212877334669,4514436659935434,4516212907468754,4523818387298190,4531199754266565,4550901248760281,4568833277900055,4581006409997894,4590727390279467,4595685468156697,4597366620077554,4601515028000382,4608827314875359,4615159709608276,4617769020594466,4619936707280105,4621084367678791,4625905441728335,4626673788719941,4631726335298217,4633800641616713,4640199081165701,4654295246562356,4657872781368640,4661132478210282,4666457671209619,4669787776228409,4671369723057941,4674492980496685,4683849932781943,4692347119547742,4692951508928745,4692959214054142,4702682151436158,4703466937951498,4705426698181321,4714061354603004,4723560178309079,4737321221669091,4749425292583261,4752214846306539,4761194281522373,4761470113782646,4765089272687219,4769312053521729,4792325262854365,4798350455886058,4805362420184327,4825852625235333,4828101639909320,4842730202646123,4846654818914159,4861255450128282,4862230190698341,4878795099471005,4889293052025290,4900191161452110,4902942691232941,4904212906129086,4911731082077561,4913994909518289,4923395428979594,4934141608092679,4944732072871726,4945022710755681,4959030714333307,4959766600998247,4969818884678936,4978704885132633,4983704263307655,4986026413208966,4990503003817045,4993300349906282,5011157250938179,5020077032504354,5028745670443408,5029867280086418,5038512681068165,5055106612714871,5059387701857142,5061654350944522,5075589471419906,5080038748774034,5082381997856310,5085018327697967,5091180097246920,5102320787798689,5102851766146146,5105454117957181,5110014014354840,5112009772226118,5119542640386574,5122628788952333,5122839136608687,5123376903333207,5127039949771510,5138134756618099,5143563435578262,5144170204572273,5162037435367968,5177897366766501,5183377329673879,5184717353874771,5196146858782851,5197041272796857,5203661339006180,5206824190112827,5208344302442887,5208638560250779,5212366765271947,5214534321040774,5217661474855495,5221919934204818,5222634914712298,5223560967399641,5223568100405626,5226611559461133,5255230183981999,5256974899765282,5272785813246600,5289223566757218,5296712497088786,5296845877800441,5305310758668808,5311958039344400,5315801773970134,5322404778174876,5324646989961620,5335834765797024,5354141207566164,5364677138004421,5371841304235309,5377434077404951,5379156214164199,5389230994956193,5395996909697039,5412172336891113,5413297219534179,5422591988452753,5429531051525252,5439565374252101,5442414563536312,5453152853825196,5455459785659026,5456487451695990,5464231100438893,5480265213376655,5486603626329590,5486814802589751,5488186634173268,5506663972918662,5518215850539325,5518337833494097,5524088215501093,5537300855775392,5543364555231473,5545868140022188,5555018994141580,5557692138562193,5563977190130887,5564260586628788,5571213747504294,5585474351692525,5585771672008036,5593035803857736,5593713310878797,5598083111823847,5600398048423669,5611074728349593,5617867371754211,5618654706467085,5632477040223919,5633771580668259,5635829018277506,5639823522204467,5639855573031355,5649534586488405,5657788060664521,5659457162667379,5661220580632696,5668280842253147,5670973529192401,5674648265122245,5690555518222528,5692543324869324,5695118238998218,5695141772676356,5699872021694284,5700634963518601,5706514564144136,5709554286174395,5710622200962365,5727039764736806,5747681950192040,5755028503647625,5756952238221630,5758862516308976,5759532864060921,5762723095642832,5764533802710622,5777026690683120,5784464144977929,5785395340049078,5787489181326531,5790350051615400,5810573586359017,5812934075061339,5817108820100969,5824513782156545,5833848390869138,5835250513750367,5836037301522863,5838822288463445,5839555786533904,5849520875532366,5863665639718032,5890228162985314,5902086786425057,5914268685663831,5917035161766047,5919914194680583,5919978290429356,5922171478250971,5923532984173803,5931514387968018,5932717838556206,5938263688671848,5939567076490661,5985590305139853,5996624466936668,5997554707861125,6003432068956444,6005763994610719,6008942735093207,6009147543968630,6010393548611231,6026335198431591,6050285636914237,6052473791698575,6053607804995478,6059410131699164,6067824060203388,6073349599643298,6077605129575089,6079326672888748,6082399118469833,6086722089865182,6090795252568112,6091184568956996,6092719062875593,6101351466537255,6101822997363446,6110084735418138,6123230958045937,6128890325612532,6136262681879883,6139340310151074,6140858346616001,6144717453761105,6170065107672589,6176325467833490,6178301843995665,6181447461797678,6185218147463590,6186544278838797,6192469923668530,6204855599363100,6205927122375216,6207384571189194,6210882515872852,6211266240619008,6213801740203050,6228082270024634,6231555672527648,6242708022497941,6243290840604368,6244720770065791,6245527106875065,6251641796572287,6257544227395042,6260911207834703,6264116531168898,6265838302257305,6287442935757881,6288129940646199,6289818505174533,6309707931250758,6317423979743826,6344537581067420,6350295400939335,6351198697102667,6364968914035678,6373341544418571,6373423435431429,6383953772474654,6395987107829355,6396157750572723,6396458954115365,6401919077976123,6408442695600842,6408811519514711,6414452276268395,6423114039324897,6427943667756564,6430377589692067,6431101091995729,6462768335868739,6468986865498271,6469440250267137,6470373011304820,6474355318121907,6474491520876828,6475559448178704,6478919478460574,6484376654950725,6496189102350047,6496712703023801,6500708193703815,6501942161756420,6509914935983600,6511543899994729,6513288901852289,6530067353706573,6530451401928742,6549037699170999,6550730451127253,6557522288962216,6557531202407186,6558322017194459,6571739126548434,6580505712397031,6598397185045178,6602603095883795,6608255644723386,6619876698183376,6620338214000190,6623542241265475,6628855109748647,6633877360707926,6639185249103234,6639724474934102,6645055446305257,6645814647770869,6671129961062636,6676551782384336,6681587233391029,6683615112503595,6687737379098633,6690345385027479,6694139242926254,6697423490073328,6719140703662352,6719292320747056,6725508735680454,6726108117261792,6727192910648138,6763499695774054,6767161552105367,6769024573293439,6770134771159605,6776733414553396,6777367120385088,6780525677364482,6783645023947197,6783860697519994,6784939106959851,6792934804356922,6794677946703249,6798217515116278,6800717849550264,6814891039709077,6816249268069989,6823924295969746,6825210771381950,6838684558492067,6839450572119253,6844833275627045,6852308899340451,6853108878434452,6857260900437568,6858844304549889,6861154784621069,6862582675235315,6866010386504180,6868383581250948,6880466738755650,6880620875700479,6883312268076995,6887644027891131,6890092666962112,6893963958285107,6896891465630989,6899474512330212,6903966259508083,6906774581654601,6917518402346537,6920228776111240,6927759147158845,6929222454215738,6932237438942071,6938611858734010,6940983939150773,6955492033976711,6957355915155415,6957409812904860,6958158092057155,6964953182979839,6971845506322922,6973849894533127,6975775253948514,6980673968780541,6982461381827807,6984518527379424,6994672575016773,7005997300005087,7009467044395519,7009956396850660,7017041897785883,7031235064890701,7036699697496580,7045972126708334,7047626986296692,7049463893747111,7054333966820335,7063121244533437,7065282359958197,7074001543863372,7077600629380765,7095918378689563,7113753243497361,7113880267836788,7118051816506356,7120233391889756,7126788262904843,7128977445324019,7134668009262494,7136298404921629,7144191852160422,7151963843997602,7153119447578149,7163098216978529,7165734687064184,7166692002238855,7178913667136664,7187143119811785,7190867850927375,7192771575578674,7198828598035712,7216737595830537,7217363072607251,7233402332827927,7236471534378568,7241108228249588,7249867367364749,7250057595933971,7281464985518526,7287638720175409,7289081361216595,7298635105533509,7299764448781635,7308839821538208,7310710940411174,7315055306082672,7320616593184400,7331638917055154,7333274649071511,7341754340657633,7343665683230088,7345511493873568,7348237079969536,7348273141050123,7356699463495525,7362693912018987,7367749483684913,7368579113931270,7379360775002348,7379887997577518,7381552929344958,7383564155775652,7393142399508005,7397703662314130,7405329540193659,7406630599603251,7407577789542880,7410300486575663,7410813221906389,7422188421434099,7422823482085116,7423898164810365,7435754612356738,7439085578172008,7439852037642003,7442381224323320,7448565519403222,7450516087279320,7450897719621050,7454522226838672,7457966268358511,7459370669412569,7483652515393214,7490503104891027,7494712525530999,7499501635125617,7504976904287673,7508009705563826,7512241776025769,7517968324545975,7518976977726817,7545322034401558,7546576096710795,7549957087035319,7551402205120807,7554095269160757,7560950424675240,7561780238279712,7574328018084455,7574957565363519,7585716917258740,7586764823559384,7588632718341726,7595441651681795,7607848228556618,7612580276135361,7623351894355044,7624577706129285,7628079857326312,7632355216557742,7636606778752404,7644254514531142,7647638535465987,7652590187036693,7658032607512798,7672331734643023,7672562686401228,7678016918758128,7678719017119351,7681155551129534,7684345564858927,7687996113123983,7691560136976489,7708831171704847,7710624349269203,7714203378007913,7725859011517137,7729445148851574,7737149790700340,7751784018915517,7752425172140200,7754672210289021,7756157419056283,7760734855155386,7761665626170291,7787055069948556,7787346124969131,7789162808785785,7796488882750278,7796708619943630,7805808897469892,7810100749944299,7811584684757759,7813119186127417,7813544421596950,7819467221224253,7822774433222336,7826406653048946,7827485301764935,7830789141901716,7831614154253229,7852561193992782,7857111996581293,7860564614543871,7870447250844082,7875660262925973,7884036337351714,7885098665494058,7892380978111107,7901578908584988,7912348119358888,7918788583570209,7929020368484326,7937024034933850,7943899889767188,7960694476798166,7979836733744154,7985777454213842,7989758322330771,7998588882906672,7999512248011133,8004503493277828,8008779693197166,8011893168850692,8018902586023486,8019782506113949,8028252920813391,8035134738017902,8036109382779130,8037341629450963,8044844062485753,8049740554508439,8049910782186159,8051950343026490,8063527126789525,8075302218828164,8087787591165253,8092140059129261,8093828954066598,8099983908513605,8101409556353704,8114821258354910,8128642722032908,8139338903159695,8146511381064095,8146724107492648,8152629373589136,8152890848387502,8157625518719183,8158932493681951,8160387191155832,8162093313044490,8163360139644577,8163886946021420,8166597184307370,8169828773775725,8176071088785633,8181171831754439,8181932831749736,8187837613040495,8191520415628083,8217108502173474,8218287492912770,8230821357795499,8243146034811315,8255358033263126,8266349981495069,8267304758660847,8268266587854532,8272373122028813,8275071316315435,8276131100753693,8283190457605341,8290533273947821,8315059040750762,8317411749488520,8318740232468854,8320974477582524,8321166551225075,8347102684135350,8349925332458792,8350061097610417,8351789552302364,8353785196103482,8358965206435953,8362289111784936,8378406131349582,8380583589350278,8414767800209456,8428388765780719,8435300597475812,8448839938006051,8450580158644414,8462413441173890,8474318085007237,8491615703163644,8498961113892709,8509927962456322,8524124024515991,8526821409446047,8536567733398656,8538049359859780,8542514498280165,8545507529639024,8546918063994669,8549151625710130,8550979301286806,8554862355971444,8559499433422855,8566486093314379,8570535277299096,8576898435810708,8579088829606687,8590218724482812,8599864442317608,8600601956871339,8604871792319389,8606558168173457,8610036470680783,8610619796951074,8611991418689669,8612659640075668,8614680102294072,8614829450398820,8619946193362826,8620058734434085,8636264547803618,8636859569781603,8640216564377796,8644407611670377,8647335038209880,8656489438589106,8659839107227701,8684772328025067,8686901317251013,8690872067954709,8697522208362332,8697690334984817,8702100234137519,8710425726240176,8715973316183997,8719682292116184,8722426916946003,8722471963763387,8732462556449853,8740373294564512,8742853165408225,8744416818270991,8747900587432574,8748766142197568,8760849775111413,8764934810724258,8777692348599761,8780418430091418,8784855962570429,8790921050746125,8797209079200634,8799125419277526,8817871203006015,8821939571877026,8826742651392566,8827462234698241,8836750356893564,8838454968523848,8838693457616593,8840935320555623,8857658730895130,8865420275174268,8867253827428258,8867409445456483,8870822228839044,8879328453828094,8881748516684847,8889188654708297,8890429397587916,8891226055027839,8903648335081528,8907277521965682,8915624647595587,8924988771626683,8928994634680699,8945564282181590,8954597313994678,8956830135875359,8959704699271040,8969881540835998,8976048630771784,8977084690925313,9002162249939257,9007218279701052,9014006794723629,9027097351004411,9032050078180736,9041112332107681,9044227069726297,9052909486020534,9061466131556829,9061885952176360,9069821385897917,9071212439410526,9092028672356414,9095215163358580,9095275311216441,9113487407909842,9133728802889948,9134692014099767,9136114602810877,9138929571984081,9139455077771634,9156052289895947,9158856450609838,9160455129580468,9163878977561596,9172654266462396,9174133864574580,9180479646083196,9195826342470937,9196747073633995,9200594490609081,9208654133417858,9215289538415899,9225340076872347,9225403435261250,9227764116397055,9234382264537926,9238184998296963,9238730315757599,9238894159275653,9239140595443895,9242493593271354,9249521914439050,9250441155999075,9251077186173893,9251458247774639,9254280981275698,9262675693581652,9264696747038457,9267867224753836,9283905991177988,9286392397032439,9293944425331300,9294143859600586,9297442120669668,9302011178059365,9303589412869061,9307200548102471,9307714902456096,9315393495614920,9322161413843728,9326861000176024,9334770233614340,9356991669898501,9364107184474711,9370788101281036,9390710227334608,9395751616230051,9396033944654210,9396168442667249,9399559307543144,9400683641953935,9406015856833313,9420737327411371,9430672408138398,9438998346296662,9440995247278303,9447044667166380,9458279523330579,9459632239034317,9465983508257198,9467768614331533,9468291636390503,9472733773931366,9480715846815492,9483402211460973,9496328214496117,9497643082894291,9497945657240443,9510039362021581,9526962427512485,9535085202224911,9548519651215080,9555119559546465,9559220064143719,9569909832550442,9572321510271779,9576087325730576,9577103066245492,9579008503626261,9581720677878396,9582735652546623,9589501329485139,9597239152103167,9601357143681850,9607558399827629,9617906311214231,9624704656634184,9629445135601592,9633737256594237,9637976764545582,9646135515176467,9661227741259383,9665070579797686,9685836830100557,9688496147128488,9698207854579498,9708137105085936,9718231283178671,9728277989246440,9730088856589725,9733083680529678,9761804762652315,9762972125589523,9765406177350911,9768026716723595,9780870889500014,9800153905997293,9801206720386041,9809590330810337,9813494240390490,9816347684218574,9829376652500456,9839720718611149,9849883211611171,9860626678543767,9866291865782153,9872443335022693,9884010865567480,9888397571237094,9892294368900837,9915870874121898,9918349094975377,9921836036554824,9925299584026090,9927629714822635,9928723047303897,9929210737499788,9937716884138436,9953274733871410,9956110834562097,9958260412909413,9958526370105353,9961230710212519,9965797955577244,9969427138195076,9969712004759159,9976429818744950,9977116225982896,9978259730657754,9979503158143609,9980228867327898,9984764170887144,9998214371651969,10005995627936403,10006300747626122,10016355828595793,10018670103613218,10020789297538777,10020998337712936,10028385723111258,10057990606348413,10058293341463358,10066597217478345,10075792206607247,10080418058981304,10081797977153896,10091986419075284,10097720409740216,10099265031619720,10120791665756073,10124857654046744,10126534301872219,10127022492301708,10138246721297275,10151143241879545,10151369017332796,10154885378407016,10163256706883610,10163538628369686,10164859408844707,10175662500909733,10198825326804322,10202212646420698,10209298293056083,10210149386984458,10228212900125169,10229882420652243,10231234628772701,10231732654669262,10261329017112687,10263002941732796,10272253212474829,10274875519634515,10274915168494518,10282022063390053,10285894712837147,10290792106118903,10296274748633906,10298286637654759,10307768010606049,10308891095985038,10311620746835383,10314363153978115,10320800978185150,10322775962399093,10324143250714170,10325173420245960,10325818907457553,10344284936559794,10349881421374535,10353398560979555,10361638275171561,10362080429246452,10377959670046979,10388528874808876,10396776524025790,10402229625733290,10414411326405836,10419252320013692,10419792433247176,10422067623377635,10424870673434245,10433085049874441,10437590841119851,10446422428977742,10451193462699462,10460862206958678,10466595974550647,10466814596953364,10468556514719403,10468653025426045,10470095489333896,10471366784310573,10475108414650027,10478169958812080,10486797669577622,10501547037522401,10513495767469275,10516676338108847,10519480945896388,10519680915451750,10523694510485719,10531441549974176,10531937392814169,10538731059568420,10583736536899199,10589858669169203,10592197984735741,10594282232621406,10595898556909659,10601025835509913,10655396295642340,10658356843488300,10658609794119437,10658619216673790,10660429736536100,10671080336464035,10678993728260087,10685774849812469,10688437123264692,10695083121226097,10707012299648639,10711153833297184,10713487642186333,10716657928827750,10719578999985878,10720355626351546,10721420922180361,10727235402759472,10740570134247868,10748266867882030,10748976371611371,10755437565666731,10755885637117595,10756281433354137,10765873656865306,10770565199694331,10773543073275807,10786689517096026,10793244144786222,10799547516806338,10802354215776687,10809258543108081,10814209041550522,10823538262600433,10824893537214786,10842444596466871,10844193313004952,10856238950714297,10858330351486277,10865969413614925,10874259805568272,10878225251262378,10888644990303587,10907131997298273,10922664037313170,10925164681722506,10928697370450756,10933220188455391,10934027956172097,10938372393510713,10943851682216922,10944564531895152,10951522212420944,10956511831945812,10984796238065035,10985377296269936,10987004835339953,10989837597008947,11011222470419527,11013609193297476,11028031048251563,11040715671685697,11048466341895047,11054763352934838,11058532998844178,11060167583298299,11065652818412914,11068402244795362,11070352154682922,11072659755461329,11078029962984538,11080493484395614,11090866374869508,11095051859068651,11096812079942756,11102067171877159,11102999749150048,11106512226853800,11108559706856783,11112008116027564,11112482120162419,11115036669332236,11118567428469333,11134520887420712,11137899996337169,11139404275594390,11145364870549915,11147365915573233,11150914006031887,11152227499932627,11157373962647329,11163505061996579,11166335791635670,11175870473102767,11179017295961603,11187421074062384,11192383827887451,11225863132774232,11229005625073563,11249738172467037,11265971379200947,11280623037280463,11281452327780618,11285264566300132,11290354116478951,11296415636645464,11305946547309124,11308272527263558,11308332760233219,11315168384918649,11316719437136638,11323005093643747,11326859646301978,11328194975352583,11329509121572195,11331267399162221,11347632256438508,11380015465264513,11381330972779864,11383100924523792,11389643178059871,11399312596448001,11402878707358893,11404892922524846,11411739946785228,11418967780886320,11424758669434990,11431789496987422,11448097427436342,11454708992551943,11458750221557597,11459504189062725,11466541077521058,11468751042170202,11472388947958730,11476859725967150,11477852166729229,11481138028503275,11500114813330144,11503056726808300,11519342289922652,11519808810870295,11525165038639331,11528008663600699,11532361019206776,11543340805312651,11553683755079759,11554792095119524,11555746147664431,11566315979454600,11575858570029616,11578624095616773,11582650659281559,11586729853195225,11601481286147763,11601899898036676,11602256837341702,11603150227471942,11608094718311913,11615729309991835,11619689578950758,11624293182857922,11624544993280106,11635006358151983,11645593022152542,11651482483543397,11662534346827158,11664105016888582,11666678970427011,11668503494956839,11674745226209085,11679178548609074,11686145871210872,11689899896242159,11694712692333966,11695229429699703,11699803836975891,11701078573734871,11710174358884948,11712321093397960,11713174131482293,11718204327121293,11719948419341127,11733529606290588,11733856428490582,11749120207805789,11758124224999926,11759155042280182,11759632360209991,11762721294639297,11789402028266570,11803888895140630,11808432172469571,11808677120038076,11822284400880291,11823833270377998,11835049711704392,11852262611387780,11874586424066575,11877780351789865,11878561819350910,11879964422556497,11881350103968138,11887532755955374,11891901082216058,11892846073259560,11893480230501484,11895644930353812,11907431294460313,11912167420161445,11912535614444307,11912596190380622,11917680135230674,11921482716809117,11922318660990902,11926783256028788,11927312706420029,11938253467456975,11938487837060018,11939433837736390,11941377508200765,11944897148719032,11946057805659630,11954167335510836,11966515417886858,11967177969696326,11969270983768205,11972491066843823,11975021092787770,11991579931661465,11996681224586602,11999941145947169,12001265313067113,12003694815283190,12005264635132620,12007737622687825,12035849588414651,12037204972357923,12040863607311074,12042516568037860,12045428359765202,12046059447238299,12057277685219310,12063296041411515,12068704280901120,12069307632953999,12081092462631794,12086224274961382,12086510410894503,12092967520953701,12099186682204065,12108547568301273,12110756388481412,12117437028771932,12118988334060737,12146468924745521,12147422179657696,12154636502605294,12158360193151553,12159789949843596,12178916806499706,12190590319457117,12194123766538151,12211415115726689,12216068068497543,12226673227058947,12237933656546584,12242808604117989,12248275609666608,12248471481546398,12252410010445681,12254123594043504,12254359995640611,12266932794592494,12268647468486874,12269120906421245,12272568345080743,12278909480371917,12283940318157590,12286630957820209,12303544360626096,12305094885073954,12310100968343095,12315316594597206,12332005249300661,12332364725984204,12334912948133058,12337772378551713,12351788468756014,12355068002221001,12357533856711344,12365136146179658,12369964374887776,12372752902831855,12374133103752844,12379626787675439,12382417417495548,12383445793405510,12385261186745988,12387929976624868,12388566641985120,12395643417184934,12417505821360965,12424415757776351,12444299711271744,12451944629532869,12454411354515750,12459793931007482,12471757627341493,12482874844366692,12483104409106486,12486990476438136,12513074116241798,12516410651391202,12528964093483970,12535404888323848,12535432398195415,12537604251845700,12539504995870710,12550301488195514,12565833975317004,12566256000084035,12568740079611010,12570272701427188,12579510171653287,12584823102482879,12596226915312185,12598773484811171,12608777746838133,12612825756215230,12615003189749792,12617234448891767,12618310790618543,12620211766552469,12624077053858168,12637410101066379,12641721742508355,12673887950234482,12676906656489693,12680605350813842,12681746894145683,12698065696412122,12698770769178289,12703953955943445,12712553034438753,12718984158908307,12734250937665386,12744275941477633,12752051378236810,12759351564510480,12763084732642034,12768818926617948,12780727635621798,12792863038343865,12797923705492547,12804426712798263,12826918737383607,12827398133198312,12831795207421728,12833213360332340,12833595436132096,12833724044304608,12834704229271650,12858248497080467,12858426052892084,12859642635081800,12859868772761576,12862807310068576,12864907273884516,12870776709860206,12871512873709206,12877398363896369,12878760609859459,12879104571873517,12885895283138597,12888957047286212,12891914122856740,12894661519671440,12895419945134500,12908288338765039,12911240234988914,12915064015692434,12925746340266754,12927741315126950,12935817001762635,12942579402028947,12942675272239956,12944827373237493,12946380209599939,12955631117024505,12962034047922668,12967336234328420,12969355271582444,12969850933749259,12971698983067460,12977290947081842,13017466902016445,13019662270486086,13031867966003613,13035534714200667,13043885016985628,13045502556849387,13082156120250909,13099416222945196,13104088068433398,13110902128849452,13114017553377530,13118258284001038,13118624579502662,13126287733553514,13126648857004067,13127018639814929,13127641914670620,13129754096080152,13139573754943426,13142738570741542,13144086370976473,13146044525779509,13151782603211559,13152866329879212,13159186873506926,13159674132483884,13161089032161842,13161895161732997,13163449168487468,13165783524768096,13169699929124692,13176018156331423,13177801313876208,13178326087499118,13192123705845813,13207919082894818,13217495343648911,13218959923076455,13222609941013342,13237245858222486,13241897040466403,13242785676138520,13250813039092824,13252598151461563,13253392674357147,13276909361666696,13278781832607911,13279580273190747,13279927979717983,13284573866529148,13291332534778161,13293114022711151,13307846572424248,13313116484460717,13317363037529310,13319652306361073,13322474822628145,13338909720705380,13349834350740321,13351409970603825,13355620086202578,13357665956179682,13371894245855394,13374397426284291,13378590116897557,13386522813128738,13395484334888192,13411613014888093,13417263420420761,13434243150949851,13442015300066442,13448588230723860,13448715208780374,13452693450000489,13461025763937673,13466509021747437,13485189322885222,13488623691921961,13498321549906482,13501411260913204,13522278655584261,13531234137078011,13554984747295880,13555651175449053,13568552470704827,13574257140904967,13576345055912637,13581376789048028,13582038261109421,13584777064713884,13605010260999267,13608122773582976,13608211139665663,13610383737838207,13614917649307158,13618078733071491,13620267950245715,13636448611894403,13644420273140678,13654276900110481,13667106833907520,13677551572656387,13684271429025192,13685297341355734,13705799643982596,13707666325593199,13713478824250540,13714734230620995,13716879543137952,13718728878151910,13733255171380138,13741507154764744,13742478043841388,13746521524748143,13760371235614210,13761509731105552,13763077457004666,13768070330666298,13770768093408033,13771586624654837,13772395559834487,13773198795242844,13774901441814533,13774922110680128,13777481113917317,13778080297325467,13781995907743591,13782286973657048,13782683406913659,13785420857164502,13796524105316784,13812736944921665,13816014416913582,13826396071719835,13833123664824486,13837797045100306,13842755490619920,13858027805951419,13866647953236610,13869254047147178,13872708044839395,13884113353858701,13892034308509130,13898870224002701,13900228939529286,13925881030825997,13946008735609294,13968226284849022,13969038571761961,13970927105921451,13977797216265437,13978552584468701,13981287129880657,13981536635586336,13986106195623271,13988893087858948,13990414850712085,14009215845999754,14014155130507882,14028776429294844,14030875745981116,14032299964552579,14037325077802033,14043152388382940,14058396853696500,14065732506046054,14072081835758451,14081585246981099,14085911707533721,14088687698899161,14088752117353946,14096755521512121,14102600595382843,14110911759744335,14111911184445052,14120810170870888,14136589313024300,14136858149404714,14138574813987456,14149643949206382,14162706047575171,14166548471016942,14169997119978353,14171681742605446,14172414518168509,14173806395919658,14177444622018864,14181914076332258,14187921443804895,14194792872533605,14199013164240555,14208564031766815,14212094498157477,14215318123464764,14226858020282996,14227151197673983,14233342560110135,14245505826674622,14259534070751189,14260468621825933,14264857146734737,14267736363398098,14275411102861413,14280181431659420,14299280942514286,14300217865972334,14304386201174892,14305638380042772,14314884485414976,14322455272908815,14324858973605778,14326237008908622,14342388949537590,14342713463559475,14344361227758716,14344639517183304,14346553662196314,14347678940701014,14353707410964571,14360185872137533,14366446769998720,14368220273623945,14368778457435576,14371955246669940,14373086846850390,14374913882208077,14376996871385166,14379634497268949,14394294834695274,14394815769121419,14399043227160692,14402211700876216,14418019649131948,14420689162682474,14437666055421567,14438377285606813,14451251001482525,14455310264076215,14460248344113694,14481461019178833,14484858681208985,14485004800203093,14487810384758055,14491089949247658,14493903974525951,14510934169652050,14511753739775813,14515406379214285,14521948815666992,14522449796435706,14527743883164136,14530040796447201,14530264771563724,14540892959051160,14540916417262604,14541188912385840,14544216567067688,14546796114818671,14550428514699190,14556432751053533,14575995011315708,14586069104433076,14587500258455282,14598668433830105,14599556977835959,14605576028028388,14613322543558991,14614412194391121,14615024796720141,14629135390292068,14640110523294599,14646258133189016,14648766866939442,14663412701617686,14668350031553276,14685351710744926,14695331577616375,14701584610672097,14707837442320404,14716261537833730,14722174319794562,14728043701644581,14747627461918094,14763255832125442,14766426770385946,14770933534270682,14775634903955035,14785695109383486,14816239965302841,14816361738373419,14819187317141476,14827009856096304,14828017230112196,14832210451507573,14832607860747139,14832793698162611,14834114801666223,14837004658738563,14842432753497739,14845925667370543,14849045297424236,14851803819250117,14854635570864477,14856644214716073,14863561275514612,14864978618638667,14870697401906789,14875502904533331,14884844892558738,14890899724782050,14896827436587872,14897664727652486,14905212087207028,14912295785582716,14913871826241534,14914719669690239,14919969532993986,14923054253359996,14935747387459251,14941943390991317,14943074829937200,14972455329084356,14973644710375402,14977640868629591,14978109842419291,14989040281355192,14992395956539264,14994345454465281,14996981066688375,15000198776544356,15003966282604648,15005451770887550,15011470759394223,15036361051943010,15053801560168414,15054006645463283,15054775345669968,15093515976330521,15104235660087895,15109547471763358,15114800309173296,15115077606726394,15131416162035728,15151182934206080,15152563608862008,15154015473174741,15157314144559848,15161412062677683,15173628072842370,15174159589646594,15179423543399722,15196096076070926,15206501147861872,15226747633160118,15228371094821317,15240332964235451,15240968327449076,15252595332491887,15257712766871016,15258331077776722,15261062662829082,15264288045435586,15267015180539713,15274623669487652,15276063801060134,15277784321422548,15281659483346766,15281688632667845,15282778970354054,15283383082319047,15284764617207199,15285828335377837,15297031683608322,15306289087876920,15312274403436971,15314547086913679,15317393628480339,15318539625374752,15322045709500546,15322717708622984,15345596512129985,15352323506907112,15356068351467280,15363411439639634,15368882102427186,15369763521589184,15374802843000711,15380414993791763,15383944179124278,15384160688200197,15386257730944049,15391772843609775,15397047023774280,15418047344402380,15419370381005500,15425477516444410,15431268442792806,15441335138509899,15443468740469602,15454471810885094,15469539432041584,15470707127582747,15476555162609012,15497439416378603,15511873919403822,15523218474477719,15523967971833052,15527813389771374,15538778175184689,15541104975512967,15551689795871812,15552679448165444,15556912307814016,15560393512974172,15565684067139472,15570344758308035,15577550284542721,15583031565015549,15583800277870644,15589095928607639,15596526160200925,15601536857203719,15604244191749065,15604292282937898,15607002150661531,15610384462722550,15611069497782032,15615820524654465,15637338360769626,15638006653170359,15638871055187943,15644029820276668,15644633114222750,15653485945488653,15653632456107777,15654398382379661,15666894099602877,15672363355288937,15686428615872368,15687456576553178,15687557012666869,15687730447257608,15707185914141601,15729473966426450,15731950439842667,15766985577505196,15777811916761941,15778347507423158,15788879961967489,15800231386130055,15811135721705599,15816408322841406,15821585480694607,15831622222880902,15851758597836195,15852083879790423,15856720306707413,15863544960826735,15870558953580566,15880225197231508,15881804043732666,15885821733189631,15893761696494090,15898387305928646,15909221128133335,15909787937045411,15911115191227599,15913117630728683,15917444911920923,15919288447894883,15919549273963936,15921732111504088,15927721488814841,15940449251591302,15947341744738715,15948826295948477,15961311415462572,15966177046973511,15971134053246439,15971374147713419,15989123292659199,15989779475967770,15996372747839902,15998583255895161,16005752967233151,16014122573139831,16022542091731388,16028843714143271,16031311598972844,16036478572652541,16049043361660785,16057202351417735,16063805595543517,16066765340355146,16071652709914998,16074795405455007,16092366525402403,16097678964399322,16104092820838992,16107317271550706,16123042268458475,16123549800057857,16126218379420338,16128749857477374,16128988291167846,16130033703888782,16133414755379905,16135674770305420,16140088390029619,16160567128925378,16161016291517621,16161789950876232,16162926598012211,16169374781327253,16175489348725133,16183062663131376,16190784181168182,16199622646992400,16202033036073593,16206069857154535,16210298280615933,16215726719246016,16217394504248797,16218615301471277,16219094187744156,16225151565204066,16229308754035434,16236343286791229,16285310867013012,16289730247643706,16295680495911373,16296936441981859,16307253625625817,16320707984397077,16321481821041796,16321882058862498,16323374038447993,16324549256881601,16326481017900630,16350221544895390,16360006866625511,16360467865290692,16368824736979943,16369335781544303,16374680629739506,16380188917825051,16399984256980369,16415839425466042,16416074263834592,16426763806445356,16428321295930764,16440725262660037,16462408501564917,16468261024853759,16476307122011847,16476937942856637,16480777214175422,16482509001735175,16502365228637085,16502457629719022,16504298307128202,16510761010234681,16513459485148559,16519463241354535,16521843914002103,16546281951509069,16548474354611949,16550929054876507,16560403504774038,16578357491467911,16582707435282670,16586756741358065,16605127649138370,16609876185135555,16611927608147287,16624798445185090,16630094605895900,16639907778581852,16651489141329772,16651596652497159,16659368366393961,16668576737460694,16680246557324359,16688951860856489,16691272898046160,16692018211882722,16692275849107994,16695498859117718,16704764623572989,16705693318052932,16712774021054615,16713686220219201,16722219342722471,16726818994521960,16743982992147690,16749374505649167,16761658775814705,16774327613331618,16781125826436964,16782605111751523,16785606440059277,16798980056251867,16803390248179827,16813828341802753,16813850917105409,16817861038282401,16821032705392158,16825325783885159,16826179150281963,16830347247326578,16845046417908761,16845773708660822,16854875957575522,16864143845448315,16870157007457525,16873108011506628,16878169741916571,16879047682262790,16885778825562788,16888570679626627,16908939470925944,16911010122455380,16916100613833017,16919119825941239,16926732919418303,16930665040251324,16930951994319217,16940737914423229,16945109307932848,16955735945189198,16960083040427819,16984436010232172,16990421364703918,17006165896966823,17008020442543408,17009339848508729,17011107101691432,17014176537119415,17016523449240495,17023632496194929,17027771531203421,17039559001100860,17042510871936170,17052851194940724,17053822264677791,17063927348275877,17066677715572492,17075114396193756,17084158261394982,17087416091202780,17088251484038011,17089559918797657,17102077878457779,17102294072885081,17112840774101511,17115181382693939,17115280802524391,17119189611876650,17121951870541833,17122583391656580,17124199104954881,17130775523609712,17137905730506680,17146776030813470,17152683184050608,17153723876213366,17175561515108731,17179273333443650,17184863073699290,17202186074046668,17205047577407399,17207698871633943,17210696732657762,17231708451701898,17237970364679709,17242883932378216,17244476928416349,17272620079525716,17275160291405410,17279586325867363,17321802519457212,17334953325578494,17337671504899420,17339399287814080,17340945591227433,17347117194341401,17350211852889735,17351431427340230,17364246039011649,17366744707791010,17369312479904414,17372106843994970,17373703901221018,17376729405967072,17400008382535725,17426365140630494,17427125566196124,17431714286366629,17436882878126885,17443114926942462,17452707649327011,17461965101976864,17489573374743043,17524144630919988,17527873337952368,17535005818873555,17551287895642532,17553185904967105,17553860014526861,17554245071279310,17554778564009552,17567748717274949,17571981253665703,17587122731377504,17587702086143938,17588064452355464,17597794777777160,17603791467492805,17605072602226291,17605441911663411,17615785190882821,17624674238052203,17649428853641722,17654073046188396,17669245495565522,17684589388563728,17686965224338729,17689654701449712,17693140045546671,17693603448823927,17693815098039753,17697540333748932,17697658785057482,17700754608025093,17701382392032922,17702070591816308,17706136234415534,17707031178109105,17709607573658808,17712906839385830,17724387050674690,17729252668219030,17738660980248093,17744242020867816,17761836800996727,17764735509350900,17765540369988900,17772060730520554,17772638261487923,17785570908371758,17789346360240647,17793637185676886,17797748143462680,17797840215707544,17797918171623826,17798089632541709,17801667902725031,17803379158338004,17804699182902335,17817397112872299,17821803635772306,17822541729890773,17826593867928084,17828981498493209,17837124573295566,17837530706021763,17844858315492045,17844874351832368,17847570591090636,17853245019860211,17859738620606332,17869282949692454,17870128982402649,17870747365449693,17871600144530386,17874235602945727,17898794551703291,17906003324655705,17906253828146726,17919102916446972,17919671321358722,17924803660595223,17927011640330705,17927373007523603,17932587168360495,17935236422466237,17935582999313063,17961074324958059,17968352963412912,17969657580883608,17979964568021981,17982511307210574,17983556899409001,17987500899095194,17988320727025255,17990339965543917,17991119212376589,17992751117564356,18007528942878341,18021268029728876,18021273823362741,18022461072879376,18024689762143323,18028549590719876,18034681310366454,18044378566089340,18051623757584534,18072830341483453,18076230334426490,18087301473035041,18095367761915992,18098213983017923,18104934733045005,18108042480033355,18112174856644497,18112653159983268,18112865716541527,18132943072908114,18135196196653289,18150688968788558,18154077525619765,18157322369810806,18162760734097751,18170685124352785,18174883261383092,18177553881696561,18184571232215857,18187618290929951,18195644515815611,18214845280442530,18223317215142880,18233425835503682,18250133401172960,18261093651485025,18270290157715406,18271671093373424,18275757050957880,18284313369105505,18286971626301481,18307697090221504,18309542005828258,18311790293173989,18322198132800801,18322956993741543,18335853846627868,18349709103395703,18363178275892645,18369334588997503,18370293394562207,18377328825351776,18378613283970369,18387350286994700,18388027589940849,18388159691544975,18398402319592178,18405464536553600,18406535809287064,18430490777386681,18437212643447644,18444120304209900],\\"md5sum\\":\\"02663165b6ad8e4652691998c4f53356\\",\\"molecule\\":\\"dna\\"}],\\"version\\":0.4}"}',
+    //     method: 'POST',
+    //     mode: 'cors',
+    //     credentials: 'omit',
+    //   })
+    //     .then(async (response) => {
+    //       if (!response.ok) {
+    //         const text = await response.text();
+    //         throw new Error(
+    //           `HTTP ${response.status} ${response.statusText}: ${text}`
+    //         );
+    //       }
+    //       return response.json();
+    //     })
+    //     .then((data) => {
+    //       const resultsArray = Array.isArray(data)
+    //         ? (data as SearchResult[])
+    //         : [];
+    //       setSearchResults(resultsArray);
+    //
+    //       const vizData = prepareVisualizationData(resultsArray);
+    //       setVisualizationData(vizData);
+    //       const mapData = convertToMapSamples(resultsArray);
+    //       setMapSamples(mapData);
+    //
+    //       const counts = getCountryCountsFromResults(resultsArray);
+    //       setCountryCounts(counts);
+    //
+    //       setIsLoading(false);
+    //     })
+    //     .catch((error) => {
+    //       console.error('Error fetching search results:', error);
+    //       setIsLoading(false);
+    //       setVisualizationData(null);
+    //       setMapSamples([]);
+    //       setCountryCounts({});
+    //     });
+    // } else {
+    //   console.log(
+    //     'No signature available yet. Please upload and sketch a file first.'
+    //   );
+    // }
+  };
+
+  // Updated useEffect for handling search results
+  useEffect(() => {
+    if (searchResults.length > 0) {
+      const filteredResults = getFilteredResults();
+      const vizData = prepareVisualizationData(filteredResults);
+      setVisualizationData(vizData);
+
+      // Convert filtered results to map samples
+      const mapData = convertToMapSamples(filteredResults);
+      setMapSamples(mapData);
+
+      // Set available geo data for other uses
+      const availableGeoData = filteredResults.filter(
+        (item) =>
+          item.geo_loc_name_country_calc &&
+          item.lat_lon &&
+          item.lat_lon !== 'NP'
+      );
+      // setAvailableGeoData(availableGeoData);
+    } else {
+      // Clear data when no search results
+      setMapSamples([]);
+      // setAvailableGeoData([]);
+    }
+  }, [
+    filters,
+    getFilteredResults,
+    prepareVisualizationData,
+    searchResults,
+    convertToMapSamples,
+  ]);
+
   useEffect(() => {
     const handleSketched = (evt: CustomEvent): void => {
       evt.preventDefault();
-      const sig = JSON.parse(evt.detail.signature)[0];
+      console.log('EVT ', evt);
+      // const sig = JSON.parse(evt.detail.signature)[0];
+      const sig = JSON.parse(evt.detail.signature);
 
       setSignature(sig);
       // Removed automatic axios request - will only search when button is clicked
@@ -462,90 +875,40 @@ const Branchwater = () => {
     };
   }, [signature]);
 
-  // Update visualization data when filters change
   useEffect(() => {
     if (searchResults.length > 0) {
       const filteredResults = getFilteredResults();
       const vizData = prepareVisualizationData(filteredResults);
       setVisualizationData(vizData);
 
-      // Update map samples
-      // const mapData = convertToMapSamples(filteredResults);
+      // Convert filtered results to map samples
+      const mapData = convertToMapSamples(filteredResults);
+      setMapSamples(mapData);
 
-      // setMapSamples(mockMapSamples);
-      setMapSamples(availableGeoData);
+      // Calculate country counts for heatmap
+      const counts = getCountryCountsFromResults(filteredResults);
+      setCountryCounts(counts);
+
+      // Set available geo data for other uses
+      const availableGeoData = filteredResults.filter(
+        (item) =>
+          item.geo_loc_name_country_calc &&
+          item.lat_lon &&
+          item.lat_lon !== 'NP'
+      );
     } else {
-      // For development/testing: use mock data when no search results
-      // setMapSamples(mockMapSamples);
-      setMapSamples(availableGeoData);
+      // Clear data when no search results
+      setMapSamples([]);
+      setCountryCounts({});
     }
   }, [
     filters,
     getFilteredResults,
     prepareVisualizationData,
     searchResults,
-    mockMapSamples,
+    convertToMapSamples,
+    getCountryCountsFromResults,
   ]);
-
-  const handleSearchClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ): void => {
-    event.preventDefault();
-    setShowMgnifySourmash(true);
-
-    // If we already have a signature, trigger a search
-    if (signature) {
-      setIsLoading(true);
-      axios
-        .post(
-          'http://branchwater-dev.mgnify.org/',
-          {
-            signatures: JSON.stringify(signature),
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-        .then((response) => {
-          // Ensure response.data is an array before setting it to searchResults
-          const resultsArray = Array.isArray(response.data)
-            ? (response.data as SearchResult[])
-            : [];
-          setSearchResults(resultsArray);
-
-          const availableGeoData = response.data.filter(
-            (item) => item.geo_loc_name_country_calc
-          );
-          setAvailableGeoData(availableGeoData);
-          // )
-
-          // Prepare visualization data
-          const vizData = prepareVisualizationData(resultsArray);
-          setVisualizationData(vizData);
-
-          // Prepare map data
-          // const mapData = convertToMapSamples(resultsArray);
-          // setMapSamples(mockMapSamples);
-          setMapSamples(availableGeoData);
-
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error('Error fetching search results:', error);
-          setIsLoading(false);
-          // Note: sampleEntries is not defined in this scope, so we'll just clear the data
-          setVisualizationData(null);
-          setMapSamples([]);
-        });
-    } else {
-      // If no signature yet, show a message or use sample data for testing
-      console.log(
-        'No signature available yet. Please upload and sketch a file first.'
-      );
-    }
-  };
 
   // Handle filter change
   const handleFilterChange = (field: keyof Filters, value: string): void => {
@@ -573,62 +936,83 @@ const Branchwater = () => {
     setCurrentPage(page);
   };
 
-  // Apply sorting to filtered results
-  const getSortedResults = (
-    filteredResults: SearchResult[]
-  ): SearchResult[] => {
-    if (!sortField) return filteredResults;
-
-    return [...filteredResults].sort((a, b) => {
-      const aValue = a[sortField] || '';
-      const bValue = b[sortField] || '';
-
-      // Handle numeric values
-      // eslint-disable-next-line no-restricted-globals
-      if (!isNaN(Number(aValue)) && !isNaN(Number(bValue))) {
-        return sortDirection === 'asc'
-          ? Number(aValue) - Number(bValue)
-          : Number(bValue) - Number(aValue);
-      }
-
-      // Handle string values
-      const comparison = String(aValue).localeCompare(String(bValue));
-      return sortDirection === 'asc' ? comparison : -comparison;
-    });
-  };
-
-  // Get paginated results
-  const getPaginatedResults = (
-    sortedResults: SearchResult[]
-  ): SearchResult[] => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return sortedResults.slice(startIndex, startIndex + itemsPerPage);
-  };
-
-  // Calculate total pages
-  const getTotalPages = (filteredResults: SearchResult[]): number => {
-    return Math.ceil(filteredResults.length / itemsPerPage);
-  };
-
   // Process results for display
-  const processResults = (): {
-    filteredResults: SearchResult[];
-    sortedResults: SearchResult[];
-    paginatedResults: SearchResult[];
-    totalPages: number;
-  } => {
-    const filteredResults = getFilteredResults();
-    const sortedResults = getSortedResults(filteredResults);
-    const paginatedResults = getPaginatedResults(sortedResults);
-    const totalPages = getTotalPages(filteredResults);
+  // Replaced by memoized `processedResults` + `processResults` wrapper above
 
-    return {
-      filteredResults,
-      sortedResults,
-      paginatedResults,
-      totalPages,
+  // Export helpers: build CSV and trigger download using current processed results
+  const downloadCSV = () => {
+    const { sortedResults } = processResults();
+    if (!sortedResults || sortedResults.length === 0) return;
+
+    // Prefer a known set of columns first, then append any additional keys found
+    const preferredOrder = [
+      'acc',
+      'assay_type',
+      'bioproject',
+      'biosample_link',
+      'cANI',
+      'collection_date_sam',
+      'containment',
+      'geo_loc_name_country_calc',
+      'organism',
+    ];
+
+    const allKeys = new Set<string>();
+    sortedResults.forEach((r) => Object.keys(r).forEach((k) => allKeys.add(k)));
+
+    // Ensure lat_lon is exported as string
+    const remaining = Array.from(allKeys).filter(
+      (k) => !preferredOrder.includes(k)
+    );
+    const columns = [...preferredOrder, ...remaining];
+
+    const escape = (val: unknown): string => {
+      if (val === null || val === undefined) return '';
+      let s: string;
+      if (Array.isArray(val)) {
+        s = val.join(';');
+      } else if (typeof val === 'object') {
+        s = JSON.stringify(val);
+      } else {
+        s = String(val);
+      }
+      // Escape double quotes by doubling them and wrap in quotes if needed
+      const needsQuotes = /[",\n]/.test(s);
+      s = s.replace(/"/g, '""');
+      return needsQuotes ? `"${s}"` : s;
     };
+
+    const header = columns.map((c) => escape(c)).join(',');
+    const rows = sortedResults.map((row) =>
+      columns
+        .map((col) => {
+          const v = row[col];
+          if (col === 'lat_lon' && Array.isArray(v)) return escape(v.join(','));
+          return escape(v);
+        })
+        .join(',')
+    );
+
+    const csv = [header, ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const date = new Date();
+    const ts = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(date.getDate()).padStart(2, '0')}_${String(
+      date.getHours()
+    ).padStart(2, '0')}${String(date.getMinutes()).padStart(2, '0')}`;
+    a.href = url;
+    a.download = `branchwater_results_${ts}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
+
+  const stripQuotes = (s: string) => s.replace(/^"+|"+$/g, '').trim();
 
   const handleClearClick = (): void => {
     setShowMgnifySourmash(false);
@@ -641,7 +1025,7 @@ const Branchwater = () => {
       acc: '',
       assay_type: '',
       bioproject: '',
-      cANI: '',
+      // cANI: '',
       collection_date_sam: '',
       containment: '',
       geo_loc_name_country_calc: '',
@@ -666,8 +1050,85 @@ const Branchwater = () => {
     setActiveTab(tabId);
   };
 
+  const handleExampleSubmit = () => {
+    setShowMgnifySourmash(false);
+    setUploadedFile(null);
+    setSearchResults([]);
+    setSignature(null);
+    setVisualizationData(null);
+    setMapSamples([]);
+    setFilters({
+      acc: '',
+      assay_type: '',
+      bioproject: '',
+      // cANI: '',
+      collection_date_sam: '',
+      containment: '',
+      geo_loc_name_country_calc: '',
+      organism: '',
+    });
+    setSortField('');
+    setSortDirection('asc');
+    setCurrentPage(1);
+    const fileInput = document.getElementById(
+      'file-upload'
+    ) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+
+    setShowMgnifySourmash(true);
+    setIsLoading(true);
+    const examples = [
+      {
+        id: 'example-mag-1st',
+        accession: 'MGYG000304400',
+        catalogue: 'sheep-rumen-v1-0',
+      },
+      {
+        id: 'example-mag-2nd',
+        accession: 'MGYG000485384',
+        catalogue: 'marine-v2-0',
+      },
+      {
+        id: 'example-mag-3rd',
+        accession: 'MGYG000001346',
+        catalogue: 'human-gut-v2-0-2',
+      },
+    ];
+    const selected = examples.find((example) => {
+      return example.id === selectedExample;
+    });
+    axios
+      .post(
+        `http://branchwater-dev.mgnify.org/mags?accession=${selected.accession}&catalogue=${selected.catalogue}`
+      )
+      .then((response) => {
+        const resultsArray = Array.isArray(response.data)
+          ? (response.data as SearchResult[])
+          : [];
+        setSearchResults(resultsArray);
+
+        const vizData = prepareVisualizationData(resultsArray);
+        setVisualizationData(vizData);
+        const mapData = convertToMapSamples(resultsArray);
+        setMapSamples(mapData);
+
+        const counts = getCountryCountsFromResults(resultsArray);
+        setCountryCounts(counts);
+
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setVisualizationData(null);
+        setMapSamples([]);
+        setCountryCounts({});
+      });
+  };
+
   return (
-    <>
+    <section className="vf-content mg-page-search">
       <div className="vf-tabs">
         <ul className="vf-tabs__list">
           <li className="vf-tabs__item">
@@ -739,666 +1200,703 @@ const Branchwater = () => {
           }}
         >
           <h2>Search Metagenomes</h2>
+          <div className="vf-u-margin__top--400">
+            <details className="vf-details">
+              <summary className="vf-details--summary">Instructions</summary>
+              <p className="vf-text-body vf-text-body--3">
+                Use the Browse button below to select a FastA file
+              </p>
+              <p className="vf-text-body vf-text-body--3">
+                <strong>Sourmash</strong> runs in your browser to create compact
+                signatures which are then sent to our servers.
+              </p>
+              <p className="vf-text-body vf-text-body--3">
+                <strong>Branchwater</strong> then compares these signatures
+                against over 1,161,119 metagenomes and also assocaites the
+                relevant metadata to the results.
+              </p>
+              <p className="vf-text-body vf-text-body--3">
+                Sequences shorter than 10kb will rarely produce results. Quality
+                of the match to the uploaded genome is represented by the cANI
+                score (calculated from containment). The relationship between
+                cANI and taxonomic level of the match varies with the genome of
+                interest. In general, matches are most robust to the genus
+                taxonomic level and a cANI greater than 0.97 often represents a
+                species-level match.
+              </p>
+              <p className="vf-text-body vf-text-body--3">
+                Notes: processing time depends on file size and your device;
+                keep this tab open until the search completes.
+              </p>
+            </details>
+          </div>
+
           <div>
-            <div>
-              <form className="vf-stack vf-stack--400">
-                <div className="vf-form__item vf-stack">
-                  <mgnify-sourmash-component
-                    id="sourmash"
-                    ref={sourmash}
-                    ksize={21}
-                    show_directory_checkbox={false}
-                  />
+            <form className="vf-stack vf-stack--400">
+              <div className="vf-form__item vf-stack">
+                <mgnify-sourmash-component
+                  id="sourmash"
+                  ref={sourmash}
+                  ksize={21}
+                />
 
-                  <fieldset className="vf-form__fieldset vf-stack vf-stack--400">
-                    <legend className="vf-form__legend">
-                      Select target databafwfwfwse
-                    </legend>
+                {/* TODO:  Confirm if this is still necessary, seeing as there is already a MAG search tab */}
 
-                    <div className="vf-form__item vf-form__item--radio">
-                      <input
-                        type="radio"
-                        name="targetDatabase"
-                        value="MAGs"
-                        id="1"
-                        className="vf-form__radio"
-                        checked={targetDatabase === 'MAGs'}
-                        onChange={() => setTargetDatabase('MAGs')}
-                      />
-                      <label htmlFor="1" className="vf-form__label">
-                        MAGs
-                      </label>
-                    </div>
+                {/* <fieldset className="vf-form__fieldset vf-stack vf-stack--400"> */}
+                {/*  <legend className="vf-form__legend"> */}
+                {/*    Select target database */}
+                {/*  </legend> */}
 
-                    <div className="vf-form__item vf-form__item--radio">
-                      <input
-                        type="radio"
-                        name="targetDatabase"
-                        value="Metagenomes"
-                        id="2"
-                        className="vf-form__radio"
-                        checked={targetDatabase === 'Metagenomes'}
-                        onChange={() => setTargetDatabase('Metagenomes')}
-                      />
-                      <label htmlFor="2" className="vf-form__label">
-                        Metagenomes
-                      </label>
-                    </div>
+                {/*  <div className="vf-form__item vf-form__item--radio"> */}
+                {/*    <input */}
+                {/*      type="radio" */}
+                {/*      name="targetDatabase" */}
+                {/*      value="MAGs" */}
+                {/*      id="target-db-mags" */}
+                {/*      className="vf-form__radio" */}
+                {/*      checked={targetDatabase === 'MAGs'} */}
+                {/*      onChange={() => setTargetDatabase('MAGs')} */}
+                {/*    /> */}
+                {/*    <label htmlFor="target-db-mags" className="vf-form__label"> */}
+                {/*      MAGs */}
+                {/*    </label> */}
+                {/*  </div> */}
 
-                    <button
-                      className="vf-button vf-button--sm vf-button--primary mg-button"
-                      onClick={handleSearchClick}
-                    >
-                      Search
-                    </button>
-                    <button
-                      id="clear-button-mag"
-                      type="button"
-                      className="vf-button vf-button--sm vf-button--tertiary"
-                      onClick={handleClearClick}
-                    >
-                      Clear
-                    </button>
-                  </fieldset>
+                {/*  <div className="vf-form__item vf-form__item--radio"> */}
+                {/*    <input */}
+                {/*      type="radio" */}
+                {/*      name="targetDatabase" */}
+                {/*      value="Metagenomes" */}
+                {/*      id="target-db-metagenomes" */}
+                {/*      className="vf-form__radio" */}
+                {/*      checked={targetDatabase === 'Metagenomes'} */}
+                {/*      onChange={() => setTargetDatabase('Metagenomes')} */}
+                {/*    /> */}
+                {/*    <label */}
+                {/*      htmlFor="target-db-metagenomes" */}
+                {/*      className="vf-form__label" */}
+                {/*    > */}
+                {/*      Metagenomes */}
+                {/*    </label> */}
+                {/*  </div> */}
+                {/* </fieldset> */}
 
-                  <button
-                    className="vf-button vf-button--sm vf-button--primary mg-button"
-                    onClick={handleSearchClick}
-                  >
-                    Search
-                  </button>
-                  <button
-                    id="clear-button-mag"
-                    type="button"
-                    className="vf-button vf-button--sm vf-button--tertiary"
-                    onClick={handleClearClick}
-                  >
-                    Clear
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            {showMgnifySourmash && (
-              <>
-                <svg
-                  className="vf-icon-sprite vf-icon-sprite--tables"
-                  style={{ display: 'none' }}
+                <button
+                  className="vf-button vf-button--sm vf-button--primary mg-button vf-u-margin__top--400"
+                  onClick={handleSearchClick}
                 >
-                  <defs>
-                    <g id="vf-table-sortable--up">
-                      <path
-                        xmlns="http://www.w3.org/2000/svg"
-                        d="M17.485,5.062,12.707.284a1.031,1.031,0,0,0-1.415,0L6.515,5.062a1,1,0,0,0,.707,1.707H10.25a.25.25,0,0,1,.25.25V22.492a1.5,1.5,0,1,0,3,0V7.019a.249.249,0,0,1,.25-.25h3.028a1,1,0,0,0,.707-1.707Z"
-                      />
-                    </g>
-                    <g id="vf-table-sortable--down">
-                      <path
-                        xmlns="http://www.w3.org/2000/svg"
-                        d="M17.7,17.838a1,1,0,0,0-.924-.617H13.75a.249.249,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0V16.971a.25.25,0,0,1-.25.25H7.222a1,1,0,0,0-.707,1.707l4.777,4.778a1,1,0,0,0,1.415,0l4.778-4.778A1,1,0,0,0,17.7,17.838Z"
-                      />
-                    </g>
-                    <g id="vf-table-sortable">
-                      <path
-                        xmlns="http://www.w3.org/2000/svg"
-                        d="M9,19a1,1,0,0,0-.707,1.707l3,3a1,1,0,0,0,1.414,0l3-3A1,1,0,0,0,15,19H13.5a.25.25,0,0,1-.25-.25V5.249A.25.25,0,0,1,13.5,5H15a1,1,0,0,0,.707-1.707l-3-3a1,1,0,0,0-1.414,0l-3,3A1,1,0,0,0,9,5h1.5a.25.25,0,0,1,.25.25v13.5a.25.25,0,0,1-.25.25Z"
-                      />
-                    </g>
-                  </defs>
-                </svg>
-                {/* eslint-disable-next-line no-nested-ternary */}
-                {isLoading ? (
-                  <div className="vf-u-padding__top--800">
-                    <p>Loading search results...</p>
-                  </div>
-                ) : searchResults.length > 0 ? (
-                  <>
-                    <table className="vf-table">
-                      <thead className="vf-table__header">
-                        <tr className="vf-table__row">
-                          {/* Filter inputs row */}
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Accession"
-                              value={filters.acc}
-                              onChange={(e) =>
-                                handleFilterChange('acc', e.target.value)
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Type"
-                              value={filters.assay_type}
-                              onChange={(e) =>
-                                handleFilterChange('assay_type', e.target.value)
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Bioproject"
-                              value={filters.bioproject}
-                              onChange={(e) =>
-                                handleFilterChange('bioproject', e.target.value)
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            {/* No filter for Biosample link */}
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter cANI"
-                              value={filters.cANI}
-                              onChange={(e) =>
-                                handleFilterChange('cANI', e.target.value)
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Date"
-                              value={filters.collection_date_sam}
-                              onChange={(e) =>
-                                handleFilterChange(
-                                  'collection_date_sam',
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Containment"
-                              value={filters.containment}
-                              onChange={(e) =>
-                                handleFilterChange(
-                                  'containment',
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Location"
-                              value={filters.geo_loc_name_country_calc}
-                              onChange={(e) =>
-                                handleFilterChange(
-                                  'geo_loc_name_country_calc',
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            <input
-                              type="text"
-                              className="vf-form__input"
-                              placeholder="Filter Organism"
-                              value={filters.organism}
-                              onChange={(e) =>
-                                handleFilterChange('organism', e.target.value)
-                              }
-                            />
-                          </th>
-                        </tr>
-                        <tr className="vf-table__row">
-                          {/* Sortable column headers */}
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() => handleSortChange('acc')}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            Accession
-                            {sortField === 'acc' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() => handleSortChange('assay_type')}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            Type
-                            {sortField === 'assay_type' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() => handleSortChange('bioproject')}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            Bioproject
-                            {sortField === 'bioproject' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th className="vf-table__heading" scope="col">
-                            Biosample
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() => handleSortChange('cANI')}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            cANI
-                            {sortField === 'cANI' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() =>
-                              handleSortChange('collection_date_sam')
-                            }
-                            style={{ cursor: 'pointer' }}
-                          >
-                            Date
-                            {sortField === 'collection_date_sam' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() => handleSortChange('containment')}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            Containment
-                            {sortField === 'containment' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() =>
-                              handleSortChange('geo_loc_name_country_calc')
-                            }
-                            style={{ cursor: 'pointer' }}
-                          >
-                            Location
-                            {sortField === 'geo_loc_name_country_calc' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                          <th
-                            className="vf-table__heading"
-                            scope="col"
-                            onClick={() => handleSortChange('organism')}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            Organism
-                            {sortField === 'organism' && (
-                              <svg
-                                className="vf-icon"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                              >
-                                <use
-                                  href={`#vf-table-sortable--${
-                                    sortDirection === 'asc' ? 'up' : 'down'
-                                  }`}
-                                />
-                              </svg>
-                            )}
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="vf-table__body">
-                        {processResults().paginatedResults.map(
-                          (entry, index) => {
-                            // Define URLs for first two results
-                            const accessionLinks = [
-                              'https://www.ebi.ac.uk/metagenomics/runs/ERR868490',
-                              'https://www.ebi.ac.uk/metagenomics/runs/ERR1726685',
-                            ];
+                  Search
+                </button>
+                <button
+                  id="clear-button-mag"
+                  type="button"
+                  className="vf-button vf-button--sm vf-button--tertiary"
+                  onClick={handleClearClick}
+                >
+                  Clear
+                </button>
+              </div>
+            </form>
 
-                            return (
-                              // eslint-disable-next-line react/no-array-index-key
-                              <tr className="vf-table__row" key={index}>
-                                <td className="vf-table__cell">
-                                  {index < 2 ? (
-                                    <a
-                                      href={accessionLinks[index]}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="vf-link"
-                                    >
-                                      {entry.acc}
-                                    </a>
-                                  ) : (
-                                    entry.acc
-                                  )}
-                                </td>
-                                <td className="vf-table__cell">
-                                  {entry.assay_type}
-                                </td>
-                                <td className="vf-table__cell">
-                                  {entry.bioproject}
-                                </td>
-                                <td className="vf-table__cell">
-                                  <a
-                                    href={entry.biosample_link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    Link
-                                  </a>
-                                </td>
-                                <td className="vf-table__cell">{entry.cANI}</td>
-                                <td className="vf-table__cell">
-                                  {entry.collection_date_sam || 'NP'}
-                                </td>
-                                <td className="vf-table__cell">
-                                  {entry.containment}
-                                </td>
-                                <td className="vf-table__cell">
-                                  {entry.geo_loc_name_country_calc || 'NP'}
-                                </td>
-                                <td className="vf-table__cell">
-                                  {entry.organism}
-                                </td>
-                              </tr>
-                            );
+            <details className="vf-details">
+              <summary className="vf-details--summary">Try an example</summary>
+              <div className="vf-u-margin__top--200">
+                <fieldset className="vf-form__fieldset">
+                  <legend className="vf-form__legend">
+                    Choose an organism
+                  </legend>
+                  <div className="vf-form__item vf-form__item--radio">
+                    <input
+                      className="vf-form__radio"
+                      type="radio"
+                      id="example-mag-1st"
+                      name="exampleMag1st"
+                      value="example-mag-1st"
+                      checked={selectedExample === 'example-mag-1st'}
+                      onChange={() => setSelectedExample('example-mag-1st')}
+                    />
+                    <label className="vf-form__label" htmlFor="example-mag-1st">
+                      Sodaliphilus sp900320055 — Sheep Rumen &nbsp;
+                      <a
+                        className="vf-link"
+                        href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000304400#overview"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        MGYG000304400
+                      </a>
+                    </label>
+                  </div>
+                  <div className="vf-form__item vf-form__item--radio">
+                    <input
+                      className="vf-form__radio"
+                      type="radio"
+                      id="example-mag-2nd"
+                      name="exampleMag2nd"
+                      value="example-mag-2nd"
+                      checked={selectedExample === 'example-mag-2nd'}
+                      onChange={() => setSelectedExample('example-mag-2nd')}
+                    />
+                    <label className="vf-form__label" htmlFor="example-mag-2nd">
+                      Rhizobiaceae BOKV01— Marine &nbsp;
+                      <a
+                        className="vf-link"
+                        href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000485384#overview"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        MGYG000485384
+                      </a>
+                    </label>
+                  </div>
+                  <div className="vf-form__item vf-form__item--radio">
+                    <input
+                      className="vf-form__radio"
+                      type="radio"
+                      id="example-mag-3rd"
+                      name="exampleMag3rd"
+                      value="metagenome"
+                      checked={selectedExample === 'example-mag-3rd'}
+                      onChange={() => setSelectedExample('example-mag-3rd')}
+                    />
+                    <label className="vf-form__label" htmlFor="example-mag-3rd">
+                      Peptostreptococcaceae — Human Gut &nbsp;{' '}
+                      <a
+                        className="vf-link"
+                        href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000001346#overview"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        MGYG000001346
+                      </a>
+                    </label>
+                  </div>
+                </fieldset>
+                <button
+                  type="button"
+                  className="vf-button vf-button--sm vf-button--secondary"
+                  onClick={handleExampleSubmit}
+                >
+                  Use selected example
+                </button>
+              </div>
+            </details>
+          </div>
+
+          {showMgnifySourmash && (
+            <>
+              <svg
+                className="vf-icon-sprite vf-icon-sprite--tables"
+                style={{ display: 'none' }}
+              >
+                <defs>
+                  <g id="vf-table-sortable--up">
+                    <path
+                      xmlns="http://www.w3.org/2000/svg"
+                      d="M17.485,5.062,12.707.284a1.031,1.031,0,0,0-1.415,0L6.515,5.062a1,1,0,0,0,.707,1.707H10.25a.25.25,0,0,1,.25.25V22.492a1.5,1.5,0,1,0,3,0V7.019a.249.249,0,0,1,.25-.25h3.028a1,1,0,0,0,.707-1.707Z"
+                    />
+                  </g>
+                  <g id="vf-table-sortable--down">
+                    <path
+                      xmlns="http://www.w3.org/2000/svg"
+                      d="M17.7,17.838a1,1,0,0,0-.924-.617H13.75a.249.249,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0V16.971a.25.25,0,0,1-.25.25H7.222a1,1,0,0,0-.707,1.707l4.777,4.778a1,1,0,0,0,1.415,0l4.778-4.778A1,1,0,0,0,17.7,17.838Z"
+                    />
+                  </g>
+                  <g id="vf-table-sortable">
+                    <path
+                      xmlns="http://www.w3.org/2000/svg"
+                      d="M9,19a1,1,0,0,0-.707,1.707l3,3a1,1,0,0,0,1.414,0l3-3A1,1,0,0,0,15,19H13.5a.25.25,0,0,1-.25-.25V5.249A.25.25,0,0,1,13.5,5H15a1,1,0,0,0,.707-1.707l-3-3a1,1,0,0,0-1.414,0l-3,3A1,1,0,0,0,9,5h1.5a.25.25,0,0,1,.25.25v13.5a.25.25,0,0,1-.25.25Z"
+                    />
+                  </g>
+                </defs>
+              </svg>
+              {/* eslint-disable-next-line no-nested-ternary */}
+
+              {isLoading ? (
+                <div className="vf-u-padding__top--800">
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      padding: '40px',
+                      backgroundColor: '#f8f9fa',
+                      borderRadius: '8px',
+                      border: '2px dashed #dee2e6',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '18px',
+                        color: '#6c757d',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      🔍 Searching metagenomes...
+                    </div>
+                    <div
+                      style={{
+                        fontSize: '14px',
+                        color: '#868e96',
+                      }}
+                    >
+                      This may take a few moments
+                    </div>
+                  </div>
+                </div>
+              ) : searchResults.length > 0 ? (
+                <div className="vf-u-padding__top--600">
+                  {/* Results Summary Header */}
+                  <div
+                    style={{
+                      backgroundColor: '#e8f5e8',
+                      padding: '20px',
+                      borderRadius: '8px',
+                      marginBottom: '20px',
+                      border: '1px solid #28a745',
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <div>
+                        <h3 style={{ margin: '0 0 5px 0', color: '#155724' }}>
+                          🎯 Search Complete: {searchResults.length} matches
+                          found
+                        </h3>
+                        <p style={{ margin: 0, color: '#155724' }}>
+                          Found{' '}
+                          {
+                            searchResults.filter((r) => r.assay_type === 'WGS')
+                              .length
+                          }{' '}
+                          samples with assemblies •
+                          {Object.keys(countryCounts).length} countries •
+                          Average containment:{' '}
+                          {searchResults.length > 0
+                            ? (
+                                searchResults
+                                  .filter(
+                                    (r) => typeof r.containment === 'number'
+                                  )
+                                  .reduce(
+                                    (sum, r) => sum + Number(r.containment),
+                                    0
+                                  ) /
+                                searchResults.filter(
+                                  (r) => typeof r.containment === 'number'
+                                ).length
+                              ).toFixed(3)
+                            : '0.000'}
+                        </p>
+                      </div>
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button
+                          className="vf-button vf-button--primary vf-button--sm"
+                          onClick={() => setIsTableVisible(!isTableVisible)}
+                        >
+                          {isTableVisible
+                            ? '📊 Hide Details'
+                            : '📋 View Details'}
+                        </button>
+                        <button
+                          className="vf-button vf-button--secondary vf-button--sm"
+                          onClick={downloadCSV}
+                          disabled={!processedResults.sortedResults.length}
+                          title={
+                            processedResults.sortedResults.length
+                              ? 'Download current results as CSV'
+                              : 'No results to download'
                           }
-                        )}
-                      </tbody>
-                    </table>
-
-                    {/* Pagination */}
-                    {processResults().totalPages > 1 && (
-                      <nav className="vf-pagination" aria-label="Pagination">
-                        <ul className="vf-pagination__list">
-                          <li
-                            className={`vf-pagination__item vf-pagination__item--previous-page ${
-                              currentPage === 1
-                                ? 'vf-pagination__item--is-disabled'
-                                : ''
-                            }`}
-                          >
-                            <button
-                              type="button"
-                              className="vf-pagination__link"
-                              onClick={() =>
-                                currentPage > 1 &&
-                                handlePageChange(currentPage - 1)
-                              }
-                            >
-                              Previous
-                              <span className="vf-u-sr-only"> page</span>
-                            </button>
-                          </li>
-
-                          {/* First page */}
-                          {currentPage > 2 && (
-                            <li className="vf-pagination__item">
-                              <button
-                                type="button"
-                                className="vf-pagination__link"
-                                onClick={() => handlePageChange(1)}
-                              >
-                                1<span className="vf-u-sr-only"> page</span>
-                              </button>
-                            </li>
-                          )}
-
-                          {/* Ellipsis if needed */}
-                          {currentPage > 3 && (
-                            <li className="vf-pagination__item">
-                              <span className="vf-pagination__label">...</span>
-                            </li>
-                          )}
-
-                          {/* Previous page if not first */}
-                          {currentPage > 1 && (
-                            <li className="vf-pagination__item">
-                              <button
-                                type="button"
-                                className="vf-pagination__link"
-                                onClick={() =>
-                                  handlePageChange(currentPage - 1)
-                                }
-                              >
-                                {currentPage - 1}
-                                <span className="vf-u-sr-only"> page</span>
-                              </button>
-                            </li>
-                          )}
-
-                          {/* Current page */}
-                          <li className="vf-pagination__item vf-pagination__item--is-active">
-                            <span
-                              className="vf-pagination__label"
-                              aria-current="page"
-                            >
-                              <span className="vf-u-sr-only">Page </span>
-                              {currentPage}
-                            </span>
-                          </li>
-
-                          {/* Next page if not last */}
-                          {currentPage < processResults().totalPages && (
-                            <li className="vf-pagination__item">
-                              <button
-                                type="button"
-                                className="vf-pagination__link"
-                                onClick={() =>
-                                  handlePageChange(currentPage + 1)
-                                }
-                              >
-                                {currentPage + 1}
-                                <span className="vf-u-sr-only"> page</span>
-                              </button>
-                            </li>
-                          )}
-
-                          {/* Ellipsis if needed */}
-                          {currentPage < processResults().totalPages - 2 && (
-                            <li className="vf-pagination__item">
-                              <span className="vf-pagination__label">...</span>
-                            </li>
-                          )}
-
-                          {/* Last page */}
-                          {currentPage < processResults().totalPages - 1 && (
-                            <li className="vf-pagination__item">
-                              <button
-                                type="button"
-                                className="vf-pagination__link"
-                                onClick={() =>
-                                  handlePageChange(processResults().totalPages)
-                                }
-                              >
-                                {processResults().totalPages}
-                                <span className="vf-u-sr-only"> page</span>
-                              </button>
-                            </li>
-                          )}
-
-                          <li
-                            className={`vf-pagination__item vf-pagination__item--next-page ${
-                              currentPage === processResults().totalPages
-                                ? 'vf-pagination__item--is-disabled'
-                                : ''
-                            }`}
-                          >
-                            <button
-                              type="button"
-                              className="vf-pagination__link"
-                              onClick={() =>
-                                currentPage < processResults().totalPages &&
-                                handlePageChange(currentPage + 1)
-                              }
-                            >
-                              Next<span className="vf-u-sr-only"> page</span>
-                            </button>
-                          </li>
-                        </ul>
-                      </nav>
-                    )}
-                  </>
-                ) : (
-                  <div className="vf-u-padding__top--800">
-                    <p>
-                      No search results found. Please try a different search.
-                    </p>
+                        >
+                          ⬇️ Download CSV
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                )}
-                {/* Visualization components */}
-                {visualizationData && (
-                  <div className="vf-u-padding__top--800">
-                    <h2 className="vf-text vf-text-heading--2">
-                      Visualizations
-                    </h2>
 
-                    {/* Containment Histogram */}
-                    <div className="vf-u-padding__top--400">
-                      <h3 className="vf-text vf-text-heading--3">
-                        Match Similarity Scores
-                      </h3>
+                  <TextSearch />
+
+                  <section className="vf-grid mg-grid-search vf-u-padding__top--400">
+                    <div className="vf-stack vf-stack--800">
+                      <CANIFilter />
+
+                      <LocalMultipleOptionFilter
+                        facetName="geo_loc_name_country_calc"
+                        header="Location"
+                        data={searchResults}
+                        includeTextFilter
+                      />
+
+                      <LocalMultipleOptionFilter
+                        facetName="organism"
+                        header="Organism"
+                        data={searchResults}
+                        includeTextFilter
+                      />
+
+                      <LocalMultipleOptionFilter
+                        facetName="assay_type"
+                        header="Assay Type"
+                        data={searchResults}
+                      />
+                    </div>
+                    <section>
+                      <DetailedResultsTable
+                        isOpen={isTableVisible}
+                        onToggleOpen={() => setIsTableVisible(!isTableVisible)}
+                        filters={filters}
+                        onFilterChange={handleFilterChange}
+                        sortField={sortField}
+                        sortDirection={sortDirection}
+                        onSortChange={handleSortChange}
+                        processResults={processResults}
+                        currentPage={currentPage}
+                        itemsPerPage={itemsPerPage}
+                        onPageChange={handlePageChange}
+                      />
+                    </section>
+                  </section>
+                </div>
+              ) : (
+                <div className="vf-u-padding__top--800">
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      padding: '60px',
+                      backgroundColor: '#f8f9fa',
+                      borderRadius: '8px',
+                      border: '2px dashed #dee2e6',
+                    }}
+                  >
+                    <div style={{ fontSize: '48px', marginBottom: '20px' }}>
+                      🔍
+                    </div>
+                    <h3 style={{ color: '#6c757d', marginBottom: '10px' }}>
+                      No search results found
+                    </h3>
+                    <p style={{ color: '#868e96', marginBottom: '20px' }}>
+                      Try uploading a different file or adjusting your search
+                      parameters
+                    </p>
+                    <button
+                      className="vf-button vf-button--primary"
+                      onClick={() => window.location.reload()}
+                    >
+                      🔄 Start New Search
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {visualizationData && (
+                <div className="vf-u-padding__top--800">
+                  <h2 className="vf-text vf-text-heading--2">
+                    Results Dashboard
+                  </h2>
+
+                  {/* Quick Stats Summary */}
+                  <div className="vf-u-padding__bottom--600">
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns:
+                          'repeat(auto-fit, minmax(200px, 1fr))',
+                        gap: '20px',
+                        marginBottom: '30px',
+                      }}
+                    >
                       <div
-                        id="contDiv"
+                        style={{
+                          backgroundColor: '#f8f9fa',
+                          padding: '20px',
+                          borderRadius: '8px',
+                          textAlign: 'center',
+                          border: '1px solid #dee2e6',
+                        }}
+                      >
+                        <h4 style={{ margin: '0 0 10px 0', color: '#495057' }}>
+                          Total Matches
+                        </h4>
+                        <div
+                          style={{
+                            fontSize: '2em',
+                            fontWeight: 'bold',
+                            color: '#28a745',
+                          }}
+                        >
+                          {searchResults.length}
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          backgroundColor: '#f8f9fa',
+                          padding: '20px',
+                          borderRadius: '8px',
+                          textAlign: 'center',
+                          border: '1px solid #dee2e6',
+                        }}
+                      >
+                        <h4 style={{ margin: '0 0 10px 0', color: '#495057' }}>
+                          Unique Countries
+                        </h4>
+                        <div
+                          style={{
+                            fontSize: '2em',
+                            fontWeight: 'bold',
+                            color: '#17a2b8',
+                          }}
+                        >
+                          {Object.keys(countryCounts).length}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {mapSamples && mapSamples.length > 0 && (
+                    <div className="vf-u-padding__top--400">
+                      <h4 className="vf-text vf-text-heading--4">
+                        Geographic Distribution
+                      </h4>
+
+                      {/* Country counts summary */}
+                      {Object.keys(countryCounts).length > 0 && (
+                        <div className="vf-u-padding__bottom--400">
+                          <p className="vf-text vf-text--body">
+                            <strong>Samples by Country:</strong>
+                          </p>
+                          <div
+                            style={{
+                              display: 'flex',
+                              flexWrap: 'wrap',
+                              gap: '10px',
+                              marginBottom: '15px',
+                              maxHeight: '100px',
+                              overflowY: 'auto',
+                            }}
+                          >
+                            {Object.entries(countryCounts)
+                              .sort(([, a], [, b]) => b - a)
+                              .map(([country, count]) => {
+                                const maxCount = Math.max(
+                                  ...Object.values(countryCounts)
+                                );
+                                const color = getCountryColor(count, maxCount);
+                                return (
+                                  <span
+                                    key={country}
+                                    style={{
+                                      padding: '4px 8px',
+                                      backgroundColor: color,
+                                      color:
+                                        count > maxCount * 0.6
+                                          ? 'white'
+                                          : 'black',
+                                      borderRadius: '4px',
+                                      fontSize: '12px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    {country}: {count}
+                                  </span>
+                                );
+                              })}
+                          </div>
+
+                          {/* Legend */}
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '10px',
+                              fontSize: '12px',
+                            }}
+                          >
+                            <span>Heat intensity:</span>
+                            <div style={{ display: 'flex', gap: '2px' }}>
+                              {[
+                                '#FFEDA0',
+                                '#FEB24C',
+                                '#FD8D3C',
+                                '#FC4E2A',
+                                '#E31A1C',
+                                '#BD0026',
+                              ].map((color, index) => (
+                                <div
+                                  key={index}
+                                  style={{
+                                    width: '20px',
+                                    height: '12px',
+                                    backgroundColor: color,
+                                    border: '1px solid #ccc',
+                                  }}
+                                />
+                              ))}
+                            </div>
+                            <span>Low → High</span>
+                          </div>
+                        </div>
+                      )}
+
+                      <div style={{ width: '100%', height: '500px' }}>
+                        {/* Pin capping controls */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: '8px',
+                          }}
+                        >
+                          <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                            Showing{' '}
+                            {displayedMapSamples.length.toLocaleString()} of{' '}
+                            {mapSamples.length.toLocaleString()} pins
+                          </div>
+                          {displayedMapSamples.length < mapSamples.length && (
+                            <button
+                              className="vf-button vf-button--secondary vf-button--sm"
+                              onClick={() =>
+                                setMapPinsLimit((prev) =>
+                                  Math.min(prev + 1000, mapSamples.length)
+                                )
+                              }
+                            >
+                              Load more pins (+1,000)
+                            </button>
+                          )}
+                        </div>
+                        <MapContainer
+                          center={[20, 0]}
+                          zoom={2}
+                          style={{ width: '100%', height: '100%' }}
+                          scrollWheelZoom
+                        >
+                          <TileLayer
+                            attribution="Tiles &copy; Esri — Source: Esri, DeLorme,
+                            NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri
+                            Japan, METI, Esri China (Hong Kong),
+                            Esri (Thailand), TomTom, 2012"
+                            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+                          />
+
+                          {/* Individual sample markers (capped) */}
+                          {displayedMapSamples.map((sample) => (
+                            <Marker
+                              key={sample.id}
+                              position={[
+                                sample.attributes.latitude,
+                                sample.attributes.longitude,
+                              ]}
+                            >
+                              <Popup>
+                                <div>
+                                  <strong>ID:</strong> {sample.id}
+                                  <br />
+                                  <strong>Country:</strong>{' '}
+                                  {sample.attributes.country}
+                                  <br />
+                                  <strong>Coordinates:</strong>{' '}
+                                  {sample.attributes.latitude},{' '}
+                                  {sample.attributes.longitude}
+                                  <br />
+                                  <strong>Metagenome:</strong>{' '}
+                                  {sample.attributes.organism}
+                                  <br />
+                                  <strong>Assay type:</strong>{' '}
+                                  {sample.attributes.assay_type}
+                                </div>
+                              </Popup>
+                            </Marker>
+                          ))}
+                        </MapContainer>
+                      </div>
+
+                      {/* Additional country statistics */}
+                      {Object.keys(countryCounts).length > 0 && (
+                        <div className="vf-u-padding__top--400">
+                          <details>
+                            <summary
+                              style={{ cursor: 'pointer', fontWeight: 'bold' }}
+                            >
+                              Country Statistics (
+                              {Object.keys(countryCounts).length} countries)
+                            </summary>
+                            <div style={{ marginTop: '10px' }}>
+                              <table className="vf-table vf-table--compact">
+                                <thead>
+                                  <tr>
+                                    <th>Country</th>
+                                    <th>Sample Count</th>
+                                    <th>Percentage</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {Object.entries(countryCounts)
+                                    .sort(([, a], [, b]) => b - a)
+                                    .map(([country, count]) => {
+                                      const percentage = (
+                                        (count / totalCountryCount) *
+                                        100
+                                      ).toFixed(1);
+                                      return (
+                                        <tr key={country}>
+                                          <td>{country}</td>
+                                          <td>{count}</td>
+                                          <td>{percentage}%</td>
+                                        </tr>
+                                      );
+                                    })}
+                                </tbody>
+                              </table>
+                            </div>
+                          </details>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Enhanced Containment Distribution */}
+                  <div className="vf-u-padding__top--400">
+                    <h3 className="vf-text vf-text-heading--3">
+                      Containment Score Distribution
+                      <div
+                        id="containmentBinsDiv"
                         style={{ width: '100%', height: '400px' }}
                       >
                         <Plot
-                          data={visualizationData.histogramData}
-                          layout={{
-                            bargap: 0.05,
-                            bargroupgap: 0.2,
-                            title: 'Match similarity scores',
-                            xaxis: { title: 'Score' },
-                            yaxis: { title: 'Frequency' },
-                            updatemenus: [
-                              {
-                                x: 0.05,
-                                y: 1.2,
-                                xanchor: 'left',
-                                yanchor: 'top',
-                                buttons: [
-                                  {
-                                    method: 'update',
-                                    args: [{ visible: [true, false] }],
-                                    label: 'containment',
-                                  },
-                                  {
-                                    method: 'update',
-                                    args: [{ visible: [false, true] }],
-                                    label: 'cANI',
-                                  },
-                                ],
-                                direction: 'down',
-                                showactive: true,
+                          data={[
+                            {
+                              x: containmentHistogram.binsDesc,
+                              y: containmentHistogram.countsDesc,
+                              type: 'bar',
+                              marker: {
+                                color: 'rgba(54, 162, 235, 0.7)',
+                                line: {
+                                  color: 'rgba(54, 162, 235, 1)',
+                                  width: 1,
+                                },
                               },
-                            ],
+                              name: 'Containment Distribution',
+                              hovertemplate:
+                                '%{x}<br>count=%{y}<extra></extra>',
+                            },
+                          ]}
+                          layout={{
+                            title:
+                              'Distribution of Containment Scores (0.1 bin ranges)',
+                            xaxis: {
+                              title: 'Containment Score Range (high → low)',
+                              tickangle: -45,
+                              // ensure Plotly keeps our descending order
+                              categoryorder: 'array',
+                              categoryarray: containmentHistogram.binsDesc,
+                            },
+                            yaxis: { title: 'Count' },
+                            bargap: 0.1,
                           }}
                           config={{
                             scrollZoom: true,
@@ -1408,155 +1906,466 @@ const Branchwater = () => {
                           style={{ width: '100%', height: '100%' }}
                         />
                       </div>
+                    </h3>
+                  </div>
+
+                  {/* Enhanced Biome/Organism Distribution */}
+                  <div className="vf-u-padding__top--400">
+                    <h3 className="vf-text vf-text-heading--3">
+                      Sample Type Distribution
+                      <small
+                        style={{
+                          fontWeight: 'normal',
+                          color: '#6c757d',
+                          marginLeft: '10px',
+                        }}
+                      >
+                        (Showing biome/organism metadata)
+                      </small>
+                    </h3>
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '10px',
+                      }}
+                    >
+                      {/* Assay Type Distribution */}
+                      <div>
+                        <h4>Assay Types</h4>
+                        <Plot
+                          data={[
+                            {
+                              x: (() => {
+                                const assayCounts = {};
+                                searchResults.forEach((r) => {
+                                  const type = r.assay_type || 'Unknown';
+                                  assayCounts[type] =
+                                    (assayCounts[type] || 0) + 1;
+                                });
+                                return Object.keys(assayCounts);
+                              })(),
+                              y: (() => {
+                                const assayCounts = {};
+                                searchResults.forEach((r) => {
+                                  const type = r.assay_type || 'Unknown';
+                                  assayCounts[type] =
+                                    (assayCounts[type] || 0) + 1;
+                                });
+                                return Object.values(assayCounts);
+                              })(),
+                              type: 'bar',
+                              marker: { color: 'rgba(255, 99, 132, 0.7)' },
+                            },
+                          ]}
+                          layout={{
+                            height: 300,
+                            xaxis: { title: 'Assay Type' },
+                            yaxis: { title: 'Count' },
+                            margin: { t: 30, b: 60, l: 60, r: 30 },
+                          }}
+                          config={{ displaylogo: false, responsive: true }}
+                        />
+                      </div>
                     </div>
+                  </div>
 
-                    {/* Categorical Bar Plots */}
-                    {visualizationData.barPlotData &&
-                      visualizationData.barPlotData.length > 0 && (
-                        <div className="vf-u-padding__top--400">
-                          <h3 className="vf-text vf-text-heading--3">
-                            Categorical Metadata
-                          </h3>
-                          <div
-                            id="barDiv"
-                            style={{ width: '100%', height: '400px' }}
-                          >
-                            <Plot
-                              data={visualizationData.barPlotData}
-                              layout={{
-                                bargap: 0.05,
-                                bargroupgap: 0.2,
-                                title: 'Summary counts of categorical metadata',
-                                xaxis: { automargin: true, title: 'Category' },
-                                yaxis: { automargin: true, title: 'Counts' },
-                                updatemenus: [
-                                  {
-                                    x: 0.05,
-                                    y: 1.2,
-                                    xanchor: 'left',
-                                    yanchor: 'top',
-                                    buttons: visualizationData.stringKeys.map(
-                                      (key, i) => ({
-                                        method: 'update',
-                                        args: [
-                                          {
-                                            visible:
-                                              visualizationData.stringKeys.map(
-                                                (_, idx) => idx === i
-                                              ),
-                                          },
-                                        ],
-                                        label: key,
-                                      })
-                                    ),
-                                    direction: 'down',
-                                    showactive: true,
-                                  },
-                                ],
-                              }}
-                              config={{
-                                scrollZoom: true,
-                                displaylogo: false,
-                                responsive: true,
-                              }}
-                              style={{ width: '100%', height: '100%' }}
-                            />
-                          </div>
-                        </div>
-                      )}
+                  {/* Organism Distribution */}
+                  <div>
+                    <h4>Top Organisms/Biomes</h4>
+                    <Plot
+                      data={[
+                        {
+                          x: (() => {
+                            const orgCounts = {};
+                            searchResults.forEach((r) => {
+                              const org = r.organism || 'Unknown';
+                              orgCounts[org] = (orgCounts[org] || 0) + 1;
+                            });
+                            return Object.entries(orgCounts)
+                              .sort(([, a], [, b]) => b - a)
+                              .slice(0, 10)
+                              .map(([org]) =>
+                                org.length > 20
+                                  ? `${org.substring(0, 17)}...`
+                                  : org
+                              );
+                          })(),
+                          y: (() => {
+                            const orgCounts = {};
+                            searchResults.forEach((r) => {
+                              const org = r.organism || 'Unknown';
+                              orgCounts[org] = (orgCounts[org] || 0) + 1;
+                            });
+                            return Object.entries(orgCounts)
+                              .sort(([, a], [, b]) => b - a)
+                              .slice(0, 10)
+                              .map(([, count]) => count);
+                          })(),
+                          type: 'bar',
+                          marker: { color: 'rgba(75, 192, 192, 0.7)' },
+                        },
+                      ]}
+                      layout={{
+                        height: 300,
+                        xaxis: {
+                          title: 'Organism/Biome',
+                          tickangle: -45,
+                        },
+                        yaxis: { title: 'Count' },
+                        margin: { t: 30, b: 100, l: 60, r: 30 },
+                      }}
+                      config={{ displaylogo: false, responsive: true }}
+                    />
+                  </div>
 
-                    {/* Map Visualizations */}
-                    {visualizationData.mapData &&
-                      visualizationData.mapData.length > 0 && (
+                  {/* NEW: ANI vs Containment Scatter Plot */}
+                  <div className="vf-u-padding__top--400">
+                    <h3 className="vf-text vf-text-heading--3">
+                      Quality Assessment: cANI vs Containment
+                      <small
+                        style={{
+                          fontWeight: 'normal',
+                          color: '#6c757d',
+                          marginLeft: '10px',
+                        }}
+                      >
+                        (Higher values indicate better matches)
+                      </small>
+                    </h3>
+                    <div
+                      id="scatterDiv"
+                      style={{ width: '100%', height: '520px' }}
+                    >
+                      {scatterData.sampled && (
                         <div
-                          className="vf-u-padding__top--400"
-                          style={{ height: '600px' }}
+                          style={{
+                            fontSize: '12px',
+                            color: '#6c757d',
+                            marginBottom: '6px',
+                          }}
                         >
-                          <h3 className="vf-text vf-text-heading--3">
-                            Geographic Distribution
-                          </h3>
-                          <div
-                            id="mapDiv"
-                            style={{ width: '100%', height: '500px' }}
-                          >
-                            <Plot
-                              data={visualizationData.mapData}
-                              layout={{
-                                title: 'Accession locations',
-                                geo: {
-                                  scope: 'world',
-                                  showcountries: true,
-                                  countrycolor: 'rgb(255, 255, 255)',
-                                  countrywidth: 1,
-                                  showframe: false,
-                                  projection: {
-                                    type: 'robinson',
-                                  },
-                                  showland: true,
-                                  landcolor: 'rgb(250,250,250)',
-                                  subunitcolor: 'rgb(217,217,217)',
-                                },
-                              }}
-                              config={{
-                                scrollZoom: true,
-                                displaylogo: false,
-                                responsive: true,
-                              }}
-                              style={{ width: '100%', height: '100%' }}
-                            />
-                          </div>
+                          Showing a sampled subset of{' '}
+                          {scatterData.xs.length.toLocaleString()} points out of{' '}
+                          {scatterData.total.toLocaleString()} to keep the UI
+                          responsive.
                         </div>
                       )}
-                    {/* Leaflet Map */}
-                    {mapSamples && mapSamples.length > 0 && (
+                      <Plot
+                        data={[
+                          {
+                            x: scatterData.xs,
+                            y: scatterData.ys,
+                            mode: 'markers',
+                            type: 'scatter',
+                            text: scatterData.texts.map((t) =>
+                              t.replace(/\n/g, '<br>')
+                            ),
+                            hovertemplate:
+                              '%{text}<br>Containment: %{x:.3f}<br>cANI: %{y:.3f}<extra></extra>',
+                            marker: {
+                              size: 8,
+                              color: scatterData.colors,
+                              line: { width: 1, color: 'white' },
+                            },
+                          },
+                        ]}
+                        layout={{
+                          title: 'Match Quality: cANI vs Containment Score',
+                          xaxis: { title: 'Containment Score', range: [0, 1] },
+                          yaxis: {
+                            title:
+                              'cANI (calculated Average Nucleotide Identity)',
+                            range: [0.8, 1],
+                          },
+                          annotations: [
+                            {
+                              x: 0.7,
+                              y: 0.95,
+                              text: 'Higher quality matches',
+                              showarrow: true,
+                              arrowhead: 2,
+                              arrowsize: 1,
+                              arrowwidth: 2,
+                              arrowcolor: '#636363',
+                              ax: -30,
+                              ay: -30,
+                            },
+                          ],
+                        }}
+                        config={{
+                          scrollZoom: true,
+                          displaylogo: false,
+                          responsive: true,
+                        }}
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* MGnify Promotion Section */}
+                  <div className="vf-u-padding__top--600">
+                    <div
+                      style={{
+                        backgroundColor: '#e3f2fd',
+                        padding: '20px',
+                        borderRadius: '8px',
+                        border: '1px solid #2196f3',
+                      }}
+                    >
+                      <h3
+                        className="vf-text vf-text-heading--3"
+                        style={{ color: '#1976d2', marginTop: 0 }}
+                      >
+                        Explore Further with MGnify
+                      </h3>
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns:
+                            'repeat(auto-fit, minmax(300px, 1fr))',
+                          gap: '20px',
+                        }}
+                      >
+                        <div>
+                          <h4 style={{ color: '#1976d2' }}>
+                            Available Assemblies
+                          </h4>
+                          <p>
+                            <strong>
+                              {
+                                searchResults.filter(
+                                  (r) => r.assay_type === 'WGS'
+                                ).length
+                              }
+                            </strong>{' '}
+                            of your matches have assembled genomes available for
+                            detailed analysis.
+                          </p>
+                          <button
+                            className="vf-button vf-button--primary vf-button--sm"
+                            onClick={() =>
+                              window.open(
+                                'https://www.ebi.ac.uk/metagenomics/',
+                                '_blank'
+                              )
+                            }
+                          >
+                            View in MGnify
+                          </button>
+                        </div>
+
+                        <div>
+                          <h4 style={{ color: '#1976d2' }}>Request Assembly</h4>
+                          <p>
+                            For samples without assemblies, you can request
+                            assembly analysis through MGnify's pipeline.
+                          </p>
+                          <button
+                            className="vf-button vf-button--secondary vf-button--sm"
+                            onClick={() =>
+                              window.open(
+                                'https://www.ebi.ac.uk/metagenomics/submit',
+                                '_blank'
+                              )
+                            }
+                          >
+                            Request Analysis
+                          </button>
+                        </div>
+
+                        <div>
+                          <h4 style={{ color: '#1976d2' }}>
+                            Raw Read Analysis
+                          </h4>
+                          <p>
+                            Access comprehensive taxonomic and functional
+                            analysis results for all your matched samples.
+                          </p>
+                          <button
+                            className="vf-button vf-button--tertiary vf-button--sm"
+                            onClick={() =>
+                              window.open(
+                                'https://www.ebi.ac.uk/metagenomics/browse',
+                                '_blank'
+                              )
+                            }
+                          >
+                            Browse Data
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Enhanced original visualizations with improvements */}
+                  <div className="vf-u-padding__top--400">
+                    <h3 className="vf-text vf-text-heading--3">
+                      Detailed Score Distributions
+                    </h3>
+                    <div
+                      id="contDiv"
+                      style={{ width: '100%', height: '400px' }}
+                    >
+                      <Plot
+                        data={visualizationData.histogramData}
+                        layout={{
+                          bargap: 0.05,
+                          bargroupgap: 0.2,
+                          title: 'Match similarity scores (detailed view)',
+                          xaxis: { title: 'Score' },
+                          yaxis: { title: 'Frequency' },
+                          updatemenus: [
+                            {
+                              x: 0.05,
+                              y: 1.2,
+                              xanchor: 'left',
+                              yanchor: 'top',
+                              buttons: [
+                                {
+                                  method: 'update',
+                                  args: [{ visible: [true, false] }],
+                                  label: 'containment',
+                                },
+                                {
+                                  method: 'update',
+                                  args: [{ visible: [false, true] }],
+                                  label: 'cANI',
+                                },
+                              ],
+                              direction: 'down',
+                              showactive: true,
+                            },
+                          ],
+                        }}
+                        config={{
+                          scrollZoom: true,
+                          displaylogo: false,
+                          responsive: true,
+                        }}
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Visualization components */}
+              {visualizationData && (
+                <div className="vf-u-padding__top--800">
+                  <h2 className="vf-text vf-text-heading--2">Visualizations</h2>
+
+                  {/* Containment Histogram */}
+                  <div className="vf-u-padding__top--400">
+                    <h3 className="vf-text vf-text-heading--3">
+                      Match Similarity Scores
+                    </h3>
+                    <div
+                      id="contDiv"
+                      style={{ width: '100%', height: '400px' }}
+                    >
+                      <Plot
+                        data={visualizationData.histogramData}
+                        layout={{
+                          bargap: 0.05,
+                          bargroupgap: 0.2,
+                          title: 'Match similarity scores',
+                          xaxis: { title: 'Score' },
+                          yaxis: { title: 'Frequency' },
+                          updatemenus: [
+                            {
+                              x: 0.05,
+                              y: 1.2,
+                              xanchor: 'left',
+                              yanchor: 'top',
+                              buttons: [
+                                {
+                                  method: 'update',
+                                  args: [{ visible: [true, false] }],
+                                  label: 'containment',
+                                },
+                                {
+                                  method: 'update',
+                                  args: [{ visible: [false, true] }],
+                                  label: 'cANI',
+                                },
+                              ],
+                              direction: 'down',
+                              showactive: true,
+                            },
+                          ],
+                        }}
+                        config={{
+                          scrollZoom: true,
+                          displaylogo: false,
+                          responsive: true,
+                        }}
+                        style={{ width: '100%', height: '100%' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Categorical Bar Plots */}
+                  {visualizationData.barPlotData &&
+                    visualizationData.barPlotData.length > 0 && (
                       <div className="vf-u-padding__top--400">
                         <h3 className="vf-text vf-text-heading--3">
-                          Interactive Map
+                          Categorical Metadata
                         </h3>
-                        <div style={{ width: '100%', height: '500px' }}>
-                          <MapContainer
-                            center={[0, 0]}
-                            zoom={2}
+                        <div
+                          id="barDiv"
+                          style={{ width: '100%', height: '400px' }}
+                        >
+                          <Plot
+                            data={visualizationData.barPlotData}
+                            layout={{
+                              bargap: 0.05,
+                              bargroupgap: 0.2,
+                              title: 'Summary counts of categorical metadata',
+                              xaxis: { automargin: true, title: 'Category' },
+                              yaxis: { automargin: true, title: 'Counts' },
+                              updatemenus: [
+                                {
+                                  x: 0.05,
+                                  y: 1.2,
+                                  xanchor: 'left',
+                                  yanchor: 'top',
+                                  buttons: visualizationData.stringKeys.map(
+                                    (key, i) => ({
+                                      method: 'update',
+                                      args: [
+                                        {
+                                          visible:
+                                            visualizationData.stringKeys.map(
+                                              (_, idx) => idx === i
+                                            ),
+                                        },
+                                      ],
+                                      label: key,
+                                    })
+                                  ),
+                                  direction: 'down',
+                                  showactive: true,
+                                },
+                              ],
+                            }}
+                            config={{
+                              scrollZoom: true,
+                              displaylogo: false,
+                              responsive: true,
+                            }}
                             style={{ width: '100%', height: '100%' }}
-                            scrollWheelZoom
-                          >
-                            <TileLayer
-                              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                            {mapSamples.map((sample) => (
-                              <Marker
-                                key={sample.id}
-                                position={[
-                                  sample.attributes.latitude,
-                                  sample.attributes.longitude,
-                                ]}
-                              >
-                                <Popup>
-                                  <div>
-                                    <strong>ID:</strong> {sample.id}
-                                    <br />
-                                    <strong>Description:</strong>{' '}
-                                    {sample.attributes['sample-desc']}
-                                    <br />
-                                    <strong>Biome:</strong>{' '}
-                                    {sample.relationships.biome.data.id}
-                                  </div>
-                                </Popup>
-                              </Marker>
-                            ))}
-                          </MapContainer>
+                          />
                         </div>
                       </div>
                     )}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
+                </div>
+              )}
+            </>
+          )}
         </section>
       </div>
-    </>
+    </section>
   );
 };
 
