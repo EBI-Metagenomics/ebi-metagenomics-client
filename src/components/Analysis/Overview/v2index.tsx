@@ -67,13 +67,13 @@ const AnalysisOverview: React.FC = () => {
     },
     {
       key: 'Sample',
-      value: data?.sample?.accession || '',
-      // data?.sample?.accession &&
-      // (() => (
-      //   <Link to={`/samples/${data?.sample?.accession}`}>
-      //     {data?.sample?.accession}
-      //   </Link>
-      // )),
+      value:
+        data?.sample?.accession &&
+        (() => (
+          <Link to={`/samples/${data?.sample?.accession}`}>
+            {data?.sample?.accession}
+          </Link>
+        )),
       rawValue: data?.sample?.accession || '',
     },
     {
