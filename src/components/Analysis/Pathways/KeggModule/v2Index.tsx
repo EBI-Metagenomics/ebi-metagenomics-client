@@ -14,12 +14,13 @@ const KeggModuleTab: React.FC = () => {
         <div className="p-4">
           <h3 className="text-lg font-medium mb-2">KEGG Modules</h3>
           <p className="text-sm text-gray-600 mb-4">
-            KEGG Modules represent functional units in metabolic and signaling pathways, 
-            providing insights into the completeness of biological processes.
+            KEGG Modules represent functional units in metabolic and signaling
+            pathways, providing insights into the completeness of biological
+            processes.
           </p>
           <p className="text-sm">
-            Download this file to view the complete KEGG Module annotations for this
-            analysis.
+            Download this file to view the complete KEGG Module annotations for
+            this analysis.
           </p>
         </div>
       </SlimVisualisationCard>

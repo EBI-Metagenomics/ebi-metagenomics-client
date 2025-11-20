@@ -168,7 +168,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
         setChangingPage(false);
       }
     }
-  }, [showPagination, setPage, pageIndex]);
+  }, [showPagination, setPage, pageIndex, page, isChangingPage]);
 
   useEffect(() => {
     if (sortable) {
@@ -181,7 +181,15 @@ const EMGTable: React.FC<EMGTableProps> = ({
         setChangingPage(false);
       }
     }
-  }, [showPagination, setOrdering, setPage, sortBy, sortable]);
+  }, [
+    showPagination,
+    setOrdering,
+    setPage,
+    sortBy,
+    sortable,
+    ordering,
+    isChangingPage,
+  ]);
 
   const paginationRanges = useMemo(
     () => getPaginationRanges(pageIndex, pageCount),

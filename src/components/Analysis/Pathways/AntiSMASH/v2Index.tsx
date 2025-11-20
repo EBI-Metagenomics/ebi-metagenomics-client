@@ -14,13 +14,13 @@ const AntiSmashTab: React.FC = () => {
         <div className="p-4">
           <h3 className="text-lg font-medium mb-2">antiSMASH Clusters</h3>
           <p className="text-sm text-gray-600 mb-4">
-            antiSMASH (antibiotics & Secondary Metabolite Analysis Shell) identifies 
-            biosynthetic gene clusters in bacterial and fungal genomes, providing insights 
-            into secondary metabolite production.
+            antiSMASH (antibiotics & Secondary Metabolite Analysis Shell)
+            identifies biosynthetic gene clusters in bacterial and fungal
+            genomes, providing insights into secondary metabolite production.
           </p>
           <p className="text-sm">
-            Download this file to view the complete antiSMASH cluster annotations for this
-            analysis.
+            Download this file to view the complete antiSMASH cluster
+            annotations for this analysis.
           </p>
         </div>
       </SlimVisualisationCard>

@@ -11,17 +11,11 @@ const MAX = 1;
 const CANIFilter: React.FC = () => {
   const [cani, setCani] = useQueryParamState('cani', '');
   const [range, setRange] = useState<number[]>(
-    cani
-      .split(',')
-      .filter(Boolean)
-      .map(Number)
+    cani.split(',').filter(Boolean).map(Number)
   );
 
   useEffect(() => {
-    const newRange = cani
-      .split(',')
-      .filter(Boolean)
-      .map(Number);
+    const newRange = cani.split(',').filter(Boolean).map(Number);
     setRange(newRange);
   }, [cani]);
 

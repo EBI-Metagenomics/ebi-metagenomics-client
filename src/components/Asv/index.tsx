@@ -121,7 +121,8 @@ const Asv: React.FC = () => {
           }}
         >
           <PrimerIdentification
-            infoText="Primers are short sequences of nucleic acid that provide a starting point for DNA synthesis. In 16S rRNA analysis, they target specific variable regions of the gene."
+            infoText="Primers are short sequences of nucleic acid that provide
+            a starting point for DNA synthesis. In 16S rRNA analysis, they target specific variable regions of the gene."
             downloadableFile={getSepcificFile('primer_identification', 'json')}
           />
         </section>

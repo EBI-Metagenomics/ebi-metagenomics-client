@@ -25,9 +25,7 @@ import PersistLogin from 'components/PersistLogin';
 // import SearchPage from './pages/Search';
 // import Branchwater from './pages/Branchwater';
 // import PersistLogin from 'components/PersistLogin';
-import V2AnalysisPage from 'pages/Analysis/v2index';
 import V2AssemblyPage from 'pages/Assembly/v2index';
-import SessionExpiryBanner from 'components/UI/SessionExpiryBanner';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));

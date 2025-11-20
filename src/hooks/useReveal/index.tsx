@@ -1,25 +1,28 @@
 // hooks/useReveal.ts
 import { useEffect, useRef } from 'react';
 
-export function useReveal(className = 'is-revealed') {
+export default function useReveal(className = 'is-revealed') {
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
+    let observer: IntersectionObserver | null = null;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          node.classList.add(className);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
+    if (node) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            node.classList.add(className);
+            observer?.disconnect();
+          }
+        },
+        { threshold: 0.1 }
+      );
+      observer.observe(node);
+    }
 
-    observer.observe(node);
-    return () => observer.disconnect();
+    // Always return a cleanup function to satisfy consistent-return
+    return () => observer?.disconnect();
   }, [className]);
 
   return ref;

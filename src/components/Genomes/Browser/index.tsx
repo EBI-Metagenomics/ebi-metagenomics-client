@@ -97,7 +97,10 @@ const GenomeBrowser: React.FC = () => {
       igv.createBrowser(node, options).then((browser: Browser) => {
         browser.on(
           'trackclick',
-          (track: any, trackData: { name: string; value: string | number }[]) =>
+          (
+            _track: unknown,
+            trackData: { name: string; value: string | number }[]
+          ) =>
             ReactDOMServer.renderToString(
               <GenomeBrowserPopup data={trackData} />
             )
@@ -115,7 +118,7 @@ const GenomeBrowser: React.FC = () => {
         );
       });
     },
-    [config.api, accession, hasVirify, virifyGffUrl]
+    [config.api, accession, hasVirify, virifyGffUrl, trackColorBys]
   );
 
   useEffect(() => {

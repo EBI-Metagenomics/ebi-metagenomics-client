@@ -14,7 +14,9 @@ import { cleanTaxLineage } from '@/utils/taxon';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import EMGTable from 'components/UI/EMGTable';
 import getBranchwaterResultColumns from 'components/Branchwater/common/resultColumns';
-import useBranchwaterResults, { BranchwaterFilters } from 'components/Branchwater/common/useBranchwaterResults';
+import useBranchwaterResults, {
+  BranchwaterFilters,
+} from 'components/Branchwater/common/useBranchwaterResults';
 import FiltersBar from 'components/Branchwater/common/FiltersBar';
 import ResultsDashboard from 'components/Branchwater/common/ResultsDashboard';
 
@@ -40,7 +42,21 @@ const tabs = [
 const GenomePage: React.FC = () => {
   const accession = useURLAccession();
   const { data, loading, error } = useMGnifyData(`genomes/${accession}`);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  // Branchwater/Metagenome search result type (as returned by the API)
+  type BranchwaterResult = {
+    acc: string;
+    assay_type: string;
+    bioproject: string;
+    cANI: number | string; // API may return number or numeric string
+    containment: number | string; // same as above
+    geo_loc_name_country_calc: string;
+    organism: string;
+    exists_on_mgnify?: boolean;
+    // Allow unknown extra fields without resorting to `any`
+    [key: string]: unknown;
+  };
+
+  const [searchResults, setSearchResults] = useState<BranchwaterResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [filters, setFilters] = useState<BranchwaterFilters>({
     acc: '',
@@ -52,7 +68,7 @@ const GenomePage: React.FC = () => {
     organism: '',
   });
   const namespace = 'genome-metagenome-search-';
-  const results = useBranchwaterResults({
+  const results = useBranchwaterResults<BranchwaterResult>({
     items: searchResults,
     namespace,
     pageSize: 25,
@@ -62,7 +78,6 @@ const GenomePage: React.FC = () => {
     setFilters((prev) => ({ ...prev, [field]: value }));
 
   const handleMetagenomeSearch = () => {
-    // Only proceed if we have the data
     if (!data) return;
 
     const { data: genomeData } = data as MGnifyResponseObj;
@@ -74,15 +89,14 @@ const GenomePage: React.FC = () => {
     setIsSearching(true);
 
     axios
-      .post(
+      .post<BranchwaterResult[]>(
         `http://branchwater-dev.mgnify.org/mags?accession=${accession}&catalogue=${relatedCat.data.id}`
       )
-      .then((response) => {
-        setSearchResults(response.data);
+      .then(({ responseData }) => {
+        setSearchResults(responseData);
         setIsSearching(false);
       })
-      .catch((err) => {
-        console.error('Error fetching metagenome search results:', err);
+      .catch(() => {
         setIsSearching(false);
       });
   };
@@ -182,7 +196,10 @@ const GenomePage: React.FC = () => {
                 <div className="vf-u-padding__top--400">
                   <h4>Search Results ({results.total} matches found)</h4>
 
-                  <FiltersBar filters={filters} onFilterChange={handleFilterChange} />
+                  <FiltersBar
+                    filters={filters}
+                    onFilterChange={handleFilterChange}
+                  />
 
                   <div style={{ overflowX: 'auto' }}>
                     <EMGTable
@@ -192,9 +209,9 @@ const GenomePage: React.FC = () => {
                         count: results.total,
                       }}
                       className="vf-table"
-                      showPagination={true}
+                      showPagination
                       expectedPageSize={25}
-                      sortable={true}
+                      sortable
                       namespace={namespace}
                     />
                   </div>

@@ -1,4 +1,3 @@
-// Create a new component: LocalMultipleOptionFilter.tsx
 import React, { useMemo, useState, useEffect } from 'react';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
@@ -6,7 +5,7 @@ import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
 interface LocalMultipleOptionFilterProps {
   facetName: string;
   header: string;
-  data: any[]; // Your searchResults array
+  data: never[];
   includeTextFilter?: boolean;
 }
 

@@ -2,11 +2,11 @@ import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 import BrowseStudies from 'components/Browse/Studies';
-import BrowseSuperStudies from 'components/Browse/SuperStudies';
-import BrowseSamples from 'components/Browse/Samples';
-import BrowsePublications from 'components/Browse/Publications';
+// import BrowseSuperStudies from 'components/Browse/SuperStudies';
+// import BrowseSamples from 'components/Browse/Samples';
+// import BrowsePublications from 'components/Browse/Publications';
 import BrowseGenomes from 'components/Browse/Genomes';
-import BrowseBiomes from 'components/Browse/Biomes';
+// import BrowseBiomes from 'components/Browse/Biomes';
 import Tabs from 'components/UI/Tabs';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 

@@ -37,17 +37,18 @@ const Slider: React.FC<SliderProps> = ({
     min: selection && 'min' in selection ? selection.min : min,
     max: selection && 'max' in selection ? selection.max : max,
   });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounced = useCallback(debounce(onChange, 300), []);
   useEffect(() => {
     if (!areEqual(currentSelection, selection)) {
       debounced(currentSelection);
     }
-  }, [currentSelection]);
+  }, [currentSelection, debounced, selection]);
   useEffect(() => {
     if (!areEqual(currentSelection, selection)) {
       setCurrentSelection(selection);
     }
-  }, [selection]);
+  }, [currentSelection, selection]);
 
   const step = useMemo(() => {
     if (logarithmic) {

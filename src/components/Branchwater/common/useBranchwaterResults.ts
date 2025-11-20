@@ -11,7 +11,7 @@ export type BranchwaterFilters = {
   organism: string;
 };
 
-export type UseBranchwaterResultsArgs<T extends Record<string, any>> = {
+export type UseBranchwaterResultsArgs<T extends Record<string, unknown>> = {
   items: T[];
   namespace: string; // must end with a hyphen (e.g. "genome-branchwater-")
   pageSize?: number;
@@ -37,13 +37,19 @@ function toLowerSafe(v: unknown): string {
   }
 }
 
-function compareValues(a: any, b: any): number {
+function compareValues(a: unknown, b: unknown): number {
   // Numeric if both are finite numbers
-  const aNum = typeof a === 'string' && a.trim() !== '' ? Number(a) : a;
-  const bNum = typeof b === 'string' && b.trim() !== '' ? Number(b) : b;
-  const aIsNum = Number.isFinite(aNum);
-  const bIsNum = Number.isFinite(bNum);
-  if (aIsNum && bIsNum) {
+  const toFiniteNumber = (v: unknown): number | null => {
+    if (typeof v === 'number' && Number.isFinite(v)) return v;
+    if (typeof v === 'string' && v.trim() !== '') {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    }
+    return null;
+  };
+  const aNum = toFiniteNumber(a);
+  const bNum = toFiniteNumber(b);
+  if (aNum !== null && bNum !== null) {
     if (aNum < bNum) return -1;
     if (aNum > bNum) return 1;
     return 0;
@@ -55,7 +61,9 @@ function compareValues(a: any, b: any): number {
   return 0;
 }
 
-export default function useBranchwaterResults<T extends Record<string, any>>({
+export default function useBranchwaterResults<
+  T extends Record<string, unknown>
+>({
   items,
   namespace,
   pageSize = 25,
@@ -77,12 +85,15 @@ export default function useBranchwaterResults<T extends Record<string, any>>({
         ['geo_loc_name_country_calc', f.geo_loc_name_country_calc],
         ['organism', f.organism],
       ];
-      for (const [key, val] of entries) {
-        if (!val) continue;
+      let ok = true;
+      entries.forEach(([key, val]) => {
+        if (!ok) return; // short-circuit further checks
+        if (!val) return;
         const needle = val.toLowerCase();
-        const hay = toLowerSafe((it as any)[key]);
-        if (!hay.includes(needle)) return false;
-      }
+        const hay = toLowerSafe((it as Record<string, unknown>)[key]);
+        if (!hay.includes(needle)) ok = false;
+      });
+      if (!ok) return false;
       return true;
     });
   }, [items, filters]);
@@ -94,7 +105,10 @@ export default function useBranchwaterResults<T extends Record<string, any>>({
     const field = order.replace(/^-/, '');
     const arr = [...filteredResults];
     arr.sort((a, b) => {
-      const cmp = compareValues((a as any)[field], (b as any)[field]);
+      const cmp = compareValues(
+        (a as Record<string, unknown>)[field],
+        (b as Record<string, unknown>)[field]
+      );
       return desc ? -cmp : cmp;
     });
     return arr;

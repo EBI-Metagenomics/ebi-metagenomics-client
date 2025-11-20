@@ -1,11 +1,9 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react';
 
 import { BGZipService } from 'components/Analysis/BgZipService';
-import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 
 const InterProTableWithPagination = () => {
-  const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
   const [bgzipService, setBgzipService] = useState<BGZipService | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,10 +32,6 @@ const InterProTableWithPagination = () => {
   });
 
   const pageSize = 50;
-
-  const dataFile = analysisOverviewData.downloads.find(
-    (file) => file.alias.includes === 'interpro' && file.file_type === 'tsv.gz'
-  );
   // const dataFileUrl = dataFile?.url;
   const dataFileUrl =
     'http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/SRR1111/SRR1111111/V6/aseembly/asa-results/functional-annotation/interpro/ERZ1049444_interpro_summary.tsv.gz';
@@ -91,14 +85,8 @@ const InterProTableWithPagination = () => {
       if (!bgzipService) return;
       try {
         setIsLoading(true);
-        console.log('local pageSize ', pageSize);
         const rawData = await bgzipService.getPageData(page, pageSize);
         const interProData = parseInterProData(rawData);
-        // const interProData = await bgzipService.getPagedData(
-        //   page,
-        //   pageSize,
-        //   parseInterProData
-        // );
         setInterProDomainData(interProData);
         setCurrentPage(page);
         setError(null);
@@ -115,15 +103,12 @@ const InterProTableWithPagination = () => {
     if (newPage < 1 || newPage > totalPages || isLoading) {
       return;
     }
-    console.log('THIS IS NEW PAGE ', newPage);
     loadPage(newPage);
   };
 
   useEffect(() => {
     const service = new BGZipService(dataFileUrl, indexFileUrl, {
       avgBytesPerRecord: 100,
-      onLog: (msg) => console.log(`[BGZip] ${msg}`),
-      onError: (msg) => console.error(`[BGZip Error] ${msg}`),
     });
 
     setBgzipService(service);
@@ -167,7 +152,7 @@ const InterProTableWithPagination = () => {
     };
 
     initializeService();
-  }, [bgzipService]);
+  }, [bgzipService, loadPage]);
 
   // useEffect(() => {
   //   // examineFileStructure();

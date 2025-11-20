@@ -15,7 +15,11 @@ const groupStyle: React.CSSProperties = {
 };
 
 const FiltersBar: React.FC<FiltersBarProps> = ({ filters, onFilterChange }) => {
-  const entries: Array<{ key: keyof BranchwaterFilters; label: string; placeholder?: string }>= [
+  const entries: Array<{
+    key: keyof BranchwaterFilters;
+    label: string;
+    placeholder?: string;
+  }> = [
     { key: 'acc', label: 'Accession', placeholder: 'e.g. ERR...' },
     { key: 'assay_type', label: 'Assay Type', placeholder: 'e.g. WGS' },
     { key: 'bioproject', label: 'Bioproject' },
@@ -29,7 +33,10 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ filters, onFilterChange }) => {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
         {entries.map(({ key, label, placeholder }) => (
           <div key={String(key)} className="vf-form__item" style={groupStyle}>
-            <label className="vf-form__label" htmlFor={`bw-filter-${String(key)}`}>
+            <label
+              className="vf-form__label"
+              htmlFor={`bw-filter-${String(key)}`}
+            >
               {label}
             </label>
             <input
