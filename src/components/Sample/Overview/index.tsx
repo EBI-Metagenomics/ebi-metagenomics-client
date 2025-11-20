@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 import SamplesMap from 'components/UI/SamplesMap/BySamplesArray';
 import Box from 'components/UI/Box';
 import ExtLink from 'components/UI/ExtLink';
-import { getBiomeIcon } from '@/utils/biomes';
 import { ENA_VIEW_URL } from '@/utils/urls';
 import { SampleDetail, Study } from '@/interfaces';
 import { find } from 'lodash-es';
 import InfoBanner from 'components/UI/InfoBanner';
+import { BiomeClassificationFlag } from 'components/UI/BiomeClassificationFlag';
 
 type SampleOverviewProps = {
   data: SampleDetail;
@@ -53,11 +53,7 @@ const SampleOverview: React.FC<SampleOverviewProps> = ({ data }) => {
             </ul>
           </Box>
           <Box label="Classification">
-            <span
-              className={`biome_icon icon_sm ${getBiomeIcon(lineage)}`}
-              style={{ float: 'initial' }}
-            />
-            {lineage}
+            <BiomeClassificationFlag lineage={lineage} />
           </Box>
         </div>
         <SamplesMap samples={[data]} study={study} />
