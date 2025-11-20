@@ -1,11 +1,14 @@
 import React, { useContext } from 'react';
-import AnalysisContext, { AnalysisContextType } from 'pages/Analysis/V2AnalysisContext';
-import { Download } from 'interfaces/index';
+import AnalysisContext, {
+  AnalysisContextType,
+} from 'pages/Analysis/V2AnalysisContext';
+import { Download } from '@/interfaces';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 
 const InterPro: React.FC = () => {
-  const { overviewData: analysisData } = useContext<AnalysisContextType>(AnalysisContext);
+  const { overviewData: analysisData } =
+    useContext<AnalysisContextType>(AnalysisContext);
 
   const dataFile: Download | undefined = analysisData?.downloads.find(
     (file) =>

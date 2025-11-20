@@ -195,8 +195,8 @@ export const PublicationAnnotationsPopupBadge: React.FC<
       >
         <span className="vf-badge vf-badge--secondary">
           <i className="icon icon-common" data-icon="&#xf1c0;" /> meta
-        </span>{' '}
-        Show metadata from Europe PMC Annotations
+        </span>
+        &nbsp;&nbsp; Show metadata from Europe PMC Annotations
       </button>
     </>
   );

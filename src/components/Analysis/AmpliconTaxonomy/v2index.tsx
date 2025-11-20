@@ -5,8 +5,8 @@ import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import './style.css';
 import SlimVisualisationCard from 'components/Analysis/VisualisationCards/SlimVisualisationCard';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
-import AsvMarkerGeneTable from 'components/Analysis/Taxonomy/AsvMarkerGeneTable';
-import ClosedReferenceMarkerGeneTable from 'components/Analysis/Taxonomy/ClosedReferenceMarkerGeneTable';
+import AsvMarkerGeneTable from 'components/Analysis/AmpliconTaxonomy/AsvMarkerGeneTable';
+import ClosedReferenceMarkerGeneTable from 'components/Analysis/AmpliconTaxonomy/ClosedReferenceMarkerGeneTable';
 import { Download } from '@/interfaces';
 
 type MarkerGeneSummary = {

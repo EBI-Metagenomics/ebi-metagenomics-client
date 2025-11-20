@@ -17,8 +17,8 @@ import V2AnalysisContext, {
 import useAnalysisDetail from 'hooks/data/useAnalysisDetail';
 import { AnalysisDetail } from '@/interfaces';
 import Asv from 'components/Asv';
-import AssemblyTaxonomy from 'components/Analysis/AssemblyTaxonomy';
-import Taxonomy from 'components/Analysis/Taxonomy/v2index';
+import WGSTaxonomy from 'components/Analysis/WGSTaxonomy';
+import AmpliconTaxonomy from 'components/Analysis/AmpliconTaxonomy/v2index';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
@@ -28,11 +28,6 @@ const isAssembly = (
   experimentType: AnalysisDetail['experiment_type']
 ): boolean => experimentType.toLowerCase().endsWith('assembly');
 
-const isNotAmplicon = (
-  experimentType: AnalysisDetail['experiment_type']
-): boolean => {
-  return experimentType.toLowerCase() !== 'amplicon';
-};
 
 const isAmplicon = (
   experimentType: AnalysisDetail['experiment_type']
@@ -58,10 +53,6 @@ const V2AnalysisPage: React.FC = () => {
     () => data?.experiment_type && isAmplicon(data.experiment_type),
     [data?.experiment_type]
   );
-  const thisIsNotAmplicon = useMemo(
-    () => data?.experiment_type && isNotAmplicon(data.experiment_type),
-    [data?.experiment_type]
-  );
 
   const tabs = useMemo(() => {
     if (!data?.accession)
@@ -70,16 +61,14 @@ const V2AnalysisPage: React.FC = () => {
       { label: 'Overview', to: 'overview' },
       { label: 'Quality control', to: 'qc' },
       { label: 'Taxonomy', to: 'taxonomic' },
-      thisIsNotAmplicon
+      thisIsAssembly
         ? { label: 'Functional analysis', to: 'functional' }
         : null,
-      thisIsNotAmplicon
-        ? { label: 'Pathways/Systems', to: 'path-systems' }
-        : null,
+      thisIsAssembly ? { label: 'Pathways/Systems', to: 'path-systems' } : null,
       thisIsAssembly ? { label: 'Contig Viewer', to: 'contigs-viewer' } : null,
       thisIsAmplicon ? { label: 'ASV', to: 'asv' } : null,
     ].filter(Boolean) as { label: string | React.ElementType; to: string }[];
-  }, [thisIsNotAmplicon, thisIsAssembly, thisIsAmplicon, data?.accession]);
+  }, [thisIsAssembly, thisIsAmplicon, data?.accession]);
 
   const breadcrumbs = useMemo(() => {
     if (!data?.accession) return [] as Array<{ label: string; url?: string }>;
@@ -112,10 +101,10 @@ const V2AnalysisPage: React.FC = () => {
               <Route
                 path="taxonomic"
                 element={
-                  isAssembly(data.experiment_type) ? (
-                    <AssemblyTaxonomy />
+                  isAmplicon(data.experiment_type) ? (
+                    <AmpliconTaxonomy />
                   ) : (
-                    <Taxonomy />
+                    <WGSTaxonomy />
                   )
                 }
               />

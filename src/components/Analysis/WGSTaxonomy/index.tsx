@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
-import 'src/components/Analysis/Taxonomy/style.css';
+import 'components/Analysis/AmpliconTaxonomy/style.css';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import { Download } from '@/interfaces';
 import InfoBanner from 'components/UI/InfoBanner';
 
-const AssemblyTaxonomy: React.FC = () => {
+const WGSTaxonomy: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
   const kronaFile = analysisData?.downloads.find(
     (file: Download) =>
@@ -17,8 +17,6 @@ const AssemblyTaxonomy: React.FC = () => {
 
   return (
     <div className="vf-stack vf-stack--400">
-      <h1 className="vf-text vf-text--heading-l">Assembly Taxonomy</h1>
-
       <details className="vf-details" open>
         <summary className="vf-details--summary">
           Taxonomic Analysis Visualization
@@ -46,9 +44,9 @@ const AssemblyTaxonomy: React.FC = () => {
         <h3>About This Visualization</h3>
         <p>
           This interactive Krona chart displays the taxonomic composition of the
-          metagenomic assembly. The visualization allows you to explore the
-          hierarchical structure of the taxonomic classifications, from domain
-          down to species level.
+          metagenome. The visualization allows you to explore the hierarchical
+          structure of the taxonomic classifications, from domain down to
+          species level.
         </p>
         <p>
           <strong>How to use:</strong> Click on any segment to zoom in on that
@@ -60,4 +58,4 @@ const AssemblyTaxonomy: React.FC = () => {
   );
 };
 
-export default AssemblyTaxonomy;
+export default WGSTaxonomy;
