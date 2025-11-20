@@ -11,7 +11,7 @@ import { ErrorFromFetch } from 'hooks/data/useData';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import { truncate } from 'lodash-es';
 
-const expectedPageSize = 10;
+const expectedPageSize = 100;
 type AssociatedAnaysesProps = {
   rootEndpoint: string;
 };
