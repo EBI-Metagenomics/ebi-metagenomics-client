@@ -82,7 +82,7 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
               </ul>
             </Box>
           )}
-          {publications?.items?.length && (
+          {!!publications?.items?.length && (
             <Box label="Publications">
               <ul className="vf-list">
                 {publications.items.map((pub) => (
