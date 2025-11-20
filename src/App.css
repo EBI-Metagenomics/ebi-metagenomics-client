@@ -87,11 +87,7 @@ fieldset.mg-fieldbox label {
   grid-template-columns: 30% 70%;
 }
 
-html,
-.vf-content,
-.vf-table--striped,
-.vf-table__body,
-.vf-table__row:not(.vf-table__row--selected):hover {
+.vf-table__body .vf-table__row:not(.vf-table__row--selected):hover{
   background-color: #fffadc;
 }
 
