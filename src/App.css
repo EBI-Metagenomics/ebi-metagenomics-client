@@ -123,3 +123,7 @@ pre.vf-code-example__pre > button {
   color: #3b6fb6;
   text-decoration: underline;
 }
+
+.vf-tabs__link.is-active {
+  z-index: 1999 !important;  /* Ensure it's below the mega-menu */'
+}
