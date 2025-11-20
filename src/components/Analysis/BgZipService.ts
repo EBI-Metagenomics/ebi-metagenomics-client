@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 /* eslint-disable no-bitwise */
 
 import * as pako from 'pako';
-import { Download } from 'interfaces';
+import { Download } from 'interfaces/index';
+import { find } from 'lodash-es';
 
 const MAX_BLOCK_SIZE = 100000;
 
@@ -11,6 +11,16 @@ export interface GziBlock {
   uncompressedOffset: number;
 }
 
+/**
+ * Service for handling BGZF (Blocked GNU Zip Format) compressed files with random access capabilities.
+ * Specifically: allows the random fetching of "pages" (blocks) of text files like TSV and GFF.
+ *
+ *
+ * @param download - Download object containing URL and index file information
+ * @param autoInitialize - Whether to automatically initialize the service (default: true)
+ * @param leadingTsvCommentChars - Characters to treat as comment lines (default: "#"),
+ * in which case those lines are removed from pages (and empty pages are made invisible)
+ */
 export class BGZipService {
   private gziIndex: GziBlock[] = [];
 
@@ -20,14 +30,41 @@ export class BGZipService {
 
   private readonly indexFileUrl: string;
 
+  private firstPageIsOnlyComments = false;
+
+  /**
+   * Generates the full URL for a GZI index file based on the download object
+   * @param download - Download object containing URL and index file information
+   * @param indexType - E.g. gzi (default) or fai
+   * @returns The full URL for the GZI index file
+   */
+  public static getIndexFileUrl(
+    download: Download,
+    indexType = 'gzi'
+  ): string | undefined {
+    const relativeUrl = find(
+      download.index_files ?? [],
+      (index) => index.index_type === indexType
+    )?.relative_url;
+
+    return (
+      relativeUrl &&
+      new URL(relativeUrl, download.url.replace(/[^/]+$/, '')).toString()
+    );
+  }
+
   constructor(private download: Download, autoInitialize = true) {
     this.dataFileUrl = this.download.url;
-    this.indexFileUrl = new URL(
-      this.download.index_file?.relative_url,
-      this.download.url.replace(/[^/]+$/, '')
-    ).toString();
+    const idx = BGZipService.getIndexFileUrl(this.download);
+    if (idx) {
+      this.indexFileUrl = idx;
+    } else {
+      throw new Error('No index file found for BGZip download');
+    }
     if (autoInitialize) {
-      this.initialize().then(() => console.groupEnd());
+      this.initialize().then(() => {
+        // Empty
+      });
     }
   }
 
@@ -38,7 +75,6 @@ export class BGZipService {
     if (this.isInitialized) return true;
 
     try {
-      console.groupCollapsed('Initialize BGZip Service');
       const response = await fetch(this.indexFileUrl);
       if (!response.ok) {
         throw new Error(
@@ -57,31 +93,20 @@ export class BGZipService {
 
       this.isInitialized = true;
       return true;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      console.error('Error fetching GZI index:', errorMessage);
-      return false;
     } finally {
-      console.groupEnd();
+      /* empty */
     }
   }
 
   private async getFileSize(): Promise<number> {
     const headResponse = await fetch(this.dataFileUrl, { method: 'HEAD' });
-    const contentLength = Number(
-      headResponse.headers.get('content-length') || '0'
-    );
-    console.debug(`Compressed file size: ${contentLength}`);
-    return contentLength;
+
+    return Number(headResponse.headers.get('content-length') || '0');
   }
 
   private async parseGziIndex(buffer: ArrayBuffer): Promise<GziBlock[]> {
-    console.groupCollapsed('Parsing the GZI');
-
     const view = new DataView(buffer);
     const numIndexEntries = Number(view.getBigUint64(0, true));
-    console.log('GZI has index block count of', numIndexEntries);
-
     const blocks: GziBlock[] = [];
 
     for (let i = 0; i < numIndexEntries; i++) {
@@ -103,33 +128,23 @@ export class BGZipService {
      If the index is empty, make fake block of the entire file unless it seems bizarrely large.
     */
     if (blocks.length === 0) {
-      console.log('Index file is empty');
       const size = await this.getFileSize();
       if (size > MAX_BLOCK_SIZE) {
         throw new Error('Index file is empty, but compressed file is too big.');
       }
-      console.warn(
-        'No index entries, but file is small so adding synthetic entry at 0'
-      );
       blocks.unshift({
         compressedOffset: 0,
         uncompressedOffset: 0,
       });
     }
     if (blocks[0].uncompressedOffset > 0) {
-      console.warn(
-        'First index entry uncompressed offset > 0, adding synthetic entry at 0'
-      );
       blocks.unshift({
         compressedOffset: 0,
         uncompressedOffset: 0,
       });
     }
 
-    console.log('Parsed GZI blocks', blocks);
-
     this.gziIndex = blocks;
-    console.groupEnd();
     return blocks;
   }
 
@@ -171,6 +186,10 @@ export class BGZipService {
     return this.decompressBGZFBlock(compressedChunk);
   }
 
+  getSourcePageNumber(pageNum: number): number {
+    return this.firstPageIsOnlyComments ? pageNum + 1 : pageNum;
+  }
+
   /**
    * Fetches one full BGZF block as a page.
    */
@@ -179,36 +198,9 @@ export class BGZipService {
       throw new Error('Service not initialized yet');
     }
     if (pageNum < 0 || pageNum >= this.gziIndex.length) {
-      console.log(`No data for page ${pageNum}`);
       return new Uint8Array(0); // Out of range → empty
     }
     const entry = this.gziIndex[pageNum];
     return this.fetchAndDecompressBlock(entry.compressedOffset);
-  }
-
-  async readPageAsTSV(pageNum: number): Promise<string[][]> {
-    console.groupCollapsed('Read blockzip page/block as TSV');
-    const pageBytes = await this.readPage(pageNum - 1);
-    console.debug(`Read blockzip page size ${pageBytes.length}`);
-    const decoder = new TextDecoder('utf-8');
-    const text = decoder.decode(pageBytes);
-
-    // Split lines and filter empty lines
-    const lines = text.split('\n').filter((line) => line.trim().length > 0);
-    console.debug(`Lines ${lines.length}`);
-
-    // Split columns by tab
-    const rows = lines.map((line) => line.split('\t'));
-    console.debug(`Rows ${rows.length}`);
-    console.groupEnd();
-    return rows;
-  }
-
-  /**
-   * Returns the total number of pages = total BGZF blocks
-   */
-  getPageCount() {
-    console.debug(`Page count is ${this.gziIndex.length}`);
-    return this.gziIndex.length;
   }
 }

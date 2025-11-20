@@ -38,7 +38,7 @@ const InterProMatchesChart: React.FC<InterProMatchesChartProps> = ({
         onMatchesChange(matches);
       }
     }
-  }, [matches, loading]);
+  }, [matches, loading, onTotalChange, onMatchesChange]);
   useEffect(() => {
     if (chartComponentRef.current && selectedName !== null) {
       let index = chartComponentRef.current.chart.series[0].data.findIndex(

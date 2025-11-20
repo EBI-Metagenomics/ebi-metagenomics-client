@@ -22,7 +22,7 @@ const TabsForQueryParameter: React.FC<TabsProps> = ({
       setTabQp(defaultValue);
       setPage(1);
     }
-  }, [tabQp, queryParameter]);
+  }, [tabQp, queryParameter, setTabQp, defaultValue, setPage]);
 
   return (
     <div className="vf-tabs mg-search-tabs">

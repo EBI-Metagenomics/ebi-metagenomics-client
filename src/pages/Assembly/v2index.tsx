@@ -23,11 +23,21 @@ import RouteForHash from 'components/Nav/RouteForHash';
 import config from 'utils/config';
 import EMGTable from 'components/UI/EMGTable';
 
+type GenomeLink = {
+  genome: {
+    accession: string;
+    taxon_lineage: string;
+    catalogue_id: string | number;
+    catalogue_version: string | number;
+  };
+  species_rep: string;
+};
+
 type V2AssemblyCtx = {
   assemblyData: {
-    accession: any;
+    accession: string;
     run_accession: React.ReactNode | undefined;
-    genome_links: [];
+    genome_links: GenomeLink[];
     sample_accession: (() => JSX.Element) | string;
   } | null;
   loading: boolean;
@@ -39,7 +49,9 @@ const V2AssemblyContext = createContext<V2AssemblyCtx>({
   assemblyData: null,
   loading: false,
   error: null,
-  refetch: async () => {},
+  refetch(): Promise<void> {
+    return Promise.resolve(undefined);
+  },
 });
 
 const DerivedGenomes: React.FC = () => {
@@ -49,7 +61,7 @@ const DerivedGenomes: React.FC = () => {
     {
       id: 'genome_accession',
       Header: 'Genome accession',
-      accessor: (row: any) => (
+      accessor: (row: GenomeLink) => (
         <Link to={`/genomes/${row.genome.accession}`}>
           {row.genome.accession}
         </Link>
@@ -58,7 +70,7 @@ const DerivedGenomes: React.FC = () => {
     {
       id: 'ena',
       Header: 'ENA',
-      accessor: (row: any) =>
+      accessor: (row: GenomeLink) =>
         row.genome.accession === row.species_rep ? (
           <span
             className="icon icon-common icon-check-circle"
@@ -71,19 +83,19 @@ const DerivedGenomes: React.FC = () => {
     {
       id: 'species_representative',
       Header: 'Species representative',
-      accessor: (row: any) => (
+      accessor: (row: GenomeLink) => (
         <Link to={`/genomes/${row.species_rep}`}>{row.species_rep}</Link>
       ),
     },
     {
       id: 'taxonomy',
       Header: 'Taxonomy',
-      accessor: (row: any) => row.genome.taxon_lineage,
+      accessor: (row: GenomeLink) => row.genome.taxon_lineage,
     },
     {
       id: 'catalogue',
       Header: 'Catalogue',
-      accessor: (row: any) =>
+      accessor: (row: GenomeLink) =>
         `${row.genome.catalogue_id} v${row.genome.catalogue_version}`,
     },
   ];
@@ -109,11 +121,9 @@ const Overview: React.FC = () => {
       key: 'Sample',
       value: assemblyData
         ? () => (
-            <>
-              <Link to={`${assemblyData?.sample_accession}`}>
-                {assemblyData?.sample_accession}
-              </Link>
-            </>
+            <Link to={`${assemblyData?.sample_accession}`}>
+              {assemblyData?.sample_accession}
+            </Link>
           )
         : null,
     },

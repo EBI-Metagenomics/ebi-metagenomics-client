@@ -48,7 +48,7 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({ addToStorage }) => {
       setCount(0);
       setShouldCheck(false);
     }
-  }, [data, error, loading]);
+  }, [addToStorage, data, error, jobId, loading]);
 
   useEffect(() => {
     setJob(null);

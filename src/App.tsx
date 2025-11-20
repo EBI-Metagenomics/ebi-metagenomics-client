@@ -21,11 +21,11 @@ import './styles/search.css';
 import { ToastContainer } from 'react-toastify';
 import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import Matomo from 'components/Analytics';
-import V2AnalysisPage from 'pages/Analysis/v2index';
-import V2AssemblyPage from 'pages/Assembly/v2index';
-import SessionExpiryBanner from 'components/UI/SessionExpiryBanner';
 import PersistLogin from 'components/PersistLogin';
-import MyDataStudies from './pages/MyData/MyDataStudies';
+// import SearchPage from './pages/Search';
+// import Branchwater from './pages/Branchwater';
+// import PersistLogin from 'components/PersistLogin';
+import V2AssemblyPage from 'pages/Assembly/v2index';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -86,8 +86,6 @@ const App: React.FC = () => {
           <EBIHeader />
           <HeroHeader />
           <MainMenu />
-          <SessionExpiryBanner />
-          <PersistLogin />
           <div className="vf-body vf-u-margin__top--400 vf-u-margin__bottom--800">
             <ErrorBoundary>
               <ResetScroll />
@@ -115,14 +113,10 @@ const App: React.FC = () => {
                   <Route path="/v2-assemblies/*" element={<V2AssemblyPage />} />
                   <Route path="/pipelines/*" element={<Pipelines />} />
                   <Route path="/analyses/*" element={<Analysis />} />
-                  <Route path="/v2-analyses/*" element={<V2AnalysisPage />} />
-                  <Route path="/mydata/*" element={<MyData />}>
-                    <Route index element={<MyDataStudies />} />
-                    <Route path="studies" element={<MyDataStudies />} />
+                  <Route path="/mydata" element={<MyData />} />
+                  <Route element={<PersistLogin />}>
+                    <Route path="/login" element={<Login />} />
                   </Route>
-                  {/* <Route element={<PersistLogin />}> */}
-                  <Route path="/login" element={<Login />} />
-                  {/* </Route> */}
                 </Routes>
               </Suspense>
             </ErrorBoundary>

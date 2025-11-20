@@ -36,6 +36,14 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showCopiedMessage, setShowCopiedMessage] = useState(false);
 
+  // Helpers: toggle a CSS class to apply hover/focus styles (avoids inline mutations)
+  const setActive = (el: HTMLElement) => {
+    el.classList.add('is-active');
+  };
+  const setInactive = (el: HTMLElement) => {
+    el.classList.remove('is-active');
+  };
+
   const defaultZoomHandler = () => {
     setIsModalOpen(true);
     if (onSearch) {
@@ -45,15 +53,10 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
 
   const defaultCopyHandler = () => {
     if (ftpLink) {
-      navigator.clipboard
-        .writeText(ftpLink)
-        .then(() => {
-          setShowCopiedMessage(true);
-          setTimeout(() => setShowCopiedMessage(false), 2000);
-        })
-        .catch((err) => {
-          console.error('Failed to copy FTP link: ', err);
-        });
+      navigator.clipboard.writeText(ftpLink).then(() => {
+        setShowCopiedMessage(true);
+        setTimeout(() => setShowCopiedMessage(false), 2000);
+      });
     }
     if (onCopy) {
       onCopy();
@@ -143,7 +146,6 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
           >
             {showZoomButton && (
               <Tooltip content="Zoom">
-                {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
                 <button
                   type="button"
                   onClick={handleZoom}
@@ -161,20 +163,10 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
                   }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.backgroundColor = '#edf4f7';
-                    e.currentTarget.style.borderColor = '#3B6FB6';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow =
-                      '0 4px 8px rgba(59, 111, 182, 0.15)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.backgroundColor = '#f8f8f8';
-                    e.currentTarget.style.borderColor = '#e4e4e4';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow =
-                      '0 2px 4px rgba(0, 0, 0, 0.08)';
-                  }}
+                  onMouseOver={(e) => setActive(e.currentTarget)}
+                  onMouseOut={(e) => setInactive(e.currentTarget)}
+                  onFocus={(e) => setActive(e.currentTarget)}
+                  onBlur={(e) => setInactive(e.currentTarget)}
                 >
                   <svg
                     width="24"
@@ -218,7 +210,6 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
 
             {showDownloadButton && (
               <Tooltip content="Download">
-                {/* eslint-disable-next-line jsx-a11y/mouse-events-have-key-events */}
                 <a
                   href={ftpLink}
                   download
@@ -245,20 +236,10 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
                     transition: 'all 0.2s ease',
                     textDecoration: 'none',
                   }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.backgroundColor = '#edf4f7';
-                    e.currentTarget.style.borderColor = '#3B6FB6';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow =
-                      '0 4px 8px rgba(59, 111, 182, 0.15)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.backgroundColor = '#f8f8f8';
-                    e.currentTarget.style.borderColor = '#e4e4e4';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow =
-                      '0 2px 4px rgba(0, 0, 0, 0.08)';
-                  }}
+                  onMouseOver={(e) => setActive(e.currentTarget)}
+                  onMouseOut={(e) => setInactive(e.currentTarget)}
+                  onFocus={(e) => setActive(e.currentTarget)}
+                  onBlur={(e) => setInactive(e.currentTarget)}
                 >
                   <svg
                     width="24"
@@ -268,8 +249,9 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957
-                      21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
+                      d="M21 15V19C21 19.5304 20.7893
+                      20.0391 20.4142 20.4142C20.0391
+                      20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
                       stroke="#333333"
                       strokeWidth="2.5"
                       strokeLinecap="round"
@@ -317,29 +299,10 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
                   }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.backgroundColor = showCopiedMessage
-                      ? '#d4edda'
-                      : '#edf4f7';
-                    e.currentTarget.style.borderColor = showCopiedMessage
-                      ? '#28a745'
-                      : '#3B6FB6';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = showCopiedMessage
-                      ? '0 4px 8px rgba(40, 167, 69, 0.15)'
-                      : '0 4px 8px rgba(59, 111, 182, 0.15)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.backgroundColor = showCopiedMessage
-                      ? '#edf8ed'
-                      : '#f8f8f8';
-                    e.currentTarget.style.borderColor = showCopiedMessage
-                      ? '#7ac47a'
-                      : '#e4e4e4';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow =
-                      '0 2px 4px rgba(0, 0, 0, 0.08)';
-                  }}
+                  onMouseOver={(e) => setActive(e.currentTarget)}
+                  onMouseOut={(e) => setInactive(e.currentTarget)}
+                  onFocus={(e) => setActive(e.currentTarget)}
+                  onBlur={(e) => setInactive(e.currentTarget)}
                 >
                   {showCopiedMessage ? (
                     <svg
@@ -366,17 +329,18 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M20 9H11C9.89543 9 9 9.89543 9 11V20C9 21.1046 9.89543 22 11 22H20C21.1046 22 22 21.1046 22
-                        20V11C22 9.89543 21.1046 9 20 9Z"
+                        d="M20 9H11C9.89543 9 9 9.89543 9 11V20C9
+                        21.1046 9.89543 22 11 22H20C21.1046 22 22 21.1046 22 20V11C22 9.89543 21.1046 9 20 9Z"
                         stroke="#333333"
                         strokeWidth="2.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       />
                       <path
-                        d="M5 15H4C3.46957 15 2.96086 14.7893 2.58579 14.4142C2.21071 14.0391 2 13.5304 2 13V4C2 3.46957
-                        2.21071 2.96086 2.58579 2.58579C2.96086 2.21071 3.46957 2 4 2H13C13.5304 2 14.0391 2.21071
-                        14.4142 2.58579C14.7893 2.96086 15 3.46957 15 4V5"
+                        d="M5 15H4C3.46957 15 2.96086 14.7893 2.58579
+                        14.4142C2.21071 14.0391 2 13.5304 2 13V4C2 3.46957
+                        2.21071 2.96086 2.58579 2.58579C2.96086 2.21071 3.46957
+                        2 4 2H13C13.5304 2 14.0391 2.21071 14.4142 2.58579C14.7893 2.96086 15 3.46957 15 4V5"
                         stroke="#333333"
                         strokeWidth="2.5"
                         strokeLinecap="round"
@@ -393,7 +357,7 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
         <div className="vf-card__content | vf-stack vf-stack--400">
           <h3 className="vf-card__heading"> {title} </h3>
           <p className="vf-card__subheading">{subheading}</p>
-          <div className="vf-card__text">{children}</div>
+          <p className="vf-card__text">{children}</p>
         </div>
 
         <style>
@@ -413,6 +377,19 @@ const DetailedVisualisationCard: React.FC<VisualisationCardProps> = ({
               --vf-color-gray-border: #e4e4e4;
               --vf-color-success: #28a745;
               --vf-color-success-light: #edf8ed;
+            }
+
+            /* Hover/Focus styles toggled via .is-active class to avoid inline mutations */
+            .action-button.is-active {
+              background-color: var(--vf-color-blue-light) !important;
+              border-color: var(--vf-color-blue) !important;
+              transform: translateY(-2px) !important;
+              box-shadow: 0 4px 8px rgba(59, 111, 182, 0.15) !important;
+            }
+            .action-button.copied.is-active {
+              background-color: #d4edda !important;
+              border-color: var(--vf-color-success) !important;
+              box-shadow: 0 4px 8px rgba(40, 167, 69, 0.15) !important;
             }
           `}
         </style>

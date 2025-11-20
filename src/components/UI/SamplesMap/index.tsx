@@ -47,7 +47,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
   const markers = useRef({});
   const [markingEezRegions, setMarkingEezRegions] = useState(false);
 
-  // eslint-disable-next-line consistent-return
+  // eslint-disable-next-line consistent-return,react-hooks/exhaustive-deps
   const fetchPolygonCoordinates = async () => {
     try {
       const response = await axios.get(
@@ -90,6 +90,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const drawPolygon = (coordinates) => {
     if (!theMap) return;
     const polygon = new google.maps.Polygon({
@@ -191,7 +192,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
         });
       }
     }
-  }, [theMap, samples]);
+  }, [theMap, samples, fetchPolygonCoordinates, drawPolygon]);
 
   return (
     <>

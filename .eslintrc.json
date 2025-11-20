@@ -48,16 +48,17 @@
         "tsx": "never"
       }
     ],
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "no-shadow": "off",
     "no-plusplus": "off",
     "ignoreRestSiblings": 0,
-    "no-bitwise" : "warn",
-    "no-nested-ternary" : "warn",
+    "no-bitwise": "warn",
+    "no-nested-ternary": "warn",
     "jsx-a11y/label-has-associated-control": "off",
-    "jsx-a11y/no-static-element-interactions": "warn",  // TODO!
-    "jsx-a11y/click-events-have-key-events": "warn",  // TODO!
-    "jsx-a11y/mouse-events-have-key-events": "warn",  // TODO!
+    "jsx-a11y/no-static-element-interactions": "warn", // TODO!
+    "jsx-a11y/click-events-have-key-events": "warn", // TODO!
+    "jsx-a11y/mouse-events-have-key-events": "warn", // TODO!
+    "no-continue": "off",
     "max-len": [
       "warn",
       {

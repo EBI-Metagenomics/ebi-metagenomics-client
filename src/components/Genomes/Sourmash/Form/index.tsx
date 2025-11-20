@@ -7,6 +7,11 @@ import useMgnifySourmashSearch from '@/hooks/data/useMgnifySourmashSearch';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import CataloguePicker from 'components/Genomes/CrossCatalogueSearchCataloguePicker';
 
+type SourmashEventDetail = {
+  signatures: Record<string, string>;
+  errors: Record<string, string>;
+};
+
 type SourmashFormProps = {
   catalogueID?: string;
 };
@@ -18,30 +23,23 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
     catalogueID ? [catalogueID] : []
   );
 
-  const [{ signatures, errors }, setSourmashState] = useState({
+  const [{ signatures, errors }, setSourmashState] = useState<{
+    signatures: Record<string, string> | null;
+    errors: Record<string, string> | null;
+  }>({
     signatures: null,
     errors: null,
   });
   const { data, error, loading } = useMgnifySourmashSearch(
     shouldSearch ? 'gather' : '',
     selectedCatalogues,
-    signatures || {}
+    (signatures ?? {}) as Record<string, string>
   );
 
   useEffect(() => {
-    let sourmashElement: {
-      addEventListener: (
-        arg0: string,
-        arg1: (event: { detail: { signatures: any; errors: any } }) => void
-      ) => void;
-      removeEventListener: (
-        arg0: string,
-        arg1: (event: { detail: { signatures: any; errors: any } }) => void
-      ) => void;
-    };
-    const sketchedAll = (event: {
-      detail: { signatures: any; errors: any };
-    }): void => {
+    let sourmashElement: HTMLMgnifySourmashComponentElement | null;
+    const sketchedAll = (evt: Event): void => {
+      const event = evt as CustomEvent<SourmashEventDetail>;
       setSourmashState({
         signatures: event.detail.signatures,
         errors: event.detail.errors,
@@ -64,7 +62,7 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
         sourmashElement.removeEventListener('change', changedFiles);
       }
     };
-  }, [sourmash.current]);
+  }, []);
 
   useEffect(() => {
     if (!loading && !error && data) {
@@ -72,7 +70,7 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
       setJobId((data.data as Record<string, string>).job_id);
       setShouldSearch(false);
     }
-  }, [data, error, loading]);
+  }, [data, error, loading, setJobId]);
 
   const handleSearch = (): void => {
     setShouldSearch(true);

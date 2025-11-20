@@ -1,13 +1,9 @@
 import React from 'react';
-import BlogExcerpts from 'components/Home/BlogExcerpts';
-import ExtLink from 'components/UI/ExtLink';
 import Publications, { MainPublication } from 'components/Publications';
 import InnerCard from 'components/UI/InnerCard';
 import './style.css';
 import SearchPage from 'pages/Search';
-import { useReveal } from 'hooks/useReveal';
-import SearchBy from 'components/Home/SearchBy';
-import LatestStudies from 'components/Home/Request/LatestStudies';
+import useReveal from 'hooks/useReveal';
 
 const HomePage: React.FC = () => {
   const SearchIcon = (
@@ -93,8 +89,7 @@ const HomePage: React.FC = () => {
     </svg>
   );
   const analysisRef = useReveal();
-  const exploreRef = useReveal();
-
+  useReveal();
   return (
     <section className="vf-content vf-stack vf-stack--800">
       {/* Hero section with stylized layout */}

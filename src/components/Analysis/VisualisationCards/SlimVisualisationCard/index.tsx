@@ -126,9 +126,10 @@ const SlimVisualisationCard: React.FC<SlimVisualisationCardProps> = ({
                   style={{ marginRight: '4px' }}
                 >
                   <path
-                    d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304
-                    4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893
-                    19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"
+                    d="M14 2H6C5.46957 2 4.96086 2.21071
+                    4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304
+                    4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957
+                    22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"
                     stroke={fileTypeColors.color}
                     strokeWidth="2"
                     strokeLinecap="round"
@@ -248,7 +249,8 @@ const SlimVisualisationCard: React.FC<SlimVisualisationCardProps> = ({
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957
+                    d="M21 15V19C21 19.5304 20.7893 20.0391
+                    20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957
                     21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
                     stroke={fileTypeColors.color}
                     strokeWidth="2"
@@ -344,17 +346,18 @@ const SlimVisualisationCard: React.FC<SlimVisualisationCardProps> = ({
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M20 9H11C9.89543 9 9 9.89543 9 11V20C9 21.1046 9.89543 22 11 22H20C21.1046 22 22 21.1046 22
-                      20V11C22 9.89543 21.1046 9 20 9Z"
+                      d="M20 9H11C9.89543 9 9 9.89543 9 11V20C9 21.1046
+                      9.89543 22 11 22H20C21.1046 22 22 21.1046 22 20V11C22 9.89543 21.1046 9 20 9Z"
                       stroke="#333333"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
                     <path
-                      d="M5 15H4C3.46957 15 2.96086 14.7893 2.58579 14.4142C2.21071 14.0391 2 13.5304 2 13V4C2 3.46957
-                      2.21071 2.96086 2.58579 2.58579C2.96086 2.21071 3.46957 2 4 2H13C13.5304 2 14.0391 2.21071 14.4142
-                      2.58579C14.7893 2.96086 15 3.46957 15 4V5"
+                      d="M5 15H4C3.46957 15 2.96086
+                      14.7893 2.58579 14.4142C2.21071 14.0391 2 13.5304 2 13V4C2 3.46957
+                      2.21071 2.96086 2.58579 2.58579C2.96086 2.21071 3.46957
+                      2 4 2H13C13.5304 2 14.0391 2.21071 14.4142 2.58579C14.7893 2.96086 15 3.46957 15 4V5"
                       stroke="#333333"
                       strokeWidth="2"
                       strokeLinecap="round"
@@ -417,7 +420,7 @@ const SlimVisualisationCard: React.FC<SlimVisualisationCardProps> = ({
           /* URL link container */
           .url-link-container {
             background-color: #f8f8f8;
-            padding: 8px 12px 8px 4em;
+            padding: 8px 12px;
             border-radius: 6px;
             margin-bottom: 12px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -430,7 +433,7 @@ const SlimVisualisationCard: React.FC<SlimVisualisationCardProps> = ({
           .url-link-container::before {
             content: 'URL';
             position: absolute;
-            top: 10px;
+            top: -8px;
             left: 12px;
             background-color: #f0f0f0;
             padding: 0 6px;
