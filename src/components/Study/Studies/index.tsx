@@ -55,7 +55,7 @@ const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
   return (
     <EMGTable
       cols={columns}
-      data={associatedStudies as Record<string, any>[]}
+      data={associatedStudies as Record<string, never>[]}
       className="mg-studies-table"
       showPagination={false}
       // downloadURL={downloadURL}
