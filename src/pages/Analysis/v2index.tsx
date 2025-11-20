@@ -28,7 +28,6 @@ const isAssembly = (
   experimentType: AnalysisDetail['experiment_type']
 ): boolean => experimentType.toLowerCase().endsWith('assembly');
 
-
 const isAmplicon = (
   experimentType: AnalysisDetail['experiment_type']
 ): boolean => {

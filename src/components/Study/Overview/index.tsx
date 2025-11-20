@@ -55,7 +55,7 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
         {data.accession && <SamplesMapByStudy study={data} />}
       </div>
       <br />
-      <div className="mg-flex">
+      <div>
         {/* {data?.relationships?.studies?.data?.length > 0 && ( */}
         {/*  <Box label="Related studies"> */}
         {/*    <ul className="vf-list"> */}

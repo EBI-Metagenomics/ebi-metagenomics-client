@@ -64,12 +64,6 @@ button.mg-button[disabled],
   cursor: default;
 }
 
-.mg-flex {
-  display: flex;
-  gap: var(--page-grid-gap, 1em);
-  align-items: flex-start;
-}
-
 .mg-list__item {
   margin-left: 0.6rem;
 }
@@ -93,11 +87,11 @@ fieldset.mg-fieldbox label {
   grid-template-columns: 30% 70%;
 }
 
-html
-  .vf-content
-  .vf-table--striped
-  .vf-table__body
-  .vf-table__row:not(.vf-table__row--selected):hover {
+html,
+.vf-content,
+.vf-table--striped,
+.vf-table__body,
+.vf-table__row:not(.vf-table__row--selected):hover {
   background-color: #fffadc;
 }
 

@@ -11,7 +11,7 @@ import Accordion, {
 } from 'components/UI/Accordion';
 import EMGModal from 'components/UI/EMGModal';
 import { usePublicationAnnotations } from 'hooks/data/usePublicationDetail';
-import { AnnotationGroup } from 'interfaces/index';
+import { AnnotationGroup } from '@/interfaces';
 
 const AnnotationSuperGroup: React.FC<{
   superGroup: AnnotationGroup[];
