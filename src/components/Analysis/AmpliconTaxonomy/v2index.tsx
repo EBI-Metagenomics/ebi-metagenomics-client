@@ -299,14 +299,10 @@ const Taxonomy = () => {
           Marker Gene Summary
         </summary>
         <p>
-          The tables below show the marker genes that were identified and
-          analysed.
-        </p>
-        <p>
-          The pipeline searches for the different marker genes shown in these
-          tables, which shows which ones were identified and analysed in this
-          run. The tables also show which types of analysis results are
-          available for each identified marker gene.
+          The pipeline searches for the different marker genes shown in the
+          tables below, and which markers were identified in this run.
+          The tables also list which types of analysis results are available
+          for each identified marker gene.
         </p>
 
         <AsvMarkerGeneTable
