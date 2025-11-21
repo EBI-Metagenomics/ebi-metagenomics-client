@@ -13,9 +13,9 @@ describe('Study page', function() {
     beforeEach(function() {
         cy.intercept('GET', `${config.api_v2}/studies/${projectId}`,
           {fixture: 'apiv2/studies/studyMGYS00000001.json'});
-        cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=1`,
+        cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=1&page_size=10`,
           {fixture: 'apiv2/studies/studyMGYS00000001AnalysesPage1.json'}).as('getAnalysesPage1');
-        cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=2`,
+        cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=2&page_size=10`,
           {fixture: 'apiv2/studies/studyMGYS00000001AnalysesPage2.json'}).as('getAnalysesPage2');
         cy.intercept('GET', `${config.api_v2}/studies/${projectId}/publications**`,
           {fixture: 'apiv2/studies/studyMGYS00000001Publications.json'}).as('getPublications');
@@ -129,7 +129,7 @@ describe('Study page', function() {
 
       it('Analysis table download should handle empty analyses list', function() {
         // TODO: probably better a unit test rather than e2e here
-        cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=1`,
+        cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=1&page_size=10`,
           {fixture: 'apiv2/emptyList.json'}).as('getAnalysesPage1');
 
         const writtenChunks = [];
@@ -152,7 +152,7 @@ describe('Study page', function() {
         let callTimestamps = [];
 
         cy.fixture('apiv2/studies/studyMGYS00000001AnalysesPage2.json').then((fixtureData) => {
-          cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=2`, (req) => {
+          cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=2&page_size=10`, (req) => {
             page2CallCount ++;
             const now = Date.now();
             callTimestamps.push(now);
@@ -205,7 +205,7 @@ describe('Study page', function() {
       it('Analysis table download should show error if API response is bad', function() {
         // TODO: probably better a unit test rather than e2e here
 
-        cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=2`, {
+        cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=2&page_size=10`, {
           statusCode: 500,
           body: 'Internal Server Error',
         }).as('serverError');

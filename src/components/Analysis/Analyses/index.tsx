@@ -11,7 +11,7 @@ import { ErrorFromFetch } from 'hooks/data/useData';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import { truncate } from 'lodash-es';
 
-const expectedPageSize = 100;
+const expectedPageSize = 10;
 type AssociatedAnaysesProps = {
   rootEndpoint: string;
 };
@@ -25,6 +25,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = () => {
     accession || '',
     {
       page: analysesPage,
+      page_size: expectedPageSize,
     }
   );
 
