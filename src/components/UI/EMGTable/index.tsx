@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, {
   MouseEventHandler,
   useEffect,
@@ -6,15 +5,22 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { filter } from 'lodash-es';
+import { camelCase, filter } from 'lodash-es';
 
-import { Column, Row, usePagination, useSortBy, useTable } from 'react-table';
+import {
+  Column,
+  Row,
+  SortingRule,
+  usePagination,
+  useSortBy,
+  useTable,
+} from 'react-table';
 import Loading from 'components/UI/Loading';
 import TextInputDebounced from 'components/UI/TextInputDebounced';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
-import { PaginatedList } from 'interfaces';
+import { PaginatedList } from '@/interfaces';
 import { MGnifyDatum, MGnifyResponse } from 'hooks/data/useData';
 import PaginationButton from './PaginationButton';
 import './style.css';
@@ -65,7 +71,7 @@ function getPaginationRanges(
 }
 
 function getOrderingQueryParamFromSortedColumn(
-  tableSortBy: Array<{ id: string; desc: boolean }>
+  tableSortBy: Array<SortingRule<string>>
 ): string {
   if (!tableSortBy.length) return '';
   const col = tableSortBy[0];
@@ -74,8 +80,20 @@ function getOrderingQueryParamFromSortedColumn(
     .replace(/-/g, '_')}`;
 }
 
-type EMGTableProps = {
-  cols: Column[];
+function getSortedColumnFromOrderingQueryParam(
+  ordering: string
+): Array<{ id: string; desc: boolean }> {
+  if (!ordering) return [];
+  const desc = ordering.startsWith('-');
+  const id = ordering
+    .replace(/^-/, '')
+    .replace(/attributes\./g, '')
+    .replace(/-/g, '_');
+  return [{ id, desc }];
+}
+
+type EMGTableProps<T extends object> = {
+  cols: Column<T>[];
   data:
     | PaginatedList
     | Record<string, unknown>[]
@@ -95,12 +113,12 @@ type EMGTableProps = {
   downloadURL?: string;
   onDownloadRequested?: () => void;
   ExtraBarComponent?: React.ReactNode;
-  onMouseEnterRow?: (row: Row) => void;
-  onMouseLeaveRow?: (row: Row) => void;
+  onMouseEnterRow?: (row: Row<T>) => void;
+  onMouseLeaveRow?: (row: Row<T>) => void;
   dataCy?: string;
 };
 
-const EMGTable: React.FC<EMGTableProps> = ({
+const EMGTable = <T extends object>({
   cols,
   data,
   Title,
@@ -113,15 +131,19 @@ const EMGTable: React.FC<EMGTableProps> = ({
   sortable = false,
   loading = false,
   isStale = false,
-  downloadURL = null,
+  downloadURL = undefined,
   onDownloadRequested = () => null,
   ExtraBarComponent = null,
   onMouseEnterRow = () => null,
   onMouseLeaveRow = () => null,
   dataCy,
-}) => {
-  const [page, setPage] = useQueryParamState(`${namespace}page`, 1, Number);
-  const [ordering, setOrdering] = useQueryParamState(`${namespace}order`, '');
+}: EMGTableProps<T>) => {
+  const [page, setPage] = useQueryParamState<number>(
+    camelCase(`${namespace} page`)
+  );
+  const [ordering, setOrdering] = useQueryParamState<string>(
+    camelCase(`${namespace} order`)
+  );
 
   const pageCount = useMemo(() => {
     if (data && 'count' in data) {
@@ -130,7 +152,14 @@ const EMGTable: React.FC<EMGTableProps> = ({
     return (data as MGnifyResponse)?.meta?.pagination?.pages || 1;
   }, [data, expectedPageSize]);
 
+  const tableData = useMemo(() => {
+    return ((data as MGnifyResponse)?.data ||
+      (data as PaginatedList)?.items ||
+      data) as T[];
+  }, [data]);
+
   const {
+    setSortBy,
     getTableProps,
     getTableBodyProps,
     headerGroups,
@@ -139,18 +168,14 @@ const EMGTable: React.FC<EMGTableProps> = ({
     canPreviousPage,
     canNextPage,
     gotoPage,
-    nextPage,
-    previousPage,
     state: { pageIndex, sortBy },
-  } = useTable(
+  } = useTable<T>(
     {
-      columns: cols,
-      data:
-        (data as MGnifyResponse)?.data ||
-        (data as PaginatedList)?.items ||
-        data,
+      columns: cols as Column<T>[],
+      data: tableData,
       initialState: {
         pageIndex: initialPage,
+        sortBy: getSortedColumnFromOrderingQueryParam(ordering),
       },
       pageCount: pageCount || 1,
       manualPagination: true,
@@ -163,43 +188,51 @@ const EMGTable: React.FC<EMGTableProps> = ({
   const [isChangingPage, setChangingPage] = useState(false);
 
   useEffect(() => {
-    if (showPagination && page !== pageIndex + 1) {
-      setPage(pageIndex + 1);
+    if (!showPagination) return;
+    const desiredIndex = Math.max(0, (page ?? 1) - 1);
+    if (pageIndex !== desiredIndex) {
+      gotoPage(desiredIndex);
       if (tableRef.current && isChangingPage) {
-        tableRef.current.scrollIntoView();
+        (tableRef.current as HTMLElement).scrollIntoView();
         setChangingPage(false);
       }
     }
-  }, [showPagination, setPage, pageIndex, page, isChangingPage]);
+  }, [showPagination, page, pageIndex, gotoPage, isChangingPage]);
 
   useEffect(() => {
-    if (sortable) {
-      const order = getOrderingQueryParamFromSortedColumn(sortBy);
-      if (order === ordering) return;
-      setOrdering(order);
+    // Handle table-initiated change of sorting column
+    if (!sortable || !sortBy?.length) return;
+    const orderParamRequestedByTable =
+      getOrderingQueryParamFromSortedColumn(sortBy);
+    if (ordering !== orderParamRequestedByTable) {
+      setOrdering(orderParamRequestedByTable);
       setPage(1);
-      if (tableRef.current && isChangingPage) {
-        tableRef.current.scrollIntoView();
-        setChangingPage(false);
-      }
     }
-  }, [
-    showPagination,
-    setOrdering,
-    setPage,
-    sortBy,
-    sortable,
-    ordering,
-    isChangingPage,
-  ]);
+  }, [sortable, sortBy, ordering, setOrdering, setPage]);
+
+  useEffect(() => {
+    // Handle external (e.g. URL query param) load/change of sorting column
+    if (!sortable) return;
+    const orderParamSpecifiedExternally = ordering;
+    const orderParamCurrentlyInTable =
+      getOrderingQueryParamFromSortedColumn(sortBy);
+    if (orderParamSpecifiedExternally !== orderParamCurrentlyInTable) {
+      setSortBy(
+        getSortedColumnFromOrderingQueryParam(orderParamSpecifiedExternally)
+      );
+      setPage(1);
+    }
+  }, [ordering, setPage, setSortBy, sortBy, sortable]);
 
   const paginationRanges = useMemo(
     () => getPaginationRanges(pageIndex, pageCount),
     [pageIndex, pageCount]
   );
   const goToPageAndScroll = (pageNumber): MouseEventHandler => {
-    setChangingPage(true);
-    return gotoPage(pageNumber);
+    return () => {
+      setChangingPage(true);
+      setPage(pageNumber + 1);
+    };
   };
 
   const fullWidthColSpan = useMemo(() => {
@@ -211,7 +244,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
     <section data-cy={dataCy}>
       <LoadingOverlay loading={loading && isStale}>
         <table
-          {...getTableProps}
+          {...getTableProps()}
           className={`vf-table--striped mg-table ${className}`}
           ref={tableRef}
         >
@@ -258,10 +291,11 @@ const EMGTable: React.FC<EMGTableProps> = ({
             </caption>
           )}
           <thead className="vf-table__header">
-            {headerGroups.map((headerGroup) => (
+            {headerGroups.map((headerGroup, idx) => (
               <tr
                 {...headerGroup.getHeaderGroupProps()}
                 className="vf-table__row"
+                key={headerGroup.id || idx}
               >
                 {headerGroup.headers.map((column) => {
                   if (column.isFullWidth) {
@@ -273,6 +307,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
                         ? column.getHeaderProps(column.getSortByToggleProps())
                         : { key: column.id })}
                       className="vf-table__heading"
+                      key={column.id}
                     >
                       {column.render('Header')}
                       {sortable && column.canSort && (
@@ -316,6 +351,7 @@ const EMGTable: React.FC<EMGTableProps> = ({
                       return (
                         <td
                           {...cell.getCellProps()}
+                          key={cell.column.id}
                           colSpan={
                             typeof cell.column?.colspan === 'function'
                               ? cell.column.colspan(cell)
@@ -388,7 +424,10 @@ const EMGTable: React.FC<EMGTableProps> = ({
                 <button
                   disabled={!canPreviousPage}
                   type="button"
-                  onClick={previousPage}
+                  onClick={() => {
+                    setChangingPage(true);
+                    setPage(Math.max(1, pageIndex /* zero-based */ + 1 - 1));
+                  }}
                   className="vf-button vf-button--link vf-pagination__link"
                 >
                   Previous<span className="vf-u-sr-only"> page</span>
@@ -438,7 +477,10 @@ const EMGTable: React.FC<EMGTableProps> = ({
                 <button
                   disabled={!canNextPage}
                   type="button"
-                  onClick={nextPage}
+                  onClick={() => {
+                    setChangingPage(true);
+                    setPage(pageIndex + 1 + 1);
+                  }}
                   className="vf-button vf-button--link vf-pagination__link"
                 >
                   Next<span className="vf-u-sr-only"> page</span>

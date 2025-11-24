@@ -580,7 +580,7 @@ const Branchwater = () => {
         const bValue = b[effectiveField] ?? '';
 
         // Handle numeric values
-        // eslint-disable-next-line no-restricted-globals
+
         if (!isNaN(Number(aValue)) && !isNaN(Number(bValue))) {
           return effectiveDirection === 'asc'
             ? Number(aValue) - Number(bValue)

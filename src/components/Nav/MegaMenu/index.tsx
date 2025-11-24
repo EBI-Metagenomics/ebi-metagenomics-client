@@ -2,18 +2,15 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import ArrowForLink from 'components/UI/ArrowForLink';
 import Link from 'components/UI/Link';
 import { getDetailOrSearchURLForQuery } from '@/utils/accessions';
-import { createParamFromURL } from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
-import useQueryParamsStore from '@/hooks/queryParamState/QueryParamStore/useQueryParamsStore';
 import { useNavigate } from 'react-router-dom';
 import UserContext from 'pages/Login/UserContext';
 import config from '@/utils/config';
+import { noop } from 'lodash-es';
 
 const MegaMenu: React.FC = () => {
   const { isAuthenticated } = useContext(UserContext);
   const [menuVisible, setMenuVisible] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
-
-  const { dispatch } = useQueryParamsStore();
 
   const navigate = useNavigate();
 
@@ -31,7 +28,7 @@ const MegaMenu: React.FC = () => {
     setActiveSection(null);
   };
 
-  const searchBox = useRef<HTMLInputElement>();
+  const searchBox = useRef<HTMLInputElement | null>(null);
   const [isAccessionLike, setIsAccessionLike] = useState(false);
   const [nextURL, setNextURL] = useState('/search/studies');
 
@@ -45,14 +42,16 @@ const MegaMenu: React.FC = () => {
   };
 
   const setSearchQuery = (query: string) => {
-    dispatch(
-      createParamFromURL({
-        name: 'query',
-        value: query,
-      })
-    );
+    // TODO
+    console.log('setSearchQuery', query);
+    // dispatch(
+    //   createParamFromURL({
+    //     name: 'query',
+    //     value: query,
+    //   })
+    // );
   };
-  const menuRef = useRef(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -243,14 +242,14 @@ const MegaMenu: React.FC = () => {
                             Studies <ArrowForLink />
                           </a>
                         </li>
-                        {/* <li className="vf-navigation__item"> */}
-                        {/*  <a */}
-                        {/*    href={`${config.basename}/browse/samples`} */}
-                        {/*    className="vf-navigation__link rotating-link" */}
-                        {/*  > */}
-                        {/*    Samples <ArrowForLink /> */}
-                        {/*  </a> */}
-                        {/* </li> */}
+                        <li className="vf-navigation__item">
+                          <a
+                            href={`${config.basename}/browse/samples`}
+                            className="vf-navigation__link rotating-link"
+                          >
+                            Samples <ArrowForLink />
+                          </a>
+                        </li>
                         <li className="vf-navigation__item">
                           <a
                             href={`${config.basename}/browse/publications`}
@@ -365,13 +364,13 @@ const MegaMenu: React.FC = () => {
                     className="vf-form vf-form--search vf-form--search--mini | vf-sidebar vf-sidebar--end"
                     onSubmit={async (e) => {
                       e.preventDefault();
-                      const searchText = searchBox.current.value;
+                      const searchText = searchBox.current?.value;
                       if (!isAccessionLike) {
-                        setSearchQuery(searchText);
+                        setSearchQuery(searchText ?? '');
                       }
                       navigate(nextURL);
-                      searchBox.current.value = '';
-                      searchBox.current.blur();
+                      if (searchBox.current) searchBox.current.value = '';
+                      searchBox.current?.blur();
                     }}
                   >
                     <div className="vf-sidebar__inner">
@@ -409,10 +408,10 @@ const MegaMenu: React.FC = () => {
                           type={isAccessionLike ? 'button' : 'submit'}
                           onClick={
                             !isAccessionLike
-                              ? null
+                              ? noop
                               : () => {
-                                  const searchText = searchBox.current.value;
-                                  setSearchQuery(searchText);
+                                  const searchText = searchBox.current?.value;
+                                  setSearchQuery(searchText ?? '');
                                   navigate('/search/submit');
                                 }
                           }

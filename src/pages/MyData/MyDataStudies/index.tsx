@@ -4,20 +4,23 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import { getBiomeIcon } from 'utils/biomes';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 
 import useProtectedApiCall from 'hooks/useProtectedApiCall';
-import { StudyList } from 'interfaces';
+import { Study, StudyList } from 'interfaces/index';
+
+const { usePage, withQueryParamProvider } =
+  createSharedQueryParamContextForTable();
 
 const MyDataStudies: React.FC = () => {
-  const [page] = useQueryParamState('page', 1, Number);
+  const [page] = usePage();
 
   const protectedAxios = useProtectedApiCall();
   const [myData, setMyData] = useState<StudyList | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isStale] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
-  const [downloadURL] = useState<string | null>(null);
+  const [error, setError] = useState<Error>();
+  const [downloadURL] = useState<string>();
 
   useEffect(() => {
     let isMounted = true;
@@ -37,7 +40,7 @@ const MyDataStudies: React.FC = () => {
         }
       } catch (apiError) {
         if (isMounted) {
-          setError(apiError);
+          setError(apiError as Error);
           setLoading(false);
         }
       }
@@ -82,14 +85,13 @@ const MyDataStudies: React.FC = () => {
       {
         Header: 'Last updated',
         accessor: 'updated_at',
-        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+        Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
       },
     ],
     []
   );
   if (loading && (!isStale || !myData)) return <Loading size="large" />;
   if (error) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return <FetchError error={error} />;
   }
@@ -97,9 +99,9 @@ const MyDataStudies: React.FC = () => {
   return (
     <section>
       <h4>My Studies</h4>
-      <EMGTable
+      <EMGTable<Study>
         cols={columns}
-        data={myData}
+        data={myData ?? []}
         initialPage={(page as number) - 1}
         sortable
         loading={loading}
@@ -110,4 +112,4 @@ const MyDataStudies: React.FC = () => {
   );
 };
 
-export default MyDataStudies;
+export default withQueryParamProvider(MyDataStudies);

@@ -5,16 +5,19 @@ import useMGnifyData from '@/hooks/data/useMGnifyData';
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 
 const PAGE_SIZE = 25;
 
+const { useKeggPage, useKeggPageSize, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('kegg', {}, PAGE_SIZE);
+
 const KeggTable: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
-  const [page] = useQueryParamState('page', 1, Number);
-  const [pageSize] = useQueryParamState('page_size', PAGE_SIZE, Number);
+  const [page] = useKeggPage<number>();
+  const [pageSize] = useKeggPageSize<number>();
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(
-    `analyses/${overviewData.id}/kegg-modules`,
+    overviewData ? `analyses/${overviewData.id}/kegg-modules` : undefined,
     {
       page: page as number,
       page_size: pageSize as number,
@@ -60,8 +63,9 @@ const KeggTable: React.FC = () => {
       isStale={isStale}
       showPagination
       downloadURL={downloadURL}
+      namespace="kegg"
     />
   );
 };
 
-export default KeggTable;
+export default withQueryParamProvider(KeggTable);

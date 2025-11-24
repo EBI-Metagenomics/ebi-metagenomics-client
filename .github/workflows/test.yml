@@ -6,7 +6,7 @@ env:
   API_URL: http://localhost:9000/metagenomics/api/v1/
   API_V2_URL: http://localhost:8000/
   SEARCH_URL: https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_
-  DEPLOYMENT_SUBFOLDER: /metagenomics
+  VITE_BASE_URL: /metagenomics
   BASE_URL: http://localhost:9000/metagenomics/
   INTERPRO_URL: http://www.ebi.ac.uk/interpro/
   SEQUENCE_SEARCH_URL: https://wwwdev.ebi.ac.uk/metagenomics/sequence-search/search/phmmer
@@ -38,7 +38,9 @@ jobs:
 
       - name: 🔧 - Install deps
         working-directory: client-repo
-        run: npm ci
+        run: |
+          npm ci
+          npm i -g concurrently
 
       - name: 🧹 - ESlint
         working-directory: client-repo
@@ -50,7 +52,7 @@ jobs:
         with:
           working-directory: client-repo
           browser: chrome
-          start: npm run start
+          start: concurrently -k "npm run serve:fixtures" "npm run start"
           wait-on: http://localhost:9000/
           wait-on-timeout: 60
         env:

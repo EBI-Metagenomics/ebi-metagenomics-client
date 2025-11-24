@@ -1,11 +1,11 @@
-import { KeyValue } from 'hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
 import { useContext } from 'react';
 
-import { AnalysisDetail } from 'interfaces';
+import { BiomeList } from '@/interfaces';
 import useApiData from 'hooks/data/useApiData';
+import { KeyValue } from 'hooks/data/useData';
 
-const useAnalysesDetail = (id: string, parameters: KeyValue = {}) => {
+const useBiomesList = (parameters: KeyValue = {}) => {
   const { config } = useContext(UserContext);
 
   const queryString = Object.entries(parameters)
@@ -15,13 +15,11 @@ const useAnalysesDetail = (id: string, parameters: KeyValue = {}) => {
     )
     .join('&');
 
-  const url = `${config.api_v2}analyses/${id}${
-    queryString ? `?${queryString}` : ''
-  }`;
+  const url = `${config.api_v2}biomes/${queryString ? `?${queryString}` : ''}`;
 
-  return useApiData<AnalysisDetail>({
+  return useApiData<BiomeList>({
     url,
   });
 };
 
-export default useAnalysesDetail;
+export default useBiomesList;

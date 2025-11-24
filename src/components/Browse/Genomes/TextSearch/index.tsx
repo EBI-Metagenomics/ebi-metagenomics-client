@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -7,17 +5,28 @@ import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { MGnifyResponseList } from '@/hooks/data/useData';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import { getBiomeIcon } from '@/utils/biomes';
-import { cleanTaxLineage, getSimpleTaxLineage } from '@/utils/taxon';
+import { cleanTaxLineage, getSimpleTaxLineage } from 'utils/taxon';
 import FetchError from 'components/UI/FetchError';
 import Tooltip from 'components/UI/Tooltip';
+import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
+
+const {
+  useGenomesPage,
+  useGenomesageSize,
+  useGenomesOrder,
+  useGenomesSearch,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable('genomes', {
+  genomesSearch: SharedTextQueryParam(''),
+});
 
 const GenomesTextSearch: React.FC = () => {
-  const [page] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [pageSize] = useQueryParamState('page_size', 25, Number);
-  const [search] = useQueryParamState('search', '');
+  const [page] = useGenomesPage<number>();
+  const [order] = useGenomesOrder<string>();
+  const [pageSize] = useGenomesageSize<number>();
+  const [search] = useGenomesSearch<string>();
   const {
     data: genomesList,
     loading,
@@ -28,7 +37,7 @@ const GenomesTextSearch: React.FC = () => {
     page,
     ordering: order,
     page_size: pageSize,
-    search: (search as string) || undefined,
+    search: (search as string) || '',
   });
 
   const columns = [
@@ -85,10 +94,11 @@ const GenomesTextSearch: React.FC = () => {
   ];
 
   if (loading && !isStale) return <Loading size="small" />;
-  if (error || !genomesList) return <FetchError error={error} />;
+  if (error) return <FetchError error={error} />;
+  if (!genomesList) return null;
 
   return (
-    <div>
+    <>
       <p className="vf-text-body vf-text-body--3">
         Search for genomes across all catalogues.
       </p>
@@ -102,9 +112,10 @@ const GenomesTextSearch: React.FC = () => {
         isStale={isStale}
         showTextFilter
         downloadURL={downloadURL}
+        namespace={'genomes'}
       />
-    </div>
+    </>
   );
 };
 
-export default GenomesTextSearch;
+export default withQueryParamProvider(GenomesTextSearch);

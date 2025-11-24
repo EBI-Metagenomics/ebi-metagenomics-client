@@ -1,4 +1,5 @@
 import React, { ReactChild, ReactChildren } from 'react';
+import type * as CSS from 'csstype';
 
 import Modal from 'react-modal';
 
@@ -9,7 +10,7 @@ Modal.setAppElement('#root');
 const modalStyle = {
   overlay: {
     zIndex: 2000,
-    position: 'fixed',
+    position: 'fixed' as CSS.Property.Position,
   },
   content: {
     top: '50%',
@@ -18,8 +19,8 @@ const modalStyle = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
+    overflowY: 'auto' as CSS.Property.OverflowY,
     maxHeight: 'calc(100vh - 5em)',
-    overflowY: 'auto',
     width: '80vw',
     height: '80vh',
   },

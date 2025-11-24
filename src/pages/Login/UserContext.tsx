@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { noop } from 'lodash-es';
 import { ConfigType } from 'utils/config';
 
-type UserType = {
+export type UserType = {
   username: null | string;
   isAuthenticated: boolean;
   token: null | string;
@@ -20,13 +20,20 @@ export type UserDetail = {
 };
 export type UserDetails = Array<UserDetail>;
 
-const UserContext = React.createContext({
+export type UserContextType = UserType & {
+  setUser: Dispatch<SetStateAction<UserType | null>>;
+  details: UserDetails | null;
+  setDetails: Dispatch<SetStateAction<UserDetails | null>>;
+  config: ConfigType;
+};
+
+const UserContext = React.createContext<UserContextType>({
   username: null,
   isAuthenticated: false,
   details: null,
   config: {} as ConfigType,
-  setUser: noop as (u: UserType) => void,
-  setDetails: noop as (details: UserDetails) => void,
+  setUser: noop as Dispatch<SetStateAction<UserType | null>>,
+  setDetails: noop as Dispatch<SetStateAction<UserDetails | null>>,
   token: null,
 });
 

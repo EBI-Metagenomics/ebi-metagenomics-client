@@ -55,8 +55,15 @@ export const PipelineChart1: React.FC<TableProps> = ({
         <div className="arrow_pip " />
         <div
           className="block small step0"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(0)}
           onFocus={() => onHoverStep(0)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(0);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           SeqPrep
         </div>
@@ -65,8 +72,15 @@ export const PipelineChart1: React.FC<TableProps> = ({
         <div className="arrow_pip" />
         <div
           className="block step1"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(1)}
           onFocus={() => onHoverStep(1)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(1);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           QC
           <div className="qclist">
@@ -83,8 +97,15 @@ export const PipelineChart1: React.FC<TableProps> = ({
         <div className="arrow_pip" />
         <div
           className="block step2"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(2)}
           onFocus={() => onHoverStep(2)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(2);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           rRNASelector
         </div>
@@ -97,8 +118,15 @@ export const PipelineChart1: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step3 function"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(3)}
             onFocus={() => onHoverStep(3)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(3);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             FragGeneScan
           </div>
@@ -107,8 +135,15 @@ export const PipelineChart1: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step4 function"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(4)}
             onFocus={() => onHoverStep(4)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(4);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             InterProScan
           </div>
@@ -123,8 +158,15 @@ export const PipelineChart1: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step5 taxon"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(5)}
             onFocus={() => onHoverStep(5)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(5);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             QIIME
           </div>
@@ -145,8 +187,15 @@ export const PipelineChart2: React.FC<TableProps> = ({
         <div className="arrow_pip " />
         <div
           className="block small step0"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(0)}
           onFocus={() => onHoverStep(0)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(0);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           SeqPrep
         </div>
@@ -155,8 +204,15 @@ export const PipelineChart2: React.FC<TableProps> = ({
         <div className="arrow_pip" />
         <div
           className="block step1"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(1)}
           onFocus={() => onHoverStep(1)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(1);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           QC
           <div className="qclist">
@@ -171,8 +227,15 @@ export const PipelineChart2: React.FC<TableProps> = ({
         <div className="arrow_pip" />
         <div
           className="block step2"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(2)}
           onFocus={() => onHoverStep(2)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(2);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           rRNASelector
         </div>
@@ -185,8 +248,15 @@ export const PipelineChart2: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step3 function"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(3)}
             onFocus={() => onHoverStep(3)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(3);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             FragGeneScan
           </div>
@@ -195,8 +265,15 @@ export const PipelineChart2: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step4 function"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(4)}
             onFocus={() => onHoverStep(4)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(4);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             InterProScan
           </div>
@@ -211,8 +288,15 @@ export const PipelineChart2: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step5 taxon"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(5)}
             onFocus={() => onHoverStep(5)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(5);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             QIIME
           </div>
@@ -232,8 +316,15 @@ export const PipelineChart3: React.FC<TableProps> = ({
         <div className="arrow_pip " />
         <div
           className="block small step0"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(0)}
           onFocus={() => onHoverStep(0)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(0);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           <div className="children">SeqPrep</div>
         </div>
@@ -242,8 +333,15 @@ export const PipelineChart3: React.FC<TableProps> = ({
         <div className="arrow_pip" />
         <div
           className="block step1"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(1)}
           onFocus={() => onHoverStep(1)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(1);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           <div className="children">QC</div>
         </div>
@@ -252,8 +350,15 @@ export const PipelineChart3: React.FC<TableProps> = ({
         <div className="arrow_pip" />
         <div
           className="block step2"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(2)}
           onFocus={() => onHoverStep(2)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(2);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           <div className="children_l">ncRNA selection</div>
         </div>
@@ -266,8 +371,15 @@ export const PipelineChart3: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step3 function"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(3)}
             onFocus={() => onHoverStep(3)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(3);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             <div className="children_l">ORF predictions</div>
           </div>
@@ -276,8 +388,15 @@ export const PipelineChart3: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step4 function"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(4)}
             onFocus={() => onHoverStep(4)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(4);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             <div className="children_l">Functional analysis</div>
           </div>
@@ -293,8 +412,15 @@ export const PipelineChart3: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step5 taxon"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(5)}
             onFocus={() => onHoverStep(5)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(5);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             <div className="children_l">Taxonomic analysis</div>
           </div>
@@ -320,8 +446,15 @@ export const PipelineChart4: React.FC<TableProps> = ({
         <div className="arrow_pip " />
         <div
           className="block small step0"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(0)}
           onFocus={() => onHoverStep(0)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(0);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           <div className="children">SeqPrep</div>
         </div>
@@ -330,8 +463,15 @@ export const PipelineChart4: React.FC<TableProps> = ({
         <div className="arrow_pip" />
         <div
           className="block step1"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(1)}
           onFocus={() => onHoverStep(1)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(1);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           <div className="children">QC</div>
         </div>
@@ -340,8 +480,15 @@ export const PipelineChart4: React.FC<TableProps> = ({
         <div className="arrow_pip" />
         <div
           className="block step2"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(2)}
           onFocus={() => onHoverStep(2)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(2);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           <div className="children_l">ncRNA selection</div>
         </div>
@@ -354,8 +501,15 @@ export const PipelineChart4: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step3 function"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(3)}
             onFocus={() => onHoverStep(3)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(3);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             <div className="children_l">ORF predictions</div>
           </div>
@@ -364,8 +518,15 @@ export const PipelineChart4: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step4 function"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(4)}
             onFocus={() => onHoverStep(4)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(4);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             <div className="children_l">Functional analysis</div>
           </div>
@@ -381,8 +542,15 @@ export const PipelineChart4: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step5 taxon"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(5)}
             onFocus={() => onHoverStep(5)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(5);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             <div className="children_l">Taxonomic analysis</div>
           </div>
@@ -408,8 +576,15 @@ export const PipelineChart41: React.FC<TableProps> = ({
         <div className="arrow_pip " />
         <div
           className="block small step0"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(0)}
           onFocus={() => onHoverStep(0)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(0);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           <div className="children">SeqPrep</div>
         </div>
@@ -418,8 +593,15 @@ export const PipelineChart41: React.FC<TableProps> = ({
         <div className="arrow_pip" />
         <div
           className="block step1"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(1)}
           onFocus={() => onHoverStep(1)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(1);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           <div className="children">QC</div>
         </div>
@@ -428,8 +610,15 @@ export const PipelineChart41: React.FC<TableProps> = ({
         <div className="arrow_pip" />
         <div
           className="block step2"
+          role="button"
+          tabIndex={0}
           onMouseOver={() => onHoverStep(2)}
           onFocus={() => onHoverStep(2)}
+          onBlur={() => onHoverStep(-1)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onHoverStep(2);
+            if (e.key === 'Escape') onHoverStep(-1);
+          }}
         >
           <div className="children_l">ncRNA selection</div>
         </div>
@@ -442,8 +631,15 @@ export const PipelineChart41: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step3 function"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(3)}
             onFocus={() => onHoverStep(3)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(3);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             <div className="children_l">ORF predictions</div>
           </div>
@@ -452,8 +648,15 @@ export const PipelineChart41: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step4 function"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(4)}
             onFocus={() => onHoverStep(4)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(4);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             <div className="children_l">Functional analysis</div>
           </div>
@@ -470,8 +673,15 @@ export const PipelineChart41: React.FC<TableProps> = ({
           <div className="arrow_pip" />
           <div
             className="block step5 taxon"
+            role="button"
+            tabIndex={0}
             onMouseOver={() => onHoverStep(5)}
             onFocus={() => onHoverStep(5)}
+            onBlur={() => onHoverStep(-1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') onHoverStep(5);
+              if (e.key === 'Escape') onHoverStep(-1);
+            }}
           >
             <div className="children_l">Taxonomic analysis</div>
           </div>

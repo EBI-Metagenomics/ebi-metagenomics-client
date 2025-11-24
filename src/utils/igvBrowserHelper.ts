@@ -1,11 +1,11 @@
-import { Dispatch } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { Browser } from 'igv';
 
 export const updateQueryParams = (key: string, value: string) => {
   const currentUrl = new URL(window.location.href);
   currentUrl.searchParams.set(key, value);
   const updatedUrl = currentUrl.toString();
-  window.history.replaceState(null, null, updatedUrl);
+  window.history.replaceState(null, '', updatedUrl);
 };
 export const updateLocusQueryParams = (
   locusSearchString: string,
@@ -25,7 +25,7 @@ export const updateLocusQueryParams = (
     );
   }
   const updatedUrl = currentUrl.toString();
-  window.history.replaceState(null, null, updatedUrl);
+  window.history.replaceState(null, '', updatedUrl);
 };
 
 export const resolveQueryParameters = (browser: Browser) => {
@@ -51,8 +51,8 @@ export const resolveQueryParameters = (browser: Browser) => {
 };
 export const handleLocusChanges = (
   browser: Browser,
-  setIgvBrowser: Dispatch<object>,
-  setTrackColorBys: Dispatch<object>,
+  setIgvBrowser: Dispatch<SetStateAction<Browser>>,
+  setTrackColorBys: Dispatch<SetStateAction<Record<string, any>>>,
   setLoading: Dispatch<boolean> = () => {
     return null;
   }

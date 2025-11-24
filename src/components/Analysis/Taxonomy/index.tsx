@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContext } from '@/hooks/queryParamState/useQueryParamState';
 import UserContext from 'pages/Login/UserContext';
 
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
 import PhylumCharts from './PhylumCharts';
 import './style.css';
+import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const tabs = [
   { label: 'Krona', to: 'krona' },
@@ -24,29 +25,33 @@ const PARAMETER_DEFAULT = 'krona';
 type TaxonomicAnalysesProps = {
   accession: string;
 };
+
+const { useType, withQueryParamProvider } = createSharedQueryParamContext({
+  type: SharedTextQueryParam(PARAMETER_DEFAULT),
+});
+
 const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/taxonomy/overview`
   );
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
-  const [type] = useQueryParamState(PARAMETER_NAME, PARAMETER_DEFAULT);
-  const datum = data?.data as Record<string, unknown>;
+  const [type] = useType<string>();
+  const datum = data?.data as Record<string, number | null>;
 
-  const enableSSU = datum?.taxonomy_ssu_count > 0 || datum?.taxonomy_count > 0;
-  const enableLSU = datum?.taxonomy_lsu_count > 0;
-  const enableITSoneDB = datum?.taxonomy_itsonedb_count > 0;
-  const enableITSUnite = datum?.taxonomy_itsunite_count > 0;
+  const enableSSU =
+    (datum?.taxonomy_ssu_count ?? 0) > 0 || (datum?.taxonomy_count ?? 0) > 0;
+  const enableLSU = (datum?.taxonomy_lsu_count ?? 0) > 0;
+  const enableITSoneDB = (datum?.taxonomy_itsonedb_count ?? 0) > 0;
+  const enableITSUnite = (datum?.taxonomy_itsunite_count ?? 0) > 0;
 
   const { config } = useContext(UserContext);
-  const [taxResults, setTaxResults] = useState('/unite');
+  const [taxResults, setTaxResults] = useState<string>('/unite');
   useEffect(() => {
     if (!loading && !error && data) {
-      setTaxResults(
-        (enableITSoneDB && '/itsonedb') ||
-          (enableITSUnite && '/unite') ||
-          (enableSSU && '/ssu') ||
-          (enableLSU && '/lsu')
-      );
+      if (enableITSoneDB) setTaxResults('/itsonedb');
+      if (enableITSUnite) setTaxResults('/unite');
+      if (enableSSU) setTaxResults('/ssu');
+      if (enableLSU) setTaxResults('/lsu');
     }
   }, [
     data,
@@ -66,77 +71,75 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
 
   return (
     <div className="vf-stack mg-analyses-taxonomy">
-      <div>
-        {(enableSSU || enableLSU) && (
-          <fieldset
-            data-cy="ssu-lsu-btns"
-            className="vf-form__fieldset vf-stack vf-stack--400 mg-fieldbox"
-            style={{
-              width: '15rem',
-            }}
-          >
-            <legend className="vf-form__legend">rRNA</legend>
-            <label>
-              <input
-                type="radio"
-                id="smallrRNA"
-                data-cy="ssu-btn"
-                name="tax-results"
-                disabled={!enableSSU}
-                value="/ssu"
-                checked={taxResults === '/ssu'}
-                onChange={handleTaxChange}
-              />{' '}
-              small subunit rRNA
-            </label>
-            <label>
-              <input
-                type="radio"
-                id="largerRNA"
-                data-cy="lsu-btn"
-                name="tax-results"
-                disabled={!enableLSU}
-                value="/lsu"
-                checked={taxResults === '/lsu'}
-                onChange={handleTaxChange}
-              />{' '}
-              large subunit rRNA
-            </label>
-          </fieldset>
-        )}
-        {(enableITSoneDB || enableITSUnite) && (
-          <fieldset
-            className="vf-form__fieldset vf-stack vf-stack--400 mg-fieldbox"
-            style={{
-              width: '15rem',
-            }}
-          >
-            <legend className="vf-form__legend">ITS</legend>
-            <label>
-              <input
-                type="radio"
-                id="smallrRNA"
-                name="tax-results"
-                value="/itsonedb"
-                checked={taxResults === '/itsonedb'}
-                onChange={handleTaxChange}
-              />{' '}
-              ITS with ITSoneDB
-            </label>
-            <label>
-              <input
-                type="radio"
-                id="largerRNA"
-                name="tax-results"
-                value="/unite"
-                checked={taxResults === '/unite'}
-                onChange={handleTaxChange}
-              />{' '}
-              ITS1/2 with UNITE
-            </label>
-          </fieldset>
-        )}
-      </div>
+      {(enableSSU || enableLSU) && (
+        <fieldset
+          data-cy="ssu-lsu-btns"
+          className="vf-form__fieldset vf-stack vf-stack--400 mg-fieldbox"
+          style={{
+            width: '15rem',
+          }}
+        >
+          <legend className="vf-form__legend">rRNA</legend>
+          <label>
+            <input
+              type="radio"
+              id="smallrRNA"
+              data-cy="ssu-btn"
+              name="tax-results"
+              disabled={!enableSSU}
+              value="/ssu"
+              checked={taxResults === '/ssu'}
+              onChange={handleTaxChange}
+            />{' '}
+            small subunit rRNA
+          </label>
+          <label>
+            <input
+              type="radio"
+              id="largerRNA"
+              data-cy="lsu-btn"
+              name="tax-results"
+              disabled={!enableLSU}
+              value="/lsu"
+              checked={taxResults === '/lsu'}
+              onChange={handleTaxChange}
+            />{' '}
+            large subunit rRNA
+          </label>
+        </fieldset>
+      )}
+      {(enableITSoneDB || enableITSUnite) && (
+        <fieldset
+          className="vf-form__fieldset vf-stack vf-stack--400 mg-fieldbox"
+          style={{
+            width: '15rem',
+          }}
+        >
+          <legend className="vf-form__legend">ITS</legend>
+          <label>
+            <input
+              type="radio"
+              id="smallrRNA"
+              name="tax-results"
+              value="/itsonedb"
+              checked={taxResults === '/itsonedb'}
+              onChange={handleTaxChange}
+            />{' '}
+            ITS with ITSoneDB
+          </label>
+          <label>
+            <input
+              type="radio"
+              id="largerRNA"
+              name="tax-results"
+              value="/unite"
+              checked={taxResults === '/unite'}
+              onChange={handleTaxChange}
+            />{' '}
+            ITS1/2 with UNITE
+          </label>
+        </fieldset>
+      )}
       <div>
         These are the results from the taxonomic analysis steps of our pipeline.
         You can switch between different views of the data using the menu of
@@ -164,7 +167,7 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
             category={taxResults}
             chartType={String(type)}
             sequencesType={
-              analysisOverviewData.attributes['experiment-type'] === 'assembly'
+              analysisOverviewData?.attributes['experiment-type'] === 'assembly'
                 ? 'contigs'
                 : 'reads'
             }
@@ -175,4 +178,4 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   );
 };
 
-export default Taxonomy;
+export default withQueryParamProvider(Taxonomy);

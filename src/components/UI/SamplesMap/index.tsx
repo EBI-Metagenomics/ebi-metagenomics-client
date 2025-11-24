@@ -1,21 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import axios from 'axios';
 
 import MarkerClusterer from '@googlemaps/markerclustererplus';
 
-import { MGnifyDatum } from '@/hooks/data/useData';
-
 import './style.css';
 import LoadingDots from 'components/UI/LoadingDots';
+import { SampleDetail, Study, StudySample } from '@/interfaces';
 
 // TODO: make the link play nicer with react-router
-const MarkerPopup: React.FC<{ sample: MGnifyDatum }> = ({ sample }) => (
+const MarkerPopup: React.FC<{ sample: StudySample }> = ({ sample }) => (
   <div className="vf-box vf-box--easy">
     <h3 className="vf-box__heading">
-      <a href={`../samples/${sample.id}`}>{sample.id}</a>
+      <a href={`../samples/${sample.accession}`}>{sample.accession}</a>
     </h3>
-    <p className="vf-box__text">{sample.attributes['sample-desc']}</p>
+    <p className="vf-box__text">{sample?.metadata?.sample_description}</p>
   </div>
 );
 const ClusterMarkerPopup: React.FC<{ accessions: string[] }> = ({
@@ -25,7 +24,7 @@ const ClusterMarkerPopup: React.FC<{ accessions: string[] }> = ({
     <h3 className="vf-box__heading">Samples on this geographical location</h3>
     <ul className="vf-list">
       {accessions.map((accession) => (
-        <li ref={accession}>
+        <li ref={accession} key={accession}>
           <a href={`../samples/${accession}`}>{accession}</a>
         </li>
       ))}
@@ -34,37 +33,32 @@ const ClusterMarkerPopup: React.FC<{ accessions: string[] }> = ({
 );
 
 type MapProps = {
-  samples: Array<MGnifyDatum>;
+  study: Study;
+  samples: Array<StudySample | SampleDetail>;
 };
 
-const SamplesMap: React.FC<MapProps> = ({ samples }) => {
-  const ref = useRef();
-  const [theMap, setTheMap] = useState(null);
-  const markerCluster = useRef<MarkerClusterer>(null);
+const SamplesMap: React.FC<MapProps> = ({ study, samples }) => {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [theMap, setTheMap] = useState<google.maps.Map>();
+  const markerCluster = useRef<MarkerClusterer>();
   const sampleInfoWindow = useRef(new google.maps.InfoWindow());
   const clusterInfoWindow = useRef(new google.maps.InfoWindow());
   const newBoundary = useRef(new google.maps.LatLngBounds());
   const markers = useRef({});
   const [markingEezRegions, setMarkingEezRegions] = useState(false);
 
-  // eslint-disable-next-line consistent-return,react-hooks/exhaustive-deps
-  const fetchPolygonCoordinates = async () => {
+  const fetchPolygonCoordinates = useCallback(async () => {
     try {
       const response = await axios.get(
-        `https://marineregions.org/rest/getGazetteerGeometries.ttl/${samples[0].attributes.mrgid}/`
+        `https://marineregions.org/rest/getGazetteerGeometries.ttl/${samples[0]?.mrgid}/`
       );
       const rdfData = response.data as unknown as string;
       let polygonCoordinatesString = rdfData.substring(
-        rdfData.indexOf('POLYGON') + 8,
-        rdfData.length - 3
-      );
-      polygonCoordinatesString = rdfData.substring(
         rdfData.indexOf('((') + 2,
         rdfData.indexOf('))')
       );
 
-      const coordinatesArray = [];
-      const internalCoordinates = [];
+      const coordinatesArray: { lat: number; lng: number }[] = [];
 
       const pairs = polygonCoordinatesString.split(',');
 
@@ -76,8 +70,6 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
             polygonCoordinatesString.indexOf(pair),
             indexOfPairEnd + pair.length
           );
-
-          internalCoordinates.push(internalCoordinatesString);
           i += internalCoordinatesString.split(' ').length - 1;
         } else {
           const [lng, lat] = pair.trim().split(' ').map(parseFloat);
@@ -85,27 +77,31 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
         }
       }
       return coordinatesArray;
-    } catch (err) {
+    } catch {
       // markingEezRegions.current = false;
     }
-  };
+  }, [samples]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const drawPolygon = (coordinates) => {
-    if (!theMap) return;
-    const polygon = new google.maps.Polygon({
-      paths: coordinates,
-      strokeColor: '#0000FF',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#0000FF',
-      fillOpacity: 0.35,
-    });
-    polygon.setMap(theMap);
-  };
+  const drawPolygon = useCallback(
+    (
+      coordinates: google.maps.LatLngLiteral[] | { lat: number; lng: number }[]
+    ) => {
+      if (!theMap) return;
+      const polygon = new google.maps.Polygon({
+        paths: coordinates as google.maps.LatLngLiteral[],
+        strokeColor: '#0000FF',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#0000FF',
+        fillOpacity: 0.35,
+      });
+      polygon.setMap(theMap);
+    },
+    [theMap]
+  );
 
   useEffect(() => {
-    if (theMap === null) {
+    if (!theMap && ref.current) {
       const tmpMap = new google.maps.Map(ref.current, {
         // zoom: 0.1,
         maxZoom: 5,
@@ -114,22 +110,26 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
       setTheMap(tmpMap);
     }
   }, [theMap]);
+
   useEffect(() => {
+    console.log('samples or map changed', theMap, samples);
     if (theMap && samples) {
+      console.log(samples);
       if (markerCluster.current) {
         markerCluster.current.clearMarkers();
       }
 
       samples
-        .filter(({ id }) => !(id in markers.current))
+        // .filter(({ accession }) => !(accession in markers.current))
         .forEach((sample) => {
           const position = {
-            lat: sample.attributes.latitude as number,
-            lng: sample.attributes.longitude as number,
+            lat: Number(sample?.metadata?.lat),
+            lng: Number(sample?.metadata?.lon),
           };
+          console.log(position);
           const marker = new google.maps.Marker({
             position,
-            title: sample.id,
+            title: sample.accession,
           });
           newBoundary.current.extend(position);
           marker.addListener('click', () => {
@@ -138,7 +138,7 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
             );
             sampleInfoWindow.current.open(theMap, marker);
           });
-          markers.current[sample.id] = marker;
+          markers.current[sample.accession] = marker;
         });
       markerCluster.current = new MarkerClusterer(
         theMap,
@@ -154,10 +154,10 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
       google.maps.event.addListener(
         markerCluster.current,
         'click',
-        // eslint-disable-next-line func-names
+
         function (cluster) {
           if (
-            // eslint-disable-next-line no-underscore-dangle, react/no-this-in-sfc
+            // @ts-ignore
             this.prevZoom_ + 1 <= this.getMaxZoom() ||
             cluster.getSize() >= 10
           ) {
@@ -179,11 +179,10 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
 
       theMap.fitBounds(newBoundary.current);
 
+      // TODO: check EEZs
       if (
-        samples[0]?.attributes?.mrgid &&
-        samples[0]?.relationships?.biome?.data?.id?.includes(
-          'root:Environmental:Aquatic'
-        )
+        samples[0]?.mrgid &&
+        study.biome.lineage?.includes('root:Environmental:Aquatic')
       ) {
         setMarkingEezRegions(true);
         fetchPolygonCoordinates().then((coordinates) => {
@@ -192,7 +191,13 @@ const SamplesMap: React.FC<MapProps> = ({ samples }) => {
         });
       }
     }
-  }, [theMap, samples, fetchPolygonCoordinates, drawPolygon]);
+  }, [
+    theMap,
+    samples,
+    study.biome.lineage,
+    fetchPolygonCoordinates,
+    drawPolygon,
+  ]);
 
   return (
     <>

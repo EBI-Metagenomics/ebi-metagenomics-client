@@ -8,7 +8,8 @@
     <arguments value="--watch" />
     <node-interpreter value="project" />
     <envs>
-      <env name="DEPLOYMENT_SUBFOLDER" value="/metagenomics" />
+      <env name="VITE_BASE_URL" value="/metagenomics" />
+      <env name="WDYR" value="1" />
     </envs>
     <method v="2" />
   </configuration>

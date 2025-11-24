@@ -1,7 +1,12 @@
 import React from 'react';
 
+export type KeyValueItemsList = {
+  key: string;
+  value: string | React.ElementType;
+}[];
+
 type KeyValueProps = {
-  list: { key: string; value: string | React.ElementType }[];
+  list: KeyValueItemsList;
   dataCy?: string;
 };
 

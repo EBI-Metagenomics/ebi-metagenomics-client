@@ -1,12 +1,12 @@
 import { KeyValue } from 'hooks/data/useData';
 
-export interface PaginatedList {
-  items: unknown[];
+export interface PaginatedList<T = unknown> {
+  items: T[];
   count: number;
 }
 
 export interface EnaDerivedObject extends Record<string, unknown> {
-  accession?: string;
+  accession: string;
   ena_accessions: string[];
 }
 
@@ -14,6 +14,8 @@ export interface Biome {
   biome_name: string;
   lineage: string;
 }
+
+export type BiomeList = PaginatedList<Biome>;
 
 export interface Download {
   download_group: string;
@@ -23,10 +25,27 @@ export interface Download {
   long_description: string;
   short_description: string;
   url: string;
-  index_file?: {
+  index_files?: {
     index_type: string;
     relative_url: string;
-  };
+  }[];
+}
+
+export interface Sample extends EnaDerivedObject {
+  sample_title: string;
+  biome?: Biome;
+  updated_at?: string;
+}
+
+export type SampleList = PaginatedList<Sample>;
+
+export interface StudySample extends Sample {
+  metadata?: Record<string, any>;
+}
+
+export interface SampleDetail extends Sample {
+  metadata?: Record<string, any>;
+  studies?: Study[];
 }
 
 export interface Run extends EnaDerivedObject {
@@ -38,7 +57,7 @@ export interface Analysis {
   study_accession: string;
   accession: string;
   run: Run | null;
-  sample: EnaDerivedObject | null;
+  sample: Sample | null;
   assembly: EnaDerivedObject | null;
   experiment_type: string;
   pipeline_version: string;
@@ -73,22 +92,20 @@ export interface AnalysisDetailWithAnnotations extends AnalysisDetail {
   };
 }
 
-export interface AnalysisList extends PaginatedList {
-  items: Analysis[];
-}
+export type AnalysisList = PaginatedList<Analysis>;
 
 export interface Study extends EnaDerivedObject {
   title: string;
   biome: Biome;
   updated_at: string;
+  metadata?: Record<string, any>;
 }
 
-export interface StudyList extends PaginatedList {
-  items: Study[];
-}
+export type StudyList = PaginatedList<Study>;
 
 export interface StudyDetail extends Study {
   downloads: Download[];
+  metadata: KeyValue;
 }
 
 export interface GenomeCatalogue extends Record<string, unknown> {
@@ -130,15 +147,11 @@ export interface Genome {
   biome: Biome;
 }
 
-export interface GenomeCatalogueList extends PaginatedList {
-  items: GenomeCatalogue[];
-}
+export type GenomeCatalogueList = PaginatedList<GenomeCatalogue>;
 
 export type GenomeCatalogueDetail = GenomeCatalogue;
 
-export interface GenomeList extends PaginatedList {
-  items: Genome[];
-}
+export type GenomeList = PaginatedList<Genome>;
 
 export interface GenomeDetail extends Genome {
   downloads: Download[];
@@ -157,9 +170,7 @@ export interface SuperStudy {
   logo_url: string;
 }
 
-export interface SuperStudyList extends PaginatedList {
-  items: SuperStudy[];
-}
+export type SuperStudyList = PaginatedList<SuperStudy>;
 
 export interface SuperStudyDetail extends SuperStudy {
   flagship_studies: Study[];
@@ -185,9 +196,7 @@ export interface Publication {
   metadata: PublicationMetadata;
 }
 
-export interface PublicationList extends PaginatedList {
-  items: Publication[];
-}
+export type PublicationList = PaginatedList<Publication>;
 
 export interface PublicationStudy {
   accession: string;

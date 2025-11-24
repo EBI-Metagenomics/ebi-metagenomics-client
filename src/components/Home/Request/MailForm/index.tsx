@@ -8,6 +8,7 @@ import UserContext, {
 } from 'pages/Login/UserContext';
 import useMgnifyEmail from '@/hooks/data/useMgnifyEmail';
 import { ErrorTypes } from '@/hooks/data/useData';
+import { toast } from 'react-toastify';
 
 const accessionRegex = /((?:PRJEB|PRJNA|PRJDB|PRJDA|MGYS|ERP|SRP|DRP)\d{5,})/;
 
@@ -41,11 +42,18 @@ type MailFormProps = {
   isPublic: boolean;
 };
 
-const EMPTY_EMAIL = {
-  fromEmail: null,
-  subject: null,
-  body: null,
-  consent: null,
+type EmailRequest = {
+  fromEmail?: string;
+  subject?: string;
+  body?: string;
+  consent?: boolean;
+};
+
+const EMPTY_EMAIL: EmailRequest = {
+  fromEmail: undefined,
+  subject: undefined,
+  body: undefined,
+  consent: undefined,
 };
 const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
   const [analysisType, setAnalysisType] = useState('Analysis');
@@ -60,7 +68,7 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
     details,
     // setUser, setDetails, isAuthenticated, config
   } = useContext(UserContext);
-  const [email, setEmail] = useState(EMPTY_EMAIL);
+  const [email, setEmail] = useState<EmailRequest>(EMPTY_EMAIL);
   const {
     data,
     loading,
@@ -95,16 +103,20 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
     setAccessionOK(accessionRegex.test(event.target.value));
   };
   const handleSubmit = () => {
+    if (!username) {
+      toast.error('You must be logged in to submit a request');
+      throw new Error('You must be logged in to submit a request');
+    }
     const { body, subject } = getRequestEmail(
       isPublic,
       analysisType,
       comments,
       accession,
       username,
-      getDetailsByWebin(details, username)
+      getDetailsByWebin(details as UserDetail[], username)
     );
     setEmail({
-      fromEmail: getEmailsFromDetails(details).join(','),
+      fromEmail: getEmailsFromDetails(details as UserDetail[]).join(','),
       body,
       subject,
       consent: false,

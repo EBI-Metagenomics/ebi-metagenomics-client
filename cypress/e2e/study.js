@@ -1,7 +1,7 @@
-import { changeTab, openPage, waitForPageLoad } from '../util/util';
+import { changeRouteTab, openPage, waitForPageLoad } from '../util/util.js';
 import config from 'utils/config';
 import { mockShowSaveFilePicker } from '../util/mockFileSystem';
-import { first, last, max } from 'lodash-es';
+import { first, last } from 'lodash-es';
 
 const projectId = 'MGYS00000001';
 const origPage = 'studies/' + projectId;
@@ -17,6 +17,10 @@ describe('Study page', function() {
           {fixture: 'apiv2/studies/studyMGYS00000001AnalysesPage1.json'}).as('getAnalysesPage1');
         cy.intercept('GET', `${config.api_v2}/studies/${projectId}/analyses/?page=2`,
           {fixture: 'apiv2/studies/studyMGYS00000001AnalysesPage2.json'}).as('getAnalysesPage2');
+        cy.intercept('GET', `${config.api_v2}/studies/${projectId}/publications**`,
+          {fixture: 'apiv2/studies/studyMGYS00000001Publications.json'}).as('getPublications');
+        cy.intercept('GET', `${config.api_v2}/publications/1/annotations`,
+          {fixture: 'apiv2/publications/publication1Annotations.json'});
     })
     context('General', function() {
         beforeEach(function() {
@@ -32,13 +36,9 @@ describe('Study page', function() {
                 .should('contain', 'Study MGYS00000001');
             cy.get('[data-cy=study-external-links]').should('contain', 'ENA website (PRJNA398089)');
             cy.contains('Host-associated:Plants').should('exist');
-            // cy.contains('Publications').scrollIntoView();
-            // cy.contains('A longitudinal study of the diabetic skin and wound microbiome.');
-            // cy.contains('Gardiner M, Vicaretti M, Sparks J, Bansal S, Bush S, et al.')
-            //     .should('be.visible');
-            // cy.get('#europe_pmc_links > li').should('contain', '2017 5');
-            // cy.get('#europe_pmc_links > li > a').should('contain', '28740749');
-            // cy.get('#europe_pmc_links > li > a').should('contain', '10.7717/peerj.3543');
+            cy.contains('Microbiome sampling of a tomato skin.').should('exist');
+            cy.contains('Publications').scrollIntoView();
+            cy.contains("Cambridge University Press").should('be.visible');
         });
 
         it('External links should all be valid', function() {
@@ -98,9 +98,12 @@ describe('Study page', function() {
         it('Should respond to pagination', function() {
             cy.contains('MGYA00000001').should('be.visible');
             cy.contains('MGYA00000010').should('be.visible');
-            cy.get('@getAnalysesPage1.all').should('have.length', 1);
+            // noinspection CYUnresolvedAlias
+            cy.get('@getAnalysesPage1.all').should('have.length', 2);
+            // noinspection CYUnresolvedAlias
             cy.get('@getAnalysesPage2.all').should('have.length', 0);
             cy.get('.vf-pagination__item--next-page > .vf-button').click();
+            // noinspection CYUnresolvedAlias
             cy.get('@getAnalysesPage2.all').should('have.length', 1);
             cy.contains('MGYA00000011').should('be.visible');
         });
@@ -186,10 +189,16 @@ describe('Study page', function() {
           expect(writtenChunks.join('\n')).to.include('MGYA00000011');  // has the second page
         });
 
-        let expectedTimeBeforeSuccessfulPage2 = config.whenDownloadingListsFromApi.cadenceMs * 1.5 + config.whenDownloadingListsFromApi.cadenceMs * 1.5 * 1.5;
+        let expectedTimeBeforeSuccessfulPage2 =
+          config.whenDownloadingListsFromApi.cadenceMs * 1.5
+          + config.whenDownloadingListsFromApi.cadenceMs * 1.5 * 1.5;
         // after first 429, cadence should be 1.5x, and another 1.5x on top after second request
         cy.wrap(null).then(() => {
-          expect(last(callTimestamps) - first(callTimestamps)).to.be.greaterThan(expectedTimeBeforeSuccessfulPage2 * 0.9);  // a bit of testing tolerance
+          expect(
+            last(callTimestamps) - first(callTimestamps)
+          ).to.be.greaterThan(
+            expectedTimeBeforeSuccessfulPage2 * 0.9
+          );  // a bit of testing tolerance
         });
       });
 
@@ -215,8 +224,8 @@ describe('Study page', function() {
     context('Error handling', function() {
         it('Should display error message if invalid accession passed in URL', function() {
             const studyId = 'ERP019566012345';
-            const origPage = 'studies/' + studyId;
-            openPage(origPage);
+            const origPageE = 'studies/' + studyId;
+            openPage(origPageE);
             cy.contains('Error Fetching Data');
         });
     });
@@ -227,7 +236,7 @@ describe('Study page', function() {
             waitForPageLoad(pageTitle);
             cy.contains('Project 1')
               .should('be.visible');
-            changeTab('analysis');
+            changeRouteTab('analysis');
         });
         it('Download links for V6 should be present', function() {
             cy.contains('PRJNA398089_SILVA-SSU_study_summary.tsv').should('be.visible').should('have.attr', 'href');

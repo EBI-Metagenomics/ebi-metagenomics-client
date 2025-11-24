@@ -17,7 +17,7 @@ const PfamBarChart: React.FC = () => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const { overviewData } = useContext(AnalysisContext);
   const { data, loading, error } = useMGnifyData(
-    `analyses/${overviewData.id}/kegg-modules`
+    overviewData?.id && `analyses/${overviewData.id}/kegg-modules`
   );
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
@@ -28,14 +28,14 @@ const PfamBarChart: React.FC = () => {
   const categories = (data.data as MGnifyDatum[]).map(
     (d) => d.attributes.accession
   );
-  const categoriesDescriptions = (data.data as MGnifyDatum[]).reduce(
-    (memo, d) => {
-      // eslint-disable-next-line no-param-reassign
-      memo[d.attributes.accession as string] = d.attributes.description;
-      return memo;
-    },
-    {}
-  );
+  const categoriesDescriptions = (data.data as MGnifyDatum[]).reduce<
+    Record<string, string | undefined>
+  >((memo, d) => {
+    memo[String(d.attributes.accession)] = d.attributes.description as
+      | string
+      | undefined;
+    return memo;
+  }, {});
   const options: Record<string, unknown> = {
     chart: {
       type: 'column',
@@ -77,20 +77,20 @@ const PfamBarChart: React.FC = () => {
       enabled: true,
     },
     tooltip: {
-      /* eslint-disable react/no-this-in-sfc */
       formatter() {
+        // @ts-ignore
         const description = categoriesDescriptions[this.key];
+        // @ts-ignore
         let tooltip = `${this.series.name}<br/>Completeness: ${this.y}%`;
         if (description) {
           tooltip += `<br />KEGG Module: ${description}`;
         }
         return tooltip;
       },
-      /* eslint-enable react/no-this-in-sfc */
     },
     series: [
       {
-        name: `Analysis ${overviewData.id}`,
+        name: `Analysis ${overviewData?.id}`,
         data: series,
         colors: TAXONOMY_COLOURS[1],
       },

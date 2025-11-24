@@ -5,12 +5,11 @@ import config from '@/utils/config';
 
 const Matomo: React.FC = () => {
   const { trackPageView, enableLinkTracking } = useMatomo();
-  const location = useLocation();
+  const { pathname, search, hash } = useLocation();
 
   const trackableLocation = useMemo(
-    () =>
-      `${config.basename}${location.pathname}?${location.search}${location.hash}`,
-    [location]
+    () => `${config.basename}${pathname}?${search}${hash}`,
+    [pathname, search, hash]
   );
 
   useEffect(() => {

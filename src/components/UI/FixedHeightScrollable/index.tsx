@@ -18,12 +18,12 @@ const bothBorderStyle = {
 };
 
 const FixedHeightScrollable: React.FC<{
-  heightPx?: number;
+  heightPx: number;
   className?: string;
 }> = ({ children, heightPx, className }) => {
   const scrollRef = React.useRef(null);
   const { y } = useScroll(scrollRef);
-  const [innerRef, { height }] = useMeasure();
+  const [innerRef, { height }] = useMeasure<HTMLDivElement>();
   const isScrolledFromTop = y > 5;
   const canScrollToBottom = y + heightPx < height - 5;
   return (

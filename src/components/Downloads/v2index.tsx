@@ -36,7 +36,7 @@ const Downloads: React.FC = () => {
   );
   const categories = {};
 
-  downloads.forEach((download) => {
+  downloads?.forEach((download) => {
     if (!categories[download.download_type as string]) {
       categories[download.download_type as string] = [];
     }

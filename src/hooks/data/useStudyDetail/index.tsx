@@ -1,7 +1,7 @@
 import UserContext from 'pages/Login/UserContext';
 import { useContext } from 'react';
 
-import { StudyDetail } from 'interfaces';
+import { StudyDetail } from 'interfaces/index';
 import useApiData from 'hooks/data/useApiData';
 
 const useStudyDetail = (accession: string) => {

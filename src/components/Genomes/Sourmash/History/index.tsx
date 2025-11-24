@@ -10,7 +10,7 @@ const SourmashHistory: React.FC<HistoryProps> = ({
   jobs,
   removeFromStorage,
 }) => {
-  const [, setJobId] = useQueryParamState('job_id', '');
+  const [, setJobId] = useQueryParamState<string>('jobId');
   return (
     <section>
       <details>

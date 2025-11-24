@@ -9,22 +9,22 @@ export type InterProCountType = {
 };
 type InterProMatchesProviderResponse = {
   matches: InterProCountType[];
-  total: number | null;
+  total: number;
   processed: number;
   loading: boolean;
-  error: ErrorFromFetch;
+  error?: ErrorFromFetch;
 };
 const useInterProMatchesProvider = (
-  accession: string,
+  accession?: string,
   limit = Infinity
 ): InterProMatchesProviderResponse => {
   const [page, setPage] = useState(1);
   const [fetchedAllOrLimit, setFetchedAllOrLimit] = useState(false);
   const [matches, setMatches] = useState<Array<InterProCountType>>([]);
-  const [processed, setProcessed] = useState(0);
-  const [total, setTotal] = useState(null);
+  const [processed, setProcessed] = useState<number>(0);
+  const [total, setTotal] = useState<number>(0);
   const { data, isStale, loading, error } = useMGnifyData(
-    `analyses/${accession}/interpro-identifiers`,
+    accession && `analyses/${accession}/interpro-identifiers`,
     {
       page,
     }
@@ -74,7 +74,7 @@ const useInterProMatchesProvider = (
     processed,
     total,
     loading: loading || !fetchedAllOrLimit,
-    error,
+    error: error || undefined,
   };
 };
 

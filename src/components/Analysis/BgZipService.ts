@@ -30,31 +30,38 @@ export class BGZipService {
 
   private readonly indexFileUrl: string;
 
-  private firstPageIsOnlyComments = false;
+  private readonly leadingTsvCommentChars: string;
+
+  private firstPageIsOnlyComments: boolean = false;
 
   /**
    * Generates the full URL for a GZI index file based on the download object
    * @param download - Download object containing URL and index file information
-   * @param indexType - E.g. gzi (default) or fai
+   * @param index_type - E.g. gzi (default) or fai
    * @returns The full URL for the GZI index file
    */
   public static getIndexFileUrl(
     download: Download,
-    indexType = 'gzi'
+    index_type: string = 'gzi'
   ): string | undefined {
-    const relativeUrl = find(
+    const relative_url = find(
       download.index_files ?? [],
-      (index) => index.index_type === indexType
+      (index) => index.index_type === index_type
     )?.relative_url;
 
     return (
-      relativeUrl &&
-      new URL(relativeUrl, download.url.replace(/[^/]+$/, '')).toString()
+      relative_url &&
+      new URL(relative_url, download.url.replace(/[^/]+$/, '')).toString()
     );
   }
 
-  constructor(private download: Download, autoInitialize = true) {
+  constructor(
+    private download: Download,
+    autoInitialize = true,
+    leadingTsvCommentChars = '#'
+  ) {
     this.dataFileUrl = this.download.url;
+    this.leadingTsvCommentChars = leadingTsvCommentChars;
     const idx = BGZipService.getIndexFileUrl(this.download);
     if (idx) {
       this.indexFileUrl = idx;
@@ -62,9 +69,7 @@ export class BGZipService {
       throw new Error('No index file found for BGZip download');
     }
     if (autoInitialize) {
-      this.initialize().then(() => {
-        // Empty
-      });
+      this.initialize().then(() => console.groupEnd());
     }
   }
 
@@ -75,6 +80,7 @@ export class BGZipService {
     if (this.isInitialized) return true;
 
     try {
+      console.groupCollapsed('Initialize BGZip Service');
       const response = await fetch(this.indexFileUrl);
       if (!response.ok) {
         throw new Error(
@@ -93,20 +99,31 @@ export class BGZipService {
 
       this.isInitialized = true;
       return true;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      console.error('Error fetching GZI index:', errorMessage);
+      return false;
     } finally {
-      /* empty */
+      console.groupEnd();
     }
   }
 
   private async getFileSize(): Promise<number> {
     const headResponse = await fetch(this.dataFileUrl, { method: 'HEAD' });
-
-    return Number(headResponse.headers.get('content-length') || '0');
+    const contentLength = Number(
+      headResponse.headers.get('content-length') || '0'
+    );
+    console.debug(`Compressed file size: ${contentLength}`);
+    return contentLength;
   }
 
   private async parseGziIndex(buffer: ArrayBuffer): Promise<GziBlock[]> {
+    console.groupCollapsed('Parsing the GZI');
+
     const view = new DataView(buffer);
     const numIndexEntries = Number(view.getBigUint64(0, true));
+    console.log('GZI has index block count of', numIndexEntries);
+
     const blocks: GziBlock[] = [];
 
     for (let i = 0; i < numIndexEntries; i++) {
@@ -128,23 +145,33 @@ export class BGZipService {
      If the index is empty, make fake block of the entire file unless it seems bizarrely large.
     */
     if (blocks.length === 0) {
+      console.log('Index file is empty');
       const size = await this.getFileSize();
       if (size > MAX_BLOCK_SIZE) {
         throw new Error('Index file is empty, but compressed file is too big.');
       }
+      console.warn(
+        'No index entries, but file is small so adding synthetic entry at 0'
+      );
       blocks.unshift({
         compressedOffset: 0,
         uncompressedOffset: 0,
       });
     }
     if (blocks[0].uncompressedOffset > 0) {
+      console.warn(
+        'First index entry uncompressed offset > 0, adding synthetic entry at 0'
+      );
       blocks.unshift({
         compressedOffset: 0,
         uncompressedOffset: 0,
       });
     }
 
+    console.log('Parsed GZI blocks', blocks);
+
     this.gziIndex = blocks;
+    console.groupEnd();
     return blocks;
   }
 
@@ -165,6 +192,7 @@ export class BGZipService {
     const deflateStart = 18;
     const deflateEnd = blockSize - 8; // footer 8 bytes
     const deflateData = block.subarray(deflateStart, deflateEnd);
+    console.debug(`Decompressing block of size ${deflateData.length}`);
     return pako.inflateRaw(deflateData);
   }
 
@@ -198,9 +226,58 @@ export class BGZipService {
       throw new Error('Service not initialized yet');
     }
     if (pageNum < 0 || pageNum >= this.gziIndex.length) {
+      console.log(`No data for page ${pageNum}`);
       return new Uint8Array(0); // Out of range → empty
     }
+    console.debug(
+      `Fetching block ${pageNum} from ${this.gziIndex.length} index entries`
+    );
     const entry = this.gziIndex[pageNum];
+    console.debug(`Fetching block ${entry.compressedOffset}`);
     return this.fetchAndDecompressBlock(entry.compressedOffset);
+  }
+
+  async readPageAsTSV(pageNum: number): Promise<string[][]> {
+    console.groupCollapsed('Read blockzip page/block as TSV');
+    const sourcePageNum = this.getSourcePageNumber(pageNum);
+    console.debug(`Will read blockzip page ${sourcePageNum}`);
+    const pageBytes = await this.readPage(sourcePageNum - 1);
+    console.debug(`Read blockzip page size ${pageBytes.length}`);
+    const decoder = new TextDecoder('utf-8');
+    const text = decoder.decode(pageBytes);
+
+    // Split lines and filter empty lines
+    const lines = text
+      .split('\n')
+      .filter(
+        (line) =>
+          line.trim().length > 0 &&
+          !line.startsWith(this.leadingTsvCommentChars)
+      );
+    console.debug(`Lines ${lines.length}`);
+    if (lines.length === 0 && pageNum === 1) {
+      this.firstPageIsOnlyComments = true;
+      console.log(
+        'First page is only comments, so treating block 2 as page 1.'
+      );
+      console.groupEnd();
+      return this.readPageAsTSV(pageNum);
+    }
+
+    // Split columns by tab
+    const rows = lines.map((line) => line.split('\t'));
+    console.debug(`Rows ${rows.length}`);
+    console.groupEnd();
+    return rows;
+  }
+
+  /**
+   * Returns the total number of pages = total BGZF blocks
+   */
+  getPageCount() {
+    console.debug(`Page count is ${this.gziIndex.length}`);
+    return this.firstPageIsOnlyComments
+      ? this.gziIndex.length - 1
+      : this.gziIndex.length;
   }
 }

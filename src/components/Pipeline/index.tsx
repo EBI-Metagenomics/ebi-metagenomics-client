@@ -63,7 +63,16 @@ const Pipeline: React.FC<PipelineProps> = ({ version }) => {
       <h2>Pipeline {version}</h2>
       <Chart onHoverStep={setStepToHighlight} />
       <h3>Pipeline tools &amp; steps</h3>
-      <div onMouseLeave={() => setStepToHighlight(-1)}>
+      <div
+        role="group"
+        aria-label="Pipeline steps table region"
+        tabIndex={0}
+        onMouseLeave={() => setStepToHighlight(-1)}
+        onBlur={() => setStepToHighlight(-1)}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') setStepToHighlight(-1);
+        }}
+      >
         <Table onHoverStep={setStepToHighlight} />
       </div>
     </section>

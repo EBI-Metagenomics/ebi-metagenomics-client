@@ -17,7 +17,7 @@ const QualityControlChart: React.FC<QualityControlProps> = ({
 }) => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const isAssembly = analysisData.attributes['experiment-type'] === 'assembly';
+  const isAssembly = analysisData?.attributes['experiment-type'] === 'assembly';
 
   const unit = isAssembly ? 'contigs' : 'reads';
   const capUnit = isAssembly ? 'Contigs' : 'Reads';
@@ -28,7 +28,7 @@ const QualityControlChart: React.FC<QualityControlProps> = ({
 
   const analysisSummary = {};
   (
-    (analysisData.attributes?.['analysis-summary'] as {
+    (analysisData?.attributes?.['analysis-summary'] as {
       key: string;
       value: string;
     }[]) || []

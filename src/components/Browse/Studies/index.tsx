@@ -1,19 +1,26 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import EMGTable from 'components/UI/EMGTable';
 import { getBiomeIcon } from 'utils/biomes';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 import useStudiesList from 'hooks/data/useStudies';
 import BiomeSelector from 'components/UI/BiomeSelector';
+import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
+import FetchError from 'components/UI/FetchError';
+import { Study } from '@/interfaces';
+
+const { usePage, useSearch, useOrder, useBiome, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('', {
+    biome: SharedTextQueryParam(''),
+  });
 
 const BrowseStudies: React.FC = () => {
-  const [page, setPage] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [biome] = useQueryParamState('biome', '');
+  const [page, setPage] = usePage<number>();
+  const [order] = useOrder<string>();
+  const [biome] = useBiome<string>();
+  const [search] = useSearch<string>();
 
   const [hasData, setHasData] = useState(false);
 
@@ -21,11 +28,13 @@ const BrowseStudies: React.FC = () => {
     data: studiesList,
     loading,
     download,
+    error,
   } = useStudiesList({
     page,
     order,
     biome_lineage: biome,
     has_analyses_from_pipeline: 'V6',
+    search,
   });
 
   const columns = React.useMemo(
@@ -59,7 +68,7 @@ const BrowseStudies: React.FC = () => {
       {
         Header: 'Last updated',
         accessor: 'updated_at',
-        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+        Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
       },
     ],
     []
@@ -70,6 +79,7 @@ const BrowseStudies: React.FC = () => {
   }, [studiesList]);
 
   if (!studiesList && loading) return <Loading />;
+  if (error) return <FetchError error={error} />;
   return (
     <section className="mg-browse-section">
       <div>
@@ -84,18 +94,19 @@ const BrowseStudies: React.FC = () => {
       </div>
       <div style={{ height: '2rem' }} />
       {hasData && (
-        <EMGTable
+        <EMGTable<Study>
           cols={columns}
-          data={studiesList}
-          Title={`Studies (${studiesList.count})`}
+          data={studiesList ?? []}
+          Title={`Studies (${studiesList?.count})`}
           initialPage={(page as number) - 1}
           sortable
           loading={loading}
           onDownloadRequested={download}
+          showTextFilter
         />
       )}
     </section>
   );
 };
 
-export default BrowseStudies;
+export default withQueryParamProvider(BrowseStudies);

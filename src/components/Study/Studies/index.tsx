@@ -2,10 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import EMGTable from 'components/UI/EMGTable';
 import { getBiomeIcon } from 'utils/biomes';
-import { PublicationStudy } from 'interfaces';
+import { PublicationStudy, Study } from '@/interfaces';
 
 type AssociatedStudiesProps = {
-  associatedStudies: PublicationStudy[];
+  associatedStudies: PublicationStudy[] | Study[];
 };
 const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
   associatedStudies,
@@ -48,7 +48,7 @@ const AssociatedStudies: React.FC<AssociatedStudiesProps> = ({
       id: 'last_update',
       Header: 'Last Updated',
       accessor: 'updated_at',
-      Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+      Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
     },
   ];
 

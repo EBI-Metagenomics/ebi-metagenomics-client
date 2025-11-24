@@ -1,12 +1,13 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { ErrorFromFetch, ErrorTypes } from 'hooks/data/useData';
 import useProtectedApiCall from 'hooks/useProtectedApiCall';
 import UserContext from 'pages/Login/UserContext';
 import paginatedDownloader from 'utils/paginatedDownloader';
+import { isNil } from 'lodash-es';
 
 interface FetchDataOptions<T> {
-  url: string | null;
+  url: string | null | undefined;
   transformResponse?: (data: T) => T;
   requireAuth?: boolean;
   includeAuthIfPresent?: boolean;
@@ -33,16 +34,13 @@ const useApiData = <T,>({
       : axios;
 
   useEffect(() => {
+    const abortController = new AbortController(); // if component unmounts, abort the request. prevents some double fetches.
+
     const fetchData = async () => {
       if (!url) {
         setError({
           type: ErrorTypes.NullURL,
-          error: {
-            message: 'URL is null',
-            request: {
-              responseURL: '',
-            },
-          },
+          error: new AxiosError('URL is null', 'NullURL'),
         });
         setLoading(false);
         return;
@@ -50,7 +48,9 @@ const useApiData = <T,>({
 
       try {
         setStale(true);
-        const response = await axiosInstance.get<T>(url);
+        const response = await axiosInstance.get<T>(url, {
+          signal: abortController.signal,
+        });
         const processedData = transformResponse
           ? transformResponse(response.data)
           : response.data;
@@ -58,28 +58,43 @@ const useApiData = <T,>({
         setError(null);
       } catch (err) {
         const axiosError = err as AxiosError;
+        // Ignore abort errors
+        if (
+          axiosError.name === 'CanceledError' ||
+          abortController.signal.aborted
+        ) {
+          return;
+        }
         const errorFromFetch: ErrorFromFetch = {
           status: axiosError.response?.status,
           type: ErrorTypes.FetchError,
-          error: err,
+          error: axiosError,
         };
         setError(errorFromFetch);
       } finally {
-        setLoading(false);
-        setStale(false);
+        if (!abortController.signal.aborted) {
+          setLoading(false);
+          setStale(false);
+        }
       }
     };
 
     fetchData();
+
+    return () => {
+      abortController.abort();
+    };
   }, [url, transformResponse, axiosInstance]);
   const download = () =>
-    paginatedDownloader(
-      url,
-      pageParameter,
-      config.whenDownloadingListsFromApi.maxPages,
-      config.whenDownloadingListsFromApi.cadenceMs,
-      axiosInstance
-    );
+    isNil(url)
+      ? async () => {}
+      : paginatedDownloader(
+          url,
+          pageParameter,
+          config.whenDownloadingListsFromApi?.maxPages || Infinity,
+          config.whenDownloadingListsFromApi?.cadenceMs || 50,
+          axiosInstance
+        );
 
   return { data, error, loading, stale, url, download };
 };

@@ -1,17 +1,15 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React, { useEffect, useState } from 'react';
 
-import { groupBy, split, map, flatMap, find, filter } from 'lodash-es';
+import { countBy, filter, find, flatMap, groupBy, map, split } from 'lodash-es';
 import Select from 'react-select';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseList, MGnifyDatum } from '@/hooks/data/useData';
 import { getBiomeIcon } from '@/utils/biomes';
 import {
   reactSelectStyles,
   reactSelectTheme,
 } from 'styles/react-select-styles';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useSharedQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useBiomes from 'hooks/data/useBiomes';
+import { Biome } from '@/interfaces';
 
 type BiomeSelectorProps = {
   onSelect: (lineage: string) => void;
@@ -19,7 +17,7 @@ type BiomeSelectorProps = {
 };
 
 type OptionProps = {
-  value: MGnifyDatum | string;
+  value: Biome | string;
   label: string | number | Record<string, unknown> | [];
 };
 
@@ -28,7 +26,7 @@ const OptionLabel: React.FC<OptionProps> = ({ value, label }) => (
     <div className="vf-flag__media">
       <span
         className={`biome_icon icon_xxs ${getBiomeIcon(
-          typeof value === 'string' ? value : value.id
+          typeof value === 'string' ? value : value.lineage
         )}`}
         style={{ float: 'initial' }}
       />
@@ -41,34 +39,27 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
   onSelect,
   lineageFilter = () => true,
 }) => {
-  const { data: biomes, loading } = useMGnifyData(
-    'biomes/root/children?depth_gte=1&depth_lte=4&page_size=200'
-  );
-  const [biomeQP, setBiomeQP] = useQueryParamState('biome', 'root');
-  const [value, setValue] = useState<OptionProps | undefined>();
+  const { data: biomes, loading } = useBiomes({ page_size: 200 });
+  const [biomeQP, setBiomeQP] = useSharedQueryParamState<string>('biome');
+  const [value, setValue] = useState<OptionProps | null>();
   const options = React.useMemo(() => {
     if (loading) {
       return [{ label: 'Loading...', value: 'root' }];
     }
-    const filteredBiomes = filter(
-      (biomes as MGnifyResponseList).data,
-      (biome) => lineageFilter(biome.attributes.lineage as string)
+    const filteredBiomes = filter(biomes?.items ?? [], (biome) =>
+      lineageFilter(biome.lineage as string)
     );
     const groupedLineages = groupBy(filteredBiomes, (biome) =>
-      split(biome.id.replace('root:', ''), ':', 1).join(':')
+      split(biome.lineage.replace('root:', ''), ':', 1).join(':')
     );
     return map(groupedLineages, (childBiomes, lineageLabel) => ({
       label: lineageLabel,
       options: childBiomes.map((biome) => ({
         value: biome,
-        label: `${
-          (biome.attributes.lineage as string).replace(/[^:]/g, '').length > 2
-            ? '↳  '
-            : ''
-        }${
-          lineageLabel === biome.attributes['biome-name']
+        label: `${countBy(biome.lineage)[':'] >= 2 ? '↳  ' : ''}${
+          lineageLabel === biome.biome_name
             ? `All ${lineageLabel}`
-            : biome.attributes['biome-name']
+            : biome.biome_name
         }
             `,
       })),
@@ -97,8 +88,11 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
         onChange={(option, action) => {
           if (action.action === 'select-option') {
             setValue(option);
+            if (!option) return;
             const biomeId =
-              typeof option.value === 'string' ? option.value : option.value.id;
+              typeof option.value === 'string'
+                ? option.value
+                : option.value.lineage;
             onSelect(biomeId);
             setBiomeQP(biomeId);
           }

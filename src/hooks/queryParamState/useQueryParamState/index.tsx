@@ -1,67 +1,96 @@
-import { Dispatch, useState } from 'react';
-import useQueryParamsStore from '@/hooks/queryParamState/QueryParamStore/useQueryParamsStore';
-import { useEffectOnce } from 'react-use';
-import {
-  GlobalState,
-  Param,
-  ParamActions,
-  subscribeToParam,
-  unsubscribeFromParam,
-  updateParam,
-} from '@/hooks/queryParamState/QueryParamStore/queryParamReducer';
-import { v4 as uuidv4 } from 'uuid';
+import SharedQueryParamsProvider, {
+  SharedNumberQueryParam,
+  SharedQueryParamContext,
+  SharedQueryParamSet,
+  SharedTextQueryParam,
+} from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+import React, { useContext } from 'react';
+import { camelCase, forEach, upperFirst } from 'lodash-es';
 
-type StateExtras = {
-  param: Param;
-  globalState: GlobalState;
-  actionDispatcher: Dispatch<ParamActions>;
-};
 
-const useQueryParamState: <S>(
+function useSharedQueryParamState<T>(
   parameter: string,
-  defaultValue: S,
-  serializer?: (stringified: string) => S | string
-) => [S | string, (s: S) => void, StateExtras] = (
-  parameter,
-  defaultValue,
-  serializer = String
-) => {
-  const { state, dispatch } = useQueryParamsStore();
-  const { params } = state;
-
-  const rawValue = params[parameter]?.value || defaultValue;
-  const value =
-    rawValue === undefined ? rawValue : serializer(rawValue as string);
-  const [subscriber] = useState(() => uuidv4());
-
-  useEffectOnce(() => {
-    dispatch(
-      subscribeToParam({
-        name: parameter,
-        defaultValue,
-        serializer,
-        subscriber,
-      })
-    );
-    return () => {
-      dispatch(unsubscribeFromParam({ name: parameter, subscriber }));
-    };
-  });
-
-  const setter = (newValue) => {
-    if ((newValue as string) === value) return;
-    dispatch(updateParam({ name: parameter, value: newValue }));
-  };
+): readonly [T, (next: T) => void] {
+  const { queryParams, setQueryParams } = useContext(SharedQueryParamContext);
 
   return [
-    value,
-    setter,
-    {
-      param: params[parameter],
-      globalState: state,
-      actionDispatcher: dispatch,
+    (queryParams[parameter]?.value as unknown as T ) ?? queryParams[parameter]?.defaultValue as T ?? (undefined as unknown as T),
+    (next: T) => {
+      setQueryParams((prev: SharedQueryParamSet) => ({
+        ...prev,
+        [parameter]: { ...(prev?.[parameter] ?? {}), value: next },
+      }));
     },
   ];
+}
+
+export default useSharedQueryParamState;
+
+type Hook = <T = unknown>() => readonly [T, (next: T) => void];
+
+// Map the param keys in P to their hook names
+type HookName<K extends string> = `use${Capitalize<K>}`;
+
+type HooksFor<P extends SharedQueryParamSet> = {
+  [K in keyof P as HookName<Extract<K, string>>]: Hook;
 };
 
-export default useQueryParamState;
+export function createSharedQueryParamContext<P extends SharedQueryParamSet>(
+  params: P
+): {
+  QueryParamProvider: React.FC<{ children: React.ReactNode }>;
+  withQueryParamProvider: <Q extends object>(Component: React.ComponentType<Q>) => React.FC<Q>;
+} & HooksFor<P> {
+  const hooks: Partial<HooksFor<P>> = {};
+
+  forEach(params, (_val, paramName) => {
+    const name = paramName as keyof P & string;
+    const hookName = `use${upperFirst(name)}` as HookName<typeof name>;
+    // Assign into the partial map
+    // eslint-disable-next-line react-hooks/rules-of-hooks,prettier/prettier
+    (hooks as any)[hookName] = (<T = unknown>() => useSharedQueryParamState<T>(name));
+  });
+
+  const QueryParamProvider: React.FC<{
+    children: React.ReactNode;
+  }> = ({ children }) => {
+    return (
+      <SharedQueryParamsProvider params={params}>{children}</SharedQueryParamsProvider>
+    )
+  }
+
+  const withQueryParamProvider = <Q extends object>(Component: React.ComponentType<Q>): React.FC<Q> => {
+    const Wrapped: React.FC<Q> = (props) => (
+      <QueryParamProvider>
+        <Component {...props} />
+      </QueryParamProvider>
+    );
+    Wrapped.displayName = `WithQueryParams(${Component.displayName ?? Component.name ?? 'Component'})`;
+    return Wrapped;
+  };
+
+  return {
+    ...(hooks as unknown as HooksFor<P>),
+    QueryParamProvider,
+    withQueryParamProvider,
+  } as {
+    QueryParamProvider: React.FC<{ children: React.ReactNode }>;
+    withQueryParamProvider: <Q extends object>(Component: React.ComponentType<Q>) => React.FC<Q>;
+  } & HooksFor<P>;
+}
+
+type BaseContext = ReturnType<typeof createSharedQueryParamContext>;
+
+export function createSharedQueryParamContextForTable(
+  namespace: string = "",
+  extraParams?: SharedQueryParamSet,
+  initialPageSize: number = 10
+): BaseContext {
+  return createSharedQueryParamContext({
+    [camelCase(`${namespace} page`)]: SharedNumberQueryParam(1),
+    [camelCase(`${namespace} page size`)]: SharedNumberQueryParam(initialPageSize),
+    [camelCase(`${namespace} order`)]: SharedTextQueryParam(""),
+    [camelCase(`${namespace} search`)]: SharedTextQueryParam(""),
+    ...extraParams,
+  });
+}

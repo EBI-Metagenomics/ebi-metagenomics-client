@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowRight, ArrowLeft, Dna, Info } from 'lucide-react';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import './style.css';
 
 const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<any>();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error>();
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
 
   useEffect(() => {
@@ -58,7 +58,6 @@ const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
           color = '#9333ea'; // purple
       }
       return (
-        // eslint-disable-next-line react/no-array-index-key
         <span key={index} style={{ color }}>
           {nucleotide}
         </span>
@@ -191,13 +190,17 @@ const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
           <span>Legend</span>
           {infoText && (
             <div className="info-tooltip-container">
-              <div
+              <button
+                type="button"
                 className="info-icon"
+                aria-label="Legend information"
                 onMouseEnter={() => setShowInfoTooltip(true)}
                 onMouseLeave={() => setShowInfoTooltip(false)}
+                onFocus={() => setShowInfoTooltip(true)}
+                onBlur={() => setShowInfoTooltip(false)}
               >
                 <Info size={16} color="#6b7280" />
-              </div>
+              </button>
               {showInfoTooltip && (
                 <div className="info-tooltip">{infoText}</div>
               )}

@@ -1,13 +1,16 @@
 import React, { useContext } from 'react';
-import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
-import { Download } from 'interfaces';
+import AnalysisContext, {
+  AnalysisContextType,
+} from 'pages/Analysis/V2AnalysisContext';
+import { Download } from 'interfaces/index';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 
 const InterPro: React.FC = () => {
-  const { overviewData: analysisData } = useContext(AnalysisContext);
+  const { overviewData: analysisData } =
+    useContext<AnalysisContextType>(AnalysisContext);
 
-  const dataFile: Download = analysisData.downloads.find(
+  const dataFile: Download | undefined = analysisData?.downloads.find(
     (file) =>
       file.download_group === 'functional_annotation.interpro_identifiers'
   );

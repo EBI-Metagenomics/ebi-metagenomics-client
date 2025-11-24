@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React, { useEffect, useState } from 'react';
 
 import EMGTable from 'components/UI/EMGTable';
@@ -7,14 +5,25 @@ import useMGnifyData from '@/hooks/data/useMGnifyData';
 import { MGnifyResponseList } from '@/hooks/data/useData';
 import { getBiomeIcon } from '@/utils/biomes';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import Link from 'components/UI/Link';
+import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+
+const {
+  useBiomesPage,
+  useBiomesPageSize,
+  useBiomesOrder,
+  useBiomesSearch,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable('biomes', {
+  biomesSearch: SharedTextQueryParam(''),
+});
 
 const BrowseBiomes: React.FC = () => {
-  const [page] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [pageSize] = useQueryParamState('page_size', 25, Number);
-  const [search] = useQueryParamState('search', '');
+  const [page] = useBiomesPage<number>();
+  const [order] = useBiomesOrder<string>();
+  const [pageSize] = useBiomesPageSize<number>();
+  const [search] = useBiomesSearch<string>();
   const [hasData, setHasData] = useState(false);
   const {
     data: biomesList,
@@ -25,7 +34,7 @@ const BrowseBiomes: React.FC = () => {
     page,
     ordering: order,
     page_size: pageSize,
-    search: (search as string) || undefined,
+    search: (search as string) || '',
   });
 
   const columns = React.useMemo(
@@ -98,4 +107,4 @@ const BrowseBiomes: React.FC = () => {
   );
 };
 
-export default BrowseBiomes;
+export default withQueryParamProvider(BrowseBiomes);

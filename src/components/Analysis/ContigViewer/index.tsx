@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {
   useCallback,
   useContext,
@@ -19,6 +18,7 @@ import useData, {
 import './style.css';
 import UserContext from 'pages/Login/UserContext';
 import igv from 'igv/dist/igv.esm';
+import { Browser } from 'igv';
 
 import ContigsTable from 'components/Analysis/ContigViewer/Table';
 import ContigsQueryContext from 'components/Analysis/ContigViewer/ContigsQueryContext';
@@ -27,9 +27,9 @@ import ReactDOMServer from 'react-dom/server';
 import GenomeBrowserPopup from 'components/Genomes/Browser/Popup';
 import ContigLengthFilter from 'components/Analysis/ContigViewer/Filter/ContigLength';
 import ContigTextFilter from 'components/Analysis/ContigViewer/Filter/ContigText';
-// eslint-disable-next-line max-len
+
 import ContigAnnotationTypeFilter from 'components/Analysis/ContigViewer/Filter/ContigAnnotationType';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContext } from 'hooks/queryParamState/useQueryParamState';
 import {
   AnnotationTrackColorPicker,
   annotationTrackCustomisations,
@@ -42,6 +42,11 @@ import {
 } from 'hooks/genomeViewer/CrateStore/useCrates';
 import { Track } from 'utils/trackView';
 import ROCrateComparer from 'components/UI/ROCrateComparer';
+import {
+  SharedMultipleValueQueryParam,
+  SharedNumberRangeQueryParam,
+  SharedTextQueryParam,
+} from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 type ContigProps = {
   contig: MGnifyDatum;
@@ -56,7 +61,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 
   const { data, loading, error } = useData(fastaURL, ResponseFormat.TXT);
 
-  const assemblyId = analysisOverviewData.relationships.assembly.data.id;
+  const assemblyId = analysisOverviewData?.relationships.assembly.data.id;
 
   const { crates, loading: loadingCrates } = useCrates(
     `assemblies/${assemblyId}/extra-annotations`
@@ -66,7 +71,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 
   const antiSMASH = contig.attributes['has-antismash'];
   const displayName = contig.attributes['contig-name'];
-  const [igvBrowser, setIgvBrowser] = useState(null);
+  const [igvBrowser, setIgvBrowser] = useState<Browser>(null);
 
   const [trackColorBys, setTrackColorBys] = useState({});
   const [updatingTracks, setUpdatingTracks] = useState(true);
@@ -109,16 +114,16 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
       }
       if (crates) {
         crates.forEach((crate) => {
-          options.tracks.push(crate.track);
+          if (crate.track) options.tracks.push(crate.track);
         });
       }
-      if (offlineCrate) {
+      if (offlineCrate?.track) {
         options.tracks.push(offlineCrate.track);
       }
 
       if (node === null) return;
       igv.createBrowser(node, options).then((browser) => {
-        browser.on('trackclick', (track, trackData) =>
+        browser.on('trackclick', (_, trackData) =>
           ReactDOMServer.renderToString(<GenomeBrowserPopup data={trackData} />)
         );
         setIgvBrowser(browser);
@@ -139,8 +144,8 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   useEffect(() => {
     const updateTracks = async () => {
       setUpdatingTracks(true);
-      const tracksToRemove = [];
-      const tracksToAdd = [];
+      const tracksToRemove: string[] = [];
+      const tracksToAdd: string[] = [];
       igvBrowser?.trackViews?.forEach((trackView) => {
         if (trackView.track.type !== 'annotation') return;
         const colorBy = trackColorBys[trackView.track.id];
@@ -203,37 +208,49 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   );
 };
 
+const {
+  useContigsPageCursor,
+  useSelectedContig,
+  useContigLength,
+  useCogCategorySearch,
+  useKeggOrthologSearch,
+  useGoTermSearch,
+  usePfamSearch,
+  useInterproSearch,
+  useAntismashSearch,
+  useAnnotationType,
+  useContigsSearch,
+  withQueryParamProvider,
+} = createSharedQueryParamContext({
+  contigsPageCursor: SharedTextQueryParam(''),
+  selectedContig: SharedTextQueryParam(''),
+  gffComparisonId: SharedTextQueryParam(''),
+  contigLength: SharedNumberRangeQueryParam([500, 10e6]),
+  cogCategorySearch: SharedTextQueryParam(''),
+  keggOrthologSearch: SharedTextQueryParam(''),
+  goTermSearch: SharedTextQueryParam(''),
+  pfamSearch: SharedTextQueryParam(''),
+  interproSearch: SharedTextQueryParam(''),
+  antismashSearch: SharedTextQueryParam(''),
+  annotationType: SharedMultipleValueQueryParam([]),
+  contigsSearch: SharedTextQueryParam(''),
+});
+
 const ContigsViewer: React.FC = () => {
   const accession = useURLAccession();
 
-  const [contigsPageCursorParam] = useQueryParamState(
-    'contigs_page_cursor',
-    ''
-  );
-  const [selectedContigParam, setSelectedContigParam] = useQueryParamState(
-    'selected_contig',
-    ''
-  );
-  useQueryParamState('gff_comparison_id', '');
-  const [contigLengthParam] = useQueryParamState('contig_length', '');
-  const [cogCategorySearchParam] = useQueryParamState(
-    'cog_category_search',
-    ''
-  );
-  const [keggOrthologSearchParam] = useQueryParamState(
-    'kegg_ortholog_search',
-    ''
-  );
-  const [goTermSearchParam] = useQueryParamState('go_term_search', '');
-  const [pfamSearchParam] = useQueryParamState('pfam_search', '');
-  const [interproSearchParam] = useQueryParamState('interpro_search', '');
-  const [antismashSearchParam] = useQueryParamState('antismash_search', '');
-  const [annotationTypeParam] = useQueryParamState('annotation_type', '');
-  const [contigsSearchParam] = useQueryParamState('contigs_search', '');
-
-  const lengthRange = useMemo(() => {
-    return (contigLengthParam as string).split(',').filter(Boolean).map(Number);
-  }, [contigLengthParam]);
+  const [contigsPageCursorParam] = useContigsPageCursor<string>();
+  const [selectedContigParam, setSelectedContigParam] =
+    useSelectedContig<string>();
+  const [lengthRange] = useContigLength<[number, number]>();
+  const [cogCategorySearchParam] = useCogCategorySearch<string>();
+  const [keggOrthologSearchParam] = useKeggOrthologSearch<string>();
+  const [goTermSearchParam] = useGoTermSearch<string>();
+  const [pfamSearchParam] = usePfamSearch<string>();
+  const [interproSearchParam] = useInterproSearch<string>();
+  const [antismashSearchParam] = useAntismashSearch<string>();
+  const [annotationTypeParam] = useAnnotationType<string[]>();
+  const [contigsSearchParam] = useContigsSearch<string>();
 
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/contigs`,
@@ -248,7 +265,7 @@ const ContigsViewer: React.FC = () => {
       pfam: pfamSearchParam,
       interpro: interproSearchParam,
       antismash: antismashSearchParam,
-      'facet[]': annotationTypeParam,
+      'facet[]': annotationTypeParam.join(','),
     },
     {}
   );
@@ -331,4 +348,4 @@ const ContigsViewer: React.FC = () => {
   );
 };
 
-export default ContigsViewer;
+export default withQueryParamProvider(ContigsViewer);

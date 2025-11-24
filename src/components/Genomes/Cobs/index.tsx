@@ -24,7 +24,7 @@ type CobsProps = {
 const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
   const { config } = useContext(UserContext);
   const isSingleCatalogue = !!catalogueID;
-  const textareaSeq = useRef(null);
+  const textareaSeq = useRef<TextareaSequenceElement>(null);
   const [shouldSearch, setShouldSearch] = useState(false);
   const [kmers, setKmers] = useState(KMERS_DEFAULT);
   const [errors, setErrors] = useState<{
@@ -34,16 +34,16 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
   }>({});
   const [valid, setValid] = useState(false);
   useEffect(() => {
-    textareaSeq.current.addEventListener('error-change', (e) => {
-      setErrors(e.detail.errors);
-      setValid(textareaSeq.current.quill.valid);
+    textareaSeq.current?.addEventListener('error-change', (e) => {
+      setErrors((e as any).detail.errors);
+      setValid((textareaSeq.current as any)?.quill.valid);
     });
   }, []);
 
   const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([]);
 
   const setSequence = (seq: string): void => {
-    textareaSeq.current.quill.setText(seq);
+    textareaSeq.current?.quill.setText(seq);
   };
 
   const getAccessionFromCataloguesFirstGenome = async (): Promise<string> => {
@@ -52,7 +52,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
     try {
       const response = await axios.get(url);
       return response.data.data[0].attributes.accession;
-    } catch (responseErrors) {
+    } catch {
       return '';
     }
   };
@@ -70,7 +70,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
       const response = await axios.get(fastaUrl, headersConfig);
       const { data } = response;
       return data.substring(0, 500);
-    } catch (responseErrors) {
+    } catch {
       return '';
     }
   };
@@ -81,7 +81,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
     const firstFiftySequenceChars = await getSequenceCharsFromFastaFile(
       fastaUrl
     );
-    textareaSeq.current.quill.setText(firstFiftySequenceChars);
+    textareaSeq.current?.quill.setText(firstFiftySequenceChars);
   };
 
   const handleExampleClick = (): void => {
@@ -113,7 +113,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
   };
 
   const handleCleanup = (): void => {
-    textareaSeq.current.cleanUp();
+    textareaSeq.current?.cleanUp();
   };
 
   const sayPasted = () =>
@@ -293,7 +293,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
 
         {shouldSearch && (
           <CobsResults
-            sequence={textareaSeq.current.sequence}
+            sequence={textareaSeq.current?.sequence ?? ''}
             threshold={kmers}
             cataloguesFilter={selectedCatalogues}
           />

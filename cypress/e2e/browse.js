@@ -30,8 +30,18 @@ describe('Browse page', function() {
         });
 
     });
-    context.skip('Studies table', function() {
+    context('Studies table', function() {
         beforeEach(function() {
+            cy.intercept('GET', `${config.api_v2}/biomes/**`,
+              {fixture: 'apiv2/biomes/biomeList.json'}).as('biomes');
+            cy.intercept('GET', `${config.api_v2}/studies/**`,
+              {fixture: 'apiv2/studies/studyListAll.json'}).as('studies');
+            cy.intercept({
+                method: 'GET',
+                url: `${config.api_v2}/studies/**`,
+                query: {biome_lineage: 'root:Engineered'}
+              },
+              {fixture: 'apiv2/emptyList.json'}).as('studiesForEngineered');
             openPage(origPage + '/studies');
             waitForPageLoad('Browse MGnify');
         });
@@ -48,8 +58,36 @@ describe('Browse page', function() {
             cy.get('.vf-table__body > .vf-table__row').should('have.length', 0);
             cy.contains('No matching data');
         });
-
     });
+
+  context('Samples table', function() {
+    beforeEach(function() {
+      cy.intercept('GET', `${config.api_v2}/biomes/**`,
+        {fixture: 'apiv2/biomes/biomeList.json'}).as('biomes');
+      cy.intercept('GET', `${config.api_v2}/samples/**`,
+        {fixture: 'apiv2/samples/sampleListAll.json'}).as('samples');
+      cy.intercept({
+          method: 'GET',
+          url: `${config.api_v2}/samples/**`,
+          query: {biome_lineage: 'root:Engineered'}
+        },
+        {fixture: 'apiv2/samples/sampleListEngineered.json'}).as('samplesForEngineered');
+      openPage(origPage + '/samples');
+      waitForPageLoad('Browse MGnify');
+    });
+
+    it('Should contain correct number of samples', function() {
+      cy.get('.mg-table-caption').should('contain.text', 3);
+      cy.get('.vf-table__body > .vf-table__row').should('have.length', 3);
+      cy.get('.vf-table__body > .vf-table__row > :nth-child(2)').should('contain.text', 'SAMN07793787');
+    });
+
+    it('Should respond to biome filtering', function() {
+      cy.get('#biome-select').click();
+      cy.contains('All Engineered').click();
+      cy.get('.vf-table__body > .vf-table__row').should('have.length', 1);
+    });
+  });
         //TODO list genome catalogues
 
         //TODO list biomes

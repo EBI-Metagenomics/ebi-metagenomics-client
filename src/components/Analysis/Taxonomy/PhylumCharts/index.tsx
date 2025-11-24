@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Row } from 'react-table';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
@@ -10,6 +9,7 @@ import PhylumTable from '../PhylumTable';
 import PhylumPie from './Pie';
 import PhylumColumn from './Column';
 import PhylumStackedColumn from './StackedColumn';
+import { Row } from 'react-table';
 
 const DEPTH_TO_CLUSTER = 2;
 
@@ -101,7 +101,7 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/taxonomy${category}`
   );
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedRow, setSelectedRow] = useState<Record<string, any>>();
 
   if (loading) return <Loading />;
   if (error) return <FetchError error={error} />;
@@ -112,7 +112,7 @@ const PhylumCharts: React.FC<PhylumChartsProps> = ({
   const clusteredDataTop = clusterData(data.data as MGnifyDatum[]);
   const includesDomainCharts = ['', '/ssu', '/lsu'].includes(category);
   const handleMouseEnterRow = (row: Row): void => setSelectedRow(row.values);
-  const handleMouseLeaveRow = (): void => setSelectedRow(null);
+  const handleMouseLeaveRow = (): void => setSelectedRow(undefined);
 
   const selectedCategory = clusteredDataTop.findIndex(
     (e) => e.name === selectedRow?.lineage

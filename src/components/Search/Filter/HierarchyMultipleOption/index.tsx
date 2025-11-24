@@ -14,7 +14,7 @@ interface OptionDataType {
   label: string;
   count: number;
   optionChildren?: OptionDataType[];
-  // eslint-disable-next-line react/no-unused-prop-types
+
   children?: OptionDataType[];
 }
 interface HierarchyOptionProps extends OptionDataType {
@@ -110,32 +110,30 @@ const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   facetName,
   header,
 }) => {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const { searchData } = useContext(SearchQueryContext);
-  const [facet, setFacet] = useQueryParamState(facetName, '');
-  const [selected, setSelected] = useState(
-    (facet as string).split(',').filter(Boolean)
-  );
+  const [facet, setFacet] = useQueryParamState<string[]>(facetName);
+  const [selected, setSelected] = useState(facet.filter(Boolean));
   useEffect(() => {
-    setSelected(facet.split(',').filter(Boolean));
+    setSelected(facet.filter(Boolean));
   }, [facet]);
 
   const facetData = useMemo(() => {
     const cleanedFacetData = (
-      searchData?.[location.pathname]?.data?.facets || []
+      searchData?.[pathname]?.data?.facets || []
     ).filter((f) => f.id === facetName)?.[0];
     if (cleanedFacetData?.id === 'biome') {
       // Do not show objects tagged to "root" biome.
       remove(cleanedFacetData.facetValues, ['value', 'root']);
     }
     return cleanedFacetData;
-  }, [location.pathname, searchData, facetName]);
+  }, [pathname, searchData, facetName]);
 
-  if (searchData?.[location.pathname].error) return null;
+  if (searchData?.[pathname].error) return null;
 
   if (!facetData)
     return (
-      <LoadingOverlay loading={searchData?.[location.pathname].loading}>
+      <LoadingOverlay loading={searchData?.[pathname].loading}>
         <fieldset className="vf-form__fieldset vf-stack vf-stack--200">
           <legend className="vf-form__legend">{header}</legend>
           <p className="vf-form__helper">
@@ -146,7 +144,7 @@ const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
-                  setFacet('');
+                  setFacet([]);
                 }}
               >
                 <span className="icon icon-common icon-times-circle" /> Clear{' '}
@@ -166,11 +164,11 @@ const HierarchyMultipleOptionFilter: React.FC<MultipleOptionProps> = ({
     } else {
       newSelected = selected.filter((s) => s !== value);
     }
-    setFacet(newSelected.sort().join(','));
+    setFacet(newSelected.sort());
   };
 
   return (
-    <LoadingOverlay loading={searchData?.[location.pathname].loading}>
+    <LoadingOverlay loading={searchData?.[pathname].loading}>
       <fieldset className="vf-form__fieldset vf-stack vf-stack--200">
         <legend className="vf-form__legend">{header}</legend>
         {facetData.facetValues.map(({ label, value, count, children }) => (

@@ -17,11 +17,11 @@ const tabs = [
 
 const GO: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
-  const [chart] = useQueryParamState('chart', 'bar');
+  const [chart] = useQueryParamState('chart');
   const { data, loading, error } = useMGnifyData(
-    `analyses/${overviewData.id}/go-slim`
+    overviewData ? `analyses/${overviewData.id}/go-slim` : undefined
   );
-  const [dataBundles, setDataBundles] = useState(null);
+  const [dataBundles, setDataBundles] = useState<Record<string, any>>();
   useEffect(() => {
     if ((data?.data as MGnifyDatum[])?.length) {
       const newBundle = {

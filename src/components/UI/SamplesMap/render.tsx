@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { Status } from '@googlemaps/react-wrapper';
 import { ErrorTypes } from '@/hooks/data/useData';
 
@@ -16,7 +16,7 @@ const render = (status: Status): ReactElement => {
         }}
       />
     );
-  return null;
+  return <></>;
 };
 
 export default render;

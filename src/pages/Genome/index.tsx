@@ -126,8 +126,11 @@ const GenomePage: React.FC = () => {
       label: relatedCatalogue.data.id,
       url: `/genome-catalogues/${relatedCatalogue.data.id}`,
     },
-    { label: accession },
+    { label: accession ?? '' },
   ];
+
+  if (!accession) return null;
+
   return (
     <section className="vf-content">
       <Breadcrumbs links={breadcrumbs} />

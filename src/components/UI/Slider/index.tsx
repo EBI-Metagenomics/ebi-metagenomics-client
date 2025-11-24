@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { debounce, round } from 'lodash-es';
+import { debounce, isNil, round } from 'lodash-es';
 import './style.css';
 
 import 'styles/filters.css';
@@ -33,22 +33,26 @@ const Slider: React.FC<SliderProps> = ({
   selection = null,
   onChange = (s) => s,
 }) => {
-  const [currentSelection, setCurrentSelection] = useState({
+  const [currentSelection, setCurrentSelection] = useState<SelectionType>({
     min: selection && 'min' in selection ? selection.min : min,
     max: selection && 'max' in selection ? selection.max : max,
   });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debounced = useCallback(debounce(onChange, 300), []);
+  const debounced = useCallback(
+    (s: SelectionType) => debounce(onChange, 300)(s),
+    [onChange]
+  );
   useEffect(() => {
-    if (!areEqual(currentSelection, selection)) {
+    if (!isNil(selection) && !areEqual(currentSelection, selection)) {
       debounced(currentSelection);
     }
-  }, [currentSelection, debounced, selection]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentSelection]);
   useEffect(() => {
-    if (!areEqual(currentSelection, selection)) {
+    if (!isNil(selection) && !areEqual(currentSelection, selection)) {
       setCurrentSelection(selection);
     }
-  }, [currentSelection, selection]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selection]);
 
   const step = useMemo(() => {
     if (logarithmic) {

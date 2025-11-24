@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download } from 'interfaces';
+import { Download } from 'interfaces/index';
 import { flatMap, groupBy } from 'lodash-es';
 
 type SummaryProps = {

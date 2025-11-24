@@ -13,12 +13,17 @@ module.exports = defineConfig({
   defaultCommandTimeout: 40000,
   retries: 3,
   e2e: {
+    baseUrl: 'http://localhost:9000',
     setupNodeEvents(on, config) {
       codeCoverageTask(on, config);
+      require('cypress-terminal-report/src/installLogsPrinter')(on);
       return config;
     },
     excludeSpecPattern: '*.disabled',
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
+    env: {
+      FIXTURE_BASE: 'http://127.0.0.1:5055',
+    },
   },
 });
 // import { defineConfig } from 'cypress';

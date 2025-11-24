@@ -1,4 +1,4 @@
-import Config from "./config";
+import Config from "./config.js";
 
 export let Util = {
   getBaseURL: function() {
@@ -23,8 +23,11 @@ export let Util = {
   assertTableIsCleared: function() {
     cy.get("table tr.sample").should("not.exist");
   },
-  changeTab: function(tabName) {
+  changeTab: function(tabName) { // hash tab variant
     cy.get("a[href*='#" + tabName + "'].vf-tabs__link").click();
+  },
+  changeRouteTab: function(tabName) { // nested route tab variant
+    cy.get("a[href*='" + tabName + "'].vf-tabs__link").click();
   },
   changeSubTab: function(subTabName) {
     cy.get("button.mg-button-as-tab").contains(subTabName).click();

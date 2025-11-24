@@ -5,10 +5,15 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
+import {
+  ErrorFromFetch,
+  MGnifyDatum,
+  MGnifyResponseList,
+} from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
 import InfoBanner from 'components/UI/InfoBanner';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const initialPageSize = 10;
 
@@ -20,28 +25,38 @@ type AssociatedAssembliesProps = {
   rootEndpoint: string;
 };
 
+const {
+  useAssembliesPage,
+  useAssembliesPageSize,
+  useAssembliesOrder,
+  useAssembliesSearch,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable(
+  'assemblies',
+  {
+    assembliesSearch: SharedTextQueryParam(''),
+  },
+  initialPageSize
+);
+
 const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
   rootEndpoint,
 }) => {
   const accession = useURLAccession();
-  const [assemblyPage] = useQueryParamState('assembly-page', 1, Number);
-  const [assemblyFilter] = useQueryParamState('assembly-search', '');
-  const [assemblyPageSize] = useQueryParamState(
-    'assembly-page_size',
-    initialPageSize,
-    Number
-  );
-  const [assemblyOrder] = useQueryParamState('assembly-order', '');
-  const url = getURLByEndpoint(rootEndpoint, accession);
+  const [assemblyPage] = useAssembliesPage<number>();
+  const [assemblyFilter] = useAssembliesSearch<string>();
+  const [assemblyPageSize] = useAssembliesPageSize<number>();
+  const [assemblyOrder] = useAssembliesOrder<string>();
+  const url = getURLByEndpoint(rootEndpoint, accession as string);
   const { data, loading, error, isStale, downloadURL } = useMGnifyData(url, {
-    sample_accession: rootEndpoint === 'samples' ? accession : undefined,
+    sample_accession: rootEndpoint === 'samples' ? (accession as string) : '',
     page: assemblyPage as number,
     ordering: assemblyOrder as string,
     page_size: assemblyPageSize as number,
     search: assemblyFilter as string,
   });
   if (loading && !isStale) return <Loading size="small" />;
-  if (error || !data) return <FetchError error={error} />;
+  if (error || !data) return <FetchError error={error as ErrorFromFetch} />;
   if (!(data.data as MGnifyDatum[]).length && !assemblyFilter)
     return <InfoBanner type="info" title="No associated assemblies found." />;
 
@@ -73,8 +88,9 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
       Header: 'Pipeline versions',
       accessor: 'relationships.pipelines.data',
       disableSortBy: true,
-      Cell: ({ cell }) =>
-        (cell.value as { id: string }[]).map(({ id }) => id).join(', '),
+      Cell: ({ cell }) => (
+        <>{(cell.value as { id: string }[]).map(({ id }) => id).join(', ')}</>
+      ),
     },
   ];
   const showPagination = (data.meta?.pagination?.count || 1) > initialPageSize;
@@ -97,4 +113,4 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
   );
 };
 
-export default AssociatedAssemblies;
+export default withQueryParamProvider(AssociatedAssemblies);

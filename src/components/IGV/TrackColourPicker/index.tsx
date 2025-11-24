@@ -18,7 +18,7 @@ import ROCrateBrowser from 'components/UI/ROCrateBrowser';
 
 function maybeGetAttributeValue(feature, attrPossibleNames: string[]) {
   if (!feature || !feature.getAttributeValue) return null;
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const [, attr] of attrPossibleNames.entries()) {
     const featureAttrVal = feature.getAttributeValue(attr);
     if (featureAttrVal) {
@@ -274,7 +274,9 @@ export const AnnotationTrackColorPicker: React.FC<
         </span>
       )}
       {trackView.track.config.crate && (
-        <ROCrateBrowser crateUrl={trackView.track.config.initialCrateURL} />
+        <ROCrateBrowser
+          crateUrl={trackView.track.config.initialCrateURL as string}
+        />
       )}
     </div>
   );

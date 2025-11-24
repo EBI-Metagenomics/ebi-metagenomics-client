@@ -1,44 +1,54 @@
-import React from 'react';
-
-import { MGnifyDatum } from '@/hooks/data/useData';
+import React, { useMemo } from 'react';
 import SamplesMap from 'components/UI/SamplesMap/BySamplesArray';
 import Box from 'components/UI/Box';
 import ExtLink from 'components/UI/ExtLink';
 import { getBiomeIcon } from '@/utils/biomes';
 import { ENA_VIEW_URL } from '@/utils/urls';
+import { SampleDetail, Study } from '@/interfaces';
+import { find } from 'lodash-es';
+import InfoBanner from 'components/UI/InfoBanner';
 
 type SampleOverviewProps = {
-  data: MGnifyDatum;
+  data: SampleDetail;
 };
 
 const SampleOverview: React.FC<SampleOverviewProps> = ({ data }) => {
-  const lineage = data.relationships.biome.data.id;
+  const lineage = data.biome?.lineage ?? 'root';
+  const biosample = useMemo(() => {
+    return find(data?.ena_accessions ?? [], (acc) => acc.startsWith('SAM'));
+  }, [data]);
+  const study = data?.studies?.[0] as Study;
+
   return (
     <section>
       <div className="vf-grid">
         <div>
           <h4>
-            Last updated:{' '}
-            {new Date(
-              data?.attributes?.['last-update'] as string
-            ).toDateString()}
+            Last updated: {new Date(data.updated_at as string).toDateString()}
           </h4>
           <Box label="Description" dataCy="sample-description">
-            {data.attributes['sample-desc']}
+            {data?.metadata?.sample_description}
           </Box>
           <Box label="External links">
             <ul data-cy="sample-external-links">
               <li>
-                <ExtLink href={ENA_VIEW_URL + data.attributes.accession}>
-                  ENA website ({data.attributes.accession})
+                <ExtLink href={ENA_VIEW_URL + data.accession}>
+                  ENA website ({data.accession})
                 </ExtLink>
               </li>
               <li>
-                <ExtLink
-                  href={`https://www.ebi.ac.uk/biosamples/samples/${data.attributes.biosample}`}
-                >
-                  EBI biosample ({data.attributes.biosample})
-                </ExtLink>
+                {biosample ? (
+                  <ExtLink
+                    href={`https://www.ebi.ac.uk/biosamples/samples/${biosample}`}
+                  >
+                    EBI BioSamples ({biosample})
+                  </ExtLink>
+                ) : (
+                  <InfoBanner
+                    type="warning"
+                    title="No BioSamples accession known"
+                  ></InfoBanner>
+                )}
               </li>
             </ul>
           </Box>
@@ -50,7 +60,7 @@ const SampleOverview: React.FC<SampleOverviewProps> = ({ data }) => {
             {lineage}
           </Box>
         </div>
-        <SamplesMap samples={[data]} />
+        <SamplesMap samples={[data]} study={study} />
       </div>
     </section>
   );
