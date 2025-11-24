@@ -187,9 +187,36 @@ const V2AssemblyPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${config.api_v2}/assemblies/${accession}`
+        `${config.api_v2}/assemblies/${accession}/genome-links`
       );
-      setData(response.data);
+      // Normalise API response to the structure expected by the UI components
+      // Expected shape:
+      // {
+      //   accession: string,
+      //   genome_links: Array<{ genome: { accession, taxon_lineage, catalogue_id, catalogue_version }, species_rep: string }>,
+      //   run_accession?: React.ReactNode,
+      //   sample_accession?: string
+      // }
+      const raw = response.data;
+      let normalised: any = raw;
+      if (raw && typeof raw === 'object') {
+        if ('items' in raw && Array.isArray((raw as any).items)) {
+          // Newer/alternative API returns { items: [...], count }
+          normalised = {
+            accession,
+            genome_links: (raw as any).items.map((it: any) => ({
+              genome: it.genome,
+              species_rep: it.species_rep,
+            })),
+            run_accession: undefined,
+            sample_accession: '',
+          };
+        } else if ('data' in raw && (raw as any).data) {
+          // MGnifyResponseObj style
+          normalised = (raw as any).data;
+        }
+      }
+      setData(normalised);
       setLoading(false);
     } catch (err) {
       setError({
@@ -204,7 +231,8 @@ const V2AssemblyPage: React.FC = () => {
     fetchData();
   }, [fetchData]);
 
-  const assemblyData = (data as MGnifyResponseObj | null)?.data ?? data;
+  // data is already normalised in fetchData
+  const assemblyData = data as any;
 
   const ctxValue = useMemo(
     () => ({ assemblyData, loading, error, refetch: fetchData }),

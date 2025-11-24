@@ -33,6 +33,10 @@ const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
       setDetails(null);
       return;
     }
+    // Avoid redundant updates if token hasn't changed
+    if (authToken === newToken) {
+      return;
+    }
     localStorage.setItem('mgnify.token', newToken as string);
     setAuthTokenInternally(newToken);
     const userDetailsFromToken = getUserDetailsFromToken(newToken as string);
