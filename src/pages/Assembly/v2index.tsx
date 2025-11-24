@@ -33,6 +33,17 @@ type GenomeLink = {
   species_rep: string;
 };
 
+type ContainedGenome = {
+  genome: {
+    accession: string;
+    taxon_lineage: string;
+    catalogue_id: string | number;
+    catalogue_version: string | number;
+  };
+  ena: string;
+  containment: number; // percentage (0-100)
+};
+
 type V2AssemblyCtx = {
   assemblyData: {
     accession: string;
@@ -113,6 +124,92 @@ const DerivedGenomes: React.FC = () => {
   );
 };
 
+const AdditionalContainedGenomes: React.FC = () => {
+  // Mock data until API is available
+  const mockData: ContainedGenome[] = [
+    {
+      genome: {
+        accession: 'MGYG000356011GCA_000876',
+        taxon_lineage: 'Gramella',
+        catalogue_id: 'Marine',
+        catalogue_version: '1.0',
+      },
+      ena: '',
+      containment: 99.9,
+    },
+    {
+      genome: {
+        accession: 'MGYG000004193GCA_000111',
+        taxon_lineage: 'HTCC2207',
+        catalogue_id: 'Non-model fish gut',
+        catalogue_version: '2.0',
+      },
+      ena: '',
+      containment: 52.0,
+    },
+  ];
+
+  const columns = [
+    {
+      id: 'genome_accession',
+      Header: 'Genome accession',
+      accessor: (row: ContainedGenome) => (
+        <Link to={`/genomes/${row.genome.accession}`}>
+          {row.genome.accession}
+        </Link>
+      ),
+    },
+    {
+      id: 'ena',
+      Header: 'ENA',
+      accessor: (row: ContainedGenome) => row.ena,
+    },
+    {
+      id: 'containment',
+      Header: 'Containment',
+      accessor: (row: ContainedGenome) => `${row.containment.toFixed(1)}%`,
+    },
+    {
+      id: 'taxonomy',
+      Header: 'Taxonomy',
+      accessor: (row: ContainedGenome) => row.genome.taxon_lineage,
+    },
+    {
+      id: 'catalogue',
+      Header: 'Catalogue',
+      accessor: (row: ContainedGenome) =>
+        `${row.genome.catalogue_id} v${row.genome.catalogue_version}`,
+    },
+  ];
+
+  return (
+    <Box label="Additional contained genomes">
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: '1rem',
+        }}
+      >
+        <p style={{ margin: 0 }}>
+          Genomes that were not derived from this assembly but have at least 50%
+          of their sequence contained in the assembly.
+        </p>
+        {/* Placeholder download action (no-op while using mock data) */}
+        <a
+          className="vf-button vf-button--secondary vf-button--sm"
+          href="#"
+          onClick={(e) => e.preventDefault()}
+        >
+          Download
+        </a>
+      </div>
+      <EMGTable cols={columns} data={mockData} />
+    </Box>
+  );
+};
+
 const Overview: React.FC = () => {
   const { assemblyData } = React.useContext(V2AssemblyContext);
 
@@ -153,6 +250,7 @@ const Overview: React.FC = () => {
         <KeyValueList list={details} />
       </Box>
       <DerivedGenomes />
+      <AdditionalContainedGenomes />
     </>
   );
 };
