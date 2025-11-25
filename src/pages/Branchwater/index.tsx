@@ -107,9 +107,9 @@ const Branchwater = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage] = useState<number>(25);
 
-  // Sorting state (legacy/local)
-  const [sortField, setSortField] = useState<string>('');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  // Sorting state (legacy/local) — default to containment descending
+  const [sortField, setSortField] = useState<string>('containment');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   // Read ordering from EMGTable's sortable integration via query param
   const [detailedOrder] = useQueryParamState('branchwater-detailed-order', '');
 
@@ -947,8 +947,9 @@ const Branchwater = () => {
       geo_loc_name_country_calc: '',
       organism: '',
     });
-    setSortField('');
-    setSortDirection('asc');
+    // Reset sorting to default: containment descending
+    setSortField('containment');
+    setSortDirection('desc');
     setCurrentPage(1);
     const fileInput = document.getElementById(
       'file-upload'
@@ -975,8 +976,9 @@ const Branchwater = () => {
       geo_loc_name_country_calc: '',
       organism: '',
     });
-    setSortField('');
-    setSortDirection('asc');
+    // Reset sorting to default: containment descending
+    setSortField('containment');
+    setSortDirection('desc');
     setCurrentPage(1);
     const fileInput = document.getElementById(
       'file-upload'
@@ -1049,9 +1051,9 @@ const Branchwater = () => {
             signatures which are then sent to our servers.
           </p>
           <p className="vf-text-body vf-text-body--3">
-            <strong>Branchwater</strong> then compares these signatures against
-            over 1,161,119 metagenomes and also assocaites the relevant metadata
-            to the results.
+            This search engine searches for the containment of a query genome
+            sequence in 6 million metagenomes available from INSDC archives as
+            of 12/08/2023
           </p>
           <p className="vf-text-body vf-text-body--3">
             Sequences shorter than 10kb will rarely produce results. Quality of

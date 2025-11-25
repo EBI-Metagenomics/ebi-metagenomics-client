@@ -1,6 +1,7 @@
 import React from 'react';
 import TextSearch from 'components/Search/Filter/Text';
 import CANIFilter from 'components/Search/Filter/CANI';
+import ContainmentFilter from 'components/Search/Filter/Containment';
 import LocalMultipleOptionFilter from 'components/Branchwater/LocalMultipleOptionFilter';
 import DetailedResultsTable from 'pages/Branchwater/DetailedResultsTable';
 import Plot from 'react-plotly.js';
@@ -92,6 +93,8 @@ const Results: React.FC<ResultsProps> = ({
   visualizationData,
   scatterData,
 }) => {
+  // Local UI state: show/hide the informational banner
+  const [showBanner, setShowBanner] = React.useState(true);
   /* ----------------------------------------------------------
       1. LOADING STATE
   ----------------------------------------------------------- */
@@ -162,11 +165,35 @@ const Results: React.FC<ResultsProps> = ({
 
   return (
     <>
+      {/* INFO BANNER: Database last updated */}
+      {showBanner && (
+        <div className="vf-banner vf-banner--alert vf-banner--info">
+          <div className="vf-banner__content">
+            <p className="vf-banner__text">
+              This search engine searches for the containment of a query genome
+              sequence in 6 million metagenomes available from INSDC archives as
+              of 12/08/2023
+            </p>
+            <button
+              type="button"
+              role="button"
+              aria-label="close notification banner"
+              className="vf-button vf-button--icon vf-button--dismiss | vf-banner__button"
+              onClick={() => setShowBanner(false)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <title>dismiss banner</title>
+                <path d="M14.3,12.179a.25.25,0,0,1,0-.354l9.263-9.262A1.5,1.5,0,0,0,21.439.442L12.177,9.7a.25.25,0,0,1-.354,0L2.561.442A1.5,1.5,0,0,0,.439,2.563L9.7,11.825a.25.25,0,0,1,0,.354L.439,21.442a1.5,1.5,0,0,0,2.122,2.121L11.823,14.3a.25.25,0,0,1,.354,0l9.262,9.263a1.5,1.5,0,0,0,2.122-2.121Z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
       {/* HEADER */}
       <div className="vf-u-padding__top--600 results-header">
         <div className="results-summary">
           <div>
-            <h3>🎯 Search Complete: {searchResults.length} matches found</h3>
+            <h3> Search Complete: {searchResults.length} matches found</h3>
             <p>
               Found {searchResults.filter((r) => r.assay_type === 'WGS').length}{' '}
               samples with assemblies • {Object.keys(countryCounts).length}{' '}
@@ -207,6 +234,7 @@ const Results: React.FC<ResultsProps> = ({
 
       <section className="vf-grid mg-grid-search vf-u-padding__top--400">
         <div className="vf-stack vf-stack--800">
+          <ContainmentFilter />
           <CANIFilter />
 
           <LocalMultipleOptionFilter

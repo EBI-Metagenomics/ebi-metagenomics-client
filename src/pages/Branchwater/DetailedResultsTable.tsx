@@ -202,12 +202,19 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               accessor: 'geo_loc_name_country_calc',
               Cell: ({ row }) => {
                 const entry = row.original;
+                const raw = entry.geo_loc_name_country_calc;
+                const normalized = (raw || '').toString().trim().toLowerCase();
+                const isNotProvided =
+                  normalized === '' ||
+                  normalized === 'np' ||
+                  normalized === 'uncalculated';
+
                 return (
                   <div style={{ fontSize: '14px' }}>
-                    {entry.geo_loc_name_country_calc === 'uncalculated' ? (
-                      'Uncalculated'
+                    {isNotProvided ? (
+                      'Not provided'
                     ) : (
-                      <span>{entry.geo_loc_name_country_calc || '—'}</span>
+                      <span>{raw}</span>
                     )}
                   </div>
                 );

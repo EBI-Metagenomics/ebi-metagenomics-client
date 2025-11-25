@@ -98,6 +98,13 @@ const DerivedGenomes: React.FC = () => {
     {
       id: 'ena',
       Header: 'ENA',
+      accessor: (row: GenomeLink) => (
+        <Link to={`/genomes/${row.species_rep}`}>{row.species_rep}</Link>
+      ),
+    },
+    {
+      id: 'species_representative',
+      Header: 'Species representative',
       accessor: (row: GenomeLink) =>
         row.genome.accession === row.species_rep ? (
           <span
@@ -105,15 +112,11 @@ const DerivedGenomes: React.FC = () => {
             style={{ fontSize: '1.3rem', color: 'green' }}
           />
         ) : (
-          ''
+          <span
+            className="icon icon-common icon-check-circle"
+            style={{ fontSize: '1.3rem', color: 'green' }}
+          />
         ),
-    },
-    {
-      id: 'species_representative',
-      Header: 'Species representative',
-      accessor: (row: GenomeLink) => (
-        <Link to={`/genomes/${row.species_rep}`}>{row.species_rep}</Link>
-      ),
     },
     {
       id: 'taxonomy',
@@ -146,22 +149,22 @@ const AdditionalContainedGenomes: React.FC = () => {
   const mockData: ContainedGenome[] = [
     {
       genome: {
-        accession: 'MGYG000356011GCA_000876',
-        taxon_lineage: 'Gramella',
-        catalogue_id: 'Marine',
+        accession: 'MGYG000304513',
+        taxon_lineage: 'RUG762 sp946184295',
+        catalogue_id: 'Sheep rumen',
         catalogue_version: '1.0',
       },
-      ena: '',
-      containment: 99.9,
+      ena: 'CAMHEZ01',
+      containment: 75.9,
     },
     {
       genome: {
-        accession: 'MGYG000004193GCA_000111',
-        taxon_lineage: 'HTCC2207',
-        catalogue_id: 'Non-model fish gut',
-        catalogue_version: '2.0',
+        accession: 'MGYG000299702',
+        taxon_lineage: 'W2P13-069 sp004553405',
+        catalogue_id: 'Pig gue',
+        catalogue_version: '1.0',
       },
-      ena: '',
+      ena: 'GCA_036480555',
       containment: 52.0,
     },
   ];
@@ -262,9 +265,9 @@ const Overview: React.FC = () => {
 
   return (
     <>
-      <Box label="Description">
-        <KeyValueList list={details} />
-      </Box>
+      {/*<Box label="Description">*/}
+      {/*  <KeyValueList list={details} />*/}
+      {/*</Box>*/}
       <DerivedGenomes />
       <AdditionalContainedGenomes />
     </>

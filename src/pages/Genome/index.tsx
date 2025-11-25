@@ -33,7 +33,7 @@ const tabs = [
   { label: 'COG analysis', to: '#cog-analysis' },
   { label: 'KEGG class analysis', to: '#kegg-class-analysis' },
   { label: 'KEGG module analysis', to: '#kegg-module-analysis' },
-  { label: 'Metagenome search', to: '#metagenome-search' },
+  { label: 'Presence in Metagenomes', to: '#metagenome-search' },
   { label: 'Downloads', to: '#downloads' },
 ];
 
@@ -89,8 +89,9 @@ const GenomePage: React.FC = () => {
   // ---------------------------------------------------------------------------
   // 5) SORT STATE
   // ---------------------------------------------------------------------------
-  const [sortField, setSortField] = useState('');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  // Default sorting for Branchwater results: containment descending
+  const [sortField, setSortField] = useState('containment');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
   const onSortChange = useCallback(
     (field: string) => {
@@ -409,11 +410,8 @@ const GenomePage: React.FC = () => {
           {/* Metagenome search */}
           <RouteForHash hash="#metagenome-search">
             <div className="vf-stack vf-stack--400">
-              <h3>Metagenome Search</h3>
-              <p>
-                Search for metagenomes similar to this genome using sequence
-                similarity.
-              </p>
+              <h3>Branchwater</h3>
+              <p>Identify genome appearance across INSDC metagenomes</p>
 
               <button
                 type="button"
@@ -421,7 +419,7 @@ const GenomePage: React.FC = () => {
                 onClick={handleMetagenomeSearch}
                 disabled={isSearching}
               >
-                {isSearching ? 'Searching...' : 'Search Metagenomes'}
+                {isSearching ? 'Searching...' : 'Click to Search'}
               </button>
 
               {isSearching && (
