@@ -5,12 +5,8 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import BranchwaterCard from './BranchwaterCard';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import Plot from 'react-plotly.js';
-import CobsSearch from 'components/Genomes/Cobs';
-import SourmashSearch from 'components/Genomes/Sourmash';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -116,23 +112,6 @@ const Branchwater = () => {
   // Read ordering from EMGTable's sortable integration via query param
   const [detailedOrder] = useQueryParamState('branchwater-detailed-order', '');
 
-  const [activeTab, setActiveTab] = useState('vf-tabs__section--1');
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  // Sync active section with route
-  useEffect(() => {
-    if (location.pathname.endsWith('/short-sequence')) {
-      setActiveTab('vf-tabs__section--1');
-    } else if (location.pathname.endsWith('/genome-catalogues')) {
-      setActiveTab('vf-tabs__section--2');
-    } else if (location.pathname.endsWith('/insdc-metagenomes')) {
-      setActiveTab('vf-tabs__section--3');
-    } else if (location.pathname.endsWith('/branchwater-search')) {
-      // default route
-      setActiveTab('vf-tabs__section--1');
-    }
-  }, [location.pathname]);
   const [selectedExample, setSelectedExample] = useState<
     'example-mag-1st' | 'example-mag-2nd' | 'example-mag-3rd'
   >('example-mag-1st');
@@ -1057,17 +1036,6 @@ const Branchwater = () => {
 
   return (
     <section className="vf-content mg-page-search">
-      {/* Card-based selector replacing tabs; forced single row with horizontal scroll on small screens */}
-      <div
-        className="vf-card-container vf-u-margin__bottom--600"
-        style={{
-          display: 'flex',
-          gap: '1rem',
-          overflowX: 'auto',
-          flexWrap: 'nowrap',
-        }}
-      ></div>
-
       <h2>Genome against INSDC metagenomes</h2>
       <div className="vf-u-margin__top--400">
         <details className="vf-details">

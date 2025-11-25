@@ -26,6 +26,11 @@ import PersistLogin from 'components/PersistLogin';
 // import Branchwater from './pages/Branchwater';
 // import PersistLogin from 'components/PersistLogin';
 import V2AssemblyPage from 'pages/Assembly/v2index';
+
+import LandingPage from 'pages/Branchwater/LandingPage';
+import MagSearch from 'pages/Branchwater/MagSearch';
+import GeneSearch from 'pages/Branchwater/GeneSearch';
+
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Help = lazy(() => import('./pages/Help'));
@@ -43,10 +48,6 @@ const Run = lazy(() => import('./pages/Run'));
 const Assembly = lazy(() => import('./pages/Assembly'));
 const Pipelines = lazy(() => import('./pages/Pipelines'));
 const Analysis = lazy(() => import('./pages/Analysis'));
-
-import LandingPage from 'pages/Branchwater/LandingPage';
-import MagSearch from 'pages/Branchwater/MagSearch';
-import GeneSearch from 'pages/Branchwater/GeneSearch';
 const Branchwater = lazy(() => import('pages/Branchwater'));
 
 const ResetScroll = () => {

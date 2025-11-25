@@ -23,6 +23,23 @@ import RouteForHash from 'components/Nav/RouteForHash';
 import config from 'utils/config';
 import EMGTable from 'components/UI/EMGTable';
 
+// Normalised data type for this page
+type AssemblyLinksData = {
+  accession: string;
+  genome_links: GenomeLink[];
+  run_accession?: React.ReactNode;
+  sample_accession?: string | (() => JSX.Element);
+};
+
+// Alternative API response shapes
+type ItemsResponse = {
+  items: Array<{
+    genome: GenomeLink['genome'];
+    species_rep: string;
+  }>;
+  count?: number;
+};
+
 type GenomeLink = {
   genome: {
     accession: string;
@@ -52,7 +69,7 @@ type V2AssemblyCtx = {
     sample_accession: (() => JSX.Element) | string;
   } | null;
   loading: boolean;
-  error: ErrorTypes;
+  error: { error: unknown; type: ErrorTypes } | null;
   refetch: () => Promise<void>;
 };
 
@@ -196,14 +213,13 @@ const AdditionalContainedGenomes: React.FC = () => {
           Genomes that were not derived from this assembly but have at least 50%
           of their sequence contained in the assembly.
         </p>
-        {/* Placeholder download action (no-op while using mock data) */}
-        <a
+        <button
+          type="button"
           className="vf-button vf-button--secondary vf-button--sm"
-          href="#"
           onClick={(e) => e.preventDefault()}
         >
           Download
-        </a>
+        </button>
       </div>
       <EMGTable cols={columns} data={mockData} />
     </Box>
@@ -275,11 +291,36 @@ const AdditionalAnalyses: React.FC = () => {
   );
 };
 
+const isItemsResponse = (raw: unknown): raw is ItemsResponse => {
+  return (
+    typeof raw === 'object' &&
+    raw !== null &&
+    Array.isArray((raw as Record<string, unknown>).items)
+  );
+};
+
+const isAssemblyLinksData = (raw: unknown): raw is AssemblyLinksData => {
+  if (typeof raw !== 'object' || raw === null) return false;
+  const obj = raw as Record<string, unknown>;
+  return typeof obj.accession === 'string' && Array.isArray(obj.genome_links);
+};
+
+const hasDataField = <T,>(raw: unknown): raw is MGnifyResponseObj<T> => {
+  return (
+    typeof raw === 'object' &&
+    raw !== null &&
+    'data' in (raw as Record<string, unknown>)
+  );
+};
+
 const V2AssemblyPage: React.FC = () => {
   const accession = useURLAccession();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [data, setData] = useState<AssemblyLinksData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<{
+    error: unknown;
+    type: ErrorTypes;
+  } | null>(null);
 
   const fetchData = useCallback(async () => {
     try {
@@ -295,24 +336,24 @@ const V2AssemblyPage: React.FC = () => {
       //   run_accession?: React.ReactNode,
       //   sample_accession?: string
       // }
-      const raw = response.data;
-      let normalised: any = raw;
-      if (raw && typeof raw === 'object') {
-        if ('items' in raw && Array.isArray((raw as any).items)) {
-          // Newer/alternative API returns { items: [...], count }
-          normalised = {
-            accession,
-            genome_links: (raw as any).items.map((it: any) => ({
-              genome: it.genome,
-              species_rep: it.species_rep,
-            })),
-            run_accession: undefined,
-            sample_accession: '',
-          };
-        } else if ('data' in raw && (raw as any).data) {
-          // MGnifyResponseObj style
-          normalised = (raw as any).data;
-        }
+      const raw: unknown = response.data;
+      let normalised: AssemblyLinksData | null = null;
+      if (isItemsResponse(raw)) {
+        // Newer/alternative API returns { items: [...], count }
+        normalised = {
+          accession,
+          genome_links: raw.items.map((it) => ({
+            genome: it.genome,
+            species_rep: it.species_rep,
+          })),
+          run_accession: undefined,
+          sample_accession: '',
+        };
+      } else if (hasDataField<AssemblyLinksData>(raw)) {
+        // MGnifyResponseObj style
+        normalised = raw.data;
+      } else if (isAssemblyLinksData(raw)) {
+        normalised = raw;
       }
       setData(normalised);
       setLoading(false);
@@ -330,7 +371,7 @@ const V2AssemblyPage: React.FC = () => {
   }, [fetchData]);
 
   // data is already normalised in fetchData
-  const assemblyData = data as any;
+  const assemblyData = data;
 
   const ctxValue = useMemo(
     () => ({ assemblyData, loading, error, refetch: fetchData }),
