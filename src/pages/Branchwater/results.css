@@ -1,0 +1,165 @@
+/* -------------------------------------------------------
+   GENERAL HELPERS
+------------------------------------------------------- */
+
+.loading-box,
+.no-results-box {
+    text-align: center;
+    padding: 40px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #dee2e6;
+}
+
+.loading-title {
+    font-size: 18px;
+    color: #6c757d;
+    margin-bottom: 8px;
+}
+
+.loading-subtitle {
+    font-size: 14px;
+    color: #868e96;
+}
+
+.no-results-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+/* -------------------------------------------------------
+   SUMMARY HEADER
+------------------------------------------------------- */
+
+.results-header {
+    width: 100%;
+}
+
+.results-summary {
+    background-color: #e8f5e8;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #28a745;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.results-summary h3 {
+    margin: 0 0 5px 0;
+    color: #155724;
+}
+
+.results-summary p {
+    margin: 0;
+    color: #155724;
+}
+
+.results-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* -------------------------------------------------------
+   DASHBOARD STAT CARDS
+------------------------------------------------------- */
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.dashboard-card {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    text-align: center;
+}
+
+.dashboard-card h4 {
+    margin: 0 0 12px 0;
+    color: #495057;
+}
+
+.dashboard-value {
+    font-size: 2em;
+    font-weight: bold;
+    color: #28a745;
+}
+
+/* -------------------------------------------------------
+   COUNTRY TAGS
+------------------------------------------------------- */
+
+.country-tag-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-height: 100px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.country-pill {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+}
+
+/* -------------------------------------------------------
+   MAP AREA
+------------------------------------------------------- */
+
+.map-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.load-more-pins {
+    margin-top: 10px;
+}
+
+/* -------------------------------------------------------
+   TABLE PANEL
+------------------------------------------------------- */
+
+.details-table-container {
+    width: 100%;
+}
+
+/* -------------------------------------------------------
+   PLOTLY BASE LINEUP
+------------------------------------------------------- */
+
+.plot-container {
+    width: 100%;
+    height: 400px;
+}
+
+.plot-container tall {
+    height: 520px;
+}
+
+/* -------------------------------------------------------
+   RESPONSIVE FIXES
+------------------------------------------------------- */
+
+@media (max-width: 700px) {
+    .results-summary {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}
