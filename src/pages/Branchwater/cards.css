@@ -1,0 +1,70 @@
+/* Base BLAST-style card */
+.bw-blast-card {
+    min-width: 23rem;
+    height: 180px;
+    border-radius: 0.75rem;
+    padding: 1.8rem;
+    cursor: pointer;
+    border: 2px solid #004f6e;
+    transition: transform 0.2s ease, box-shadow 0.25s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+}
+
+/* Gradient backgrounds mapped per-card */
+.bg-dna {
+    background-image: url('images/branchwater/helix_wave.svg');
+    background-size: cover;
+    background-position: center;
+}
+
+.bg-hex {
+    background-image: url('images/branchwater/molecule_hex.svg');
+    background-size: cover;
+    background-position: center;
+}
+
+.bg-protein {
+    background-image: url('images/branchwater/alpha_helix.svg');
+    background-size: cover;
+    background-position: center;
+}
+
+/* Hover */
+.bw-blast-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 50, 80, 0.25);
+}
+
+.bw-blast-card__inner {
+    /*color: white;*/
+    text-decoration: none;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Title */
+.bw-blast-card__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+}
+
+/* Subheading */
+.bw-blast-card__sub {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+}
+
+/* Description */
+.bw-blast-card__text {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    max-width: 20rem;
+}

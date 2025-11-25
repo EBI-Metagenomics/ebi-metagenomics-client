@@ -26,7 +26,6 @@ import PersistLogin from 'components/PersistLogin';
 // import Branchwater from './pages/Branchwater';
 // import PersistLogin from 'components/PersistLogin';
 import V2AssemblyPage from 'pages/Assembly/v2index';
-
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Help = lazy(() => import('./pages/Help'));
@@ -45,7 +44,9 @@ const Assembly = lazy(() => import('./pages/Assembly'));
 const Pipelines = lazy(() => import('./pages/Pipelines'));
 const Analysis = lazy(() => import('./pages/Analysis'));
 
-const SearchPage = lazy(() => import('pages/Search'));
+import LandingPage from 'pages/Branchwater/LandingPage';
+import MagSearch from 'pages/Branchwater/MagSearch';
+import GeneSearch from 'pages/Branchwater/GeneSearch';
 const Branchwater = lazy(() => import('pages/Branchwater'));
 
 const ResetScroll = () => {
@@ -91,8 +92,11 @@ const App: React.FC = () => {
               <ResetScroll />
               <Suspense fallback={<Loading size="large" />}>
                 <Routes>
-                  <Route path="/search-landing" element={<SearchPage />} />
+                  <Route path="/search-landing" element={<LandingPage />} />
+                  {/* Branchwater card routes */}
                   <Route path="/branchwater-search" element={<Branchwater />} />
+                  <Route path="/mag-search" element={<MagSearch />} />
+                  <Route path="/gene-search" element={<GeneSearch />} />
                   <Route path="/" element={<Home />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/help" element={<Help />} />

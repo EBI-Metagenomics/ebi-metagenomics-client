@@ -1,0 +1,33 @@
+<svg width="100%" height="100%" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0096c7"/>
+            <stop offset="100%" stop-color="#00b79f"/>
+        </linearGradient>
+
+        <linearGradient id="hexLine" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0.1"/>
+        </linearGradient>
+    </defs>
+
+    <rect width="100%" height="100%" fill="url(#hexGrad)" />
+
+    <!-- Hex pattern -->
+    <g stroke="url(#hexLine)" stroke-width="2" fill="none" opacity="0.4">
+        <path d="M50 50 l30 -17 l30 17 l0 35 l-30 17 l-30 -17z"/>
+        <path d="M140 100 l30 -17 l30 17 l0 35 l-30 17 l-30 -17z"/>
+        <path d="M230 50 l30 -17 l30 17 l0 35 l-30 17 l-30 -17z"/>
+        <path d="M320 100 l30 -17 l30 17 l0 35 l-30 17 l-30 -17z"/>
+        <path d="M410 50 l30 -17 l30 17 l0 35 l-30 17 l-30 -17z"/>
+        <path d="M500 100 l30 -17 l30 17 l0 35 l-30 17 l-30 -17z"/>
+    </g>
+
+    <!-- Soft circles / atoms -->
+    <g fill="white" opacity="0.15">
+        <circle cx="100" cy="200" r="25"/>
+        <circle cx="250" cy="230" r="18"/>
+        <circle cx="400" cy="210" r="28"/>
+        <circle cx="520" cy="180" r="15"/>
+    </g>
+</svg>
