@@ -9,7 +9,7 @@ import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Analysis/Overview';
 import QualityControl from 'components/Analysis/QualityControl';
 import ContigViewer from 'components/Analysis/ContigViewer';
-import TaxonomySubpage from 'components/Analysis/Taxonomy';
+import TaxonomySubpage from 'components/Analysis/AmpliconTaxonomy';
 import FunctionalSubpage from 'components/Analysis/Functional';
 import PathwaysSubpage from 'components/Analysis/Pathways';
 import RouteForHash from 'components/Nav/RouteForHash';

@@ -105,11 +105,11 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
   const readReductionPercent =
     dada2Stats.initial_number_of_reads > 0
       ? (
-        ((dada2Stats.initial_number_of_reads -
+          ((dada2Stats.initial_number_of_reads -
             dada2Stats.final_number_of_reads) /
-          dada2Stats.initial_number_of_reads) *
-        100
-      ).toFixed(1)
+            dada2Stats.initial_number_of_reads) *
+          100
+        ).toFixed(1)
       : 0;
 
   const statsCards = [
@@ -128,8 +128,6 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
       value: `${(dada2Stats.proportion_chimeric * 100).toFixed(2)}%`,
       description: chimericInfo.message,
       color: chimericInfo.color,
-      bgColor: chimericInfo.bgColor,
-      borderColor: chimericInfo.borderColor,
       isChimeric: true,
     },
   ];
@@ -150,20 +148,12 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
           Amplicon Sequencing Results - {sampleId}
         </h3>
 
-        <div className="space-y-4">
+        <div className="vf-stack vf-stack--400">
           <div className="vf-grid vf-grid__col-2">
             {statsCards.map((stat) => (
               <article
                 key={stat.label}
                 className="vf-card vf-card--brand vf-card--bordered"
-                style={
-                  stat.isChimeric
-                    ? {
-                      borderColor: stat.borderColor,
-                      backgroundColor: stat.bgColor,
-                    }
-                    : {}
-                }
               >
                 <div className="vf-card__content | vf-stack vf-stack--400">
                   <h3 className="vf-card__heading">{stat.label}</h3>
@@ -178,114 +168,93 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
               </article>
             ))}
           </div>
+          <div className="vf-stack vf-stack--400">
+            <article className="vf-card">
+              <div className="vf-card__content | vf-stack vf-stack--400">
+                <h3 className="vf-card__heading">Chimeric Reads Thresholds</h3>
 
-          <article
-            className="vf-card vf-card--brand vf-card--bordered"
-            style={{
-              borderColor: chimericInfo.borderColor,
-              backgroundColor: chimericInfo.bgColor,
-            }}
-          >
-            <div className="vf-card__content | vf-stack vf-stack--400">
-              <h3 className="vf-card__heading">
-                <span
-                  className="vf-card__link"
-                  style={{ color: chimericInfo.color }}
-                >
-                  Chimeric Reads Thresholds
-                  <svg
-                    aria-hidden="true"
-                    className="vf-card__heading__icon | vf-icon vf-icon-arrow--inline-end"
-                    width="1em"
-                    height="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0C5.376.008.008 5.376 0 12zm13.707-5.209l4.5 4.5a1 1 0
-                      010 1.414l-4.5 4.5a1 1 0 01-1.414-1.414l2.366-2.367a.25.25 0 00-.177-.424H6a1 1 0 010-2h8.482a.25.25 0
-                      00.177-.427l-2.366-2.368a1 1 0 011.414-1.414z"
-                      fill="currentColor"
-                      fillRule="nonzero"
+                {/* Simple Threshold Gauge */}
+                <div className="mt-3 mb-3">
+                  <div className="relative h-4 rounded-full overflow-hidden bg-gray-100">
+                    {/* Colored segments */}
+                    <div className="absolute inset-0 flex">
+                      <div
+                        style={{ backgroundColor: '#86efac', width: '25%' }}
+                      />
+                      <div
+                        style={{ backgroundColor: '#fca5a5', width: '75%' }}
+                      />
+                    </div>
+
+                    {/* Marker for current value */}
+                    <div
+                      className="absolute top-0 bottom-0 w-1 bg-black"
+                      style={{
+                        left: `${gaugePosition}%`,
+                        transform: 'translateX(-50%)',
+                      }}
                     />
-                  </svg>
-                </span>
-              </h3>
-
-              {/* Simple Threshold Gauge */}
-              <div className="mt-3 mb-3">
-                <div className="relative h-4 rounded-full overflow-hidden bg-gray-100">
-                  {/* Colored segments */}
-                  <div className="absolute inset-0 flex">
-                    <div style={{ backgroundColor: '#86efac', width: '25%' }} />
-                    <div style={{ backgroundColor: '#fca5a5', width: '75%' }} />
                   </div>
 
-                  {/* Marker for current value */}
-                  <div
-                    className="absolute top-0 bottom-0 w-1 bg-black"
-                    style={{
-                      left: `${gaugePosition}%`,
-                      transform: 'translateX(-50%)',
-                    }}
-                  />
+                  {/* Gauge labels */}
+                  <div className="flex justify-between text-xs mt-1">
+                    <span className="text-green-600">Expected (≤25%)</span>
+                    <span className="text-right text-red-500">
+                      High ({'>'}25%)
+                    </span>
+                  </div>
                 </div>
 
-                {/* Gauge labels */}
-                <div className="flex justify-between text-xs mt-1">
-                  <span className="text-green-600">Expected (≤25%)</span>
-                  <span className="text-right text-red-500">
-                    High ({'>'}25%)
-                  </span>
+                <div className="vf-card__text">
+                  <div className="border rounded-md p-3 bg-white">
+                    <h4 className="text-sm font-bold mb-2">Legend</h4>
+                    <table className="w-full text-sm">
+                      <tbody>
+                        <tr>
+                          <td className="py-1 pr-2 w-8">
+                            <div className="w-4 h-4 border-2 rounded bg-green-50 border-green-200" />
+                          </td>
+                          <td className="py-1 font-medium text-gray-700">
+                            Expected
+                          </td>
+                          <td className="py-1 text-gray-600">≤ 25%</td>
+                          <td className="py-1 text-gray-600">Normal range</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1 pr-2">
+                            <div className="w-4 h-4 border-2 rounded bg-red-50 border-red-200" />
+                          </td>
+                          <td className="py-1 font-medium text-gray-700">
+                            High
+                          </td>
+                          <td className="py-1 text-gray-600">{'>'} 25%</td>
+                          <td className="py-1 text-gray-600">
+                            Check primer trimming
+                          </td>
+                        </tr>
+                        <tr className="border-t">
+                          <td className="pt-2 pr-2">
+                            <div
+                              className="w-4 h-4 flex items-center justify-center"
+                              style={{ color: chimericInfo.color }}
+                            >
+                              <span className="text-xs">▶</span>
+                            </div>
+                          </td>
+                          <td
+                            className="pt-2 font-medium"
+                            style={{ color: chimericInfo.color }}
+                          >
+                            Current value: {(chimericValue * 100).toFixed(2)}%
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-
-              <div className="vf-card__text">
-                <div className="border rounded-md p-3 bg-white">
-                  <h4 className="text-sm font-bold mb-2">Legend</h4>
-                  <table className="w-full text-sm">
-                    <tbody>
-                    <tr>
-                      <td className="py-1 pr-2 w-8">
-                        <div className="w-4 h-4 border-2 rounded bg-green-50 border-green-200" />
-                      </td>
-                      <td className="py-1 font-medium text-gray-700">
-                        Expected
-                      </td>
-                      <td className="py-1 text-gray-600">≤ 25%</td>
-                      <td className="py-1 text-gray-600">Normal range</td>
-                    </tr>
-                    <tr>
-                      <td className="py-1 pr-2">
-                        <div className="w-4 h-4 border-2 rounded bg-red-50 border-red-200" />
-                      </td>
-                      <td className="py-1 font-medium text-gray-700">High</td>
-                      <td className="py-1 text-gray-600">{'>'} 25%</td>
-                      <td className="py-1 text-gray-600">
-                        Check primer trimming
-                      </td>
-                    </tr>
-                    <tr className="border-t">
-                      <td className="pt-2 pr-2">
-                        <div
-                          className="w-4 h-4 flex items-center justify-center"
-                          style={{ color: chimericInfo.color }}
-                        >
-                          <span className="text-xs">▶</span>
-                        </div>
-                      </td>
-                      <td
-                        className="pt-2 font-medium"
-                        style={{ color: chimericInfo.color }}
-                      >
-                        Current value: {(chimericValue * 100).toFixed(2)}%
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </article>
+            </article>
+          </div>
         </div>
       </div>
     </div>

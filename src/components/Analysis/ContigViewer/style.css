@@ -35,3 +35,8 @@ details summary > * {
     display: flex;
     flex-direction: column;
 }
+
+/* fix scaling of labels in the JBrowse rubber band */
+[class*="-root-refLabel"],[class*="-majorTickLabel"],[class*="-minorTickLabel"] {
+    font-size: 12px !important;
+}

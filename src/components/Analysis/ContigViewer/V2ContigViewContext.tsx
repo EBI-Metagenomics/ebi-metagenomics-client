@@ -1,6 +1,6 @@
 import React from 'react';
 import { createViewState } from '@jbrowse/react-linear-genome-view2';
-import { Download } from 'interfaces/index';
+import { Download } from '@/interfaces';
 import { BGZipService } from 'components/Analysis/BgZipService';
 
 type LGVViewState = ReturnType<typeof createViewState>;
@@ -22,11 +22,13 @@ export function useLGV() {
 export function LGVProvider({
   fasta,
   gff,
+  additionalGffs,
   initialLoc = 'chr1:1-50000',
   children,
 }: {
   fasta: Download;
   gff: Download;
+  additionalGffs?: Download[];
   initialLoc?: string;
   children: React.ReactNode;
 }) {
@@ -149,37 +151,92 @@ export function LGVProvider({
     if (!ready || !gff) return;
     const session = (viewState as any)?.session;
     if (!session) return;
-    // session.view.setHideHeader(true)
+
+    const csi = BGZipService.getIndexFileUrl(gff, 'csi');
+    const tbi = BGZipService.getIndexFileUrl(gff, 'tbi');
+
     const trackExists = !!session.getTrack?.(gff.alias);
+
+    const adapter: any = {
+      type: 'Gff3TabixAdapter',
+      gffGzLocation: { uri: gff.url },
+    };
+    if (csi || tbi) {
+      adapter.index = {
+        location: { uri: csi || tbi },
+        indexType: csi ? 'CSI' : 'TBI',
+      };
+    }
 
     const conf = {
       type: 'FeatureTrack',
       trackId: gff.alias,
       name: gff.alias,
       assemblyNames: [fasta.alias],
-      adapter: {
-        type: 'Gff3TabixAdapter',
-        gffGzLocation: { uri: gff.url },
-        index: {
-          location: {
-            uri: BGZipService.getIndexFileUrl(gff, 'csi'),
-          },
-          indexType: 'CSI',
-        },
-      },
+      adapter,
       displays: [
         {
           type: 'LinearBasicDisplay',
           displayId: `${gff.alias}-LinearBasicDisplay`,
         },
       ],
-    };
+    } as any;
 
     if (!trackExists) {
       session.addTrackConf?.(conf);
     }
     session.view.showTrack(gff.alias);
   }, [ready, gff, fasta.alias, viewState]);
+
+  // Add any additional GFF tracks provided e.g. mobilome annotations
+  React.useEffect(() => {
+    if (!ready || !additionalGffs?.length) return;
+    const session = (viewState as any)?.session;
+    if (!session) return;
+
+    additionalGffs.forEach((aGff) => {
+      if (!aGff) return;
+      console.log('Adding GFF track', aGff.alias, aGff);
+      const csi = BGZipService.getIndexFileUrl(aGff, 'csi');
+      const tbi = BGZipService.getIndexFileUrl(aGff, 'tbi');
+
+      const trackExists = !!session.getTrack?.(aGff.alias);
+
+      let adapter: any = {
+        type: 'Gff3Adapter',
+        uri: { uri: aGff.url },
+      };
+      if (csi || tbi) {
+        adapter = {
+          type: 'Gff3TabixAdapter',
+          gffGzLocation: { uri: aGff.url },
+          index: {
+            location: { uri: csi || tbi },
+            indexType: csi ? 'CSI' : 'TBI',
+          },
+        };
+      }
+
+      const conf = {
+        type: 'FeatureTrack',
+        trackId: aGff.alias,
+        name: aGff.alias,
+        assemblyNames: [fasta.alias],
+        adapter,
+        displays: [
+          {
+            type: 'LinearBasicDisplay',
+            displayId: `${aGff.alias}-LinearBasicDisplay`,
+          },
+        ],
+      } as any;
+
+      if (!trackExists) {
+        session.addTrackConf?.(conf);
+      }
+      session.view.showTrack(aGff.alias);
+    });
+  }, [ready, additionalGffs, fasta.alias, viewState]);
 
   const value = React.useMemo<LGVContextValue>(
     () => ({ viewState, ready, navTo }),

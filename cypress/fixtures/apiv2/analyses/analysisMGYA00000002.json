@@ -157,6 +157,26 @@
         }
       ],
       "url": "http://127.0.0.1:5055/apiv2/analyses/contigviewer/ERZ857107_annotation_summary.gff.gz"
+    },
+    {
+      "file_type": "gff",
+      "download_type": "Functional analysis",
+      "download_group": "mobilome_annotation_pipeline",
+      "short_description": "Mobilome annotations",
+      "long_description": "Mobilome annotations along with any features present in the user's protein input",
+      "alias": "ERZ857107_user_mobilome_full.gff.gz",
+      "file_size_bytes": null,
+      "index_files": [
+        {
+          "index_type": "gzi",
+          "relative_url": "ERZ857107_user_mobilome_full.gff.gz.gzi"
+        },
+        {
+          "index_type": "csi",
+          "relative_url": "ERZ857107_user_mobilome_full.gff.gz.csi"
+        }
+      ],
+      "url": "http://127.0.0.1:5055/apiv2/analyses/contigviewer/ERZ857107_user_mobilome_full.gff.gz"
     }
   ],
   "read_run": {

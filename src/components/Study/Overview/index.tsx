@@ -5,7 +5,6 @@ import Box from 'components/UI/Box';
 import ExtLink from 'components/UI/ExtLink';
 // import SamplesMapByStudy from 'components/UI/SamplesMap/ByStudy';
 // import { MGnifyDatum } from 'hooks/data/useData';
-import { getBiomeIcon } from '@/utils/biomes';
 import UserContext from 'pages/Login/UserContext';
 // import { PublicationAnnotationsPopupBadge } from 'components/Publications/EuropePMCAnnotations';
 import ProgrammaticAccessBox from 'components/UI/ProgrammaticAccess';
@@ -17,10 +16,12 @@ import FetchError from 'components/UI/FetchError';
 import Loading from 'components/UI/Loading';
 import { Publication } from 'components/Publications';
 import { PublicationAnnotationsPopupBadge } from 'components/Publications/EuropePMCAnnotations';
+import { BiomeClassificationFlag } from 'components/UI/BiomeClassificationFlag';
 
 type StudyOverviewProps = {
   data: StudyDetail;
 };
+
 const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
   const { config } = useContext(UserContext);
   const lineage = data.biome?.lineage || '';
@@ -47,18 +48,16 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
             </ul>
           </Box>
           <Box label="Classification">
-            <div
-              className={`biome_icon icon_sm ${getBiomeIcon(lineage)}`}
-              style={{ float: 'initial' }}
-            />
-            <div>{lineage}</div>
+            <BiomeClassificationFlag lineage={lineage} />
           </Box>
-          <Box label="Description">{data.metadata.study_description}</Box>
+          <Box label="Description">
+            {data.metadata.study_description || <i>No description provided</i>}
+          </Box>
         </div>
         {data.accession && <SamplesMapByStudy study={data} />}
       </div>
       <br />
-      <div className="mg-flex">
+      <div>
         {/* {data?.relationships?.studies?.data?.length > 0 && ( */}
         {/*  <Box label="Related studies"> */}
         {/*    <ul className="vf-list"> */}
@@ -82,7 +81,7 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
               </ul>
             </Box>
           )}
-          {publications?.items?.length && (
+          {!!publications?.items?.length && (
             <Box label="Publications">
               <ul className="vf-list">
                 {publications.items.map((pub) => (

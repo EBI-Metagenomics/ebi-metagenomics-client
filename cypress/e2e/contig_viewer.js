@@ -28,6 +28,12 @@ describe('Contig viewer and indexer on bgzipped gffs', () => {
       .should('be.visible');
     cy.contains('ERZ101_6')
       .should('be.visible');
+
+    // MAP GFF should be shown too
+    cy.contains('Additional GFFs shown are not searchable').should('be.visible');
+    cy.contains('ERZ857107_user_mobilome_full.gff.gz').should('be.visible');
+    cy.contains('ERZ101_1|inverted_repeat_element').should('be.visible');
+
     cy.get('#searchitem-interpro_').type('IPR003593');
     cy.get('.vf-table__body > .vf-table__row').should('have.length', 1);
     cy.get('#searchitem-interpro_').type('1');

@@ -1,5 +1,6 @@
 import React from 'react';
 import ExtLink from 'components/UI/ExtLink';
+import RouteForHash from 'components/Nav/RouteForHash';
 
 type TableProps = {
   onHoverStep?: (step: number) => void;
@@ -1326,7 +1327,243 @@ export const Table5: React.FC = () => (
   </table>
 );
 
-export const Table6: React.FC = () => (
+const Table6Raw: React.FC = () => (
+  <>
+    <table className="stack hover responsive-table">
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Version</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a href="https://github.com/BioInfoTools/BBMap">bbmap</a>
+          </td>
+          <td>35.85</td>
+          <td>Standardise paired-end fastq files</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/OpenGene/fastp">fastp</a>
+          </td>
+          <td>0.24.0</td>
+          <td>Quality control reads, and merging paired-end reads</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/lh3/seqtk">seqtk</a>
+          </td>
+          <td>1.3-r106</td>
+          <td>Coverting fastq to fasta</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/shenwei356/seqkit">seqkit</a>
+          </td>
+          <td>2.9.0</td>
+          <td>
+            Translating nucleotide to amino acid sequences, and randomly
+            subsampling sequence files
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/bwa-mem2/bwa-mem2">bwa-mem2</a>
+          </td>
+          <td>2.2.1</td>
+          <td>Map short reads to decontamination reference genomes</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/lh3/minimap2">minimap2</a>
+          </td>
+          <td>2.3.0</td>
+          <td>Map long reads to decontamination reference genomes</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/samtools/samtools">samtools</a>
+          </td>
+          <td>1.21</td>
+          <td>
+            Filter fasta/fastq files for decontamination, and generate summary
+            statistics
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/EddyRivasLab/infernal">infernal</a>
+          </td>
+          <td>1.1.5</td>
+          <td>
+            Mapping reads to rRNA covariance models using <code>cmsearch</code>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/EddyRivasLab/easel">easel</a>
+          </td>
+          <td>0.49</td>
+          <td>Extracting sequences from cmsearch mapping</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/jfmrod/MAPseq">mapseq</a>
+          </td>
+          <td>2.1.1b</td>
+          <td>Mapping rRNA reads to a reference database</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/marbl/Krona">Krona</a>
+          </td>
+          <td>2.8.1</td>
+          <td>Generate interactive taxonomic profiles</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/motu-tool/mOTUs">mOTUs</a>
+          </td>
+          <td>3.0.3</td>
+          <td>Generate taxonomic profile</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/EddyRivasLab/hmmer">HMMer</a>
+          </td>
+          <td>3.4</td>
+          <td>
+            Map reads to hidden markov models (HMMs) (i.e. Pfam-A) using{' '}
+            <code>hmmsearch</code>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/MultiQC/MultiQC">MultiQC</a>
+          </td>
+          <td>1.27</td>
+          <td>
+            Generating reports containing QC and decontamination information
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://www.nextflow.io/">Nextflow</a>
+          </td>
+          <td>24.10.2</td>
+          <td>Running the pipeline</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://www.python.org/">Python</a>
+          </td>
+          <td>3.11.8</td>
+          <td>Generating functional profiles</td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>Accessory scripts</h4>
+    <table className="stack hover responsive-table">
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Version</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a href="https://github.com/nawrockie/cmsearch_tblout_deoverlap">
+              cmsearch_tblout_deoverlap
+            </a>
+          </td>
+          <td>v0.09</td>
+          <td>
+            Resolve reads mapping to multiple locations of rRNA covariance model
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/EBI-Metagenomics/mgnify-pipelines-toolkit">
+              mgnify-pipelines-toolkit
+            </a>
+          </td>
+          <td>1.0.4</td>
+          <td>
+            Contains <code>mapseq2biom</code> for converting mapseq output to a
+            BIOM taxonomic profiles, and provides known environment for
+            executing various other commands
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>Reference databases</h4>
+    <table className="stack hover responsive-table">
+      <thead>
+        <tr>
+          <th>Database</th>
+          <th>Version</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a href="https://motu-tool.org/">mOTUs</a>
+          </td>
+          <td>3.0.3</td>
+          <td>Database for mOTUs tools</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://rfam.org/">Rfam</a>
+          </td>
+          <td>15.0</td>
+          <td>Ribosomal covariance models</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://www.ebi.ac.uk/interpro/entry/pfam">Pfam</a>
+          </td>
+          <td>38.0</td>
+          <td>Protein hidden markov models (HMMs)</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://www.arb-silva.de/">SILVA</a>
+          </td>
+          <td>138.1</td>
+          <td>LSU and SSU 16S database with taxonomy</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001405.40/">
+              hg38
+            </a>
+          </td>
+          <td>GRCh38.p14</td>
+          <td>Human host reference genome for decontaminations</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://www.ncbi.nlm.nih.gov/nuccore/9626372">phiX</a>
+          </td>
+          <td>phiX174</td>
+          <td>
+            DNA sometimes introduced by Illumina sequencing platforms to be
+            removed in decontamination
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </>
+);
+
+const Table6Amplicon: React.FC = () => (
   <>
     <table className="stack hover responsive-table">
       <thead>
@@ -1543,3 +1780,471 @@ export const Table6: React.FC = () => (
     </blockquote>
   </>
 );
+
+const Table6Assembly: React.FC = () => (
+  <>
+    <table className="stack hover responsive-table">
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Version</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a href="https://antismash.secondarymetabolites.org/#!/start">
+              antiSMASH
+            </a>
+          </td>
+          <td>8.0.1</td>
+          <td>
+            Tool for the identification and annotation of secondary metabolite
+            biosynthesis gene clusters
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/boto/boto3">boto3</a>
+          </td>
+          <td>1.35.37</td>
+          <td>
+            AWS SDK for Python used to access EBI FIRE S3 storage for assembly
+            file downloads
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/MGXlab/CAT_pack">CAT_pack</a>
+          </td>
+          <td>6.0</td>
+          <td>Taxonomic classification of the contigs in the assembly</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/nawrockie/cmsearch_tblout_deoverlap/">
+              cmsearchtbloutdeoverlap
+            </a>
+          </td>
+          <td>0.09</td>
+          <td>Deoverlapping of cmsearch results</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="http://bioinf.shenwei.me/csvtk">csvtk</a>
+          </td>
+          <td>0.31.0</td>
+          <td>A cross-platform, efficient, and practical CSV/TSV toolkit</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://www.ebi.ac.uk/metagenomics">
+              Combined Gene Caller - Merge
+            </a>
+          </td>
+          <td>1.2.0</td>
+          <td>
+            Combined gene caller merge script used to combine predictions of
+            Pyrodigal and FragGeneScanRS (this tool is part of the
+            mgnify-pipelines-toolkit)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/bbuchfink/diamond">Diamond</a>
+          </td>
+          <td>2.1.11</td>
+          <td>
+            Used to match predicted CDS against the CAT reference database for
+            the taxonomic classification of the contigs
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/WrightonLabCSU/DRAM">DRAM</a>
+          </td>
+          <td>13.5</td>
+          <td>
+            Summarizes annotations from multiple tools like KEGG, Pfam, and CAZy
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/EddyRivasLab/easel">easel</a>
+          </td>
+          <td>0.49</td>
+          <td>
+            Extracts FASTA sequences by name from a cmsearch deoverlap result
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/EBI-Metagenomics/mgnify-pipelines-toolkit">
+              extractcoords
+            </a>
+          </td>
+          <td>1.2.0</td>
+          <td>
+            Processes output from easel-sfetch to extract SSU and LSU sequences
+            (this tool is part of the mgnify-pipelines-toolkit).
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/unipept/FragGeneScanRs">
+              FragGeneScanRs
+            </a>
+          </td>
+          <td>1.1.0</td>
+          <td>CDS calling; this tool specializes in calling fragmented CDS</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/EBI-Metagenomics/mgnify-pipelines-toolkit">
+              generategaf
+            </a>
+          </td>
+          <td>1.2.0</td>
+          <td>
+            Script that generates a GO Annotation File (GAF) from an
+            InterProScan result TSV file (this tool is part of the
+            mgnify-pipelines-toolkit).
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://www.ebi.ac.uk/interpro/genomeproperties/">
+              Genome Properties
+            </a>
+          </td>
+          <td>2.0</td>
+          <td>
+            Uses protein signatures as evidence to determine the presence of
+            each step within a property
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="http://eddylab.org/infernal/">Infernal - cmscan</a>
+          </td>
+          <td>1.1.5</td>
+          <td>RNA sequence searching</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://www.ebi.ac.uk/interpro/download/InterProScan/">
+              InterProScan
+            </a>
+          </td>
+          <td>5.76-107.0</td>
+          <td>
+            Functionally characterizes nucleotide or protein sequences by
+            scanning them against the InterPro database.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="http://hmmer.org/">HMMER</a>
+          </td>
+          <td>3.4</td>
+          <td>Used to annotate CDS with KO</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/marbl/Krona/wiki/KronaTools">Krona</a>
+          </td>
+          <td>2.8.1</td>
+          <td>Krona chart visualization</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/EBI-Metagenomics/kegg-pathways-completeness-tool">
+              kegg-pathways-completeness
+            </a>
+          </td>
+          <td>1.3.0</td>
+          <td>
+            Computes the completeness of each KEGG pathway module based on KEGG
+            orthologue (KO) annotations.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/EBI-Metagenomics/mgnify-pipelines-toolkit">
+              MGnify pipelines toolkit
+            </a>
+          </td>
+          <td>1.2.0</td>
+          <td>Collection of tools and scripts used in MGnify pipelines.</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://lh3.github.io/minimap2/">minimap2</a>
+          </td>
+          <td>2.29-r1283</td>
+          <td>
+            A versatile pairwise aligner for genomic and spliced nucleotide
+            sequences. Used in the assembly decontamination subworkflow
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="http://multiqc.info/">MultiQC</a>
+          </td>
+          <td>1.29</td>
+          <td>Tool to aggregate bioinformatic analysis results.</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/owlcollab/owltools">Owltools</a>
+          </td>
+          <td>2024-06-12T00:00:00Z</td>
+          <td>Tool utilized to map GO terms to GO-slims</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://pyrodigal.readthedocs.org/">Pyrodigal</a>
+          </td>
+          <td>3.6.3</td>
+          <td>CDS calling</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://zlib.net/pigz/">pigz</a>
+          </td>
+          <td>2.3.4</td>
+          <td>
+            A parallel implementation of gzip for modern multi-processor,
+            multi-core systems
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="http://quast.sourceforge.net/quast">QUAST</a>
+          </td>
+          <td>5.2.0</td>
+          <td>
+            Tool used evaluates genome assemblies, it’s part of the pipeline QC
+            module.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/bcb-unl/run_dbcan">run_dbCAN</a>
+          </td>
+          <td>5.1.2</td>
+          <td>
+            Annotation tool for the Carbohydrate-Active-enzymes Database (CAZy)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://bioinf.shenwei.me/seqkit/">SeqKit</a>
+          </td>
+          <td>2.8.0</td>
+          <td>Used to manipulate FASTA files</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/Finn-Lab/SanntiS">SanntiS</a>
+          </td>
+          <td>0.9.4.1</td>
+          <td>Tool used to identify biosynthetic gene clusters</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="http://www.htslib.org/doc/tabix.html">tabix</a>
+          </td>
+          <td>1.21</td>
+          <td>Generic indexer for TAB-delimited genome position files</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://genometools.org/tools/gt_gff3validator.html">
+              Genome Tools - gff3validator
+            </a>
+          </td>
+          <td>1.6.5</td>
+          <td>Used to validate the analysis summary GFF file</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/jqlang/jq">jq</a>
+          </td>
+          <td>1.5</td>
+          <td>Used to concatenate the chunked antiSMASH json results</td>
+        </tr>
+      </tbody>
+    </table>
+    <table className="stack hover responsive-table">
+      <thead>
+        <tr>
+          <th>Reference database</th>
+          <th>Version</th>
+          <th>Purpose</th>
+          <th>Download</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a href="https://rfam.org/">Rfam covariance models</a>
+          </td>
+          <td>15</td>
+          <td>rRNA covariance models</td>
+          <td>
+            <a href="https://ftp.ebi.ac.uk/pub/databases/Rfam/15.0/Rfam.cm.gz">
+              ftp://ftp.ebi.ac.uk/pub/databases/Rfam/15.0/Rfam.cm.gz
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://rfam.org/">Rfam clan info</a>
+          </td>
+          <td>15</td>
+          <td>rRNA clan information</td>
+          <td>
+            <a href="https://ftp.ebi.ac.uk/pub/databases/Rfam/15.0/Rfam.clanin">
+              ftp://ftp.ebi.ac.uk/pub/databases/Rfam/15.0/Rfam.clanin
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://www.ebi.ac.uk/interpro/download/InterProScan/">
+              InterProScan
+            </a>
+          </td>
+          <td>5.73-104.0</td>
+          <td>InterProScan reference database</td>
+          <td>
+            <a href="https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.73-104.0/">
+              ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.73-104.0/
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/eggnogdb/eggnog-mapper/wiki/eggNOG-mapper-v2.1.5-to-v2.1.12#requirements">
+              eggNOG-mapper
+            </a>
+          </td>
+          <td>5.0.2</td>
+          <td>eggNOG-mapper annotation databases and Diamond</td>
+          <td>
+            <a href="https://github.com/eggnogdb/eggnog-mapper/wiki/eggNOG-mapper-v2.1.5-to-v2.1.12#requirements">
+              https://github.com/eggnogdb/eggnog-mapper/wiki/eggNOG-mapper-v2.1.5-to-v2.1.12#requirements
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://rfam.org/">antiSMASH</a>
+          </td>
+          <td>8.0.1</td>
+          <td>The antiSMASH reference database</td>
+          <td>
+            <a href="https://docs.antismash.secondarymetabolites.org/install/#antismash-standalone-lite">
+              https://docs.antismash.secondarymetabolites.org/install/#antismash-standalone-lite
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://www.genome.jp/tools/kofamkoala/">KOFAM</a>
+            <sup>*</sup>
+          </td>
+          <td>2025-04</td>
+          <td>
+            KOfam - HMM profiles for KEGG/KO. Our reference generation pipeline
+            generates the required files
+          </td>
+          <td>
+            <a href="https://github.com/EBI-Metagenomics/reference-databases-preprocessing-pipeline">
+              https://github.com/EBI-Metagenomics/reference-databases-preprocessing-pipeline
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://geneontology.org/docs/go-subset-guide/">
+              GO Slims
+            </a>
+            <sup>*</sup>
+          </td>
+          <td>20160705</td>
+          <td>Metagenomics GO Slims</td>
+          <td>
+            <a href="https://ftp.ebi.ac.uk/pub/databases/metagenomics/pipelines/tool-dbs/goslim/20160705/goslim_20160705.tar.gz">
+              ftp://ftp.ebi.ac.uk/pub/databases/metagenomics/pipelines/tool-dbs/goslim/20160705/goslim_20160705.tar.gz
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://dbcan.readthedocs.io/en/latest/installation.html#build-database">
+              run_dbCAN
+            </a>
+          </td>
+          <td>4.1.4-V13</td>
+          <td>Pre-built run_DBCan reference database</td>
+          <td>
+            <a href="https://ftp.ebi.ac.uk/pub/databases/metagenomics/pipelines/tool-dbs/dbcan/dbcan_4.1.3_V12.tar.gz">
+              ftp://ftp.ebi.ac.uk/pub/databases/metagenomics/pipelines/tool-dbs/dbcan/dbcan_4.1.3_V12.tar.gz
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/MGXlab/CAT_pack">CAT_Pack</a>
+          </td>
+          <td>2025_01</td>
+          <td>CAT/BAT/RAT NCBI taxonomy pre-made reference database</td>
+          <td>
+            <a href="https://github.com/MGXlab/CAT_pack?tab=readme-ov-file#downloading-preconstructed-database-files">
+              https://github.com/MGXlab/CAT_pack?tab=readme-ov-file#downloading-preconstructed-database-files
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://github.com/WrightonLabCSU/DRAM">DRAM</a>
+          </td>
+          <td>1.3.0</td>
+          <td>DRAM databases</td>
+          <td>
+            <a href="https://github.com/WrightonLabCSU/DRAM/wiki#dram-setup">
+              https://github.com/WrightonLabCSU/DRAM/wiki#dram-setup
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <blockquote>
+      <strong>Note:</strong> Databases marked with <sup>*</sup> are downloaded
+      and post-processed by the{' '}
+      <a href="https://github.com/EBI-Metagenomics/reference-databases-preprocessing-pipeline">
+        Microbiome Informatics reference-databases-preprocessing-pipeline
+      </a>
+      , and ready-to-use versions are stored on the EBI FTP server.
+    </blockquote>
+  </>
+);
+
+export const Table6: React.FC = () => {
+  return (
+    <div>
+      <RouteForHash hash="" isDefault>
+        <Table6Amplicon />
+      </RouteForHash>
+      <RouteForHash hash="#raw">
+        <Table6Raw />
+      </RouteForHash>
+      <RouteForHash hash="#assembly">
+        <Table6Assembly />
+      </RouteForHash>
+    </div>
+  );
+};

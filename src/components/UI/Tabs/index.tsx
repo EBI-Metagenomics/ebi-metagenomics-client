@@ -76,7 +76,7 @@ export const RouteTabs: React.FC<RouteTabProps> = ({
               : { ...to, search: (to as any).search ?? queryParamString };
 
           const isActive =
-            (typeof to === 'string' && pathname.endsWith(to)) ||
+            (typeof to === 'string' && pathname.includes(to)) ||
             (typeof to !== 'string' &&
               to.pathname &&
               pathname.endsWith(to.pathname));

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { Download, PaginatedList } from '@/interfaces';
 import './style.css';
 import { BGZipService } from 'components/Analysis/BgZipService';
@@ -8,10 +8,19 @@ import { Column } from 'react-table';
 import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 import { startCase } from 'lodash-es';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
+import BarChartForTable, {
+  BarChartForTableProps,
+} from 'components/Analysis/BarChartForTable';
+
+type BarChartSpec = Pick<
+  BarChartForTableProps,
+  'title' | 'labelsCol' | 'countsCol' | 'maxLabels'
+>;
 
 interface CompressedTSVTableProps {
   columns?: Column[];
   download: Download;
+  barChartSpec?: BarChartSpec;
 }
 
 const { usePage, withQueryParamProvider } =
@@ -23,6 +32,7 @@ const { usePage, withQueryParamProvider } =
 const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
   columns = [],
   download,
+  barChartSpec,
 }) => {
   const bgzipReader = useMemo(() => new BGZipService(download), [download]);
   const [pageNum, setPageNum] = usePage<number>();
@@ -34,6 +44,7 @@ const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
   const [cols, setCols] = useState<Column[]>(columns);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const columnsAreFirstRowOfFirstPage = !columns.length;
+  const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
 
   useEffect(() => {
     let cancelled = false;
@@ -104,21 +115,52 @@ const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
     };
   }, [pageNum, bgzipReader, estimatedPageSize, columnsAreFirstRowOfFirstPage]);
 
+  const viewModeSelector = barChartSpec ? (
+    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <button
+        type="button"
+        className={`vf-search__button | vf-button vf-button--primary mg-text-search-button vf-button--sm`}
+        onClick={() => setViewMode(viewMode === 'table' ? 'chart' : 'table')}
+      >
+        <span
+          className={`icon icon-common icon-${
+            viewMode === 'table' ? 'chart-bar' : 'table'
+          }`}
+          style={{ color: '#dcfce7' }}
+        />
+        <span className="vf-button__text">
+          Switch to {viewMode === 'table' ? 'chart' : 'table'} view
+        </span>
+      </button>
+    </div>
+  ) : null;
+
+  let content: ReactElement | null = null;
+  if (isLoading) content = <Loading />;
+  else if (viewMode === 'table')
+    content = (
+      <EMGTable
+        cols={cols}
+        data={pageData}
+        showPagination
+        expectedPageSize={estimatedPageSize || pageData.items?.length || 100}
+      />
+    );
+  else if (viewMode === 'chart' && barChartSpec)
+    content = (
+      <BarChartForTable
+        data={pageData}
+        labelsCol={barChartSpec?.labelsCol}
+        countsCol={barChartSpec?.countsCol}
+        title={barChartSpec?.title}
+      />
+    );
+
   return (
     <div className="compressed-tsv-table">
       <FixedHeightScrollable heightPx={600}>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <EMGTable
-            cols={cols}
-            data={pageData}
-            showPagination
-            expectedPageSize={
-              estimatedPageSize || pageData.items?.length || 100
-            }
-          />
-        )}
+        {viewModeSelector}
+        {content}
       </FixedHeightScrollable>
     </div>
   );

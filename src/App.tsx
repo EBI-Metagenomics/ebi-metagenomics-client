@@ -28,6 +28,7 @@ import V2AnalysisPage from 'pages/Analysis/v2index';
 import SessionExpiryBanner from 'components/UI/SessionExpiryBanner';
 import PersistLogin from 'components/PersistLogin';
 import MyDataStudies from './pages/MyData/MyDataStudies';
+import NotFoundError from 'components/UI/NotFoundError';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -121,6 +122,7 @@ const App: React.FC = () => {
                 {/* <Route element={<PersistLogin />}> */}
                 <Route path="/login" element={<Login />} />
                 {/* </Route> */}
+                <Route path="*" element={<NotFoundError />} />
               </Routes>
             </Suspense>
           </ErrorBoundary>

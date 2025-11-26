@@ -8,7 +8,6 @@ import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/De
 import ChimericProportions from 'components/Asv/ChimericProportions';
 import AsvDistribution from 'components/Asv/AsvDistribution';
 import PrimerIdentification from 'components/PrimerIdentification';
-import InfoBanner from 'components/UI/InfoBanner';
 
 const Asv: React.FC = () => {
   const [activeTab, setActiveTab] = useState(() => {
@@ -96,10 +95,7 @@ const Asv: React.FC = () => {
               </div>
             </DetailedVisualisationCard>
           ) : (
-            <InfoBanner
-              type={'warning'}
-              title={'No DADA2 statistics available.'}
-            />
+            <div className="empty-message">No DADA2 statistics available.</div>
           )}
         </section>
         <section
@@ -121,10 +117,7 @@ const Asv: React.FC = () => {
               </div>
             </DetailedVisualisationCard>
           ) : (
-            <InfoBanner
-              type={'warning'}
-              title={'No ASV distribution available.'}
-            />
+            <div className="empty-message">No ASV distribution available.</div>
           )}
         </section>
 

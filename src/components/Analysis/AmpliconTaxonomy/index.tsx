@@ -30,7 +30,7 @@ const { useType, withQueryParamProvider } = createSharedQueryParamContext({
   type: SharedTextQueryParam(PARAMETER_DEFAULT),
 });
 
-const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
+const AmpliconTaxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   const { data, loading, error } = useMGnifyData(
     `analyses/${accession}/taxonomy/overview`
   );
@@ -178,4 +178,4 @@ const Taxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
   );
 };
 
-export default withQueryParamProvider(Taxonomy);
+export default withQueryParamProvider(AmpliconTaxonomy);

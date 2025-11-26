@@ -11,7 +11,7 @@ import Accordion, {
 } from 'components/UI/Accordion';
 import EMGModal from 'components/UI/EMGModal';
 import { usePublicationAnnotations } from 'hooks/data/usePublicationDetail';
-import { AnnotationGroup } from 'interfaces/index';
+import { AnnotationGroup } from '@/interfaces';
 
 const AnnotationSuperGroup: React.FC<{
   superGroup: AnnotationGroup[];
@@ -195,8 +195,8 @@ export const PublicationAnnotationsPopupBadge: React.FC<
       >
         <span className="vf-badge vf-badge--secondary">
           <i className="icon icon-common" data-icon="&#xf1c0;" /> meta
-        </span>{' '}
-        Show metadata from Europe PMC Annotations
+        </span>
+        &nbsp;&nbsp; Show metadata from Europe PMC Annotations
       </button>
     </>
   );

@@ -5,8 +5,8 @@ import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import './style.css';
 import SlimVisualisationCard from 'components/Analysis/VisualisationCards/SlimVisualisationCard';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
-import AsvMarkerGeneTable from 'components/Analysis/Taxonomy/AsvMarkerGeneTable';
-import ClosedReferenceMarkerGeneTable from 'components/Analysis/Taxonomy/ClosedReferenceMarkerGeneTable';
+import AsvMarkerGeneTable from 'components/Analysis/AmpliconTaxonomy/AsvMarkerGeneTable';
+import ClosedReferenceMarkerGeneTable from 'components/Analysis/AmpliconTaxonomy/ClosedReferenceMarkerGeneTable';
 import { Download } from '@/interfaces';
 
 type MarkerGeneSummary = {
@@ -299,14 +299,10 @@ const Taxonomy = () => {
           Marker Gene Summary
         </summary>
         <p>
-          The tables below show the marker genes that were identified and
-          analysed.
-        </p>
-        <p>
-          The pipeline searches for the different marker genes shown in these
-          tables, which shows which ones were identified and analysed in this
-          run. The tables also show which types of analysis results are
-          available for each identified marker gene.
+          The pipeline searches for the different marker genes shown in the
+          tables below, and which markers were identified in this run.
+          The tables also list which types of analysis results are available
+          for each identified marker gene.
         </p>
 
         <AsvMarkerGeneTable
