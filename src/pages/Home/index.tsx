@@ -134,7 +134,7 @@ const HomePage: React.FC = () => {
           <InnerCard
             title="Search by Nucleotide"
             label="Search metagenomes using nucleotide sequences"
-            to="/search-landing"
+            to="/search-tools"
             icon={DnaIcon}
           />
         </div>

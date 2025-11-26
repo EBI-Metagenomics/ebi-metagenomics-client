@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo } from 'react';
+import React, { memo, useMemo } from 'react';
 
 import Slider from 'components/UI/Slider';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
@@ -6,21 +6,19 @@ import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 const MIN = 0;
 const MAX = 1;
 
-// A slider-based filter for cANI (calculated ANI) without a toggle
-// Persists selection to the `cani` query parameter as "min,max"
 const CANIFilter: React.FC = () => {
   const [cani, setCani] = useQueryParamState('cani', '');
-  const [range, setRange] = useState<number[]>(
-    cani.split(',').filter(Boolean).map(Number)
-  );
 
-  useEffect(() => {
-    const newRange = cani.split(',').filter(Boolean).map(Number);
-    setRange(newRange);
+  // Parse URL param into a stable range
+  const range = useMemo(() => {
+    const parts = cani.split(',').map(Number);
+    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+      return { min: parts[0], max: parts[1] };
+    }
+    return { min: MIN, max: MAX };
   }, [cani]);
 
-  const handleSlider = ({ min, max }): void => {
-    setRange([min, max]);
+  const handleSlider = ({ min, max }) => {
     setCani(`${min},${max}`);
   };
 
@@ -34,10 +32,7 @@ const CANIFilter: React.FC = () => {
           steps={1000}
           precision={3}
           isEnabled
-          selection={{
-            min: range?.[0] ?? MIN,
-            max: range?.[1] ?? MAX,
-          }}
+          selection={range}
           onChange={handleSlider}
         />
       </div>

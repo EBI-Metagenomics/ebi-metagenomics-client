@@ -93,7 +93,7 @@ const App: React.FC = () => {
               <ResetScroll />
               <Suspense fallback={<Loading size="large" />}>
                 <Routes>
-                  <Route path="/search-landing" element={<LandingPage />} />
+                  <Route path="/search-tools" element={<LandingPage />} />
                   {/* Branchwater card routes */}
                   <Route path="/branchwater-search" element={<Branchwater />} />
                   <Route path="/mag-search" element={<MagSearch />} />

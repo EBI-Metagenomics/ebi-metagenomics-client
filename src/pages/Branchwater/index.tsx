@@ -6,8 +6,6 @@ import React, {
   useMemo,
 } from 'react';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
-import Plot from 'react-plotly.js';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -362,6 +360,8 @@ const Branchwater = () => {
         }
       }
 
+      console.log('cANIIndex   ', cANIIndex);
+
       if (cANIIndex !== -1) {
         const xs = numCol(cANIIndex);
         if (xs.length) {
@@ -644,8 +644,8 @@ const Branchwater = () => {
       }
     });
     return {
-      binsDesc: [...binsAsc].reverse(),
-      countsDesc: [...countsAsc].reverse(),
+      binsDesc: [...binsAsc].reverse().slice(0, -1),
+      countsDesc: [...countsAsc].reverse().slice(0, -1),
     };
   }, [searchResults]);
 
@@ -1039,7 +1039,7 @@ const Branchwater = () => {
 
   return (
     <section className="vf-content mg-page-search">
-      <h2>Genome against INSDC metagenomes</h2>
+      <h2>Search for a genome within all INSDC metagenomes</h2>
       <div className="vf-u-margin__top--400">
         <details className="vf-details">
           <summary className="vf-details--summary">Instructions</summary>
@@ -1056,12 +1056,14 @@ const Branchwater = () => {
             of 12/08/2023
           </p>
           <p className="vf-text-body vf-text-body--3">
-            Sequences shorter than 10kb will rarely produce results. Quality of
-            the match to the uploaded genome is represented by the cANI score
-            (calculated from containment). The relationship between cANI and
-            taxonomic level of the match varies with the genome of interest. In
-            general, matches are most robust to the genus taxonomic level and a
-            cANI greater than 0.97 often represents a species-level match.
+            Sequences shorter than 10kb will rarely produce results. For better
+            results, it is recommended to use sequences of lengths greater than
+            50kb. The Quality of the match to the uploaded genome is represented
+            by the cANI score (calculated from containment). The relationship
+            between cANI and taxonomic level of the match varies with the genome
+            of interest. In general, matches are most robust to the genus
+            taxonomic level and a cANI greater than 0.97 often represents a
+            species-level match.
           </p>
           <p className="vf-text-body vf-text-body--3">
             Notes: processing time depends on file size and your device; keep
@@ -1198,14 +1200,14 @@ const Branchwater = () => {
                   onChange={() => setSelectedExample('example-mag-3rd')}
                 />
                 <label className="vf-form__label" htmlFor="example-mag-3rd">
-                  Peptostreptococcaceae — Human Gut &nbsp;{' '}
+                  Salmonella enterica — Human Gut &nbsp;{' '}
                   <a
                     className="vf-link"
-                    href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000001346#overview"
+                    href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000002366#overview"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    MGYG000001346
+                    MGYG000002366
                   </a>
                 </label>
               </div>

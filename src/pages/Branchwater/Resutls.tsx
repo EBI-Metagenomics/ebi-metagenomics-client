@@ -95,6 +95,24 @@ const Results: React.FC<ResultsProps> = ({
 }) => {
   // Local UI state: show/hide the informational banner
   const [showBanner, setShowBanner] = React.useState(true);
+  // Ensure all hooks are called unconditionally and in a stable order.
+  // Memoize processed results once per render, but avoid heavy work when loading or no results.
+  const processedResults = React.useMemo(() => {
+    if (isLoading || searchResults.length === 0) {
+      return {
+        filteredResults: [],
+        sortedResults: [],
+        paginatedResults: [],
+        totalPages: 0,
+      };
+    }
+    return processResults();
+  }, [isLoading, searchResults.length, processResults]);
+  const getProcessedResults = React.useCallback(
+    () => processedResults,
+    [processedResults]
+  );
+  const sortedCount = processedResults.sortedResults.length;
   /* ----------------------------------------------------------
       1. LOADING STATE
   ----------------------------------------------------------- */
@@ -161,7 +179,7 @@ const Results: React.FC<ResultsProps> = ({
   /* ----------------------------------------------------------
       3. RESULTS SUMMARY + FILTERS + TABLE
   ----------------------------------------------------------- */
-  const sortedCount = processResults().sortedResults.length;
+  // processedResults/useMemo defined above to keep Hooks order consistent
 
   return (
     <>
@@ -267,7 +285,7 @@ const Results: React.FC<ResultsProps> = ({
             sortField={sortField}
             sortDirection={sortDirection}
             onSortChange={onSortChange}
-            processResults={processResults}
+            processResults={getProcessedResults}
             currentPage={currentPage}
             itemsPerPage={itemsPerPage}
             onPageChange={onPageChange}

@@ -14,19 +14,37 @@
 
 /* Backgrounds */
 .bg-dna {
-    background-image: url('images/branchwater/helix_wave.svg');
+    /*background-image: url('images/branchwater/helix_wave.svg');*/
+    /*background-size: cover;*/
+    /*background-position: center;*/
+
+    background-image:
+            linear-gradient(rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.50)),
+            url('images/branchwater/helix_wave.svg');
     background-size: cover;
     background-position: center;
 }
 
 .bg-hex {
-    background-image: url('images/branchwater/molecule_hex.svg');
+    /*background-image: url('images/branchwater/molecule_hex.svg');*/
+    /*background-size: cover;*/
+    /*background-position: center;*/
+
+    background-image:
+            linear-gradient(rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.50)),
+            url('images/branchwater/molecule_hex.svg');
     background-size: cover;
     background-position: center;
 }
 
 .bg-protein {
-    background-image: url('images/branchwater/alpha_helix.svg');
+    /*background-image: url('images/branchwater/alpha_helix.svg');*/
+    /*background-size: cover;*/
+    /*background-position: center;*/
+
+    background-image:
+            linear-gradient(rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.50)),
+            url('images/branchwater/alpha_helix.svg');
     background-size: cover;
     background-position: center;
 }
@@ -43,7 +61,6 @@
     z-index: 2;
     padding: 1.4rem 1.6rem;
     color: white;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }
 
 /* Heading link layout */
@@ -51,19 +68,23 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
+    color: white;
 }
 
 /* Subheading */
 .bw-card__subheading {
     font-size: 1rem;
     font-weight: 500;
-    opacity: 0.9;
+    /*opacity: 0.9;*/
+    color: white;
 }
 
 /* Description */
 .bw-card__text {
     font-size: 0.95rem;
-    opacity: 0.85;
+    /*opacity: 0.85;*/
+    font-weight: 400;
+    color: white;
     max-width: 22rem;
 }
 
