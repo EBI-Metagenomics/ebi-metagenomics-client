@@ -41,11 +41,12 @@ const FetchError: React.FC<{ error: ErrorFromFetch }> = ({ error }) => {
         {error?.type === ErrorTypes.JSONError &&
           `The recovered resource didn't follow the expected format [${error.error}].`}
       </p>
-      <details className="vf-details" open>
-        <summary className="vf-details--summary">Advanced</summary>
-        Request endpoint:{' '}
-        {error.error?.request.responseURL || error.error?.config?.url}
-      </details>
+      {/*TODO: hidden to prevent page breakage caused by CORS*/}
+      {/*<details className="vf-details" open>*/}
+      {/*  <summary className="vf-details--summary">Advanced</summary>*/}
+      {/*  Request endpoint:{' '}*/}
+      {/*  {error.error?.request.responseURL || error.error?.config?.url}*/}
+      {/*</details>*/}
       <div className="mg-right">
         <button
           type="button"
