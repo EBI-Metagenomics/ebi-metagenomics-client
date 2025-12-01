@@ -101,6 +101,26 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
             {
+              Header: 'ENA',
+              accessor: 'acc_ena',
+              disableSortBy: true,
+              Cell: ({ row }) => {
+                const entry = row.original;
+                const enaBase = 'https://www.ebi.ac.uk/ena/browser/view/';
+                const href = `${enaBase}${entry.acc}`;
+                return (
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="vf-link"
+                  >
+                    View on ENA
+                  </a>
+                );
+              },
+            },
+            {
               Header: 'Assay Type',
               accessor: 'assay_type',
               disableSortBy: true,
@@ -135,7 +155,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
                     }}
                   >
                     {typeof entry.cANI === 'number'
-                      ? entry.cANI.toFixed(3)
+                      ? entry.cANI.toFixed(2)
                       : entry.cANI}
                   </div>
                 );
@@ -160,7 +180,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
                       }}
                     >
                       {typeof entry.containment === 'number'
-                        ? entry.containment.toFixed(3)
+                        ? entry.containment.toFixed(2)
                         : entry.containment}
                     </div>
                   </div>
@@ -211,11 +231,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
 
                 return (
                   <div style={{ fontSize: '14px' }}>
-                    {isNotProvided ? (
-                      'Not provided'
-                    ) : (
-                      <span>{raw}</span>
-                    )}
+                    {isNotProvided ? 'Not provided' : <span>{raw}</span>}
                   </div>
                 );
               },

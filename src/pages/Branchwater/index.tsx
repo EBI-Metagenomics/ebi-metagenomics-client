@@ -229,7 +229,8 @@ const Branchwater = () => {
     results.forEach((item) => {
       if (
         item.geo_loc_name_country_calc &&
-        item.geo_loc_name_country_calc !== 'NP'
+        item.geo_loc_name_country_calc !== 'NP' &&
+        item.geo_loc_name_country_calc !== 'uncalculated'
       ) {
         const country = item.geo_loc_name_country_calc;
         countsByCountry[country] = (countsByCountry[country] || 0) + 1;
@@ -359,8 +360,6 @@ const Branchwater = () => {
           });
         }
       }
-
-      console.log('cANIIndex   ', cANIIndex);
 
       if (cANIIndex !== -1) {
         const xs = numCol(cANIIndex);
