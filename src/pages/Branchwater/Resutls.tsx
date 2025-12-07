@@ -185,7 +185,7 @@ const Results: React.FC<ResultsProps> = ({
     <>
       {/* INFO BANNER: Database last updated */}
       {showBanner && (
-        <div className="vf-banner vf-banner--alert vf-banner--info">
+        <div className="vf-banner vf-banner--alert vf-banner--success">
           <div className="vf-banner__content">
             <p className="vf-banner__text">
               This search engine searches for the containment of a query genome
@@ -418,20 +418,69 @@ const Results: React.FC<ResultsProps> = ({
           <div className="vf-u-padding__top--400">
             <h3>Quality Assessment (cANI vs Containment)</h3>
             <Plot
-              data={[
-                {
-                  x: scatterData.xs,
-                  y: scatterData.ys,
-                  mode: 'markers',
-                  type: 'scatter',
-                  text: scatterData.texts,
-                  marker: { size: 6, color: scatterData.colors },
-                },
-              ]}
+              data={(() => {
+                // Split the single dataset into separate traces so Plotly can show a legend
+                const WGS_COLOR = 'rgba(255, 99, 132, 0.8)';
+                const OTHER_COLOR = 'rgba(54, 162, 235, 0.8)';
+
+                const wgs = {
+                  x: [] as number[],
+                  y: [] as number[],
+                  text: [] as string[],
+                };
+                const other = {
+                  x: [] as number[],
+                  y: [] as number[],
+                  text: [] as string[],
+                };
+
+                if (
+                  scatterData &&
+                  Array.isArray(scatterData.xs) &&
+                  Array.isArray(scatterData.ys) &&
+                  Array.isArray(scatterData.texts) &&
+                  Array.isArray(scatterData.colors)
+                ) {
+                  for (let i = 0; i < scatterData.xs.length; i += 1) {
+                    const color = scatterData.colors[i];
+                    if (color === WGS_COLOR) {
+                      wgs.x.push(scatterData.xs[i]);
+                      wgs.y.push(scatterData.ys[i]);
+                      wgs.text.push(scatterData.texts[i]);
+                    } else {
+                      other.x.push(scatterData.xs[i]);
+                      other.y.push(scatterData.ys[i]);
+                      other.text.push(scatterData.texts[i]);
+                    }
+                  }
+                }
+
+                return [
+                  {
+                    name: 'WGS',
+                    x: wgs.x,
+                    y: wgs.y,
+                    mode: 'markers',
+                    type: 'scatter',
+                    text: wgs.text,
+                    marker: { size: 6, color: WGS_COLOR },
+                  },
+                  {
+                    name: 'Other assay types',
+                    x: other.x,
+                    y: other.y,
+                    mode: 'markers',
+                    type: 'scatter',
+                    text: other.text,
+                    marker: { size: 6, color: OTHER_COLOR },
+                  },
+                ];
+              })()}
               layout={{
                 title: 'cANI vs Containment',
                 xaxis: { title: 'Containment' },
                 yaxis: { title: 'cANI' },
+                showlegend: true,
               }}
               style={{ width: '100%', height: '450px' }}
             />

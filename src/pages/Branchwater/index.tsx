@@ -904,7 +904,17 @@ const Branchwater = () => {
       columns
         .map((col) => {
           const v = row[col];
-          if (col === 'lat_lon' && Array.isArray(v)) return escape(v.join(','));
+          // Special handling for lat_lon column to map placeholder values
+          if (col === 'lat_lon') {
+            if (Array.isArray(v)) return escape(v.join(','));
+            const s = String(v ?? '').trim();
+            if (!s) return escape('');
+            const sl = s.toLowerCase();
+            if (sl === 'missing' || sl === 'np' || sl === 'uncalculated') {
+              return escape('Not provided');
+            }
+            return escape(s);
+          }
           return escape(v);
         })
         .join(',')
