@@ -41,7 +41,8 @@ export default merge(
   privateConfig || {},
   import.meta.env
     ? {
-        basename: import.meta.env.BASE_URL, // overrides config AND privateConfig
+        basename: import.meta.env.BASE_URL, // overrides config AND privateConfig,
+        googleMapsKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
       }
     : {}
 );

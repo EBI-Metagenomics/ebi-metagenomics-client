@@ -67,6 +67,7 @@ declare global {
 
   interface ImportMeta {
     env: {
+      VITE_GOOGLE_MAPS_KEY: string | undefined;
       BASE_URL: string;
     };
   }
