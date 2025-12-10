@@ -1,0 +1,23 @@
+{
+  "count": 2,
+  "items": [
+    {
+      "accession": "MGYG000000001",
+      "length": 123456,
+      "num_contigs": 10,
+      "completeness": 95,
+      "contamination": 2,
+      "type": "MAG",
+      "biome": {"lineage": "root:Environmental:Marine"}
+    },
+    {
+      "accession": "MGYG000000003",
+      "length": 222222,
+      "num_contigs": 20,
+      "completeness": 90,
+      "contamination": 3,
+      "type": "MAG",
+      "biome": {"lineage": "root:Environmental:Marine"}
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "count": 2,
+  "items": [
+    {
+      "accession": "MGYG000000001",
+      "catalogue_id": "mar1",
+      "type": "MAG",
+      "biome": {"lineage": "root:Environmental:Marine"}
+    },
+    {
+      "accession": "MGYG000000002",
+      "catalogue_id": "sol1",
+      "type": "Isolate",
+      "biome": {"lineage": "root:Environmental:Terrestrial:Soil"}
+    }
+  ]
+}

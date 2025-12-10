@@ -1,18 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseList } from '@/hooks/data/useData';
+import useApiData from '@/hooks/data/useApiData';
+import { PaginatedList } from '@/interfaces';
 import useURLAccession from '@/hooks/useURLAccession';
 import { getBiomeIcon } from '@/utils/biomes';
-import { cleanTaxLineage, getSimpleTaxLineage } from '@/utils/taxon';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
-import Tooltip from 'components/UI/Tooltip';
+import UserContext from 'pages/Login/UserContext';
 
-const initialPageSize = 10;
 const {
   useGenomesPage,
   useGenomesPageSize,
@@ -22,29 +20,38 @@ const {
 } = createSharedQueryParamContextForTable('genomes');
 
 const GenomesTable: React.FC = () => {
+  const { config } = useContext(UserContext);
   const accession = useURLAccession();
   const [genomesPage] = useGenomesPage();
   const [genomesPageSize] = useGenomesPageSize();
   const [genomesOrder] = useGenomesOrder();
   const [genomeSearch] = useGenomesSearch();
-  const { data, loading, error, isStale } = useMGnifyData(
-    `genome-catalogues/${accession}/genomes`,
-    {
+  const params = Object.fromEntries(
+    Object.entries({
       page: genomesPage as number,
       ordering: genomesOrder as string,
       page_size: genomesPageSize as number,
       search: genomeSearch as string,
-    }
+    }).filter(([, v]) => v !== undefined && v !== null && v !== '')
   );
-  if (loading && !isStale) return <Loading size="small" />;
+  const query = new URLSearchParams(
+    params as Record<string, string>
+  ).toString();
+  const url = `${config.api_v2}genomes/catalogues/${accession}/genomes${
+    query ? `?${query}` : ''
+  }`;
+  const { data, loading, error, stale } = useApiData<PaginatedList>({
+    url,
+  });
+  if (loading && !stale) return <Loading size="small" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
 
   const columns = [
     {
-      id: 'biome_id',
+      id: 'biome',
       Header: 'Biome',
-      accessor: (genome) => genome.relationships.biome.data?.id,
+      accessor: (genome: any) => genome.biome?.lineage,
       Cell: ({ cell }) => (
         <span
           className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
@@ -57,52 +64,31 @@ const GenomesTable: React.FC = () => {
     {
       id: 'genome',
       Header: 'Accession',
-      accessor: 'id',
+      accessor: 'accession',
       Cell: ({ cell }) => (
         <Link to={`/genomes/${cell.value}`}>{cell.value}</Link>
       ),
     },
     {
       Header: 'Length',
-      accessor: 'attributes.length',
+      accessor: 'length',
     },
     {
-      Header: 'Num. of genomes',
-      accessor: 'attributes.num-genomes-total',
+      Header: 'Num. contigs',
+      accessor: 'num_contigs',
     },
     {
       Header: 'Completeness',
-      accessor: 'attributes.completeness',
+      accessor: 'completeness',
     },
     {
       Header: 'Contamination',
-      accessor: 'attributes.contamination',
+      accessor: 'contamination',
     },
     {
       Header: 'Type',
-      accessor: 'attributes.type',
+      accessor: 'type',
       disableSortBy: true,
-    },
-    {
-      Header: 'Taxonomy',
-      accessor: 'attributes.taxon-lineage',
-      Cell: ({ cell }) => (
-        <>
-          {getSimpleTaxLineage(cell.value, true)}{' '}
-          <Tooltip content={cleanTaxLineage(cell.value, ' > ')}>
-            <sup>
-              <span className="icon icon-common icon-info" />
-            </sup>
-          </Tooltip>
-        </>
-      ),
-      disableSortBy: true,
-    },
-    {
-      id: 'last_update',
-      Header: 'Last Updated',
-      accessor: 'attributes.last-update',
-      Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
     },
   ];
 
@@ -110,12 +96,12 @@ const GenomesTable: React.FC = () => {
     <EMGTable
       Title="Species-level cluster representatives"
       cols={columns}
-      data={data as MGnifyResponseList}
+      data={data as PaginatedList}
       initialPage={(genomesPage as number) - 1}
-      initialPageSize={initialPageSize}
+      expectedPageSize={genomesPageSize as number}
       className="mg-anlyses-table"
       loading={loading}
-      isStale={isStale}
+      isStale={stale}
       namespace="genomes-"
       showTextFilter
       sortable

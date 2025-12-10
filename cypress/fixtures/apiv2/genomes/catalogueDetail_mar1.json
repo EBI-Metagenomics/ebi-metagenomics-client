@@ -1,0 +1,18 @@
+{
+  "catalogue_id": "mar1",
+  "version": "1",
+  "name": "Marine MAGs",
+  "description": "Marine genomes catalogue description",
+  "protein_catalogue_name": null,
+  "protein_catalogue_description": null,
+  "updated_at": "2024-10-01T00:00:00Z",
+  "result_directory": null,
+  "genome_count": 5,
+  "unclustered_genome_count": 8,
+  "ftp_url": "https://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/",
+  "pipeline_version_tag": "v1.0.0",
+  "catalogue_biome_label": "Marine",
+  "catalogue_type": "mag",
+  "other_stats": {},
+  "biome": {"biome_name": "Marine", "lineage": "root:Environmental:Marine"}
+}

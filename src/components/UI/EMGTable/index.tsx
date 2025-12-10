@@ -132,7 +132,7 @@ const EMGTable = <T extends object>({
   loading = false,
   isStale = false,
   downloadURL = undefined,
-  onDownloadRequested = () => null,
+  onDownloadRequested = undefined,
   ExtraBarComponent = null,
   onMouseEnterRow = () => null,
   onMouseLeaveRow = () => null,
@@ -248,7 +248,7 @@ const EMGTable = <T extends object>({
           className={`vf-table--striped mg-table ${className}`}
           ref={tableRef}
         >
-          {(Title || showTextFilter || downloadURL) && (
+          {(Title || showTextFilter || downloadURL || onDownloadRequested) && (
             <caption className="vf-table__caption mg-table-caption">
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-end' }}>

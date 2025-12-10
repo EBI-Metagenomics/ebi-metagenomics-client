@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import ReactMarkdown from 'react-markdown';
 
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseObj } from '@/hooks/data/useData';
+import useApiData from '@/hooks/data/useApiData';
 import useURLAccession from '@/hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
@@ -19,8 +18,10 @@ import Breadcrumbs from 'components/Nav/Breadcrumbs';
 
 const tabs = [
   { label: 'Genome list', to: '#' },
-  { label: 'Taxonomy tree', to: '#phylo-tab' },
-  { label: 'Protein catalogue', to: '#protein-catalog-tab' },
+  // TODO: put back when phylo tree json downloads is made available
+  // { label: 'Taxonomy tree', to: '#phylo-tab' },
+  // TODO: put back when protein catalogue info is made available
+  // { label: 'Protein catalogue', to: '#protein-catalog-tab' },
   { label: 'Search by Gene', to: '#genome-search-tab' },
   { label: 'Search by MAG', to: '#genome-search-mag-tab' },
 ];
@@ -28,29 +29,50 @@ const tabs = [
 const GenomePage: React.FC = () => {
   const accession = useURLAccession();
   const { config } = useContext(UserContext);
-  const { data, loading, error } = useMGnifyData(
-    `genome-catalogues/${accession}`
-  );
+  interface GenomeCatalogueResponse {
+    catalogue_id: string;
+    version: string;
+    name: string;
+    description: string;
+    protein_catalogue_name: string | null;
+    protein_catalogue_description: string | null;
+    updated_at: string;
+    result_directory: string | null;
+    genome_count: number;
+    unclustered_genome_count: number | null;
+    ftp_url: string;
+    pipeline_version_tag: string;
+    catalogue_biome_label: string;
+    catalogue_type: string;
+    other_stats: unknown;
+    biome: {
+      biome_name: string;
+      lineage: string;
+    };
+  }
+  const { data, loading, error } = useApiData<GenomeCatalogueResponse>({
+    url: `${config.api_v2}/genomes/catalogues/${accession}`,
+  });
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
-  const { data: genomeData } = data as MGnifyResponseObj;
+  const genomeData = data as GenomeCatalogueResponse;
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     { label: 'Genomes', url: '/browse/genomes' },
-    { label: genomeData.attributes.name as string },
+    { label: genomeData.name as string },
   ];
   return (
     <section className="vf-content">
       <Breadcrumbs links={breadcrumbs} />
-      <h2>{genomeData.attributes.name}</h2>
+      <h2>{genomeData.name}</h2>
 
       <section className="vf-card-container vf-card-container__col-4">
         <div className="vf-card-container__inner">
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
               <h3 className="vf-card__heading">
-                {genomeData.attributes['unclustered-genome-count']}
+                {genomeData.unclustered_genome_count}
               </h3>
               <p className="vf-card__subheading">Total genomes</p>
             </div>
@@ -58,9 +80,7 @@ const GenomePage: React.FC = () => {
 
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
-              <h3 className="vf-card__heading">
-                {genomeData.attributes['genome-count']}
-              </h3>
+              <h3 className="vf-card__heading">{genomeData.genome_count}</h3>
               <p className="vf-card__subheading">Species-level clusters</p>
             </div>
           </article>
@@ -68,7 +88,14 @@ const GenomePage: React.FC = () => {
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
               <h3 className="vf-card__heading">
-                <a href={genomeData.attributes['ftp-url'] as string}>
+                <a
+                  href={
+                    (genomeData.ftp_url +
+                      genomeData.catalogue_id +
+                      '/v' +
+                      genomeData.version) as string
+                  }
+                >
                   FTP Site
                   <ArrowForLink />
                 </a>
@@ -81,9 +108,9 @@ const GenomePage: React.FC = () => {
             <div className="vf-card__content | vf-stack vf-stack--200">
               <h3 className="vf-card__heading">
                 <ExtLink
-                  href={`${config.magsPipelineRepo}/releases/tag/${genomeData.attributes['pipeline-version-tag']}`}
+                  href={`${config.magsPipelineRepo}/releases/tag/${genomeData.pipeline_version_tag}`}
                 >
-                  Pipeline {genomeData.attributes['pipeline-version-tag']}
+                  Pipeline {genomeData.pipeline_version_tag}
                 </ExtLink>
               </h3>
               <p className="vf-card__subheading">View workflow & tools</p>
@@ -93,9 +120,7 @@ const GenomePage: React.FC = () => {
       </section>
 
       <div>
-        <ReactMarkdown>
-          {genomeData.attributes.description as string}
-        </ReactMarkdown>
+        <ReactMarkdown>{genomeData.description as string}</ReactMarkdown>
       </div>
 
       <Tabs tabs={tabs} />
@@ -104,25 +129,25 @@ const GenomePage: React.FC = () => {
           <RouteForHash hash="" isDefault>
             <GenomesTable />
           </RouteForHash>
-          <RouteForHash hash="#phylo-tab">
-            <PhyloTree />
-          </RouteForHash>
+          {/*<RouteForHash hash="#phylo-tab">*/}
+          {/*  <PhyloTree />*/}
+          {/*</RouteForHash>*/}
           <RouteForHash hash="#genome-search-tab">
             <CobsSearch
-              catalogueName={genomeData.attributes.name as string}
-              catalogueID={genomeData.id}
+              catalogueName={genomeData.name as string}
+              catalogueID={genomeData.catalogue_id}
             />
           </RouteForHash>
           <RouteForHash hash="#genome-search-mag-tab">
             <SourmashSearch
-              catalogueName={genomeData.attributes.name as string}
-              catalogueID={genomeData.id}
+              catalogueName={genomeData.name as string}
+              catalogueID={genomeData.catalogue_id}
             />
           </RouteForHash>
           <RouteForHash hash="#protein-catalog-tab">
-            <h3>{genomeData.attributes['protein-catalogue-name'] as string}</h3>
+            <h3>{genomeData.protein_catalogue_name as string}</h3>
             <ReactMarkdown>
-              {genomeData.attributes['protein-catalogue-description'] as string}
+              {(genomeData.protein_catalogue_description || '') as string}
             </ReactMarkdown>
           </RouteForHash>
         </div>

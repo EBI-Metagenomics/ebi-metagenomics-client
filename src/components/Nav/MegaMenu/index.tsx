@@ -242,14 +242,14 @@ const MegaMenu: React.FC = () => {
                             Studies <ArrowForLink />
                           </a>
                         </li>
-                         <li className="vf-navigation__item">
+                        <li className="vf-navigation__item">
                           <a
                             href={`${config.basename}/browse/samples`}
                             className="vf-navigation__link rotating-link"
                           >
                             Samples <ArrowForLink />
                           </a>
-                         </li>
+                        </li>
                         <li className="vf-navigation__item">
                           <a
                             href={`${config.basename}/browse/publications`}
@@ -258,22 +258,22 @@ const MegaMenu: React.FC = () => {
                             Publications <ArrowForLink />
                           </a>
                         </li>
-                        {/* <li className="vf-navigation__item"> */}
-                        {/*  <a */}
-                        {/*    href={`${config.basename}/browse/genomes`} */}
-                        {/*    className="vf-navigation__link rotating-link" */}
-                        {/*  > */}
-                        {/*    Genomes <ArrowForLink /> */}
-                        {/*  </a> */}
-                        {/* </li> */}
-                        {/* <li className="vf-navigation__item"> */}
-                        {/*  <a */}
-                        {/*    href={`${config.basename}/browse/biomes`} */}
-                        {/*    className="vf-navigation__link rotating-link" */}
-                        {/*  > */}
-                        {/*    Biomes <ArrowForLink /> */}
-                        {/*  </a> */}
-                        {/* </li> */}
+                        <li className="vf-navigation__item">
+                          <a
+                            href={`${config.basename}/browse/genomes`}
+                            className="vf-navigation__link rotating-link"
+                          >
+                            Genomes <ArrowForLink />
+                          </a>
+                        </li>
+                        <li className="vf-navigation__item">
+                          <a
+                            href={`${config.basename}/browse/biomes`}
+                            className="vf-navigation__link rotating-link"
+                          >
+                            Biomes <ArrowForLink />
+                          </a>
+                        </li>
                       </ul>
                     </nav>
                   </div>

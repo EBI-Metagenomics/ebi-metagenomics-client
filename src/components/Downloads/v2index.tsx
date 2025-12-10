@@ -4,9 +4,13 @@ import EMGTable from 'components/UI/EMGTable';
 import { MGnifyDatum } from 'hooks/data/useData';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 
-const Downloads: React.FC = () => {
+interface DownloadsProps {
+  downloads?: Array<MGnifyDatum>;
+}
+
+const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
   const { overviewData } = useContext(AnalysisContext);
-  const downloads = overviewData?.downloads;
+  const downloads = propDownloads ?? overviewData?.downloads;
   const columns = useMemo(
     () => [
       {

@@ -4,8 +4,8 @@ import {
   reactSelectTheme,
 } from 'styles/react-select-styles';
 import React, { useEffect, useMemo, useState } from 'react';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseList } from '@/hooks/data/useData';
+import useApiData from '@/hooks/data/useApiData';
+import config from 'utils/config.ts';
 
 type CataloguePickerProps = {
   onChange: (options) => void;
@@ -18,16 +18,20 @@ const CataloguePicker: React.FC<CataloguePickerProps> = ({
   onChange,
   singleCatalogue,
 }) => {
-  const { data: cataloguesList, loading: loadingCataloguesList } =
-    useMGnifyData('genome-catalogues');
+  const { data: apiData, loading: loadingCataloguesList } = useApiData<{
+    count: number;
+    items: any[];
+  }>({
+    url: `${config.api_v2}/genomes/catalogues/`,
+  });
 
   const catalogueOptions = useMemo(() => {
-    if (!cataloguesList) return [];
-    return (cataloguesList as MGnifyResponseList).data.map((catalogue) => ({
-      label: catalogue.attributes.name,
-      value: catalogue.id,
+    if (!apiData) return [];
+    return apiData.items.map((catalogue: any) => ({
+      label: catalogue?.name,
+      value: catalogue?.catalogue_id,
     }));
-  }, [cataloguesList]);
+  }, [apiData]);
 
   const [selectedCatalogues, setSelectedCatalogues] = useState<SelectOptions>(
     []

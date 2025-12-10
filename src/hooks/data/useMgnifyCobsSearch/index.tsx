@@ -40,7 +40,7 @@ const useMgnifyCobsSearch: (
 
   const data = useData(
     sequence.length && String(threshold).length && cataloguesFilter.length
-      ? `${config.api}genome-search`
+      ? `${config.api_v2}genome-search/`
       : null,
     ResponseFormat.JSON,
     {
