@@ -43,21 +43,30 @@ export type EezMetadata = {
 };
 
 export const EezInfo: React.FC<{ eezData: EezMetadata }> = ({ eezData }) => {
-  if (!eezData || (!eezData.eezInfoText && !eezData.beyondEez)) return null as any;
+  if (!eezData || (!eezData.eezInfoText && !eezData.beyondEez))
+    return null as any;
   const prefix = eezData.eezInfoPrefix || '';
   if (eezData.beyondEez) {
     return (
       <div className="vf-meta__details">
         <p>
-          <span className={`vf-badge vf-badge--${eezData.eezBadgeColor || 'tertiary'}`}>
+          <span
+            className={`vf-badge vf-badge--${
+              eezData.eezBadgeColor || 'tertiary'
+            }`}
+          >
             <abbr title="Exclusive Economic Zone" className="eez-abbr">
               EEZ Info
             </abbr>
           </span>
           &nbsp;
-          {`${prefix} a region beyond an EEZ. While this means there are no national ABS obligations under individual countries' jurisdiction, benefit-sharing obligations may still apply for the use of Marine Genetic Resource (MGR) in areas beyond national jurisdictions, as outlined in the `}
+          {`${prefix} a region beyond an EEZ. While this means there are no 
+          national ABS obligations under individual countries' 
+          jurisdiction, benefit-sharing obligations may still apply for the use of 
+          Marine Genetic Resource (MGR) in areas beyond national jurisdictions, as outlined in the `}
           <a href="https://www.un.org/bbnj/">BBNJ agreement</a>
-          {`. Although this agreement is not yet in force, its provisions, including obligations for MGR users, will apply retroactively once enacted.`}
+          {`. Although this agreement is not yet in force, its provisions, 
+          including obligations for MGR users, will apply retroactively once enacted.`}
         </p>
       </div>
     );
@@ -65,7 +74,9 @@ export const EezInfo: React.FC<{ eezData: EezMetadata }> = ({ eezData }) => {
   return (
     <div className="vf-meta__details">
       <p>
-        <span className={`vf-badge vf-badge--${eezData.eezBadgeColor || 'primary'}`}>
+        <span
+          className={`vf-badge vf-badge--${eezData.eezBadgeColor || 'primary'}`}
+        >
           <abbr title="Exclusive Economic Zone" className="eez-abbr">
             EEZ Info
           </abbr>

@@ -68,11 +68,7 @@ const SamplePage: React.FC = () => {
       eezInfoPrefix:
         'Based on the sample coordinates, this sample originates from the',
     };
-    if (
-      !sampleData.biome?.lineage.includes(
-        'root:Environmental:Aquatic'
-      )
-    ) {
+    if (!sampleData.biome?.lineage.includes('root:Environmental:Aquatic')) {
       eezMetadata.eezInfoText =
         'The sample is from a biome for which MGnify does not currently report ABS requirements.';
       eezMetadata.eezBadgeColor = 'tertiary';

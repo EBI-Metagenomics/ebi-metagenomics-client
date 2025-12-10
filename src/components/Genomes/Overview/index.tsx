@@ -125,7 +125,9 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
                   key: 'PATRIC genome accession',
                   value: data.patric_genome_accession
                     ? () => (
-                        <ExtLink href={PATRIC_URL + data.patric_genome_accession}>
+                        <ExtLink
+                          href={PATRIC_URL + data.patric_genome_accession}
+                        >
                           {data.patric_genome_accession}
                         </ExtLink>
                       )

@@ -47,7 +47,7 @@ export function createSharedQueryParamContext<P extends SharedQueryParamSet>(
     const name = paramName as keyof P & string;
     const hookName = `use${upperFirst(name)}` as HookName<typeof name>;
     // Assign into the partial map
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks,prettier/prettier
     (hooks as any)[hookName] = (<T = unknown>() => useSharedQueryParamState<T>(name));
   });
 

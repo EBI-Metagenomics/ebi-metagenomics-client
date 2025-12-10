@@ -8,7 +8,7 @@ import Loading from 'components/UI/Loading';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
 import FetchError from 'components/UI/FetchError';
-import config from 'utils/config.ts';
+import config from 'utils/config';
 
 const GenomesTextSearch: React.FC = () => {
   const [page] = useQueryParamState('page', 1, Number);

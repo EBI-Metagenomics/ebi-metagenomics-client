@@ -113,7 +113,7 @@ const SamplesMapByStudy: React.FC<SamplesMapProps> = ({ study }) => {
     <div className="mg-map-container">
       <div className="mg-map-wrapper">
         <Wrapper apiKey={config.googleMapsKey} render={render}>
-          <SamplesMap samples={samplesFiltered || []} study={study}/>
+          <SamplesMap samples={samplesFiltered || []} study={study} />
         </Wrapper>
       </div>
       {samples?.count && (

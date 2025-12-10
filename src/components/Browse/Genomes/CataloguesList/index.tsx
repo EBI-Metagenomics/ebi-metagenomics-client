@@ -9,7 +9,7 @@ import { PaginatedList } from '@/interfaces';
 import BiomeSelector from 'components/UI/BiomeSelector';
 import { some } from 'lodash-es';
 import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
-import config from 'utils/config.ts';
+import config from 'utils/config';
 
 const { usePage, useBiome, withQueryParamProvider } =
   createSharedQueryParamContextForTable('', {

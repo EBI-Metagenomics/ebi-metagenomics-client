@@ -5,7 +5,11 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { ErrorFromFetch, MGnifyDatum, MGnifyResponseList } from '@/hooks/data/useData';
+import {
+  ErrorFromFetch,
+  MGnifyDatum,
+  MGnifyResponseList,
+} from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
 import InfoBanner from 'components/UI/InfoBanner';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';

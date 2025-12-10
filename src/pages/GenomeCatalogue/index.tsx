@@ -7,7 +7,7 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import GenomesTable from 'components/Genomes/Table';
-import PhyloTree from 'components/Genomes/PhyloTree';
+// import PhyloTree from 'components/Genomes/PhyloTree';
 import CobsSearch from 'components/Genomes/Cobs';
 import SourmashSearch from 'components/Genomes/Sourmash';
 import RouteForHash from 'components/Nav/RouteForHash';

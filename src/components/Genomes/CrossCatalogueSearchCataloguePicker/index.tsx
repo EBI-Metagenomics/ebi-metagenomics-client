@@ -5,7 +5,7 @@ import {
 } from 'styles/react-select-styles';
 import React, { useEffect, useMemo, useState } from 'react';
 import useApiData from '@/hooks/data/useApiData';
-import config from 'utils/config.ts';
+import config from 'utils/config';
 
 type CataloguePickerProps = {
   onChange: (options) => void;

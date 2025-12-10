@@ -15,9 +15,7 @@ const useSamplesList = (parameters: KeyValue = {}) => {
     )
     .join('&');
 
-  const url = `${config.api_v2}samples/${
-    queryString ? `?${queryString}` : ''
-  }`;
+  const url = `${config.api_v2}samples/${queryString ? `?${queryString}` : ''}`;
 
   return useApiData<SampleList>({
     url,
