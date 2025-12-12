@@ -16,84 +16,84 @@ const wasmContentTypePlugin = {
   },
 };
 
-// export default defineConfig({
-//   base: '/metagenomics/',
-//   plugins: [
-//     react(),
-//     wasmContentTypePlugin,
-//     {
-//       name: 'copy-mgnify-component',
-//       writeBundle() {
-//         // Copy the component file to dist after build
-//         copyFileSync(
-//           resolve(
-//             __dirname,
-//             'node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.js'
-//           ),
-//           resolve(__dirname, 'dist/mgnify-sourmash-component.js')
-//         );
-//         copyFileSync(
-//           resolve(
-//             __dirname,
-//             'node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.worker.js'
-//           ),
-//           resolve(
-//             __dirname,
-//             'dist/node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.worker.js'
-//           )
-//         );
-//         copyFileSync(
-//           resolve(
-//             __dirname,
-//             'node_modules/mgnify-sourmash-component/dist/646.mgnify-sourmash-component.worker.js'
-//           ),
-//           resolve(
-//             __dirname,
-//             'dist/node_modules/mgnify-sourmash-component/dist/646.mgnify-sourmash-component.worker.js'
-//           )
-//         );
-//         copyFileSync(
-//           resolve(
-//             __dirname,
-//             'node_modules/mgnify-sourmash-component/dist/c92d2c3be4e1b9242546.module.wasm'
-//           ),
-//           resolve(
-//             __dirname,
-//             'dist/node_modules/mgnify-sourmash-component/dist/c92d2c3be4e1b9242546.module.wasm'
-//           )
-//         );
-//       },
-//     },
-//   ],
-//   resolve: {
-//     alias: {
-//       '@': path.resolve(__dirname, './src'),
-//       src: path.resolve(__dirname, './src'),
-//       components: path.resolve(__dirname, './src/components'),
-//       interfaces: path.resolve(__dirname, './src/interfaces'),
-//       pages: path.resolve(__dirname, './src/pages'),
-//       styles: path.resolve(__dirname, './src/styles'),
-//       utils: path.resolve(__dirname, './src/utils'),
-//       hooks: path.resolve(__dirname, './src/hooks'),
-//       images: path.resolve(__dirname, './public/images'),
-//       data: path.resolve(__dirname, './public/data'),
-//       'config.json': path.resolve(__dirname, './config.json'),
-//       'config.private.json': path.resolve(__dirname, './config.private.json'),
-//     },
-//   },
-//   assetsInclude: [
-//     '**/*.svg',
-//     '**/*.png',
-//     '**/*.jpg',
-//     '**/*.jpeg',
-//     '**/*.gif',
-//     '**/*.wasm',
-//   ],
-//   server: {
-//     port: 9000,
-//   },
-// });
-//
+export default defineConfig({
+  base: '/metagenomics/',
+  plugins: [
+    react(),
+    wasmContentTypePlugin,
+    {
+      name: 'copy-mgnify-component',
+      writeBundle() {
+        // Copy the component file to dist after build
+        copyFileSync(
+          resolve(
+            __dirname,
+            'node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.js'
+          ),
+          resolve(__dirname, 'dist/mgnify-sourmash-component.js')
+        );
+        copyFileSync(
+          resolve(
+            __dirname,
+            'node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.worker.js'
+          ),
+          resolve(
+            __dirname,
+            'dist/node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.worker.js'
+          )
+        );
+        copyFileSync(
+          resolve(
+            __dirname,
+            'node_modules/mgnify-sourmash-component/dist/646.mgnify-sourmash-component.worker.js'
+          ),
+          resolve(
+            __dirname,
+            'dist/node_modules/mgnify-sourmash-component/dist/646.mgnify-sourmash-component.worker.js'
+          )
+        );
+        copyFileSync(
+          resolve(
+            __dirname,
+            'node_modules/mgnify-sourmash-component/dist/c92d2c3be4e1b9242546.module.wasm'
+          ),
+          resolve(
+            __dirname,
+            'dist/node_modules/mgnify-sourmash-component/dist/c92d2c3be4e1b9242546.module.wasm'
+          )
+        );
+      },
+    },
+  ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      src: path.resolve(__dirname, './src'),
+      components: path.resolve(__dirname, './src/components'),
+      interfaces: path.resolve(__dirname, './src/interfaces'),
+      pages: path.resolve(__dirname, './src/pages'),
+      styles: path.resolve(__dirname, './src/styles'),
+      utils: path.resolve(__dirname, './src/utils'),
+      hooks: path.resolve(__dirname, './src/hooks'),
+      images: path.resolve(__dirname, './public/images'),
+      data: path.resolve(__dirname, './public/data'),
+      'config.json': path.resolve(__dirname, './config.json'),
+      'config.private.json': path.resolve(__dirname, './config.private.json'),
+    },
+  },
+  assetsInclude: [
+    '**/*.svg',
+    '**/*.png',
+    '**/*.jpg',
+    '**/*.jpeg',
+    '**/*.gif',
+    '**/*.wasm',
+  ],
+  server: {
+    port: 9000,
+  },
+});
+
 // export default defineConfig(({ mode }) => {
 //   const env = loadEnv(mode, process.cwd());
 //
