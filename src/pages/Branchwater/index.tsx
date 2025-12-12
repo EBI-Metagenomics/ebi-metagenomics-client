@@ -11,12 +11,8 @@ import 'leaflet/dist/leaflet.css';
 
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import CANIFilter from 'components/Search/Filter/CANI';
-import TextSearch from 'components/Search/Filter/Text';
-import LocalMultipleOptionFilter from 'components/Branchwater/LocalMultipleOptionFilter';
 import axios from 'axios';
-import DetailedResultsTable from './DetailedResultsTable';
-import Results from 'pages/Branchwater/Results.tsx';
+import Results from 'pages/Branchwater/Results';
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -577,7 +573,7 @@ const Branchwater = () => {
         const bValue = b[effectiveField] ?? '';
 
         // Handle numeric values
-        // eslint-disable-next-line no-restricted-globals
+
         if (!isNaN(Number(aValue)) && !isNaN(Number(bValue))) {
           return effectiveDirection === 'asc'
             ? Number(aValue) - Number(bValue)

@@ -40,9 +40,7 @@ const tabs = [
 const GenomePage: React.FC = () => {
   const accession = useURLAccession();
 
-  // ---------------------------------------------------------------------------
-  // 1) FETCH GENOME METADATA (MGnify API)
-  // ---------------------------------------------------------------------------
+  const [currentPage, setCurrentPage] = useState(1);
   const { data, loading, error } = useMGnifyData(`genomes/${accession}`);
 
   // ---------------------------------------------------------------------------
@@ -106,20 +104,10 @@ const GenomePage: React.FC = () => {
     [sortField]
   );
 
-  // ---------------------------------------------------------------------------
-  // 6) PAGINATION
-  // ---------------------------------------------------------------------------
   const itemsPerPage = 25;
-  const [currentPage, setCurrentPage] = useState(1);
 
-  // ---------------------------------------------------------------------------
-  // 7) TABLE VISIBILITY
-  // ---------------------------------------------------------------------------
   const [isTableVisible, setIsTableVisible] = useState(false);
 
-  // ---------------------------------------------------------------------------
-  // 8) FILTERING
-  // ---------------------------------------------------------------------------
   const filteredResults = useMemo(() => {
     return searchResults.filter((row) =>
       Object.entries(filters).every(([key, value]) => {
@@ -322,8 +310,8 @@ const GenomePage: React.FC = () => {
       .post<BranchwaterResult[]>(
         `http://branchwater-dev.mgnify.org/mags?accession=${accession}&catalogue=${relatedCatalogue.data.id}`
       )
-      .then(({ data }) => {
-        setSearchResults(data);
+      .then(({ branchwaterResults }) => {
+        setSearchResults(branchwaterResults);
         setIsSearching(false);
       })
       .catch(() => setIsSearching(false));

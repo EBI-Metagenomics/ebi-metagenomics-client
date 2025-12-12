@@ -12,8 +12,8 @@ import useURLAccession from 'hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Box from 'components/UI/Box';
-import KeyValueList from 'components/UI/KeyValueList';
-import ExtLink from 'components/UI/ExtLink';
+// import KeyValueList from 'components/UI/KeyValueList';
+// import ExtLink from 'components/UI/ExtLink';
 import { Link } from 'react-router-dom';
 import AssociatedAnalyses from 'components/Analysis/Analyses';
 import { ENA_VIEW_URL } from 'utils/urls';
@@ -183,6 +183,7 @@ const AdditionalContainedGenomes: React.FC = () => {
         }));
         if (!cancelled) setRows(mapped);
       } catch (e) {
+        console.error(e);
         if (!cancelled)
           setError('Failed to fetch additional contained genomes.');
       } finally {
@@ -209,7 +210,9 @@ const AdditionalContainedGenomes: React.FC = () => {
       id: 'ena',
       Header: 'ENA',
       accessor: (row: ContainedGenome) => (
-        <Link to={`${ENA_VIEW_URL}GCA_036480555`}>GCA_036480555</Link>
+        <Link to={`${ENA_VIEW_URL}GCA_036480555`}>
+          {row.ena_genome_accession}
+        </Link>
       ),
     },
     {
@@ -264,38 +267,38 @@ const AdditionalContainedGenomes: React.FC = () => {
 };
 
 const Overview: React.FC = () => {
-  const { assemblyData } = React.useContext(V2AssemblyContext);
+  // const { assemblyData } = React.useContext(V2AssemblyContext);
 
-  const details = [
-    {
-      key: 'Sample',
-      value: assemblyData
-        ? () => (
-            <Link to={`${assemblyData?.sample_accession}`}>
-              {assemblyData?.sample_accession}
-            </Link>
-          )
-        : null,
-    },
-    {
-      key: 'Runs',
-      value: assemblyData
-        ? () => (
-            <Link to={`${assemblyData?.run_accession}`}>
-              {assemblyData?.run_accession}
-            </Link>
-          )
-        : null,
-    },
-    {
-      key: 'ENA accession',
-      value: () => (
-        <ExtLink href={`${ENA_VIEW_URL}${assemblyData?.accession}`}>
-          {assemblyData?.accession}
-        </ExtLink>
-      ),
-    },
-  ].filter(({ value }) => Boolean(value));
+  // const details = [
+  //   {
+  //     key: 'Sample',
+  //     value: assemblyData
+  //       ? () => (
+  //           <Link to={`${assemblyData?.sample_accession}`}>
+  //             {assemblyData?.sample_accession}
+  //           </Link>
+  //         )
+  //       : null,
+  //   },
+  //   {
+  //     key: 'Runs',
+  //     value: assemblyData
+  //       ? () => (
+  //           <Link to={`${assemblyData?.run_accession}`}>
+  //             {assemblyData?.run_accession}
+  //           </Link>
+  //         )
+  //       : null,
+  //   },
+  //   {
+  //     key: 'ENA accession',
+  //     value: () => (
+  //       <ExtLink href={`${ENA_VIEW_URL}${assemblyData?.accession}`}>
+  //         {assemblyData?.accession}
+  //       </ExtLink>
+  //     ),
+  //   },
+  // ].filter(({ value }) => Boolean(value));
 
   return (
     <>

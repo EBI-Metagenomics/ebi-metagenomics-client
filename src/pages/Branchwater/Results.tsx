@@ -46,24 +46,19 @@ interface ResultsProps {
   itemsPerPage: number;
   onPageChange: (page: number) => void;
 
-  // Map + country stats
   countryCounts: CountryCounts;
   mapSamples: MapSample[];
   displayedMapSamples: MapSample[];
   setMapPinsLimit: React.Dispatch<React.SetStateAction<number>>;
-  totalCountryCount: number;
   getCountryColor: (count: number, max: number) => string;
 
-  // CSV download
   downloadCSV: () => void;
 
-  // Histogram data
   containmentHistogram: {
     binsDesc: string[];
     countsDesc: number[];
   };
 
-  // Visualization data
   visualizationData: any | null;
   scatterData: any;
 }
@@ -86,17 +81,13 @@ const Results: React.FC<ResultsProps> = ({
   mapSamples,
   displayedMapSamples,
   setMapPinsLimit,
-  totalCountryCount,
   getCountryColor,
   downloadCSV,
   containmentHistogram,
   visualizationData,
   scatterData,
 }) => {
-  // Local UI state: show/hide the informational banner
   const [showBanner, setShowBanner] = React.useState(true);
-  // Ensure all hooks are called unconditionally and in a stable order.
-  // Memoize processed results once per render, but avoid heavy work when loading or no results.
   const processedResults = React.useMemo(() => {
     if (isLoading || searchResults.length === 0) {
       return {
@@ -113,9 +104,6 @@ const Results: React.FC<ResultsProps> = ({
     [processedResults]
   );
   const sortedCount = processedResults.sortedResults.length;
-  /* ----------------------------------------------------------
-      1. LOADING STATE
-  ----------------------------------------------------------- */
   if (isLoading) {
     return (
       <div className="vf-u-padding__top--800">
@@ -152,9 +140,6 @@ const Results: React.FC<ResultsProps> = ({
     );
   }
 
-  /* ----------------------------------------------------------
-      2. NO RESULTS
-  ----------------------------------------------------------- */
   if (!isLoading && searchResults.length === 0) {
     return (
       <div className="vf-u-padding__top--800">
@@ -176,14 +161,8 @@ const Results: React.FC<ResultsProps> = ({
     );
   }
 
-  /* ----------------------------------------------------------
-      3. RESULTS SUMMARY + FILTERS + TABLE
-  ----------------------------------------------------------- */
-  // processedResults/useMemo defined above to keep Hooks order consistent
-
   return (
     <>
-      {/* INFO BANNER: Database last updated */}
       {showBanner && (
         <div className="vf-banner vf-banner--alert vf-banner--success">
           <div className="vf-banner__content">
@@ -207,7 +186,6 @@ const Results: React.FC<ResultsProps> = ({
           </div>
         </div>
       )}
-      {/* HEADER */}
       <div className="vf-u-padding__top--600 results-header">
         <div className="results-summary">
           <div>
@@ -247,7 +225,6 @@ const Results: React.FC<ResultsProps> = ({
         </div>
       </div>
 
-      {/* FILTERS + RESULTS TABLE */}
       <TextSearch />
 
       <section className="vf-grid mg-grid-search vf-u-padding__top--400">
@@ -293,10 +270,6 @@ const Results: React.FC<ResultsProps> = ({
         </section>
       </section>
 
-      {/* ----------------------------------------------------------
-          4. FULL VISUALIZATION DASHBOARD
-      ----------------------------------------------------------- */}
-
       {visualizationData && (
         <>
           <div className="vf-u-padding__top--800">
@@ -318,12 +291,10 @@ const Results: React.FC<ResultsProps> = ({
             </div>
           </div>
 
-          {/* MAP */}
           {mapSamples.length > 0 && (
             <div className="vf-u-padding__top--400">
               <h4>Geographic Distribution</h4>
 
-              {/* Country tags */}
               {Object.keys(countryCounts).length > 0 && (
                 <div className="country-tag-box">
                   {Object.entries(countryCounts)
@@ -346,7 +317,6 @@ const Results: React.FC<ResultsProps> = ({
                 </div>
               )}
 
-              {/* Map */}
               <div style={{ width: '100%', height: '500px' }}>
                 <MapContainer
                   center={[20, 0]}
@@ -377,7 +347,6 @@ const Results: React.FC<ResultsProps> = ({
                   ))}
                 </MapContainer>
 
-                {/* Load more pins */}
                 {displayedMapSamples.length < mapSamples.length && (
                   <button
                     className="vf-button vf-button--secondary vf-button--sm vf-u-margin__top--200"
@@ -394,7 +363,6 @@ const Results: React.FC<ResultsProps> = ({
             </div>
           )}
 
-          {/* CONTAINMENT HISTOGRAM */}
           <div className="vf-u-padding__top--400">
             <h3>Containment Score Distribution</h3>
             <Plot
@@ -414,12 +382,10 @@ const Results: React.FC<ResultsProps> = ({
             />
           </div>
 
-          {/* SCATTER (cANI vs Containment) */}
           <div className="vf-u-padding__top--400">
             <h3>Quality Assessment (cANI vs Containment)</h3>
             <Plot
               data={(() => {
-                // Split the single dataset into separate traces so Plotly can show a legend
                 const WGS_COLOR = 'rgba(255, 99, 132, 0.8)';
                 const OTHER_COLOR = 'rgba(54, 162, 235, 0.8)';
 
@@ -486,7 +452,6 @@ const Results: React.FC<ResultsProps> = ({
             />
           </div>
 
-          {/* FULL HISTOGRAMS + BAR PLOTS */}
           <div className="vf-u-padding__top--400">
             <h3>Detailed Score Distributions</h3>
             <Plot

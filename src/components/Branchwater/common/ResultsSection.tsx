@@ -47,10 +47,8 @@ function ResultsSection<T extends BranchwaterResultGeneric>(
     filters,
   });
 
-  const handleFilterChange = (
-    field: keyof BranchwaterFilters,
-    value: string
-  ) => setFilters((prev) => ({ ...prev, [field]: value }));
+  const handleFilterChange = (field: keyof BranchwaterFilters, value: string) =>
+    setFilters((prev) => ({ ...prev, [field]: value }));
 
   const hasResults = Array.isArray(items) && items.length > 0;
 
@@ -58,14 +56,21 @@ function ResultsSection<T extends BranchwaterResultGeneric>(
 
   return (
     <div className="vf-stack vf-stack--400">
-      {title && <h4>{title} ({results.total} matches found)</h4>}
+      {title && (
+        <h4>
+          {title} ({results.total} matches found)
+        </h4>
+      )}
 
       <FiltersBar filters={filters} onFilterChange={handleFilterChange} />
 
       <div style={{ overflowX: 'auto' }}>
         <EMGTable
           cols={getBranchwaterResultColumns()}
-          data={{ items: results.paginatedResults as unknown as T[], count: results.total }}
+          data={{
+            items: results.paginatedResults as unknown as T[],
+            count: results.total,
+          }}
           className="vf-table"
           showPagination
           expectedPageSize={pageSize}

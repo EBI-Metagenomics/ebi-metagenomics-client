@@ -43,13 +43,18 @@ export type EezMetadata = {
 };
 
 export const EezInfo: React.FC<{ eezData: EezMetadata }> = ({ eezData }) => {
-  if (!eezData || (!eezData.eezInfoText && !eezData.beyondEez)) return null as any;
+  if (!eezData || (!eezData.eezInfoText && !eezData.beyondEez))
+    return null as any;
   const prefix = eezData.eezInfoPrefix || '';
   if (eezData.beyondEez) {
     return (
       <div className="vf-meta__details">
         <p>
-          <span className={`vf-badge vf-badge--${eezData.eezBadgeColor || 'tertiary'}`}>
+          <span
+            className={`vf-badge vf-badge--${
+              eezData.eezBadgeColor || 'tertiary'
+            }`}
+          >
             <abbr title="Exclusive Economic Zone" className="eez-abbr">
               EEZ Info
             </abbr>
@@ -65,7 +70,9 @@ export const EezInfo: React.FC<{ eezData: EezMetadata }> = ({ eezData }) => {
   return (
     <div className="vf-meta__details">
       <p>
-        <span className={`vf-badge vf-badge--${eezData.eezBadgeColor || 'primary'}`}>
+        <span
+          className={`vf-badge vf-badge--${eezData.eezBadgeColor || 'primary'}`}
+        >
           <abbr title="Exclusive Economic Zone" className="eez-abbr">
             EEZ Info
           </abbr>

@@ -28,7 +28,7 @@ const QualityControl: React.FC = () => {
       ? null
       : Object.fromEntries(data as unknown as Array<[k: string, v: string]>);
 
-  if (!analysisData) return <Loading/>
+  if (!analysisData) return <Loading />;
 
   const isAssembly = analysisData.attributes['experiment-type'] === 'assembly';
   const unit = isAssembly ? 'contig' : 'read';

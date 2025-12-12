@@ -1,6 +1,5 @@
 import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
-import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import config from 'utils/config';
 import EBIHeader from 'components/UI/EBIHeader';
 import HeroHeader from 'components/UI/HeroHeader';
@@ -41,8 +40,8 @@ import NotFoundError from 'components/UI/NotFoundError';
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Help = lazy(() => import('./pages/Help'));
-const TextSearch = lazy(() => import('./pages/TextSearch'));
-const SequenceSearch = lazy(() => import('./pages/SequenceSearch'));
+// const TextSearch = lazy(() => import('./pages/TextSearch'));
+// const SequenceSearch = lazy(() => import('./pages/SequenceSearch'));
 const Browse = lazy(() => import('./pages/Browse'));
 const Login = lazy(() => import('./pages/Login'));
 const Study = lazy(() => import('./pages/Study'));
