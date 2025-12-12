@@ -99,7 +99,7 @@ const DerivedGenomes: React.FC = () => {
       id: 'ena',
       Header: 'ENA',
       accessor: (row: GenomeLink) => (
-        <Link to={`/genomes/${row.species_rep}`}>{row.species_rep}</Link>
+        <Link to={`/genomes/${row.ena}`}>{row.ena}</Link>
       ),
     },
     {
@@ -145,29 +145,55 @@ const DerivedGenomes: React.FC = () => {
 };
 
 const AdditionalContainedGenomes: React.FC = () => {
-  // Mock data until API is available
-  const mockData: ContainedGenome[] = [
-    {
-      genome: {
-        accession: 'MGYG000304513',
-        taxon_lineage: 'RUG762 sp946184295',
-        catalogue_id: 'Sheep rumen',
-        catalogue_version: '1.0',
-      },
-      ena: 'CAMHEZ01',
-      containment: 75.9,
-    },
-    {
-      genome: {
-        accession: 'MGYG000299702',
-        taxon_lineage: 'W2P13-069 sp004553405',
-        catalogue_id: 'Pig gue',
-        catalogue_version: '1.0',
-      },
-      ena: 'GCA_036480555',
-      containment: 52.0,
-    },
-  ];
+  const accession = useURLAccession();
+  const [rows, setRows] = useState<ContainedGenome[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const fetchAdditional = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const resp = await axios.get(
+          // `${config.api_v2}assemblies/${accession}/additional-contained-genomes`
+          'http://localhost:8000/assemblies/ERZ857108/additional-contained-genomes'
+        );
+        const raw = resp.data as unknown;
+        // Raw shape expected from API:
+        // { count: number, items: [{ genome: {...}, run_accession: string, containment: number, cani: number }] }
+        const items =
+          raw && typeof raw === 'object' && Array.isArray((raw as any).items)
+            ? ((raw as any).items as Array<any>)
+            : [];
+        const mapped: ContainedGenome[] = items.map((it) => ({
+          genome: {
+            accession: it?.genome?.accession ?? '',
+            taxon_lineage: it?.genome?.taxon_lineage ?? '',
+            catalogue_id: it?.genome?.catalogue_id ?? '',
+            catalogue_version: it?.genome?.catalogue_version ?? '',
+            ena_genome_accession: it?.genome.ena_genome_accession ?? '',
+          },
+          // ENA currently not provided by API; keep empty as requested
+          // ena: '',
+          // API returns fraction (e.g., 1.0). Convert to percentage for display
+          containment:
+            typeof it?.containment === 'number' ? it.containment * 100 : 0,
+        }));
+        if (!cancelled) setRows(mapped);
+      } catch (e) {
+        if (!cancelled)
+          setError('Failed to fetch additional contained genomes.');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    fetchAdditional();
+    return () => {
+      cancelled = true;
+    };
+  }, [accession]);
 
   const columns = [
     {
@@ -182,7 +208,9 @@ const AdditionalContainedGenomes: React.FC = () => {
     {
       id: 'ena',
       Header: 'ENA',
-      accessor: (row: ContainedGenome) => row.ena,
+      accessor: (row: ContainedGenome) => (
+        <Link to={`${ENA_VIEW_URL}GCA_036480555`}>GCA_036480555</Link>
+      ),
     },
     {
       id: 'containment',
@@ -224,7 +252,13 @@ const AdditionalContainedGenomes: React.FC = () => {
           Download
         </button>
       </div>
-      <EMGTable cols={columns} data={mockData} />
+      {loading ? (
+        <Loading size="small" />
+      ) : error ? (
+        <p>{error}</p>
+      ) : (
+        <EMGTable cols={columns} data={rows} />
+      )}
     </Box>
   );
 };
@@ -329,7 +363,7 @@ const V2AssemblyPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${config.api_v2}/assemblies/${accession}/genome-links`
+        `${config.api_v2}assemblies/${accession}/genome-links`
       );
       // Normalise API response to the structure expected by the UI components
       // Expected shape:
