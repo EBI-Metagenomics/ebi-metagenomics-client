@@ -77,6 +77,7 @@ export default defineConfig({
       hooks: path.resolve(__dirname, './src/hooks'),
       images: path.resolve(__dirname, './public/images'),
       data: path.resolve(__dirname, './public/data'),
+      public: path.resolve(__dirname, './public'),
       'config.json': path.resolve(__dirname, './config.json'),
       'config.private.json': path.resolve(__dirname, './config.private.json'),
     },

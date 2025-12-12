@@ -14,7 +14,7 @@ import { cleanTaxLineage } from '@/utils/taxon';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 
 import type { BranchwaterFilters } from 'components/Branchwater/common/useBranchwaterResults';
-import Results from 'pages/Branchwater/Resutls.tsx';
+import Results from 'pages/Branchwater/Results';
 
 // Lazy-loaded pages
 const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));
@@ -26,6 +26,7 @@ const KEGGModulesAnalysis = lazy(
   () => import('components/Genomes/KEGGModulesAnalysis')
 );
 
+// Navigation tabs
 const tabs = [
   { label: 'Overview', to: '#overview' },
   { label: 'Browse genome', to: '#genome-browser' },
@@ -347,15 +348,17 @@ const GenomePage: React.FC = () => {
       label: relatedCatalogue.data.id,
       url: `/genome-catalogues/${relatedCatalogue.data.id}`,
     },
-    { label: accession ?? '' },
+    { label: accession },
   ];
 
-  if (!accession) return null;
-
+  // ---------------------------------------------------------------------------
+  // 18) RENDER
+  // ---------------------------------------------------------------------------
   return (
     <section className="vf-content">
       <Breadcrumbs links={breadcrumbs} />
       <h2>Genome {accession}</h2>
+
       <p>
         <b>Type:</b> {genomeData.attributes.type}
       </p>
@@ -366,27 +369,38 @@ const GenomePage: React.FC = () => {
           ' > '
         )}
       </p>
+
       <Tabs tabs={tabs} />
+
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
+          {/* Overview */}
           <RouteForHash hash="#overview" isDefault>
             <Overview data={genomeData} />
           </RouteForHash>
+
+          {/* Genome browser */}
           <RouteForHash hash="#genome-browser">
             <Suspense fallback={<Loading size="large" />}>
               <GenomeBrowser />
             </Suspense>
           </RouteForHash>
+
+          {/* COG analysis */}
           <RouteForHash hash="#cog-analysis">
             <Suspense fallback={<Loading size="large" />}>
               <COGAnalysis />
             </Suspense>
           </RouteForHash>
+
+          {/* KEGG class */}
           <RouteForHash hash="#kegg-class-analysis">
             <Suspense fallback={<Loading size="large" />}>
               <KEGGClassAnalysis />
             </Suspense>
           </RouteForHash>
+
+          {/* KEGG module */}
           <RouteForHash hash="#kegg-module-analysis">
             <Suspense fallback={<Loading size="large" />}>
               <KEGGModulesAnalysis />

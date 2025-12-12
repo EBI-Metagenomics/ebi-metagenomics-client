@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
-
+import QueryParamsProvider from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 import config from 'utils/config';
 import EBIHeader from 'components/UI/EBIHeader';
 import HeroHeader from 'components/UI/HeroHeader';
@@ -35,7 +35,6 @@ import MagSearch from 'pages/Branchwater/MagSearch';
 import GeneSearch from 'pages/Branchwater/GeneSearch';
 import V2AnalysisPage from 'pages/Analysis/v2index';
 import SessionExpiryBanner from 'components/UI/SessionExpiryBanner';
-import PersistLogin from 'components/PersistLogin';
 import MyDataStudies from './pages/MyData/MyDataStudies';
 import NotFoundError from 'components/UI/NotFoundError';
 
@@ -89,58 +88,66 @@ const App: React.FC = () => {
 
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
-      <UserContext.Provider value={value}>
-        <Matomo />
-        <ToastContainer />
-        <EBIHeader />
-        <HeroHeader />
-        <MainMenu />
-        <SessionExpiryBanner />
-        <PersistLogin />
-        <div className="vf-body vf-u-margin__top--400 vf-u-margin__bottom--800">
-          <ErrorBoundary>
-            <ResetScroll />
-            <Suspense fallback={<Loading size="large" />}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/help" element={<Help />} />
-                {/* <Route path="/search/*" element={<TextSearch />} /> */}
-                {/* <Route path="/sequence-search" element={<SequenceSearch />} /> */}
-                <Route path="/browse/*" element={<Browse />} />
-                <Route path="/studies/:accession/*" element={<Study />} />
-                <Route path="/super-studies/*" element={<SuperStudy />} />
-                <Route path="/samples/*" element={<Sample />} />
-                <Route path="/publications/*" element={<Publication />} />
-                <Route
-                  path="/genome-catalogues/*"
-                  element={<GenomeCatalogue />}
-                />
-                <Route path="/genomes/*" element={<Genome />} />
-                <Route path="/runs/*" element={<Run />} />
-                <Route path="/assemblies/*" element={<Assembly />} />
-                <Route path="/pipelines/*" element={<Pipelines />} />
-                <Route path="/analyses/*" element={<Analysis />} />
-                <Route
-                  path="/v2-analyses/:accession/*"
-                  element={<V2AnalysisPage />}
-                />
-                <Route path="/mydata/*" element={<MyData />}>
-                  <Route index element={<MyDataStudies />} />
-                  <Route path="studies" element={<MyDataStudies />} />
-                </Route>
-                {/* <Route element={<PersistLogin />}> */}
-                <Route path="/login" element={<Login />} />
-                {/* </Route> */}
-                <Route path="*" element={<NotFoundError />} />
-              </Routes>
-            </Suspense>
-          </ErrorBoundary>
-        </div>
-        <ElixirBanner />
-        <EBIFooter />
-        <CookieBanner />
-      </UserContext.Provider>
+      <QueryParamsProvider>
+        <UserContext.Provider value={value}>
+          <Matomo />
+          <ToastContainer />
+          <EBIHeader />
+          <HeroHeader />
+          <MainMenu />
+          <SessionExpiryBanner />
+          <PersistLogin />
+          <div className="vf-body vf-u-margin__top--400 vf-u-margin__bottom--800">
+            <ErrorBoundary>
+              <ResetScroll />
+              <Suspense fallback={<Loading size="large" />}>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/help" element={<Help />} />
+                  <Route path="/search-tools" element={<LandingPage />} />
+                  {/* Branchwater card routes */}
+                  <Route path="/branchwater-search" element={<Branchwater />} />
+                  <Route path="/mag-search" element={<MagSearch />} />
+                  <Route path="/gene-search" element={<GeneSearch />} />
+                  {/* <Route path="/search/*" element={<TextSearch />} /> */}
+                  {/* <Route path="/sequence-search" element={<SequenceSearch />} /> */}
+                  <Route path="/browse/*" element={<Browse />} />
+                  <Route path="/studies/:accession/*" element={<Study />} />
+                  <Route path="/super-studies/*" element={<SuperStudy />} />
+                  <Route path="/samples/*" element={<Sample />} />
+                  <Route path="/publications/*" element={<Publication />} />
+                  <Route
+                    path="/genome-catalogues/*"
+                    element={<GenomeCatalogue />}
+                  />
+                  <Route path="/genomes/*" element={<Genome />} />
+                  <Route path="/runs/*" element={<Run />} />
+                  <Route path="/assemblies/*" element={<Assembly />} />
+                  <Route path="/v2-assemblies/*" element={<V2AssemblyPage />} />
+                  <Route path="/pipelines/*" element={<Pipelines />} />
+                  <Route path="/analyses/*" element={<Analysis />} />
+                  <Route
+                    path="/v2-analyses/:accession/*"
+                    element={<V2AnalysisPage />}
+                  />
+                  <Route path="/mydata/*" element={<MyData />}>
+                    <Route index element={<MyDataStudies />} />
+                    <Route path="studies" element={<MyDataStudies />} />
+                  </Route>
+                  {/* <Route element={<PersistLogin />}> */}
+                  <Route path="/login" element={<Login />} />
+                  {/* </Route> */}
+                  <Route path="*" element={<NotFoundError />} />
+                </Routes>
+              </Suspense>
+            </ErrorBoundary>
+          </div>
+          <ElixirBanner />
+          <EBIFooter />
+          <CookieBanner />
+        </UserContext.Provider>
+      </QueryParamsProvider>
     </BrowserRouter>
   );
 };

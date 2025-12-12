@@ -103,41 +103,6 @@
   color: #3182ce;
 }
 
-/* Button styling */
-.vf-button {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-  text-decoration: none;
-}
-
-.vf-button--primary {
-  background-color: #10b981; /* Updated to a pleasant green */
-  color: white;
-  transition: all 0.2s ease;
-}
-
-.vf-button--primary:hover {
-  background-color: #0d9669; /* Darker on hover */
-  box-shadow: 0 2px 4px rgba(13, 150, 105, 0.2);
-  transform: translateY(-1px);
-}
-
-.vf-button--sm {
-  font-size: 0.75rem;
-  padding: 0.4rem 0.65rem;
-}
-
-.vf-button__text {
-  margin-left: 0.25rem;
-}
-
 /* Icon styling */
 .icon-check-circle {
   color: #4ade80 !important;

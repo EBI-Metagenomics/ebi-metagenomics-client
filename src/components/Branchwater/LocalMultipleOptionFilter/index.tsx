@@ -16,11 +16,11 @@ const LocalMultipleOptionFilter: React.FC<LocalMultipleOptionFilterProps> = ({
   includeTextFilter = false,
 }) => {
   const [facet, setFacet] = useQueryParamState(facetName, '');
-  const [selected, setSelected] = useState(facet.split(',').filter(Boolean));
+  const [selected, setSelected] = useState(facet?.split(',').filter(Boolean));
   const [textFilter, setTextFilter] = useState('');
 
   useEffect(() => {
-    setSelected(facet.split(',').filter(Boolean));
+    setSelected(facet?.split(',').filter(Boolean));
   }, [facet]);
 
   // Generate facet data from your search results
@@ -86,7 +86,7 @@ const LocalMultipleOptionFilter: React.FC<LocalMultipleOptionFilterProps> = ({
                 id={`${facetName}-${value}`}
                 className="vf-form__checkbox"
                 onChange={handleSelection}
-                checked={selected.includes(value)}
+                checked={selected?.includes(value)}
               />
               <label
                 className="vf-form__label"

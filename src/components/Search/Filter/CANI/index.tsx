@@ -11,8 +11,8 @@ const CANIFilter: React.FC = () => {
 
   // Parse URL param into a stable range
   const range = useMemo(() => {
-    const parts = cani.split(',').map(Number);
-    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+    const parts = cani?.split(',').map(Number);
+    if (parts?.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
       return { min: parts[0], max: parts[1] };
     }
     return { min: MIN, max: MAX };

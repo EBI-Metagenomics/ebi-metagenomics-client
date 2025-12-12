@@ -11,11 +11,11 @@ const MAX = 1;
 const ContainmentFilter: React.FC = () => {
   const [containment, setContainment] = useQueryParamState('containment', '');
   const [range, setRange] = useState<number[]>(
-    containment.split(',').filter(Boolean).map(Number)
+    containment?.split(',').filter(Boolean).map(Number)
   );
 
   useEffect(() => {
-    const newRange = containment.split(',').filter(Boolean).map(Number);
+    const newRange = containment?.split(',').filter(Boolean).map(Number);
     setRange(newRange);
   }, [containment]);
 

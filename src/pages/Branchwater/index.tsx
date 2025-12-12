@@ -16,7 +16,7 @@ import TextSearch from 'components/Search/Filter/Text';
 import LocalMultipleOptionFilter from 'components/Branchwater/LocalMultipleOptionFilter';
 import axios from 'axios';
 import DetailedResultsTable from './DetailedResultsTable';
-import Results from 'pages/Branchwater/Resutls.tsx';
+import Results from 'pages/Branchwater/Results.tsx';
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
