@@ -1,0 +1,28 @@
+{
+  "pubmed_id": 1,
+  "title": "The Origin of Species",
+  "published_year": 1859,
+  "metadata": {
+    "authors": "Charles Darwin",
+    "doi": "10.1017/CBO9780511694295",
+    "isbn": "9780511694295",
+    "iso_journal": "Cambridge University Press",
+    "pubmed_central_id": 1,
+    "volume": "1",
+    "pub_type": "Book"
+  },
+  "studies": [
+    {
+      "accession": "MGYS00000001",
+      "ena_accessions": [
+        "PRJNA398089"
+      ],
+      "title": "Project 1",
+      "biome": {
+        "biome_name": "root",
+        "lineage": "root"
+      },
+      "updated_at": "2025-07-29T11:32:54.168Z"
+    }
+  ]
+}

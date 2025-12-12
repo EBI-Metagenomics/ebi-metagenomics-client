@@ -10,7 +10,7 @@ const FileUploaderButton: React.FC<FileUploaderButtonProps> = ({
   accept,
   buttonClassName = 'vf-button--primary vf-button--sm',
 }) => {
-  const fileInput = useRef(null);
+  const fileInput = useRef<HTMLInputElement>(null);
   return (
     <>
       <input

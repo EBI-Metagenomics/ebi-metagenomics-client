@@ -1,0 +1,11 @@
+.compressed-tsv-table {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.compressed-tsv-table h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}

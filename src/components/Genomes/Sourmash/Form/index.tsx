@@ -16,8 +16,8 @@ type SourmashFormProps = {
   catalogueID?: string;
 };
 const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
-  const sourmash = useRef<HTMLMgnifySourmashComponentElement | null>(null);
-  const [jobId, setJobId] = useQueryParamState('job_id', '');
+  const sourmash = useRef<HTMLMgnifySourmashComponentElement>(null);
+  const [jobId, setJobId] = useQueryParamState<string>('jobId');
   const [shouldSearch, setShouldSearch] = useState(false);
   const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>(
     catalogueID ? [catalogueID] : []

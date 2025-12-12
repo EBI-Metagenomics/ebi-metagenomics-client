@@ -19,3 +19,24 @@ details summary {
 details summary > * {
     display: inline;
 }
+
+.gff-attribute {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.65rem;
+    font-family: monospace;
+    border: 1px solid rgba(100, 116, 139, 0.60);
+    border-radius: 6px;
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.gff-attributes {
+    display: flex;
+    flex-direction: column;
+}
+
+/* fix scaling of labels in the JBrowse rubber band */
+[class*="-root-refLabel"],[class*="-majorTickLabel"],[class*="-minorTickLabel"] {
+    font-size: 12px !important;
+}

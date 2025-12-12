@@ -1,0 +1,22 @@
+{
+  "count": 4,
+  "items":
+  [
+    {
+      "biome_name": "root",
+      "lineage": "root"
+    },
+    {
+      "biome_name": "Engineered",
+      "lineage": "root:Engineered"
+    },
+    {
+      "biome_name": "Host-Associated",
+      "lineage": "root:Host-Associated"
+    },
+    {
+      "biome_name": "Human",
+      "lineage": "root:Host-Associated:Human"
+    }
+  ]
+}

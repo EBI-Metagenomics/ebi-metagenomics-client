@@ -15,11 +15,11 @@ type SourmashResultsProps = {
 };
 
 const SourmashResults: React.FC<SourmashResultsProps> = ({ addToStorage }) => {
-  const [jobId, setJobId] = useQueryParamState('job_id', '');
+  const [jobId, setJobId] = useQueryParamState<string>('jobId');
   const [count, setCount] = useState(-1);
   const [shouldCheck, setShouldCheck] = useState(false);
   const [jobRetrieved, setJobRetrieved] = useState(false);
-  const [job, setJob] = useState(null);
+  const [job, setJob] = useState<any>();
 
   useInterval(() => {
     if (!jobId || jobRetrieved) return;

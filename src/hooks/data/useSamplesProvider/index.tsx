@@ -4,17 +4,17 @@ import { MGnifyDatum, ErrorFromFetch } from '@/hooks/data/useData';
 
 type SampleProviderResponse = {
   samples: MGnifyDatum[];
-  total: number | null;
+  total: number | undefined;
   loading: boolean;
-  error: ErrorFromFetch;
+  error?: ErrorFromFetch;
 };
 const useSamplesProvider = (
   study: string,
-  limit?: number
+  limit: number = Infinity
 ): SampleProviderResponse => {
   const [page, setPage] = useState(1);
   const [samples, setSamples] = useState<MGnifyDatum[]>([]);
-  const [total, setTotal] = useState(null);
+  const [total, setTotal] = useState<number>();
   const { data, isStale, loading, error } = useMGnifyData('samples', {
     study_accession: study,
     page,
@@ -38,7 +38,7 @@ const useSamplesProvider = (
     }
   }, [data?.links?.next, limit, page, samples.length]);
 
-  return { samples, total, loading, error };
+  return { samples, total, loading, error: error || undefined };
 };
 
 export default useSamplesProvider;

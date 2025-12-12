@@ -8,10 +8,10 @@ import useData, {
 import UserContext from 'pages/Login/UserContext';
 
 const useMgnifyEmail: (
-  fromEmail: string,
-  subject: string,
-  body: string,
-  consent: boolean,
+  fromEmail?: string,
+  subject?: string,
+  body?: string,
+  consent?: boolean,
   cc?: string
 ) => HTMLDataResponse = (fromEmail, subject, body, consent, cc = '') => {
   const { config } = useContext(UserContext);

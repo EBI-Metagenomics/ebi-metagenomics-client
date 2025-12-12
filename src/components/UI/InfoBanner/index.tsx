@@ -8,7 +8,7 @@ const InfoBanner: React.FC<InfoBannerProps> = ({ type, title, children }) => {
   return (
     <div
       className={`vf-banner vf-banner--alert ${
-        ['warning', 'error'].includes(type)
+        ['warning', 'error'].includes(type as string)
           ? 'vf-banner--warning'
           : 'vf-banner--info'
       }`}

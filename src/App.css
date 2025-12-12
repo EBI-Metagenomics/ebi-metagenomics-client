@@ -64,12 +64,6 @@ button.mg-button[disabled],
   cursor: default;
 }
 
-.mg-flex {
-  display: flex;
-  gap: var(--page-grid-gap, 1em);
-  align-items: flex-start;
-}
-
 .mg-list__item {
   margin-left: 0.6rem;
 }
@@ -93,11 +87,7 @@ fieldset.mg-fieldbox label {
   grid-template-columns: 30% 70%;
 }
 
-html
-  .vf-content
-  .vf-table--striped
-  .vf-table__body
-  .vf-table__row:not(.vf-table__row--selected):hover {
+.vf-table__body .vf-table__row:not(.vf-table__row--selected):hover{
   background-color: #fffadc;
 }
 
@@ -122,4 +112,8 @@ pre.vf-code-example__pre > button {
 #mgnify-mega-menu .vf-navigation__link:visited:hover {
   color: #3b6fb6;
   text-decoration: underline;
+}
+
+.vf-tabs__link.is-active {
+  z-index: 1999 !important;  /* Ensure it's below the mega-menu */'
 }

@@ -72,14 +72,16 @@ const GOPieChart: React.FC<GOPieChartProps> = ({
       align: 'right',
       verticalAlign: 'middle',
       layout: 'vertical',
-      /* eslint-disable react/no-this-in-sfc */
+
       labelFormatter() {
+        // @ts-ignore
         if (this.name.length > 15) {
+          // @ts-ignore
           return `${this.name.slice(0, 15)}...`;
         }
+        // @ts-ignore
         return this.name;
       },
-      /* eslint-enable react/no-this-in-sfc */
     },
   };
   return (

@@ -5,6 +5,8 @@ import AssemblyImgV5 from 'images/pipeline/version_5/pipeline_v5.0_assembly.png'
 import RawImgV5 from 'images/pipeline/version_5/pipeline_v5.0_raw.png';
 
 import AmpliconImgV6 from 'images/pipeline/version_6/pipeline_v6.0_amplicon.png';
+import AssemblyImgV6 from 'images/pipeline/version_6/pipeline_v6.0_assembly.png';
+import RawImgV6 from 'images/pipeline/version_6/pipeline_v6.0_raw.png';
 
 import './style.css';
 import Tabs from 'components/UI/Tabs';
@@ -571,15 +573,44 @@ export const PipelineChart6: React.FC = () => (
       </div>
     </RouteForHash>
     <RouteForHash hash="#raw">
-      <div>
-        <h4>Raw reads analysis pipeline</h4>
-        <p>This pipeline is under integration</p>
-      </div>
+      <h4>Raw Reads analysis pipeline</h4>
+      <GitHubLink
+        name="MGnify - raw reads analysis pipeline"
+        link="https://github.com/EBI-Metagenomics/raw-reads-analysis-pipeline"
+      />
+      <img
+        src={RawImgV6}
+        alt="Raw reads flow diagram"
+        style={{ maxHeight: '80vh' }}
+      />
     </RouteForHash>
     <RouteForHash hash="#assembly">
       <div>
         <h4>Assembly analysis pipeline</h4>
-        <p>This pipeline is under integration</p>
+        <p>
+          Assemblies are first analysed by the Assembly Analysis Pipeline, and
+          then successfully analysed assemblies are passed to VIRify and the
+          Mobilome Annotation Pipeline for further annotation.
+        </p>
+        <div className={'vf-stack vf-stack--200'}>
+          <GitHubLink
+            name="MGnify - assembly analysis pipeline"
+            link="https://github.com/ebi-metagenomics/assembly-analysis-pipeline"
+          />
+          <GitHubLink
+            name="VIRify - viral annotation pipeline"
+            link="https://github.com/EBI-Metagenomics/emg-viral-pipeline"
+          />
+          <GitHubLink
+            name="MAP - mobilome annotation pipeline"
+            link="https://github.com/EBI-Metagenomics/mobilome-annotation-pipeline"
+          />
+        </div>
+        <img
+          src={AssemblyImgV6}
+          alt="Assembly analysis flow diagram (ASA pipeline step only)"
+          style={{ maxHeight: '60vh' }}
+        />
       </div>
     </RouteForHash>
   </section>

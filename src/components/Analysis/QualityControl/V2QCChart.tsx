@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import * as Highcharts from 'highcharts';
 import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';

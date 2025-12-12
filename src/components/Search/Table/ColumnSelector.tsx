@@ -5,7 +5,7 @@ type ColumnSelectorProps = {
   pathname: string;
   columns: Record<string, Record<string, unknown>>;
   selectedColumns: Record<string, Record<string, boolean>>;
-  setSelectedColumns: (state: unknown) => void;
+  setSelectedColumns: (state: Record<string, any>) => void;
 };
 const ColumnSelector: React.FC<ColumnSelectorProps> = ({
   pathname,

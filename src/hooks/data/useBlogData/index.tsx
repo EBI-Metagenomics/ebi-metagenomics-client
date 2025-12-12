@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import useData, { DataResponse, BlogResponse } from '@/hooks/data/useData';
 import UserContext from 'pages/Login/UserContext';
+import { isNil } from 'lodash-es';
 
 interface BlogDataResponse extends DataResponse {
   data: BlogResponse;
@@ -8,9 +9,7 @@ interface BlogDataResponse extends DataResponse {
 
 const useBlogData: (resource: string) => BlogDataResponse = (resource) => {
   const { config } = useContext(UserContext);
-  const data = useData(
-    [null, undefined].includes(resource) ? null : `${config.blog}${resource}`
-  );
+  const data = useData(isNil(resource) ? null : `${config.blog}${resource}`);
   return data as BlogDataResponse;
 };
 

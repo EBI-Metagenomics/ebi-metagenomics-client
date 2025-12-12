@@ -56,11 +56,10 @@ export const AccordionList: React.FC<AccordionListProps> = ({
   return (
     <ul
       className={`vf-tree__list  vf-tree__list--${nestedLevel} ${
-        nestedLevel > 1 ? 'vf-tree__list--additional' : ''
+        nestedLevel && nestedLevel > 1 ? 'vf-tree__list--additional' : ''
       } | vf-list `}
     >
       {titles.map((title, i) => (
-        // eslint-disable-next-line react/no-array-index-key
         <AccordionElement title={title} key={i}>
           {children[i]}
         </AccordionElement>

@@ -14,13 +14,13 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands';
+import './commands.js';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
-import '@cypress/code-coverage/support';
-
+import '@cypress/code-coverage/support.js';
+require('cypress-terminal-report/src/installLogsCollector')()
 Cypress.on('test:before:run', () => {
   Cypress.automation('remote:debugger:protocol', {
     command: 'Emulation.setLocaleOverride',
@@ -30,7 +30,7 @@ Cypress.on('test:before:run', () => {
   });
 });
 
-Cypress.on('uncaught:exception', (err, runnable) => {
+Cypress.on('uncaught:exception', (err, _) => {
   // Do not fail tests for bad Google Maps key
   if (err.message.includes('InvalidKeyMapError')) {
     return false;

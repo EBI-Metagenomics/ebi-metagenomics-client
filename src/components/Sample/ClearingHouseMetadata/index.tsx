@@ -55,8 +55,9 @@ const ClearingHouseMetadata: React.FC<{ sampleAccession: string }> = ({
               <KeyValueList
                 list={curationsData.map((curation: Curation) => {
                   const evidences = curation.assertionEvidences.map(
-                    (evidence) => (
+                    (evidence, idx) => (
                       <ExtLink
+                        key={idx}
                         className="link-in-tooltip"
                         href={`http://purl.obolibrary.org/obo/${evidence.identifier}`}
                       >

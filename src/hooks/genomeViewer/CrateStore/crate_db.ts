@@ -6,14 +6,14 @@ import JSZip from 'jszip';
 export interface StorableCrate {
   url: string;
   zipBlob: Blob;
-  gff: string;
+  gff?: string;
   schema: ROCrate;
-  track: Track;
+  track?: Track;
 }
 
 export interface Crate extends StorableCrate {
   zip?: JSZip;
-  getHtmlContent?: (filename?: string) => Promise<string>;
+  getHtmlContent?: (filename?: string) => Promise<string | undefined>;
   asciigff?: string;
 }
 

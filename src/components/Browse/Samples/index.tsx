@@ -1,35 +1,37 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import EMGTable from 'components/UI/EMGTable';
-import BiomeSelector from 'components/UI/BiomeSelector';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseList } from '@/hooks/data/useData';
 import { getBiomeIcon } from '@/utils/biomes';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import useSamplesList from 'hooks/data/useSamples';
+import FetchError from 'components/UI/FetchError';
+import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
+import BiomeSelector from 'components/UI/BiomeSelector';
+
+const { usePage, useSearch, useOrder, useBiome, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('', {
+    biome: SharedTextQueryParam(''),
+  });
 
 const BrowseSamples: React.FC = () => {
-  const [page, setPage] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [biome] = useQueryParamState('biome', '');
-  const [pageSize] = useQueryParamState('page_size', 25, Number);
-  const [search] = useQueryParamState('search', '');
+  const [page, setPage] = usePage<number>();
+  const [order] = useOrder<string>();
+  const [biome] = useBiome<string>();
+  const [search] = useSearch<string>();
 
   const [hasData, setHasData] = useState(false);
   const {
     data: samplesList,
     loading,
-    isStale,
-    downloadURL,
-  } = useMGnifyData('samples', {
-    page: page as number,
-    ordering: order as string,
-    lineage: biome as string,
-    page_size: pageSize as number,
-    search: (search as string) || undefined,
+    download,
+    error,
+  } = useSamplesList({
+    page,
+    search,
+    biome_lineage: biome,
+    order,
   });
 
   const columns = React.useMemo(
@@ -37,7 +39,7 @@ const BrowseSamples: React.FC = () => {
       {
         id: 'biome',
         Header: 'Biome',
-        accessor: (sample) => sample.relationships.biome.data?.id,
+        accessor: (sample) => sample.biome?.lineage,
         Cell: ({ cell }) => (
           <span
             className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
@@ -49,25 +51,27 @@ const BrowseSamples: React.FC = () => {
       },
       {
         Header: 'Accession',
-        accessor: 'attributes.accession',
+        accessor: 'accession',
         Cell: ({ cell }) => (
           <Link to={`/samples/${cell.value}`}>{cell.value}</Link>
         ),
-      },
-      {
-        Header: 'Sample name',
-        accessor: 'attributes.sample-name',
-      },
-      {
-        Header: 'Description',
-        accessor: 'attributes.sample-desc',
         disableSortBy: true,
       },
       {
-        id: 'last_update',
+        Header: 'Sample name',
+        accessor: 'sample_title',
+      },
+      // {
+      //   Header: 'Description',
+      //   accessor: 'metadata?.description',
+      //   disableSortBy: true,
+      // },
+      // TODO: consider enabling description again on API list
+      {
+        id: 'updated_at',
         Header: 'Last Updated',
-        accessor: 'attributes.last-update',
-        Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
+        accessor: 'updated_at',
+        Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
       },
     ],
     []
@@ -77,6 +81,9 @@ const BrowseSamples: React.FC = () => {
     setHasData(!!samplesList);
   }, [samplesList]);
   if (!samplesList && loading) return <Loading />;
+
+  if (!samplesList && loading) return <Loading />;
+  if (error) return <FetchError error={error} />;
 
   return (
     <section className="mg-browse-section">
@@ -94,18 +101,17 @@ const BrowseSamples: React.FC = () => {
       {hasData && (
         <EMGTable
           cols={columns}
-          data={samplesList as MGnifyResponseList}
-          Title={`Samples (${samplesList.meta.pagination.count})`}
+          data={samplesList ?? []}
+          Title={`Samples (${samplesList?.count})`}
           initialPage={(page as number) - 1}
           sortable
           loading={loading}
-          isStale={isStale}
           showTextFilter
-          downloadURL={downloadURL}
+          onDownloadRequested={download}
         />
       )}
     </section>
   );
 };
 
-export default BrowseSamples;
+export default withQueryParamProvider(BrowseSamples);

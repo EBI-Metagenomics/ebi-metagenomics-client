@@ -95,7 +95,7 @@ const TrainingCourses = () => {
 
         setLiveData(liveResponseData);
         setOnDemandData(onDemandResponseData);
-      } catch (err) {
+      } catch {
         setError('Failed to fetch training data. Please try again later.');
       } finally {
         setIsLoading(false);

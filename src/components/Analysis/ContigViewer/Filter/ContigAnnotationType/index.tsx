@@ -4,17 +4,13 @@ import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 const TYPES = ['COG', 'KEGG', 'GO', 'Pfam', 'InterPro', 'antiSMASH'];
 
 const ContigAnnotationTypeFilter: React.FC = () => {
-  const [annotationType, setAnnotationType] = useQueryParamState(
-    'annotation_type',
-    ''
-  );
+  const [annotationType, setAnnotationType] =
+    useQueryParamState<string[]>('annotationType');
 
-  const [selected, setSelected] = useState(
-    annotationType.split(',').filter(Boolean)
-  );
+  const [selected, setSelected] = useState(annotationType.filter(Boolean));
 
   useEffect(() => {
-    setSelected(annotationType.split(',').filter(Boolean));
+    setSelected(annotationType.filter(Boolean));
   }, [annotationType]);
 
   const handleSelection = (event): void => {
@@ -25,7 +21,7 @@ const ContigAnnotationTypeFilter: React.FC = () => {
     } else {
       newSelected = selected.filter((s) => s !== value);
     }
-    setAnnotationType(newSelected.sort().join(','));
+    setAnnotationType(newSelected.sort());
   };
   return (
     <fieldset className="vf-form__fieldset vf-stack vf-stack--200 mg-contig-text-filter">

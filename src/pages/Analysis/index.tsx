@@ -9,7 +9,7 @@ import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Analysis/Overview';
 import QualityControl from 'components/Analysis/QualityControl';
 import ContigViewer from 'components/Analysis/ContigViewer';
-import TaxonomySubpage from 'components/Analysis/Taxonomy';
+import TaxonomySubpage from 'components/Analysis/AmpliconTaxonomy';
 import FunctionalSubpage from 'components/Analysis/Functional';
 import PathwaysSubpage from 'components/Analysis/Pathways';
 import RouteForHash from 'components/Nav/RouteForHash';
@@ -41,10 +41,10 @@ const AnalysisPage: React.FC = () => {
     include: 'downloads',
   });
   const value = useMemo(
-    () => ({ overviewData: data?.data, included: data?.included }),
+    () => ({ overviewData: data?.data, included: data?.included ?? {} }),
     [data]
   );
-  if (loading) return <Loading size="large" />;
+  if (loading || !accession) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   const { data: analysisData, included } = data as MGnifyResponseObj;
@@ -66,7 +66,7 @@ const AnalysisPage: React.FC = () => {
       ? { label: 'Contig Viewer', to: '#contigs-viewer' }
       : null,
     { label: 'Download', to: '#download' },
-  ].filter(Boolean);
+  ].filter(Boolean) as { label: string; to: string }[];
   const linkToOtherAnalyses = isAssembly(analysisData)
     ? `/assemblies/${analysisData?.relationships?.assembly?.data?.id}`
     : `/runs/${analysisData?.relationships?.run?.data?.id}`;

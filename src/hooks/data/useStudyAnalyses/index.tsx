@@ -1,7 +1,7 @@
 import UserContext from 'pages/Login/UserContext';
 import { useContext } from 'react';
 
-import { AnalysisList } from 'interfaces';
+import { AnalysisList } from 'interfaces/index';
 import useApiData from 'hooks/data/useApiData';
 import { KeyValue } from 'hooks/data/useData';
 

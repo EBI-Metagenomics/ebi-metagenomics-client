@@ -4,22 +4,26 @@ import { Wrapper } from '@googlemaps/react-wrapper';
 
 import UserContext from 'pages/Login/UserContext';
 import SamplesMap from 'components/UI/SamplesMap';
-import { MGnifyDatum } from '@/hooks/data/useData';
 import render from '../render';
 
 import '../style.css';
+import { SampleDetail, Study } from '@/interfaces';
 
 type SamplesMapProps = {
-  samples: Array<MGnifyDatum>;
+  study: Study;
+  samples: SampleDetail[];
 };
-const SamplesMapBySamplesArray: React.FC<SamplesMapProps> = ({ samples }) => {
+const SamplesMapBySamplesArray: React.FC<SamplesMapProps> = ({
+  study,
+  samples,
+}) => {
   const { config } = useContext(UserContext);
 
   const samplesFiltered = samples.filter((sample) => {
     try {
       return (
-        Number(sample.attributes.longitude) !== 0.0 &&
-        Number(sample.attributes.latitude) !== 0.0
+        Number(sample?.metadata?.longitude) !== 0.0 &&
+        Number(sample?.metadata?.latitude) !== 0.0
       );
     } catch {
       return false;
@@ -30,7 +34,7 @@ const SamplesMapBySamplesArray: React.FC<SamplesMapProps> = ({ samples }) => {
     <div className="mg-map-container">
       <div className="mg-map-wrapper">
         <Wrapper apiKey={config.googleMapsKey} render={render}>
-          <SamplesMap samples={samplesFiltered} />
+          <SamplesMap study={study} samples={samplesFiltered} />
         </Wrapper>
       </div>
       <div className="mg-map-progress">

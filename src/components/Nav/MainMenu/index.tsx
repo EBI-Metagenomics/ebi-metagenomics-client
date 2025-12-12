@@ -1,9 +1,9 @@
 import React, {
+  useContext,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
-  useContext,
-  useEffect,
 } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import UserContext from 'pages/Login/UserContext';
@@ -29,14 +29,14 @@ const pages: Array<{ label: string; path?: string; href?: string }> = [
   { label: 'API' },
   { label: 'About', path: '/about' },
   { label: 'Help', path: '/help' },
-  // { label: 'Login', path: '/login' },
+  { label: 'Login', path: '/login' },
 ];
 
 const START_POS = 100;
 const START_MARGIN = -7;
 
 const Nav: React.FC = () => {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const { isAuthenticated } = useContext(UserContext);
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
@@ -54,8 +54,8 @@ const Nav: React.FC = () => {
               <Link
                 className="vf-navigation__link"
                 aria-current={
-                  (path === '/' && location.pathname === path) ||
-                  (path !== '/' && location.pathname.startsWith(path))
+                  (path === '/' && pathname === path) ||
+                  (path !== '/' && pathname.startsWith(path))
                     ? 'page'
                     : undefined
                 }
@@ -104,7 +104,7 @@ const MobileNav: React.FC = () => {
 };
 
 const MainMenu: React.FC = () => {
-  const imgRef = useRef(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const { config } = useContext(UserContext);
   const isSmall = useMedia('(max-width: 768px)');
   const [animationState, setAnimationState] = useState({
@@ -118,9 +118,10 @@ const MainMenu: React.FC = () => {
   useLayoutEffect(() => {
     const onScroll = (): void => {
       if (isSmall) return;
-      const topPos = imgRef.current.getBoundingClientRect().top;
+      const topPos =
+        imgRef.current && imgRef.current.getBoundingClientRect().top;
       let newMargin = START_MARGIN;
-      if (topPos < START_POS) {
+      if (topPos !== null && topPos < START_POS) {
         const m = (START_MARGIN - 1) / START_POS;
         const b = START_MARGIN - m * START_POS;
         newMargin = m * topPos + b;
@@ -135,7 +136,7 @@ const MainMenu: React.FC = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, [isSmall]);
   // Getting link to Mgnify Hmmer from the config
-  pages[3].href = config.hmmer;
+  pages[3].href = config.hmmer as string;
   // Getting link to API from the config
   pages[5].href = config.api;
 

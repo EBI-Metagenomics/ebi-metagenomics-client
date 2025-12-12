@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useState } from 'react';
 
 import Slider from 'components/UI/Slider';
 import Switch from 'components/UI/Switch';
@@ -8,29 +8,18 @@ const MIN = 500;
 const MAX = 10e6;
 
 const ContigLengthFilter: React.FC = () => {
-  const [contigLength, setContigLength] = useQueryParamState(
-    'contig_length',
-    ''
-  );
+  const [contigLength, setContigLength] =
+    useQueryParamState<[number, number]>('contigLength');
   const [enabled, setEnabled] = useState(!!contigLength);
-
-  const [range, setRange] = useState(
-    contigLength.split(',').filter(Boolean).map(Number)
-  );
-  useEffect(() => {
-    const newRange = contigLength.split(',').filter(Boolean).map(Number);
-    setRange(newRange);
-  }, [contigLength]);
 
   const handleSwitch = (isEnabled: boolean): void => {
     setEnabled(isEnabled);
     if (!isEnabled) {
-      setContigLength('');
+      setContigLength([MIN, MAX]);
     }
   };
   const handleSlider = ({ min, max }): void => {
-    setRange([min, max]);
-    setContigLength(`${min},${max}`);
+    setContigLength([min, max]);
   };
   return (
     <fieldset className="vf-form__fieldset vf-stack vf-stack--200 mg-contig-length-filter">
@@ -49,8 +38,8 @@ const ContigLengthFilter: React.FC = () => {
           steps={100}
           isEnabled={enabled}
           selection={{
-            min: range?.[0] || MIN,
-            max: range?.[1] || MAX,
+            min: contigLength?.[0] || MIN,
+            max: contigLength?.[1] || MAX,
           }}
           onChange={handleSlider}
           logarithmic

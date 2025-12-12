@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState, useEffect } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
@@ -8,7 +8,7 @@ import useEBISearchData from '@/hooks/data/useEBISearchData';
 import 'styles/filters.css';
 import Loading from 'components/UI/Loading';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useSharedQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 const location2endpoint = {
   '/search/studies': 'metagenomics_projects',
@@ -28,16 +28,16 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   includeTextFilter = false,
   sortFn = undefined,
 }) => {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const { searchData } = useContext(SearchQueryContext);
-  const [facet, setFacet] = useQueryParamState(facetName, '');
-  const [selected, setSelected] = useState(facet.split(',').filter(Boolean));
+  const [facet, setFacet] = useSharedQueryParamState<string[]>(facetName);
+  const [selected, setSelected] = useState(facet.filter(Boolean));
   const [textFilter, setTextFilter] = useState('');
   const [sizeToLoad, setSizeToLoad] = useState(0);
   const { data, loading } = useEBISearchData(
-    sizeToLoad > 0 ? location2endpoint[location.pathname] || null : null,
+    sizeToLoad > 0 ? location2endpoint[pathname] || null : null,
     {
-      query: `domain_source:${location2endpoint[location.pathname] || ''}`,
+      query: `domain_source:${location2endpoint[pathname] || ''}`,
       size: 0,
       facetcount: sizeToLoad,
       facetfields: facetName,
@@ -45,12 +45,12 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
   );
 
   useEffect(() => {
-    setSelected(facet.split(',').filter(Boolean));
+    setSelected(facet.filter(Boolean));
   }, [facet]);
 
   const [facetData, facetSize] = useMemo(() => {
     const tmpFacet = (
-      (data || searchData?.[location.pathname]?.data)?.facets || []
+      ((data || searchData?.[pathname]?.data)?.facets || []) as any[]
     ).filter((f) => f.id === facetName)?.[0];
     const tmpData = tmpFacet?.facetValues;
     const tmpFacetSize = tmpFacet?.total;
@@ -58,13 +58,13 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
       tmpData.sort(sortFn);
     }
     return [tmpData, tmpFacetSize];
-  }, [location.pathname, searchData, facetName, sortFn, data]);
+  }, [pathname, searchData, facetName, sortFn, data]);
 
-  if (searchData?.[location.pathname].error) return null;
+  if (searchData?.[pathname].error) return null;
 
   if (!facetData)
     return (
-      <LoadingOverlay loading={searchData?.[location.pathname].loading}>
+      <LoadingOverlay loading={searchData?.[pathname].loading}>
         <fieldset className="vf-form__fieldset vf-stack vf-stack--200">
           <legend className="vf-form__legend">{header}</legend>
           <p className="vf-form__helper">
@@ -75,7 +75,7 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
-                  setFacet('');
+                  setFacet([]);
                 }}
               >
                 <span className="icon icon-common icon-times-circle" /> Clear{' '}
@@ -95,13 +95,13 @@ const MultipleOptionFilter: React.FC<MultipleOptionProps> = ({
     } else {
       newSelected = selected.filter((s) => s !== value);
     }
-    setFacet(newSelected.sort().join(','));
+    setFacet(newSelected.sort());
   };
 
   return (
     // <section className="mg-filter">
     <FixedHeightScrollable className="mg-filter" heightPx={600}>
-      <LoadingOverlay loading={searchData?.[location.pathname].loading}>
+      <LoadingOverlay loading={searchData?.[pathname].loading}>
         <fieldset className="vf-form__fieldset vf-stack vf-stack--200">
           <legend className="vf-form__legend">{header}</legend>
           {includeTextFilter && (

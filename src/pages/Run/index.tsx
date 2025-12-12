@@ -14,6 +14,10 @@ import AssociatedAnalyses from 'components/Analysis/Analyses';
 import { ENA_VIEW_URL } from '@/utils/urls';
 import ExtraAnnotations from 'components/ExtraAnnotations';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
+import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
+
+const { withQueryParamProvider } =
+  createSharedQueryParamContextForTable('analyses');
 
 const RunPage: React.FC = () => {
   const accession = useURLAccession();
@@ -27,7 +31,7 @@ const RunPage: React.FC = () => {
     {
       key: 'Study',
       value: () => {
-        if (!runData.relationships.study.data) {
+        if (!runData.relationships.study?.data) {
           return (
             <ExtLink
               href={`${ENA_VIEW_URL}${runData.attributes['ena-study-accession']}`}
@@ -46,8 +50,8 @@ const RunPage: React.FC = () => {
     {
       key: 'Sample',
       value: () => (
-        <Link to={`/samples/${runData.relationships.sample.data.id}`}>
-          {runData.relationships.sample.data.id}
+        <Link to={`/samples/${runData.relationships.sample?.data.id}`}>
+          {runData.relationships.sample?.data.id}
         </Link>
       ),
     },
@@ -74,7 +78,7 @@ const RunPage: React.FC = () => {
     { label: 'Home', url: '/' },
     {
       label: 'Associated sample',
-      url: `/samples/${runData.relationships.sample.data.id}`,
+      url: `/samples/${runData.relationships.sample?.data.id}`,
     },
     { label: runData.id },
   ];
@@ -106,4 +110,4 @@ const RunPage: React.FC = () => {
   );
 };
 
-export default RunPage;
+export default withQueryParamProvider(RunPage);

@@ -55,6 +55,7 @@ const HybridAnalysisDetails: React.FC<HybridAnalysisDetailsProps> = ({
 
 const AnalysisOverview: React.FC = () => {
   const { overviewData: data } = useContext(AnalysisContext);
+  if (!data) return null;
 
   const isHybrid =
     data.attributes['experiment-type'] === 'hybrid_assembly' &&

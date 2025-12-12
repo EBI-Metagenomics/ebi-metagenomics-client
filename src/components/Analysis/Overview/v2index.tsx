@@ -1,61 +1,57 @@
-import React, { useContext, useMemo } from 'react';
-import KeyValueList from 'components/UI/KeyValueList';
+import React, { useContext } from 'react';
+import KeyValueList, { KeyValueItemsList } from 'components/UI/KeyValueList';
 import { Link } from 'react-router-dom';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
-import useMGnifyData from 'hooks/data/useMGnifyData';
 import '../style.css';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import { extractVersionNumber } from 'utils/strings';
+import UserContext from 'pages/Login/UserContext';
 
 function isAssembly(experimentType: string): boolean {
   // return ['assembly', 'hybrid_assembly', 'long_reads_assembly'].includes(
   return ['ASSEM', 'HYASS', 'LRASS'].includes(experimentType);
 }
 
-type Run = {
-  attributes: {
-    'instrument-platform': string;
-    'instrument-model': string;
-  };
-};
+// type HybridAnalysisDetailsProps = {
+//   assemblyId: string;
+// };
 
-type HybridAnalysisDetailsProps = {
-  assemblyId: string;
-};
-
-const HybridAnalysisDetails: React.FC<HybridAnalysisDetailsProps> = ({
-  assemblyId,
-}) => {
-  const { loading: loadingRuns, data: runs } = useMGnifyData(
-    `assemblies/${assemblyId}/runs`
-  );
-  const instruments = useMemo(() => {
-    if (loadingRuns) return '';
-    const runsData = runs.data as Run[];
-    return runsData
-      .map(
-        (run) =>
-          `${run.attributes['instrument-platform']} – ${run.attributes['instrument-model']}`
-      )
-      .join('\n');
-  }, [loadingRuns, runs]);
-  return (
-    <KeyValueList
-      list={[
-        {
-          key: 'Experiment type',
-          value: 'Hybrid assembly',
-        },
-        {
-          key: 'Instruments',
-          value: instruments,
-        },
-      ].filter(({ value }) => !!value)}
-    />
-  );
-};
+// const HybridAnalysisDetails: React.FC<HybridAnalysisDetailsProps> = ({
+//   assemblyId,
+// }) => {
+//   const { loading: loadingRuns, data: runs } = useMGnifyData(
+//     `assemblies/${assemblyId}/runs`
+//   );
+//   const instruments = useMemo(() => {
+//     if (loadingRuns) return '';
+//     const runsData = runs.data as Run[];
+//     return runsData
+//       .map(
+//         (run) =>
+//           `${run.attributes['instrument-platform']} – ${run.attributes['instrument-model']}`
+//       )
+//       .join('\n');
+//   }, [loadingRuns, runs]);
+//   return (
+//     <KeyValueList
+//       list={[
+//         {
+//           key: 'Experiment type',
+//           value: 'Hybrid assembly',
+//         },
+//         {
+//           key: 'Instruments',
+//           value: instruments,
+//         },
+//       ].filter(({ value }) => !!value)}
+//     />
+//   );
+// };
 
 const AnalysisOverview: React.FC = () => {
   const { overviewData: data } = useContext(AnalysisContext);
+  const { config } = useContext(UserContext);
+
   const isHybrid = false;
   // data.experiment_type === 'hybrid_assembly' &&
   // data?.experiment_type === 'hybrid_assembly' &&
@@ -75,26 +71,26 @@ const AnalysisOverview: React.FC = () => {
     },
     {
       key: 'Sample',
-      value: data?.sample?.accession || '',
-      // data?.sample?.accession &&
-      // (() => (
-      //   <Link to={`/samples/${data?.sample?.accession}`}>
-      //     {data?.sample?.accession}
-      //   </Link>
-      // )),
+      value:
+        data?.sample?.accession &&
+        (() => (
+          <Link to={`/samples/${data?.sample?.accession}`}>
+            {data?.sample?.accession}
+          </Link>
+        )),
       rawValue: data?.sample?.accession || '',
     },
     {
       key: 'Assembly',
       value:
-        data?.assembly_accession &&
+        data?.assembly?.accession &&
         isAssembly(data.experiment_type as string) &&
         (() => (
           <Link to={`/assemblies/${data?.assembly?.accession}`}>
             {data?.assembly?.accession}
           </Link>
         )),
-      rawValue: data?.assembly_accession || '',
+      rawValue: data?.assembly?.accession || '',
     },
     {
       key: 'Run',
@@ -138,52 +134,68 @@ const AnalysisOverview: React.FC = () => {
     },
   ];
 
+  const pipelineSetMeta =
+    config.pipelines[data?.pipeline_version.toLowerCase() || ''] || {};
+  const pipelineMeta = data
+    ? pipelineSetMeta[data.experiment_type.toLowerCase()]
+    : config.pipelines['default']['default'];
+
   const pipelineInformationItems = [
     {
       key: 'Repository',
       value: () => (
-        <a
-          href="https://github.com/EBI-Metagenomics/amplicon-pipeline"
-          target="_blank"
-          rel="noreferrer"
-        >
-          https://github.com/EBI-Metagenomics/amplicon-pipeline
-        </a>
+        <ul className="vf-list vf-list--bare">
+          {pipelineMeta.githubs?.map((repo) => (
+            <li key={repo}>
+              <a href={repo} target="_blank" rel="noreferrer">
+                {repo}
+              </a>
+            </li>
+          ))}
+        </ul>
       ),
-      rawValue: 'https://github.com/EBI-Metagenomics/amplicon-pipeline',
+      rawValue: pipelineMeta.githubs?.join(', ') || '—',
     },
     {
       key: 'Documentation',
       value: () => (
-        <a
-          href="https://ebi-metagenomics.github.io/amplicon-pipeline/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          https://ebi-metagenomics.github.io/amplicon-pipeline/
-        </a>
+        <ul className="vf-list vf-list--bare">
+          {pipelineMeta.docs?.map((doc) => (
+            <li key={doc}>
+              <a href={doc} target="_blank" rel="noreferrer">
+                {doc}
+              </a>
+            </li>
+          ))}
+        </ul>
       ),
-      rawValue: 'https://ebi-metagenomics.github.io/amplicon-pipeline/',
+      rawValue: pipelineMeta.docs?.join(', ') || '—',
     },
-    // {
-    //   key: 'Workflow hub link',
-    //   value: () => (
-    //     <a
-    //       href="https://workflowhub.eu/workflows/361?version=1"
-    //       target="_blank"
-    //       rel="noreferrer"
-    //     >
-    //       https://workflowhub.eu/workflows/361?version=1
-    //     </a>
-    //   ),
-    //   rawValue: 'https://workflowhub.eu/workflows/361?version=1',
-    // },
+    {
+      key: 'WorkflowHub link',
+      value: () => (
+        <ul className="vf-list vf-list--bare">
+          {pipelineMeta.workflowHubs?.map((pipeline) => (
+            <li key={pipeline}>
+              <a href={pipeline} target="_blank" rel="noreferrer">
+                {pipeline}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ),
+      rawValue: pipelineMeta.workflowHubs?.join(', ') || '—',
+    },
     {
       key: 'Pipeline version',
       value:
         data?.pipeline_version &&
         (() => (
-          <Link to={`/pipelines/${data?.pipeline_version?.slice(1)}`}>
+          <Link
+            to={`/pipelines/${extractVersionNumber(
+              data?.pipeline_version ?? ''
+            )}`}
+          >
             {data?.pipeline_version}
           </Link>
         )),
@@ -229,7 +241,7 @@ const AnalysisOverview: React.FC = () => {
     const downloadLink = document.createElement('a');
     downloadLink.href = url;
     downloadLink.download = `analysis_overview_${
-      data?.run_accession || 'data'
+      data?.run?.accession || 'data'
     }.csv`;
     downloadLink.style.display = 'none';
     downloadLink.click();
@@ -252,11 +264,15 @@ const AnalysisOverview: React.FC = () => {
             <summary className="vf-details--summary custom-vf-details--summary">
               <b>Description</b>
             </summary>
-            <p>
+            <div>
               <KeyValueList
-                list={descriptionItems.filter(({ value }) => !!value)}
+                list={
+                  descriptionItems.filter(
+                    ({ value }) => !!value
+                  ) as KeyValueItemsList
+                }
               />
-            </p>
+            </div>
           </details>
           <details className="vf-details custom-vf-details" open>
             <summary className="vf-details--summary custom-vf-details--summary">
@@ -268,7 +284,9 @@ const AnalysisOverview: React.FC = () => {
               />
             )}
             {isHybrid && (
-              <HybridAnalysisDetails assemblyId={data?.assembly_accession} />
+              <p>Hybrid assembly details are not available yet.</p>
+              // TODO: add hybrid assembly details
+              // <HybridAnalysisDetails assemblyId={data?.assembly?.accession} />
             )}
           </details>
           <details className="vf-details custom-vf-details" open>
@@ -276,7 +294,11 @@ const AnalysisOverview: React.FC = () => {
               <b>Pipeline information</b>
             </summary>
             <KeyValueList
-              list={pipelineInformationItems.filter(({ value }) => !!value)}
+              list={
+                pipelineInformationItems.filter(
+                  ({ value }) => !!value
+                ) as KeyValueItemsList
+              }
             />
           </details>
         </DetailedVisualisationCard>

@@ -7,8 +7,8 @@ import FetchError from 'components/UI/FetchError';
 
 const Abundance: React.FC = () => {
   const { included } = useContext(AnalysisContext);
-  const stats = included.find(
-    (item) => item?.attributes?.['group-type'] === 'Statistics'
+  const stats = included?.find(
+    (item: any) => item?.attributes?.['group-type'] === 'Statistics'
   );
   const { data, error, loading } = useData(
     stats?.links?.self,
@@ -25,10 +25,7 @@ const Abundance: React.FC = () => {
       </p>
       {loading && <Loading />}
       {!loading && error && <FetchError error={error} />}
-      {
-        // eslint-disable-next-line react/no-danger
-        data && <div dangerouslySetInnerHTML={{ __html: data as string }} />
-      }
+      {data && <div dangerouslySetInnerHTML={{ __html: data as string }} />}
     </section>
   );
 };

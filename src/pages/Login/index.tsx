@@ -1,30 +1,28 @@
 import React, {
-  useContext,
-  useRef,
   FormEvent,
-  useState,
+  useContext,
   useEffect,
   useMemo,
+  useRef,
+  useState,
 } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OutterCard from 'components/UI/OutterCard';
 import UserContext from 'pages/Login/UserContext';
-import enaUserImg from 'images/ico_ena_user.jpg';
+import enaUserImg from 'public/images/ico_ena_user.jpg';
 import useAuthToken from 'hooks/authentication/useAuthToken';
 import axios from 'utils/protectedAxios';
 import Loading from 'components/UI/Loading';
+import { AxiosError } from 'axios';
 
 const Login: React.FC = () => {
   const [, setAuthToken] = useAuthToken();
 
-  // const usernameRef = useRef(null);
-  // const passwordRef = useRef(null);
-  const usernameRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const usernameRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+  const loginErrorsContainerRef = useRef<HTMLParagraphElement | null>(null);
 
-  // const loginErrorsContainerRef = useRef(null);
-  const loginErrorsContainerRef = useRef<HTMLParagraphElement>(null);
-  const loggedInUsername = localStorage.getItem('mgnify.username');
+  const loggedInUsername = localStorage.getItem('mgnify.v2.username');
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -32,7 +30,7 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { isAuthenticated } = useContext(UserContext);
   const navigate = useNavigate();
-  const location = useLocation();
+  const { state, search } = useLocation();
   const [desiredDestination, setDesiredDestination] = useState('');
 
   useMemo(() => {
@@ -40,29 +38,20 @@ const Login: React.FC = () => {
       '?from=private-request': '/?from=private-request',
       '?from=public-request': '/?from=public-request',
     };
-    if (
-      possibleDesiredDestinations[
-        location.search as '?from=private-request' | '?from=public-request'
-      ]
-    ) {
-      setDesiredDestination(
-        possibleDesiredDestinations[
-          location.search as '?from=private-request' | '?from=public-request'
-        ]
-      );
+    if (possibleDesiredDestinations[search]) {
+      setDesiredDestination(possibleDesiredDestinations[search]);
       return;
     }
-    if (location?.state?.from?.pathname) {
-      setDesiredDestination(location.state.from.pathname + location.search);
+    if (state?.from?.pathname) {
+      setDesiredDestination(state.from.pathname + search);
     }
-  }, [location]);
+  }, [state?.from, search]);
 
   const handleLogout = async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     setAuthToken(null);
-    localStorage.removeItem('mgnify.token');
-    localStorage.removeItem('mgnify.username');
+    localStorage.removeItem('mgnify.v2.token');
+    localStorage.removeItem('mgnify.v2.username');
   };
 
   useEffect(() => {
@@ -86,23 +75,23 @@ const Login: React.FC = () => {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`/utils/token/obtain`, {
-        username: usernameRef?.current?.value,
-        password: passwordRef?.current?.value,
+      const response = await axios.post(`/auth/sliding`, {
+        username: usernameRef.current?.value,
+        password: passwordRef.current?.value,
       });
-      const accessToken = response.data.data.token;
+      const accessToken = response.data.token;
+
+      // @ts-ignore
       setAuthToken(accessToken) as unknown as void;
       setUsername('');
       setPassword('');
-      navigate(desiredDestination, {
-        replace: true,
-      });
+      navigate(desiredDestination);
     } catch (error) {
-      const err = error as ErrorResponse;
-      if (!err.response) {
+      const axiosError = error as AxiosError;
+      if (!axiosError.response) {
         setErrMsg('Network error');
       } else {
-        setErrMsg(err.response.data.errors.non_field_errors[0]);
+        setErrMsg((axiosError.response.data as any).detail);
       }
       loginErrorsContainerRef.current?.focus();
     } finally {

@@ -35,8 +35,8 @@ const InterProQCChart: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
-  const isAssembly = overviewData.attributes['experiment-type'] === 'assembly';
-  const seqData = overviewData.attributes['analysis-summary'];
+  const isAssembly = overviewData?.attributes['experiment-type'] === 'assembly';
+  const seqData = overviewData?.attributes['analysis-summary'];
   // TODO: remove mapping when https://www.ebi.ac.uk/panda/jira/browse/EMG-1672
   const categories = [
     ' with predicted CDS',

@@ -1,29 +1,26 @@
 import React, { useState } from 'react';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseObj } from '@/hooks/data/useData';
-import useURLAccession from '@/hooks/useURLAccession';
+import useURLAccession from 'hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import Overview from 'components/Sample/Overview';
-import AssociatedStudies from 'components/Study/Studies';
-import AssociatedRuns from 'components/Sample/Runs';
-import AssociatedAssemblies from 'components/Assembly/Assemblies';
 import RouteForHash from 'components/Nav/RouteForHash';
 import KeyValueList from 'components/UI/KeyValueList';
 import AnnotationMetadata from 'components/Sample/AnnotationMetadata';
-import ClearingHouseMetadata from 'components/Sample/ClearingHouseMetadata';
 import axios from 'axios';
-import marineRegionsEezData from 'data/marine-regions-eez-data.json';
-import {
-  displayAbsInfo,
-  EezMetadata,
+import marineRegionsEezData from 'public/data/marine-regions-eez-data.json';
+import DisplayAbsInfo, {
   defaultEezMetadata,
-  SovereignsArray,
+  EezMetadata,
   Sov,
-} from '@/utils/eezAbs';
+  SovereignsArray,
+  EezInfo,
+} from 'utils/eezAbs';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
-import HTMLRenderer from 'components/UI/HTMLRederer';
+import useSampleDetail from 'hooks/data/useSampleDetail';
+import { flatMap, size, startCase } from 'lodash-es';
+import InfoBanner from 'components/UI/InfoBanner';
+import AssociatedStudies from 'components/Study/Studies';
 
 const tabs = [
   { label: 'Sample metadata', to: '#' },
@@ -34,33 +31,31 @@ const tabs = [
 
 const SamplePage: React.FC = () => {
   const accession = useURLAccession();
-  const { data, loading, error } = useMGnifyData(`samples/${accession}`);
+  const {
+    data: sampleData,
+    loading,
+    error,
+  } = useSampleDetail(accession as string);
   const [eezData, setEezData] = useState<EezMetadata>({
     ...defaultEezMetadata,
   });
   const [fetchEezDataCalled, setFetchEezDataCalled] = React.useState(false);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
-  if (!data) return <Loading />;
-  const { data: sampleData } = data as MGnifyResponseObj;
+  if (!sampleData) return <Loading />;
 
-  const fetchSovereignsAbsInfo = (mrgId: number) => {
+  const fetchSovereignsAbsInfo = (mrgId: number): SovereignsArray => {
     const matchingEez = marineRegionsEezData.find((eez) => eez.MRGID === mrgId);
 
-    if (!matchingEez) {
-      return [];
-    }
-
     const sovereigns: SovereignsArray = [];
+    if (!matchingEez) return sovereigns;
 
     const maxPossibleNumberOfSovereigns = 3;
     for (let i = 1; i <= maxPossibleNumberOfSovereigns; i++) {
-      const sovereignKey = `SOVEREIGN${i}` as keyof typeof matchingEez;
-      const statusKey = `SOVEREIGN${i}_ABS_STATUS` as keyof typeof matchingEez;
-      if (!matchingEez[sovereignKey]) break;
+      if (!matchingEez[`SOVEREIGN${i}`]) break;
       const sovereign: Sov = {
-        name: matchingEez[sovereignKey] as string,
-        absStatus: matchingEez[statusKey] as number,
+        name: matchingEez[`SOVEREIGN${i}`],
+        absStatus: matchingEez[`SOVEREIGN${i}_ABS_STATUS`],
       };
       sovereigns.push(sovereign);
     }
@@ -74,7 +69,7 @@ const SamplePage: React.FC = () => {
         'Based on the sample coordinates, this sample originates from the',
     };
     if (
-      !sampleData?.relationships?.biome?.data?.id.includes(
+      !sampleData.biome?.lineage.includes(
         'root:Environmental:Aquatic'
       )
     ) {
@@ -84,7 +79,7 @@ const SamplePage: React.FC = () => {
       setEezData(eezMetadata);
       return;
     }
-    if (!sampleData.attributes.latitude || !sampleData.attributes.longitude) {
+    if (!sampleData?.metadata?.lat || !sampleData?.metadata?.lon) {
       eezMetadata.eezInfoText =
         'This sample does not have coordinates, so no information concerning EEZ and ABS requirements can be provided at this point.';
       eezMetadata.eezBadgeColor = 'tertiary';
@@ -93,7 +88,7 @@ const SamplePage: React.FC = () => {
     }
     axios
       .get(
-        `https://marineregions.org/rest/getGazetteerRecordsByLatLong.json/${sampleData.attributes.latitude}/${sampleData.attributes.longitude}/?typeID=70&offset=0`
+        `https://marineregions.org/rest/getGazetteerRecordsByLatLong.json/${sampleData.metadata?.lat}/${sampleData.metadata?.lon}/?typeID=70&offset=0`
       )
       .then((response) => {
         eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} ${response.data[0].preferredGazetteerName}`;
@@ -105,13 +100,13 @@ const SamplePage: React.FC = () => {
           1;
         eezMetadata.qualifiesForAbsCheck = eezMetadata.sovereigns.length > 0;
         setEezData(eezMetadata);
-        sampleData.attributes.mrgid = response.data[0].MRGID;
+        sampleData.mrgid = response.data[0].MRGID;
       })
       .catch((err) => {
         if (err.response.status === 404) {
           eezMetadata.eezInfoPrefix =
-            'Based on the sample coordinates, this sample originates from ';
-          eezMetadata.eezInfoText = `${eezMetadata.eezInfoPrefix} a region beyond an EEZ. While this means there are no national ABS obligations under individual countries' jurisdiction, benefit-sharing obligations may still apply for the use of Marine Genetic Resource (MGR) in areas beyond national jurisdictions, as outlined in the <a href="https://www.un.org/bbnj/"> BBNJ agreement. </a> Although this agreement is not yet in force, its provisions, including obligations for MGR users, will apply retroactively once enacted.`;
+            'Based on the sample coordinates, this sample originates from';
+          eezMetadata.beyondEez = true;
           eezMetadata.eezBadgeColor = 'tertiary';
           setEezData(eezMetadata);
         }
@@ -120,20 +115,20 @@ const SamplePage: React.FC = () => {
 
   if (!fetchEezDataCalled) {
     fetchEezData();
-    if (eezData.eezInfoText) {
+    if (eezData.eezInfoText || eezData.beyondEez) {
       setFetchEezDataCalled(true);
     }
   }
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     { label: 'Samples', url: '/browse/samples' },
-    { label: accession },
+    { label: accession as string },
   ];
   return (
     <section className="vf-content">
       <Breadcrumbs links={breadcrumbs} />
       <h2>Sample overview ({accession})</h2>
-      <h3>Sample {sampleData.attributes['sample-name']}</h3>
+      <h3>{sampleData?.sample_title}</h3>
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
           <Overview data={sampleData} />
@@ -143,64 +138,47 @@ const SamplePage: React.FC = () => {
               <RouteForHash hash="" isDefault>
                 <KeyValueList
                   dataCy="sample-metadata"
-                  list={
-                    (sampleData?.attributes?.['sample-metadata'] as {
-                      key: string;
-                      value: string;
-                    }[]) || []
-                  }
+                  list={flatMap(sampleData.metadata, (value, key) => ({
+                    key: startCase(key),
+                    value: String(value),
+                  }))}
                 />
-                {!(sampleData?.attributes?.['sample-metadata'] as [])
-                  .length && (
-                  <div className="vf-box">
-                    <h3 className="vf-box__heading">
-                      <span className="icon icon-common icon-info" /> No
-                      metadata to be displayed.
-                    </h3>
-                  </div>
+                {!size(sampleData.metadata) && (
+                  <InfoBanner
+                    type={'info'}
+                    title={'No metadata to be displayed.'}
+                  />
                 )}
-                <ClearingHouseMetadata sampleAccession={accession as string} />
-                <AnnotationMetadata sampleAccession={accession as string} />
+                {/*<ClearingHouseMetadata sampleAccession={accession as string} />*/}
+                {/*TODO CDCH*/}
+                <AnnotationMetadata sample={sampleData} />
               </RouteForHash>
               <RouteForHash hash="#studies">
-                <AssociatedStudies rootEndpoint="samples" />
+                {sampleData.studies && (
+                  <AssociatedStudies associatedStudies={sampleData.studies} />
+                )}
               </RouteForHash>
-              <RouteForHash hash="#runs">
-                <AssociatedRuns />
-              </RouteForHash>
-              <RouteForHash hash="#assemblies">
-                <AssociatedAssemblies rootEndpoint="samples" />
-              </RouteForHash>
+              {/*    <RouteForHash hash="#runs">*/}
+              {/*TODO*/}
+              {/*      <AssociatedRuns />*/}
+              {/*    </RouteForHash>*/}
+              {/*    <RouteForHash hash="#assemblies">*/}
+              {/*TODO*/}
+              {/*      <AssociatedAssemblies rootEndpoint="samples" />*/}
+              {/*    </RouteForHash>*/}
             </div>
           </section>
         </div>
       </section>
 
-      {eezData.eezInfoText && (
+      {(eezData.eezInfoText || eezData.beyondEez) && (
         <div className="vf-box vf-box-theme--primary vf-box--easy">
           <h6 className="vf-box__heading">EEZ Metadata</h6>
-          <p className="vf-box__text">
+          <div className="vf-box__text">
             <aside className="vf-article-meta-information">
-              {eezData.eezInfoText && (
-                <div className="vf-meta__details">
-                  <p>
-                    <span
-                      className={`vf-badge vf-badge--${eezData.eezBadgeColor}`}
-                    >
-                      <abbr
-                        title="Exclusive Economic Zone"
-                        className="eez-abbr"
-                      >
-                        EEZ Info
-                      </abbr>
-                    </span>
-                    &nbsp;
-                    <HTMLRenderer htmlContent={eezData.eezInfoText} />
-                  </p>
-                </div>
-              )}
+              <EezInfo eezData={eezData} />
               {eezData.qualifiesForAbsCheck && (
-                <HTMLRenderer htmlContent={displayAbsInfo(eezData)} />
+                <DisplayAbsInfo eezData={eezData} />
               )}
               <details className="vf-details">
                 <summary className="vf-details--summary">More info</summary>
@@ -226,7 +204,7 @@ const SamplePage: React.FC = () => {
                 coastal, marine, and terrestrial waters.
               </details>
             </aside>
-          </p>
+          </div>
         </div>
       )}
     </section>

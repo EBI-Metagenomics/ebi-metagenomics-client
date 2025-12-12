@@ -1,28 +1,42 @@
 import React, { useContext } from 'react';
-import SlimVisualisationCard from 'components/Analysis/VisualisationCards/SlimVisualisationCard';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import { Download } from '@/interfaces';
+import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 
-const PfamTab = () => {
-  const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
+const PfamTab: React.FC = () => {
+  const { overviewData: analysisData } = useContext(AnalysisContext);
 
-  // This is used as a placeholder until the actual Pfam data is available on the API
-  const dataFile = analysisOverviewData.downloads[0];
+  const dataFile: Download | undefined = analysisData?.downloads.find(
+    (file) => file.download_group === 'functional_annotation.pfams'
+  );
+
+  if (!dataFile) {
+    return (
+      <div className="vf-stack vf-stack--200" data-cy="assembly-interpro-chart">
+        <p>No Pfam identifiers file available</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <SlimVisualisationCard fileData={dataFile}>
+    <div className="vf-stack">
+      <h5>Pfam domains</h5>
+      <DetailedVisualisationCard ftpLink={dataFile.url} title={dataFile.alias}>
         <div className="p-4">
-          <h3 className="text-lg font-medium mb-2">PFAM Domains</h3>
           <p className="text-sm text-gray-600 mb-4">
-            PFAM domains are functional regions within proteins that represent
+            Pfam domains are functional regions within proteins that represent
             conserved evolutionary units.
           </p>
           <p className="text-sm">
-            Download this file to view the complete PFAM domain annotations for
+            Download this file to view the complete Pfam domain annotations for
             this analysis.
           </p>
         </div>
-      </SlimVisualisationCard>
+        <CompressedTSVTable download={dataFile} />
+      </DetailedVisualisationCard>
+
+      <div className="vf-grid mg-grid-30-70" />
     </div>
   );
 };

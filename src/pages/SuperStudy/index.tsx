@@ -1,29 +1,29 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import ReactMarkdown from 'react-markdown';
-
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseObj } from '@/hooks/data/useData';
-import useURLAccession from '@/hooks/useURLAccession';
-import Loading from 'components/UI/Loading';
-import FetchError from 'components/UI/FetchError';
+import useURLAccession from 'hooks/useURLAccession';
 import FlagshipTable from 'components/SuperStudy/Flagship';
 import RelatedTable from 'components/SuperStudy/Related';
 import SuperStudyGenomeCataloguesTable from 'components/SuperStudy/GenomeCatalogues';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
+import useSuperStudyDetail from 'hooks/data/useSuperStudyDetail';
+import Loading from 'components/UI/Loading';
+import FetchError from 'components/UI/FetchError';
+import UserContext from 'pages/Login/UserContext';
 
 const SuperStudyPage: React.FC = () => {
-  const accession = useURLAccession();
-  const { data, loading, error } = useMGnifyData(`super-studies/${accession}`);
+  const slug = useURLAccession();
+  const { config } = useContext(UserContext);
+  const { data, loading, error } = useSuperStudyDetail(slug);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
-  const { data: superStudyData } = data as MGnifyResponseObj;
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     { label: 'Super Studies', url: '/browse/super-studies' },
-    { label: accession },
+    { label: slug ?? '' },
   ];
+  const logoAbs = config.api_v2 + data.logo_url;
   return (
     <section className="vf-content">
       <Breadcrumbs links={breadcrumbs} />
@@ -32,20 +32,18 @@ const SuperStudyPage: React.FC = () => {
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
           <div style={{ display: 'flex' }}>
-            <div>
-              <h3>{superStudyData.attributes.title}</h3>
+            <div style={{ flexGrow: 1 }}>
+              <h3>{data.title}</h3>
               <div data-cy="superStudyDescription">
-                <ReactMarkdown>
-                  {superStudyData.attributes.description as string}
-                </ReactMarkdown>
+                <ReactMarkdown>{data.description as string}</ReactMarkdown>
               </div>
             </div>
             <img
-              src={superStudyData.attributes['image-url'] as string}
+              src={logoAbs}
               style={{
                 height: '6em',
               }}
-              alt={`${superStudyData.attributes.title} logo`}
+              alt={`${data.title} logo`}
               data-cy="superStudyLogo"
             />
           </div>

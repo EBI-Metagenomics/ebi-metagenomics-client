@@ -4,8 +4,9 @@ on: [ push, pull_request ]
 env:
   EMG_CONFIG: ${{ github.workspace }}/client-repo/ci/config.yaml
   API_URL: http://localhost:9000/metagenomics/api/v1/
+  API_V2_URL: http://localhost:8000/
   SEARCH_URL: https://www.ebi.ac.uk/ebisearch/ws/rest/metagenomics_
-  DEPLOYMENT_SUBFOLDER: /metagenomics
+  VITE_BASE_URL: /metagenomics
   BASE_URL: http://localhost:9000/metagenomics/
   INTERPRO_URL: http://www.ebi.ac.uk/interpro/
   SEQUENCE_SEARCH_URL: https://wwwdev.ebi.ac.uk/metagenomics/sequence-search/search/phmmer
@@ -16,109 +17,30 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-
-    services:
-      mongo:
-        image: mongo:4.0.6
-        ports:
-          - 27017:27017
-        options: --health-cmd="mongo" --health-interval=10s --health-timeout=5s --health-retries=5
-
     steps:
       - uses: actions/checkout@v4
         with:
           path: client-repo
-
-      - name: 🐍 - Set up Python 3.9
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.9
-
-      - name: 🔧🔬 - Install EMG API
-        run: |
-          pip install --user --upgrade pip setuptools
-          python -V
-          pip -V
-          pip install "git+https://github.com/EBI-metagenomics/emgapi@develop#egg=emgcli"
-          ls -l
-
-      - name: Set up db files for API
-        working-directory: client-repo
-        run: |
-          sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/config.yaml
-          cat ci/config.yaml
-
-      - name: 🪜 - Setting up Fixtures
-        working-directory: client-repo
-        run: |
-          wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2204-x86_64-100.6.1.deb
-          sudo apt install ./mongodb-database-tools-ubuntu2204-x86_64-100.6.1.deb
-          mongorestore --gzip --archive < ci/testdbs/emg-testdb.mongoarchive
-          emgcli migrate
-          mv ci/emg_api_datafiles/results $GITHUB_WORKSPACE/results
 
       - name: ⚙️ - Settings
         working-directory: client-repo
         env: # Or as an environment variable
           MAPS_KEY: ${{ secrets.GOOGLE_MAPS_DEV_KEY }}
         run: |
-          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\"}" > "$(pwd)/config.private.json"
+          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\", \"api_v2\": \"$API_V2_URL\"}" > "$(pwd)/config.private.json"
 
-      - uses: actions/checkout@v4
-        name: 🔬 - Checkout EMG API
-        with:
-          repository: 'EBI-Metagenomics/emgapi'
-          ref: 'develop'
-          path: emgapi
-
-      - name: 🔬 - Start EMG API
-        run: |
-          export PYTHONPATH="$PYTHONPATH:${{ github.workspace }}/emgapi/tests/"
-          echo $PYTHONPATH
-          emgcli collectstatic --noinput
-          emgcli check --deploy
-          cd emgapi
-          export GUNICORN_CMD_ARGS="--bind 127.0.0.1:8000 --workers=1 --daemon -p emg.pid --error-logfile error.log --access-logfile access.log"
-          emgdeploy emgcli.wsgi:application
-          ps aux | grep emgdeploy
-          cd ..
-          echo "\ngunicorn v1/"
-          curl --silent http://localhost:8000/v1/
-
-      - name: 🌎 - Setup NginX
-        working-directory: client-repo
-        run: |
-          sudo chmod 777 /var/log/nginx/*
-          sudo chmod 777 /var/run/*
-          sudo chmod 777 /var/run
-          sed -i s#{GITHUB_WORKSPACE}#$GITHUB_WORKSPACE#g ci/nginx.conf
-          nginx -c "$(pwd)/ci/nginx.conf"
-
-      - name: 📜 - Set up JS Node 16
+      - name: 📜 - Set up JS Node 23
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '23'
           cache: 'npm'
           cache-dependency-path: client-repo/package-lock.json
 
-#       TODO: ⚠️ the json generated is not understood by codecov
-#       TODO: fix 404s for nested URLs – nginx config problem?
-      - name: 🔧 - Install
+      - name: 🔧 - Install deps
         working-directory: client-repo
         run: |
           npm ci
-          npm run build
-          npm run coverage:instrument 
-          cp -r dist metagenomics
-          mv metagenomics /usr/share/nginx/html/metagenomics
-          cp -r coverage/instrumented/* /usr/share/nginx/html/metagenomics/
-          ls /usr/share/nginx/html/metagenomics
-          echo "=== web index ==="
-          curl --silent http://localhost:9000/metagenomics/
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          npm i -g concurrently
 
       - name: 🧹 - ESlint
         working-directory: client-repo
@@ -130,6 +52,13 @@ jobs:
         with:
           working-directory: client-repo
           browser: chrome
+          start: concurrently -k "npm run serve:fixtures" "npm run start"
+          wait-on: http://localhost:9000/
+          wait-on-timeout: 60
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
       - name: 📉 - Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -156,14 +85,6 @@ jobs:
         with:
           name: tests-snapshots
           path: /home/runner/work/ebi-metagenomics-client/ebi-metagenomics-client/client-repo/cypress/screenshots/ # - name: 📊 - Coverage
-
-      - name: 🐞 - Error log
-        if: failure()
-        run: |
-          echo "NGINX error log"
-          cat /var/log/nginx/error.log
-          echo "NGINX access log"
-          cat /var/log/nginx/access.log
 
       - name: 📮 - Slack Notification
         uses: rtCamp/action-slack-notify@v2

@@ -13,7 +13,7 @@ interface MgnifyDataResponse extends DataResponse {
 }
 
 const useMGnifyData: (
-  endpoint: string,
+  endpoint?: string,
   parameters?: KeyValue,
   fetchOptions?: RequestInit,
   format?: ResponseFormat
