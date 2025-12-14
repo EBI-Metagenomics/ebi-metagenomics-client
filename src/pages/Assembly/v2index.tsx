@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 
 import axios from 'utils/protectedAxios';
-import { MGnifyResponseObj, ErrorTypes } from 'hooks/data/useData';
 import useURLAccession from 'hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
