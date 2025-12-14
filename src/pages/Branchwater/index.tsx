@@ -824,36 +824,36 @@ const Branchwater = () => {
   };
 
   // Updated useEffect for handling search results
-  useEffect(() => {
-    if (searchResults.length > 0) {
-      const filteredResults = getFilteredResults();
-      const vizData = prepareVisualizationData(filteredResults);
-      setVisualizationData(vizData);
-
-      // Convert filtered results to map samples
-      const mapData = convertToMapSamples(filteredResults);
-      setMapSamples(mapData);
-
-      // Set available geo data for other uses
-      const availableGeoData = filteredResults.filter(
-        (item) =>
-          item.geo_loc_name_country_calc &&
-          item.lat_lon &&
-          item.lat_lon !== 'NP'
-      );
-      // setAvailableGeoData(availableGeoData);
-    } else {
-      // Clear data when no search results
-      setMapSamples([]);
-      // setAvailableGeoData([]);
-    }
-  }, [
-    filters,
-    getFilteredResults,
-    prepareVisualizationData,
-    searchResults,
-    convertToMapSamples,
-  ]);
+  // useEffect(() => {
+  //   if (searchResults.length > 0) {
+  //     const filteredResults = getFilteredResults();
+  //     const vizData = prepareVisualizationData(filteredResults);
+  //     setVisualizationData(vizData);
+  //
+  //     // Convert filtered results to map samples
+  //     const mapData = convertToMapSamples(filteredResults);
+  //     setMapSamples(mapData);
+  //
+  //     // Set available geo data for other uses
+  //     const availableGeoData = filteredResults.filter(
+  //       (item) =>
+  //         item.geo_loc_name_country_calc &&
+  //         item.lat_lon &&
+  //         item.lat_lon !== 'NP'
+  //     );
+  //     // setAvailableGeoData(availableGeoData);
+  //   } else {
+  //     // Clear data when no search results
+  //     setMapSamples([]);
+  //     // setAvailableGeoData([]);
+  //   }
+  // }, [
+  //   filters,
+  //   getFilteredResults,
+  //   prepareVisualizationData,
+  //   searchResults,
+  //   convertToMapSamples,
+  // ]);
 
   useEffect(() => {
     const handleSketched = (evt: CustomEvent): void => {
@@ -863,6 +863,7 @@ const Branchwater = () => {
       const sig = JSON.parse(evt.detail.signature);
 
       setSignature(sig);
+      console.log(sig);
       // Removed automatic axios request - will only search when button is clicked
 
       // setIsButtonDisabled(false);
@@ -875,40 +876,40 @@ const Branchwater = () => {
     };
   }, [signature]);
 
-  useEffect(() => {
-    if (searchResults.length > 0) {
-      const filteredResults = getFilteredResults();
-      const vizData = prepareVisualizationData(filteredResults);
-      setVisualizationData(vizData);
-
-      // Convert filtered results to map samples
-      const mapData = convertToMapSamples(filteredResults);
-      setMapSamples(mapData);
-
-      // Calculate country counts for heatmap
-      const counts = getCountryCountsFromResults(filteredResults);
-      setCountryCounts(counts);
-
-      // Set available geo data for other uses
-      const availableGeoData = filteredResults.filter(
-        (item) =>
-          item.geo_loc_name_country_calc &&
-          item.lat_lon &&
-          item.lat_lon !== 'NP'
-      );
-    } else {
-      // Clear data when no search results
-      setMapSamples([]);
-      setCountryCounts({});
-    }
-  }, [
-    filters,
-    getFilteredResults,
-    prepareVisualizationData,
-    searchResults,
-    convertToMapSamples,
-    getCountryCountsFromResults,
-  ]);
+  // useEffect(() => {
+  //   if (searchResults.length > 0) {
+  //     const filteredResults = getFilteredResults();
+  //     const vizData = prepareVisualizationData(filteredResults);
+  //     setVisualizationData(vizData);
+  //
+  //     // Convert filtered results to map samples
+  //     const mapData = convertToMapSamples(filteredResults);
+  //     setMapSamples(mapData);
+  //
+  //     // Calculate country counts for heatmap
+  //     const counts = getCountryCountsFromResults(filteredResults);
+  //     setCountryCounts(counts);
+  //
+  //     // Set available geo data for other uses
+  //     const availableGeoData = filteredResults.filter(
+  //       (item) =>
+  //         item.geo_loc_name_country_calc &&
+  //         item.lat_lon &&
+  //         item.lat_lon !== 'NP'
+  //     );
+  //   } else {
+  //     // Clear data when no search results
+  //     setMapSamples([]);
+  //     setCountryCounts({});
+  //   }
+  // }, [
+  //   filters,
+  //   getFilteredResults,
+  //   prepareVisualizationData,
+  //   searchResults,
+  //   convertToMapSamples,
+  //   getCountryCountsFromResults,
+  // ]);
 
   // Handle filter change
   const handleFilterChange = (field: keyof Filters, value: string): void => {
@@ -1176,9 +1177,7 @@ const Branchwater = () => {
           }}
         >
           <h2>Search by Gene</h2>
-          <p>
-            <CobsSearch />
-          </p>
+          <CobsSearch />
         </section>
         <section
           className="vf-tabs__section"
@@ -1188,9 +1187,7 @@ const Branchwater = () => {
           }}
         >
           <h2>Search by Mags</h2>
-          <p>
-            <SourmashSearch />
-          </p>
+          <SourmashSearch />
         </section>
         <section
           className="vf-tabs__section"

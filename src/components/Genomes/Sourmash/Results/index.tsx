@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// import 'mgnify-sourmash-component';
 
 import useInterval from '@/hooks/useInterval';
 import useMgnifySourmashStatus from '@/hooks/data/useMgnifySourmashStatus';

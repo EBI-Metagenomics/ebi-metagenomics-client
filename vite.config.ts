@@ -1,8 +1,6 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import path, { resolve } from 'path';
-// import { resolve } from 'path';
-import { copyFileSync } from 'fs';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
 
 const wasmContentTypePlugin = {
   name: 'wasm-content-type-plugin',
@@ -21,49 +19,6 @@ export default defineConfig({
   plugins: [
     react(),
     wasmContentTypePlugin,
-    {
-      name: 'copy-mgnify-component',
-      writeBundle() {
-        // Copy the component file to dist after build
-        copyFileSync(
-          resolve(
-            __dirname,
-            'node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.js'
-          ),
-          resolve(__dirname, 'dist/mgnify-sourmash-component.js')
-        );
-        copyFileSync(
-          resolve(
-            __dirname,
-            'node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.worker.js'
-          ),
-          resolve(
-            __dirname,
-            'dist/node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.worker.js'
-          )
-        );
-        copyFileSync(
-          resolve(
-            __dirname,
-            'node_modules/mgnify-sourmash-component/dist/646.mgnify-sourmash-component.worker.js'
-          ),
-          resolve(
-            __dirname,
-            'dist/node_modules/mgnify-sourmash-component/dist/646.mgnify-sourmash-component.worker.js'
-          )
-        );
-        copyFileSync(
-          resolve(
-            __dirname,
-            'node_modules/mgnify-sourmash-component/dist/c92d2c3be4e1b9242546.module.wasm'
-          ),
-          resolve(
-            __dirname,
-            'dist/node_modules/mgnify-sourmash-component/dist/c92d2c3be4e1b9242546.module.wasm'
-          )
-        );
-      },
-    },
   ],
   resolve: {
     alias: {

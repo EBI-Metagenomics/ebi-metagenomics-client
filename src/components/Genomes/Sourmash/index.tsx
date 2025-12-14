@@ -1,5 +1,4 @@
 import React from 'react';
-// import 'mgnify-sourmash-component';
 import SourmashLogo from 'images/sourmash_logo.png';
 import useSearchStorage from '@/hooks/useSearchStorage';
 import SourmashHistory from './History';
