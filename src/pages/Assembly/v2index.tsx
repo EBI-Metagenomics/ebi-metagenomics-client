@@ -87,7 +87,6 @@ const V2AssemblyContext = createContext<V2AssemblyCtx>({
 
 const DerivedGenomes: React.FC = () => {
   const { assemblyData } = React.useContext(V2AssemblyContext);
-  const accession = assemblyData?.accession || 'assembly';
 
   const columns = [
     {
@@ -147,49 +146,6 @@ const DerivedGenomes: React.FC = () => {
 
   return (
     <Box label="Derived genomes">
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          marginBottom: '0.5rem',
-        }}
-      >
-        <button
-          type="button"
-          className="vf-button vf-button--secondary vf-button--sm"
-          disabled={!genomeLinks.length}
-          onClick={(e) => {
-            e.preventDefault();
-            if (!genomeLinks.length) return;
-            // Prepare CSV rows using visible columns
-            const records = genomeLinks.map((row) => ({
-              genome_accession: row.genome.accession,
-              mag_accession: row.mag_accession || '',
-              species_representative:
-                row.genome.accession === row.species_rep ? 'yes' : 'no',
-              taxonomy: row.genome.taxon_lineage,
-              catalogue_id: row.genome.catalogue_id,
-              catalogue_version: row.genome.catalogue_version,
-            }));
-            downloadAsCSV(
-              records,
-              [
-                'genome_accession',
-                'mag_accession',
-                'species_representative',
-                'taxonomy',
-                'catalogue_id',
-                'catalogue_version',
-              ],
-              `${accession}_derived_genomes.csv`
-            );
-          }}
-        >
-          Download
-        </button>
-      </div>
-
       {genomeLinks.length ? (
         <EMGTable cols={columns} data={genomeLinks} />
       ) : (
@@ -312,33 +268,7 @@ const AdditionalContainedGenomes: React.FC = () => {
         <button
           type="button"
           className="vf-button vf-button--secondary vf-button--sm"
-          disabled={loading || !rows.length}
-          onClick={(e) => {
-            e.preventDefault();
-            if (!rows.length) return;
-            const records = rows.map((row) => ({
-              genome_accession: row.genome.accession,
-              ena_genome_accession: row.ena_genome_accession || '',
-              containment_percent: Number.isFinite(row.containment)
-                ? Number(row.containment).toFixed(1)
-                : '0.0',
-              taxonomy: row.genome.taxon_lineage,
-              catalogue_id: row.genome.catalogue_id,
-              catalogue_version: row.genome.catalogue_version,
-            }));
-            downloadAsCSV(
-              records,
-              [
-                'genome_accession',
-                'ena_genome_accession',
-                'containment_percent',
-                'taxonomy',
-                'catalogue_id',
-                'catalogue_version',
-              ],
-              `${accession}_additional_contained_genomes.csv`
-            );
-          }}
+          onClick={(e) => e.preventDefault()}
         >
           Download
         </button>
@@ -504,42 +434,3 @@ const V2AssemblyPage: React.FC = () => {
 };
 
 export default V2AssemblyPage;
-
-// ---------- CSV helpers (local) ----------
-
-function escapeCSVField(value: unknown): string {
-  if (value === null || value === undefined) return '';
-  let str = String(value);
-  const mustQuote =
-    /[",\n\r]/.test(str) || str.startsWith(' ') || str.endsWith(' ');
-  // Escape quotes by doubling them
-  if (str.includes('"')) {
-    str = str.replace(/"/g, '""');
-  }
-  return mustQuote ? `"${str}"` : str;
-}
-
-function toCSV(records: Array<Record<string, any>>, columns: string[]): string {
-  const header = columns.join(',');
-  const lines = records.map((rec) =>
-    columns.map((col) => escapeCSVField(rec[col])).join(',')
-  );
-  return [header, ...lines].join('\n');
-}
-
-function downloadAsCSV(
-  records: Array<Record<string, any>>,
-  columns: string[],
-  filename: string
-) {
-  const csv = toCSV(records, columns);
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', filename);
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
-}
