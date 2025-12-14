@@ -32,7 +32,7 @@ const ContainmentFilter: React.FC = () => {
           min={MIN}
           max={MAX}
           steps={1000}
-          precision={3}
+          precision={2}
           isEnabled
           selection={{
             min: range?.[0] ?? MIN,

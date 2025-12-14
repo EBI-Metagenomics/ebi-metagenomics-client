@@ -5,6 +5,7 @@ import ContainmentFilter from 'components/Search/Filter/Containment';
 import LocalMultipleOptionFilter from 'components/Branchwater/LocalMultipleOptionFilter';
 import DetailedResultsTable from 'pages/Branchwater/DetailedResultsTable';
 import Plot from 'react-plotly.js';
+import InfoBanner from 'components/UI/InfoBanner';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 
 import './results.css';
@@ -164,27 +165,17 @@ const Results: React.FC<ResultsProps> = ({
   return (
     <>
       {showBanner && (
-        <div className="vf-banner vf-banner--alert vf-banner--success">
-          <div className="vf-banner__content">
-            <p className="vf-banner__text">
-              This search engine searches for the containment of a query genome
-              sequence in 6 million metagenomes available from INSDC archives as
-              of 12/08/2023
-            </p>
-            <button
-              type="button"
-              role="button"
-              aria-label="close notification banner"
-              className="vf-button vf-button--icon vf-button--dismiss | vf-banner__button"
-              onClick={() => setShowBanner(false)}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <title>dismiss banner</title>
-                <path d="M14.3,12.179a.25.25,0,0,1,0-.354l9.263-9.262A1.5,1.5,0,0,0,21.439.442L12.177,9.7a.25.25,0,0,1-.354,0L2.561.442A1.5,1.5,0,0,0,.439,2.563L9.7,11.825a.25.25,0,0,1,0,.354L.439,21.442a1.5,1.5,0,0,0,2.122,2.121L11.823,14.3a.25.25,0,0,1,.354,0l9.262,9.263a1.5,1.5,0,0,0,2.122-2.121Z" />
-              </svg>
-            </button>
-          </div>
-        </div>
+        <InfoBanner
+          type="success"
+          dismissible
+          onDismiss={() => setShowBanner(false)}
+        >
+          <p className="vf-banner__text">
+            This search engine searches for the containment of a query genome
+            sequence in 6 million metagenomes available from INSDC archives as
+            of 12/08/2023
+          </p>
+        </InfoBanner>
       )}
       <div className="vf-u-padding__top--600 results-header">
         <div className="results-summary">
@@ -205,14 +196,6 @@ const Results: React.FC<ResultsProps> = ({
           </div>
 
           <div className="results-actions">
-            <button
-              type="button"
-              className="vf-button vf-button--primary vf-button--sm"
-              onClick={() => setIsTableVisible(!isTableVisible)}
-            >
-              {isTableVisible ? '📊 Hide Details' : '📋 View Details'}
-            </button>
-
             <button
               type="button"
               className="vf-button vf-button--secondary vf-button--sm"
@@ -321,6 +304,7 @@ const Results: React.FC<ResultsProps> = ({
                 <MapContainer
                   center={[20, 0]}
                   zoom={2}
+                  minZoom={1.5}
                   scrollWheelZoom
                   style={{ height: '100%' }}
                 >

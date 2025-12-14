@@ -12,8 +12,6 @@ import useURLAccession from 'hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import Box from 'components/UI/Box';
-// import KeyValueList from 'components/UI/KeyValueList';
-// import ExtLink from 'components/UI/ExtLink';
 import { Link } from 'react-router-dom';
 import AssociatedAnalyses from 'components/Analysis/Analyses';
 import { ENA_VIEW_URL } from 'utils/urls';
@@ -22,23 +20,9 @@ import Tabs from 'components/UI/Tabs';
 import RouteForHash from 'components/Nav/RouteForHash';
 import config from 'utils/config';
 import EMGTable from 'components/UI/EMGTable';
+import InfoBanner from 'components/UI/InfoBanner';
 
-// Normalised data type for this page
-type AssemblyLinksData = {
-  accession: string;
-  genome_links: GenomeLink[];
-  run_accession?: React.ReactNode;
-  sample_accession?: string | (() => JSX.Element);
-};
-
-// Alternative API response shapes
-type ItemsResponse = {
-  items: Array<{
-    genome: GenomeLink['genome'];
-    species_rep: string;
-  }>;
-  count?: number;
-};
+// ---------- Types ----------
 
 type GenomeLink = {
   genome: {
@@ -48,6 +32,21 @@ type GenomeLink = {
     catalogue_version: string | number;
   };
   species_rep: string;
+  mag_accession?: string;
+  updated_at?: string;
+};
+
+// Normalised data type for this page
+type AssemblyLinksData = {
+  accession: string;
+  genome_links: GenomeLink[];
+  run_accession?: React.ReactNode;
+  sample_accession?: string;
+};
+
+type GenomeLinksResponse = {
+  count?: number;
+  items: GenomeLink[]; // matches the actual response you pasted
 };
 
 type ContainedGenome = {
@@ -57,7 +56,7 @@ type ContainedGenome = {
     catalogue_id: string | number;
     catalogue_version: string | number;
   };
-  ena: string;
+  ena_genome_accession?: string;
   containment: number; // percentage (0-100)
 };
 
@@ -66,11 +65,12 @@ type V2AssemblyCtx = {
     accession: string;
     run_accession: React.ReactNode | undefined;
     genome_links: GenomeLink[];
-    sample_accession: (() => JSX.Element) | string;
+    sample_accession: string;
   } | null;
   loading: boolean;
   error: { error: unknown; type: ErrorTypes } | null;
   refetch: () => Promise<void>;
+  genomeLinksLastUpdated: string | null;
 };
 
 const V2AssemblyContext = createContext<V2AssemblyCtx>({
@@ -80,10 +80,14 @@ const V2AssemblyContext = createContext<V2AssemblyCtx>({
   refetch(): Promise<void> {
     return Promise.resolve(undefined);
   },
+  genomeLinksLastUpdated: null,
 });
+
+// ---------- Components ----------
 
 const DerivedGenomes: React.FC = () => {
   const { assemblyData } = React.useContext(V2AssemblyContext);
+  const accession = assemblyData?.accession || 'assembly';
 
   const columns = [
     {
@@ -98,9 +102,19 @@ const DerivedGenomes: React.FC = () => {
     {
       id: 'ena',
       Header: 'ENA',
-      accessor: (row: GenomeLink) => (
-        <Link to={`/genomes/${row.ena}`}>{row.ena}</Link>
-      ),
+      accessor: (row: GenomeLink) =>
+        row.mag_accession ? (
+          // If mag_accession is an ENA/Browser-friendly accession, link it:
+          <a
+            href={`${ENA_VIEW_URL}${row.mag_accession}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {row.mag_accession}
+          </a>
+        ) : (
+          '—'
+        ),
     },
     {
       id: 'species_representative',
@@ -110,12 +124,10 @@ const DerivedGenomes: React.FC = () => {
           <span
             className="icon icon-common icon-check-circle"
             style={{ fontSize: '1.3rem', color: 'green' }}
+            title="Species representative"
           />
         ) : (
-          <span
-            className="icon icon-common icon-check-circle"
-            style={{ fontSize: '1.3rem', color: 'green' }}
-          />
+          <span title="Not species representative">—</span>
         ),
     },
     {
@@ -135,6 +147,49 @@ const DerivedGenomes: React.FC = () => {
 
   return (
     <Box label="Derived genomes">
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          marginBottom: '0.5rem',
+        }}
+      >
+        <button
+          type="button"
+          className="vf-button vf-button--secondary vf-button--sm"
+          disabled={!genomeLinks.length}
+          onClick={(e) => {
+            e.preventDefault();
+            if (!genomeLinks.length) return;
+            // Prepare CSV rows using visible columns
+            const records = genomeLinks.map((row) => ({
+              genome_accession: row.genome.accession,
+              mag_accession: row.mag_accession || '',
+              species_representative:
+                row.genome.accession === row.species_rep ? 'yes' : 'no',
+              taxonomy: row.genome.taxon_lineage,
+              catalogue_id: row.genome.catalogue_id,
+              catalogue_version: row.genome.catalogue_version,
+            }));
+            downloadAsCSV(
+              records,
+              [
+                'genome_accession',
+                'mag_accession',
+                'species_representative',
+                'taxonomy',
+                'catalogue_id',
+                'catalogue_version',
+              ],
+              `${accession}_derived_genomes.csv`
+            );
+          }}
+        >
+          Download
+        </button>
+      </div>
+
       {genomeLinks.length ? (
         <EMGTable cols={columns} data={genomeLinks} />
       ) : (
@@ -152,35 +207,34 @@ const AdditionalContainedGenomes: React.FC = () => {
 
   useEffect(() => {
     let cancelled = false;
+
     const fetchAdditional = async () => {
       try {
         setLoading(true);
         setError(null);
+
         const resp = await axios.get(
-          // `${config.api_v2}assemblies/${accession}/additional-contained-genomes`
-          'http://localhost:8000/assemblies/ERZ857108/additional-contained-genomes'
+          `${config.api_v2}assemblies/${accession}/additional-contained-genomes`
         );
+
         const raw = resp.data as unknown;
-        // Raw shape expected from API:
-        // { count: number, items: [{ genome: {...}, run_accession: string, containment: number, cani: number }] }
         const items =
           raw && typeof raw === 'object' && Array.isArray((raw as any).items)
             ? ((raw as any).items as Array<any>)
             : [];
+
         const mapped: ContainedGenome[] = items.map((it) => ({
           genome: {
             accession: it?.genome?.accession ?? '',
             taxon_lineage: it?.genome?.taxon_lineage ?? '',
             catalogue_id: it?.genome?.catalogue_id ?? '',
             catalogue_version: it?.genome?.catalogue_version ?? '',
-            ena_genome_accession: it?.genome.ena_genome_accession ?? '',
           },
-          // ENA currently not provided by API; keep empty as requested
-          // ena: '',
-          // API returns fraction (e.g., 1.0). Convert to percentage for display
+          ena_genome_accession: it?.genome?.ena_genome_accession ?? '',
           containment:
             typeof it?.containment === 'number' ? it.containment * 100 : 0,
         }));
+
         if (!cancelled) setRows(mapped);
       } catch (e) {
         console.error(e);
@@ -190,6 +244,7 @@ const AdditionalContainedGenomes: React.FC = () => {
         if (!cancelled) setLoading(false);
       }
     };
+
     fetchAdditional();
     return () => {
       cancelled = true;
@@ -209,11 +264,18 @@ const AdditionalContainedGenomes: React.FC = () => {
     {
       id: 'ena',
       Header: 'ENA',
-      accessor: (row: ContainedGenome) => (
-        <Link to={`${ENA_VIEW_URL}GCA_036480555`}>
-          {row.ena_genome_accession}
-        </Link>
-      ),
+      accessor: (row: ContainedGenome) =>
+        row.ena_genome_accession ? (
+          <a
+            href={`${ENA_VIEW_URL}${row.ena_genome_accession}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {row.ena_genome_accession}
+          </a>
+        ) : (
+          '—'
+        ),
     },
     {
       id: 'containment',
@@ -250,11 +312,38 @@ const AdditionalContainedGenomes: React.FC = () => {
         <button
           type="button"
           className="vf-button vf-button--secondary vf-button--sm"
-          onClick={(e) => e.preventDefault()}
+          disabled={loading || !rows.length}
+          onClick={(e) => {
+            e.preventDefault();
+            if (!rows.length) return;
+            const records = rows.map((row) => ({
+              genome_accession: row.genome.accession,
+              ena_genome_accession: row.ena_genome_accession || '',
+              containment_percent: Number.isFinite(row.containment)
+                ? Number(row.containment).toFixed(1)
+                : '0.0',
+              taxonomy: row.genome.taxon_lineage,
+              catalogue_id: row.genome.catalogue_id,
+              catalogue_version: row.genome.catalogue_version,
+            }));
+            downloadAsCSV(
+              records,
+              [
+                'genome_accession',
+                'ena_genome_accession',
+                'containment_percent',
+                'taxonomy',
+                'catalogue_id',
+                'catalogue_version',
+              ],
+              `${accession}_additional_contained_genomes.csv`
+            );
+          }}
         >
           Download
         </button>
       </div>
+
       {loading ? (
         <Loading size="small" />
       ) : error ? (
@@ -267,44 +356,19 @@ const AdditionalContainedGenomes: React.FC = () => {
 };
 
 const Overview: React.FC = () => {
-  // const { assemblyData } = React.useContext(V2AssemblyContext);
-
-  // const details = [
-  //   {
-  //     key: 'Sample',
-  //     value: assemblyData
-  //       ? () => (
-  //           <Link to={`${assemblyData?.sample_accession}`}>
-  //             {assemblyData?.sample_accession}
-  //           </Link>
-  //         )
-  //       : null,
-  //   },
-  //   {
-  //     key: 'Runs',
-  //     value: assemblyData
-  //       ? () => (
-  //           <Link to={`${assemblyData?.run_accession}`}>
-  //             {assemblyData?.run_accession}
-  //           </Link>
-  //         )
-  //       : null,
-  //   },
-  //   {
-  //     key: 'ENA accession',
-  //     value: () => (
-  //       <ExtLink href={`${ENA_VIEW_URL}${assemblyData?.accession}`}>
-  //         {assemblyData?.accession}
-  //       </ExtLink>
-  //     ),
-  //   },
-  // ].filter(({ value }) => Boolean(value));
+  const { genomeLinksLastUpdated } = React.useContext(V2AssemblyContext);
 
   return (
     <>
-      {/*<Box label="Description">*/}
-      {/*  <KeyValueList list={details} />*/}
-      {/*</Box>*/}
+      <InfoBanner type="success">
+        <p className="vf-banner__text">
+          Last updated on:{' '}
+          {genomeLinksLastUpdated
+            ? new Date(genomeLinksLastUpdated).toLocaleString()
+            : 'N/A'}
+        </p>
+      </InfoBanner>
+
       <DerivedGenomes />
       <AdditionalContainedGenomes />
     </>
@@ -331,30 +395,9 @@ const AdditionalAnalyses: React.FC = () => {
   );
 };
 
-const isItemsResponse = (raw: unknown): raw is ItemsResponse => {
-  return (
-    typeof raw === 'object' &&
-    raw !== null &&
-    Array.isArray((raw as Record<string, unknown>).items)
-  );
-};
-
-const isAssemblyLinksData = (raw: unknown): raw is AssemblyLinksData => {
-  if (typeof raw !== 'object' || raw === null) return false;
-  const obj = raw as Record<string, unknown>;
-  return typeof obj.accession === 'string' && Array.isArray(obj.genome_links);
-};
-
-const hasDataField = <T,>(raw: unknown): raw is MGnifyResponseObj<T> => {
-  return (
-    typeof raw === 'object' &&
-    raw !== null &&
-    'data' in (raw as Record<string, unknown>)
-  );
-};
-
 const V2AssemblyPage: React.FC = () => {
   const accession = useURLAccession();
+
   const [data, setData] = useState<AssemblyLinksData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<{
@@ -362,46 +405,39 @@ const V2AssemblyPage: React.FC = () => {
     type: ErrorTypes;
   } | null>(null);
 
+  const [genomeLinksLastUpdated, setGenomeLinksLastUpdated] = useState<
+    string | null
+  >(null);
+
   const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
     try {
-      setLoading(true);
-      const response = await axios.get(
+      const response = await axios.get<GenomeLinksResponse>(
         `${config.api_v2}assemblies/${accession}/genome-links`
       );
-      // Normalise API response to the structure expected by the UI components
-      // Expected shape:
-      // {
-      //   accession: string,
-      //   genome_links: Array<{ genome: { accession, taxon_lineage, catalogue_id, catalogue_version }, species_rep: string }>,
-      //   run_accession?: React.ReactNode,
-      //   sample_accession?: string
-      // }
-      const raw: unknown = response.data;
-      let normalised: AssemblyLinksData | null = null;
-      if (isItemsResponse(raw)) {
-        // Newer/alternative API returns { items: [...], count }
-        normalised = {
-          accession,
-          genome_links: raw.items.map((it) => ({
-            genome: it.genome,
-            species_rep: it.species_rep,
-          })),
-          run_accession: undefined,
-          sample_accession: '',
-        };
-      } else if (hasDataField<AssemblyLinksData>(raw)) {
-        // MGnifyResponseObj style
-        normalised = raw.data;
-      } else if (isAssemblyLinksData(raw)) {
-        normalised = raw;
-      }
+      const { items } = response.data;
+      setGenomeLinksLastUpdated(items?.[0]?.updated_at ?? null);
+      const normalised: AssemblyLinksData = {
+        accession,
+        genome_links: items.map((it) => ({
+          genome: it.genome,
+          species_rep: it.species_rep,
+          mag_accession: it.mag_accession,
+          updated_at: it.updated_at,
+        })),
+        run_accession: undefined,
+        sample_accession: '',
+      };
+
       setData(normalised);
-      setLoading(false);
     } catch (err) {
       setError({
         error: err,
         type: ErrorTypes.FetchError,
       });
+    } finally {
       setLoading(false);
     }
   }, [accession]);
@@ -410,12 +446,24 @@ const V2AssemblyPage: React.FC = () => {
     fetchData();
   }, [fetchData]);
 
-  // data is already normalised in fetchData
   const assemblyData = data;
 
   const ctxValue = useMemo(
-    () => ({ assemblyData, loading, error, refetch: fetchData }),
-    [assemblyData, loading, error, fetchData]
+    () => ({
+      assemblyData: assemblyData
+        ? {
+            accession: assemblyData.accession,
+            run_accession: assemblyData.run_accession,
+            genome_links: assemblyData.genome_links,
+            sample_accession: assemblyData.sample_accession ?? '',
+          }
+        : null,
+      loading,
+      error,
+      refetch: fetchData,
+      genomeLinksLastUpdated,
+    }),
+    [assemblyData, loading, error, fetchData, genomeLinksLastUpdated]
   );
 
   if (loading) return <Loading size="large" />;
@@ -433,15 +481,18 @@ const V2AssemblyPage: React.FC = () => {
     <section className="vf-content">
       <h2>Assembly: {assemblyData?.accession || ''}</h2>
       <Tabs tabs={tabs} />
+
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
           <V2AssemblyContext.Provider value={ctxValue}>
             <RouteForHash hash="#overview" isDefault>
               <Overview />
             </RouteForHash>
+
             <RouteForHash hash="#analyses">
               <Analyses />
             </RouteForHash>
+
             <RouteForHash hash="#additional-analyses">
               <AdditionalAnalyses />
             </RouteForHash>
@@ -453,3 +504,42 @@ const V2AssemblyPage: React.FC = () => {
 };
 
 export default V2AssemblyPage;
+
+// ---------- CSV helpers (local) ----------
+
+function escapeCSVField(value: unknown): string {
+  if (value === null || value === undefined) return '';
+  let str = String(value);
+  const mustQuote =
+    /[",\n\r]/.test(str) || str.startsWith(' ') || str.endsWith(' ');
+  // Escape quotes by doubling them
+  if (str.includes('"')) {
+    str = str.replace(/"/g, '""');
+  }
+  return mustQuote ? `"${str}"` : str;
+}
+
+function toCSV(records: Array<Record<string, any>>, columns: string[]): string {
+  const header = columns.join(',');
+  const lines = records.map((rec) =>
+    columns.map((col) => escapeCSVField(rec[col])).join(',')
+  );
+  return [header, ...lines].join('\n');
+}
+
+function downloadAsCSV(
+  records: Array<Record<string, any>>,
+  columns: string[],
+  filename: string
+) {
+  const csv = toCSV(records, columns);
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', filename);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
