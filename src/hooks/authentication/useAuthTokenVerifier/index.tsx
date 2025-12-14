@@ -24,6 +24,7 @@ const useAuthTokenVerifier = () => {
       }
     } catch (error) {
       // On failure, clear token and user details.
+      console.error(error);
       setAuthToken(null);
       setDetails(null);
     }
