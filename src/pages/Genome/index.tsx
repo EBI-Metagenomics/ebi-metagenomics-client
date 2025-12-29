@@ -282,9 +282,6 @@ const GenomePage: React.FC = () => {
     URL.revokeObjectURL(url);
   }, [sortedResults]);
 
-  // ---------------------------------------------------------------------------
-  // 15) VISUALIZATION PLACEHOLDER
-  // ---------------------------------------------------------------------------
   const visualizationData = useMemo(
     () => ({
       histogramData: [],
@@ -399,7 +396,9 @@ const GenomePage: React.FC = () => {
           <RouteForHash hash="#metagenome-search">
             <div className="vf-stack vf-stack--400">
               <h3>Branchwater</h3>
-              <p>Identify genome appearance across INSDC metagenomes</p>
+              <p>
+                Identify potential genome occurence across INSDC metagenomes
+              </p>
 
               <button
                 type="button"

@@ -4,13 +4,16 @@
  * @param {string} replace replace string
  * @return {string}
  */
-export function cleanTaxLineage(lineage: string, replace = ''): string {
-  let cleaned = lineage
-    .replace(/;/g, '')
-    .replace(/[d|p|c|o|f|g|s]__/g, replace);
+export function cleanTaxLineage(
+  lineage: string | undefined,
+  replace = ''
+): string {
+  const src = lineage ?? '';
+  let cleaned = src.replace(/;/g, '').replace(/[d|p|c|o|f|g|s]__/g, replace);
   if (cleaned.startsWith(replace)) {
     cleaned = cleaned.substring(replace.length).trimStart();
   }
+  console.log('cleaned ', cleaned);
   return cleaned;
 }
 
@@ -24,23 +27,53 @@ export function getSimpleTaxLineage(
   fullLineage: string,
   removePrefix: boolean
 ): string {
-  const l = fullLineage.split(';');
-  let head = l.pop();
-  if (!head) {
+  if (!fullLineage) {
     return '';
   }
-  // Remove all until species
-  while ((head as string).indexOf('s__') === -1) {
-    head = l.pop();
+
+  const parts = String(fullLineage)
+    .split(';')
+    .map((s) => (s ? s.trim() : s))
+    .filter((s) => !!s);
+
+  if (!parts.length) {
+    return '';
   }
-  // Find first non-null
-  while ((head as string).length <= 3) {
-    head = l.pop();
+
+  // Prefer the most specific species level (s__) if present; otherwise use the
+  // last available non-blank taxon (i.e. the tail of the lineage).
+  let chosen: string | undefined;
+
+  // Find the last occurrence of an s__ entry, if any
+  for (let idx = parts.length - 1; idx >= 0; idx -= 1) {
+    const p = parts[idx];
+    if (p.indexOf('s__') !== -1) {
+      chosen = p;
+      // If this species token is effectively blank (e.g. 's__'), walk upwards
+      // to find the first non-blank higher-rank token.
+      if (chosen.length <= 3) {
+        let j = idx - 1;
+        while (j >= 0 && parts[j] && parts[j].length <= 3) {
+          j -= 1;
+        }
+        chosen = j >= 0 ? parts[j] : undefined;
+      }
+      break;
+    }
   }
-  if (removePrefix && head) {
-    return cleanTaxLineage(head);
+
+  // If no species token found, fall back to the last non-blank part
+  if (!chosen) {
+    let j = parts.length - 1;
+    while (j >= 0 && parts[j] && parts[j].length <= 3) {
+      j -= 1;
+    }
+    chosen = j >= 0 ? parts[j] : undefined;
   }
-  return head as string;
+
+  if (!chosen) return '';
+
+  return removePrefix ? cleanTaxLineage(chosen) : chosen;
 }
 
 export const TAXONOMY_COLOURS = [

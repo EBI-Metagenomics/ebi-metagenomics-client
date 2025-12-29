@@ -172,7 +172,7 @@ const Results: React.FC<ResultsProps> = ({
         >
           <p className="vf-banner__text">
             This search engine searches for the containment of a query genome
-            sequence in 6 million metagenomes available from INSDC archives as
+            sequence in 1.6 million metagenomes available from INSDC archives as
             of 12/08/2023
           </p>
         </InfoBanner>

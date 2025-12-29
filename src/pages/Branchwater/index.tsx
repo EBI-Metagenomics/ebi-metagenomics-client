@@ -13,6 +13,8 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import axios from 'axios';
 import Results from 'pages/Branchwater/Results';
+// import MGnifySourmashComponent from '@/components/MgnifySourmashComponent';
+// import 'mgnify-sourmash-component';
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -125,18 +127,10 @@ const Branchwater = () => {
 
   const sourmash = useRef<HTMLMgnifySourmashComponentElement | null>(null);
   const [signature, setSignature] = useState<Signature | null>(null);
-
-  // State for visualizations
   const [visualizationData, setVisualizationData] =
     useState<VisualizationData | null>(null);
-
-  // State for map samples
   const [mapSamples, setMapSamples] = useState<MapSample[]>([]);
-
-  // Global text query (from generic TextSearch component)
   const [textQuery] = useQueryParamState('query', '');
-
-  // cANI range from query param (format: "min,max")
   const [caniRange] = useQueryParamState('cani', '');
 
   const parseLatLon = useCallback((raw: unknown): [number, number] | null => {
@@ -299,15 +293,12 @@ const Branchwater = () => {
     (data: SearchResult[]): VisualizationData | null => {
       if (!data || data.length === 0) return null;
 
-      // Use the union of keys across all rows (not just the first row)
       const commonKeys = Array.from(new Set(data.flatMap(Object.keys)));
 
-      // Build a columnar array (values[kIndex] -> array of values for that key)
       const values: Record<string | number, unknown>[][] = commonKeys.map((k) =>
         data.map((row) => row[k])
       );
 
-      // ----- Categorical bar plots: only include true string-like cols, skip IDs/links/coords
       const stringKeys: string[] = [];
       const stringValues: string[][] = [];
 
@@ -316,7 +307,6 @@ const Branchwater = () => {
         if (['acc', 'biosample_link', 'lat_lon'].includes(key)) continue;
 
         const col = values[i];
-        // Treat null/undefined as empty strings for the "every" check
         const isAllStrings = col.every((v) => v == null);
         if (isAllStrings) {
           stringKeys.push(key);
@@ -326,7 +316,6 @@ const Branchwater = () => {
 
       const barPlotData = createPlotData(stringKeys, stringValues);
 
-      // ----- Histograms (containment, cANI): coerce to numbers and filter NaN
       const numCol = (idx: number) =>
         idx === -1
           ? []
@@ -437,6 +426,8 @@ const Branchwater = () => {
           };
         }
       }
+
+      console.log('HISTOGRAM DATA ', hist);
 
       return {
         barPlotData,
@@ -1044,12 +1035,12 @@ const Branchwater = () => {
 
   return (
     <section className="vf-content mg-page-search">
-      <h2>Search for a genome within all INSDC metagenomes</h2>
+      <h2>Search for a genome within INSDC metagenomes</h2>
       <div className="vf-u-margin__top--400">
         <details className="vf-details">
           <summary className="vf-details--summary">Instructions</summary>
           <p className="vf-text-body vf-text-body--3">
-            Use the Browse button below to select a FastA file
+            Use the Browse button below to select a FASTA file
           </p>
           <p className="vf-text-body vf-text-body--3">
             <strong>Sourmash</strong> runs in your browser to create compact
@@ -1057,7 +1048,7 @@ const Branchwater = () => {
           </p>
           <p className="vf-text-body vf-text-body--3">
             This search engine searches for the containment of a query genome
-            sequence in 6 million metagenomes available from INSDC archives as
+            sequence in 1.6 million metagenomes available from INSDC archives as
             of 12/08/2023
           </p>
           <p className="vf-text-body vf-text-body--3">
@@ -1080,6 +1071,13 @@ const Branchwater = () => {
       <div>
         <form className="vf-stack vf-stack--400">
           <div className="vf-form__item vf-stack">
+            {/*<MGnifySourmashComponent*/}
+            {/*  showDirectoryCheckbox*/}
+            {/*  showSignatures*/}
+            {/*  ksize={21}*/}
+            {/*  scaled={1000}*/}
+            {/*/>*/}
+
             <mgnify-sourmash-component
               id="sourmash"
               ref={sourmash}
@@ -1183,7 +1181,7 @@ const Branchwater = () => {
                   onChange={() => setSelectedExample('example-mag-2nd')}
                 />
                 <label className="vf-form__label" htmlFor="example-mag-2nd">
-                  Rhizobiaceae BOKV01— Marine &nbsp;
+                  Rhizobiaceae BOKV01 sp— Marine &nbsp;
                   <a
                     className="vf-link"
                     href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000485384#overview"
