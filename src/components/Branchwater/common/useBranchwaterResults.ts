@@ -1,5 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import {
+  processBranchwaterResults,
+  type VisualizationData,
+  type MapSample,
+} from '@/utils/branchwater';
 
 export type BranchwaterFilters = {
   acc: string;
@@ -9,6 +14,8 @@ export type BranchwaterFilters = {
   containment: string;
   geo_loc_name_country_calc: string;
   organism: string;
+  query?: string;
+  cani?: string;
 };
 
 export type UseBranchwaterResultsArgs<T extends Record<string, unknown>> = {
@@ -26,6 +33,9 @@ export type UseBranchwaterResultsReturn<T> = {
   sortedResults: T[];
   paginatedResults: T[];
   total: number;
+  visualizationData: VisualizationData | null;
+  mapSamples: MapSample[];
+  countryCounts: Record<string, number>;
 };
 
 function toLowerSafe(v: unknown): string {
@@ -74,7 +84,24 @@ export default function useBranchwaterResults<
 
   const filteredResults = useMemo(() => {
     const f = filters || ({} as BranchwaterFilters);
+    const globalQuery = (f.query || '').toString().trim().toLowerCase();
+
     return (items || []).filter((it) => {
+      // Apply global text query across common fields (if provided)
+      if (globalQuery) {
+        const haystack = [
+          it.acc,
+          it.assay_type,
+          it.bioproject,
+          it.collection_date_sam,
+          it.geo_loc_name_country_calc,
+          it.organism,
+        ]
+          .map((value) => (value == null ? '' : String(value).toLowerCase()))
+          .join(' ');
+        if (!haystack.includes(globalQuery)) return false;
+      }
+
       // Apply per-field contains filters (case-insensitive)
       const entries: Array<[keyof BranchwaterFilters, string]> = [
         ['acc', f.acc],
@@ -94,6 +121,26 @@ export default function useBranchwaterResults<
         if (!hay.includes(needle)) ok = false;
       });
       if (!ok) return false;
+
+      // Apply cANI numeric range filter
+      if (f.cani) {
+        const [minStr, maxStr] = f.cani.split(',');
+        const min = Number(minStr);
+        const max = Number(maxStr);
+
+        if (!Number.isNaN(min) && !Number.isNaN(max)) {
+          const val = it.cANI;
+          const num = typeof val === 'number' ? val : Number(val);
+
+          if (Number.isNaN(num)) return false;
+
+          const EPSILON = 0.0001;
+          if (num < min - EPSILON || num > max + EPSILON) {
+            return false;
+          }
+        }
+      }
+
       return true;
     });
   }, [items, filters]);
@@ -121,6 +168,30 @@ export default function useBranchwaterResults<
     return sortedResults.slice(start, end);
   }, [sortedResults, pageQP, pageSize]);
 
+  const [visualizationData, setVisualizationData] =
+    useState<VisualizationData | null>(null);
+  const [mapSamples, setMapSamples] = useState<MapSample[]>([]);
+  const [countryCounts, setCountryCounts] = useState<Record<string, number>>(
+    {}
+  );
+
+  useEffect(() => {
+    if (items.length > 0) {
+      const {
+        vizData,
+        mapData,
+        countryCounts: counts,
+      } = processBranchwaterResults(filteredResults as any);
+      setVisualizationData(vizData);
+      setMapSamples(mapData);
+      setCountryCounts(counts);
+    } else {
+      setVisualizationData(null);
+      setMapSamples([]);
+      setCountryCounts({});
+    }
+  }, [filteredResults, items.length]);
+
   return {
     page: pageQP || 1,
     pageSize,
@@ -129,5 +200,8 @@ export default function useBranchwaterResults<
     sortedResults,
     paginatedResults,
     total: sortedResults.length,
+    visualizationData,
+    mapSamples,
+    countryCounts,
   };
 }

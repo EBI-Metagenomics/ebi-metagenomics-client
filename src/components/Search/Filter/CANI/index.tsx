@@ -6,8 +6,12 @@ import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 const MIN = 0;
 const MAX = 1;
 
-const CANIFilter: React.FC = () => {
-  const [cani, setCani] = useQueryParamState('cani', '');
+interface CANIFilterProps {
+  queryParamKey?: string;
+}
+
+const CANIFilter: React.FC<CANIFilterProps> = ({ queryParamKey = 'cani' }) => {
+  const [cani, setCani] = useQueryParamState(queryParamKey, '');
 
   // Parse URL param into a stable range
   const range = useMemo(() => {

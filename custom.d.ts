@@ -69,6 +69,7 @@ declare global {
     env: {
       VITE_GOOGLE_MAPS_KEY: string | undefined;
       BASE_URL: string;
+      VITE_BRANCHWATER_DB_DATE: string | undefined;
     };
   }
 }

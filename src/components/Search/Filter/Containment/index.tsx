@@ -6,10 +6,16 @@ import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 const MIN = 0;
 const MAX = 1;
 
+interface ContainmentFilterProps {
+  queryParamKey?: string;
+}
+
 // A slider-based filter for Containment, mirroring the cANI filter
-// Persists selection to the `containment` query parameter as "min,max"
-const ContainmentFilter: React.FC = () => {
-  const [containment, setContainment] = useQueryParamState('containment', '');
+// Persists selection to the query parameter as "min,max"
+const ContainmentFilter: React.FC<ContainmentFilterProps> = ({
+  queryParamKey = 'containment',
+}) => {
+  const [containment, setContainment] = useQueryParamState(queryParamKey, '');
   const [range, setRange] = useState<number[]>(
     containment?.split(',').filter(Boolean).map(Number)
   );

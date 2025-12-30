@@ -7,6 +7,7 @@
   "enaURL": "https://www.ebi.ac.uk/ena/browser/view/",
   "hmmer": "https://wwwdev.ebi.ac.uk/metagenomics/sequence-search/search/phmmer",
   "googleMapsKey": "xx",
+  "branchwaterDbDate": "28/11/2024",
   "sentryDsn": "https://7cb28af2cf254e70ae5eb72733f745e3@o1128655.ingest.sentry.io/6171583",
   "sentryEnv": "dev",
   "sentryTransactionRate": 0.05,
@@ -28,13 +29,22 @@
         "docs": ["https://docs.mgnify.org/"]
       },
       "metagenomic": {
-        "githubs": ["https://github.com/EBI-Metagenomics/raw-reads-analysis-pipeline"],
+        "githubs": [
+          "https://github.com/EBI-Metagenomics/raw-reads-analysis-pipeline"
+        ],
         "workflowHubs": ["https://workflowhub.eu/projects/9#workflows"],
         "docs": ["https://docs.mgnify.org/"]
       },
       "assembly": {
-        "githubs": ["https://github.com/EBI-Metagenomics/assembly-analysis-pipeline", "https://github.com/EBI-Metagenomics/emg-viral-pipeline", "https://github.com/ebi-metagenomics/mobilome-annotation-pipeline/"],
-        "workflowHubs": ["https://workflowhub.eu/workflows/27", "https://workflowhub.eu/workflows/452"],
+        "githubs": [
+          "https://github.com/EBI-Metagenomics/assembly-analysis-pipeline",
+          "https://github.com/EBI-Metagenomics/emg-viral-pipeline",
+          "https://github.com/ebi-metagenomics/mobilome-annotation-pipeline/"
+        ],
+        "workflowHubs": [
+          "https://workflowhub.eu/workflows/27",
+          "https://workflowhub.eu/workflows/452"
+        ],
         "docs": ["https://docs.mgnify.org/"]
       }
     },

@@ -7,14 +7,25 @@ import React, {
 } from 'react';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import axios from 'axios';
 import Results from 'pages/Branchwater/Results';
-// import MGnifySourmashComponent from '@/components/MgnifySourmashComponent';
-// import 'mgnify-sourmash-component';
+import config from 'utils/config';
+import useBranchwaterResults, {
+  type BranchwaterFilters,
+} from 'components/Branchwater/common/useBranchwaterResults';
+import {
+  getContainmentHistogram,
+  getCaniHistogram,
+  getScatterData,
+  getTotalCountryCount,
+  getCountryColor,
+  processBranchwaterResults,
+  downloadBranchwaterCSV,
+  type BranchwaterResult as SearchResult,
+} from 'utils/branchwater';
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -26,60 +37,6 @@ const DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// Define interfaces for the component
-interface SearchResult {
-  acc?: string;
-  assay_type?: string;
-  bioproject?: string;
-  biosample_link?: string;
-  cANI?: number | string;
-  collection_date_sam?: string;
-  containment?: number | string;
-  geo_loc_name_country_calc?: string;
-  organism?: string;
-  lat_lon?: [number, number];
-  // Allow other dynamic properties that may appear in search results
-  [key: string]:
-    | string
-    | number
-    | boolean
-    | [number, number]
-    | null
-    | undefined;
-}
-
-interface MapSample {
-  id: string;
-  attributes: {
-    latitude: number;
-    longitude: number;
-    organism: string;
-    assay_type: string;
-    country: string;
-  };
-}
-
-// Minimal Plotly trace shape to avoid relying on external types while being type-safe
-type PlotTrace = Record<string, unknown>;
-
-interface VisualizationData {
-  barPlotData: PlotTrace[];
-  histogramData: PlotTrace[];
-  mapData: PlotTrace[];
-  stringKeys: string[];
-}
-
-interface Filters {
-  acc: string;
-  assay_type: string;
-  bioproject: string;
-  // cANI: string;
-  collection_date_sam: string;
-  containment: string;
-  geo_loc_name_country_calc: string;
-  organism: string;
-}
-
 interface Signature {
   [key: string]: unknown;
 }
@@ -89,357 +46,47 @@ const Branchwater = () => {
   const [, setUploadedFile] = useState<File | null>(null);
   // const [targetDatabase, setTargetDatabase] = useState<string>('MAGs');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [countryCounts, setCountryCounts] = useState<Record<string, number>>(
-    {}
-  );
-
-  const [,] = useQueryParamState('location_name', '');
-
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Pagination state
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage] = useState<number>(25);
-
-  // Sorting state (legacy/local) — default to containment descending
-  const [sortField, setSortField] = useState<string>('containment');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-  // Read ordering from EMGTable's sortable integration via query param
-  const [detailedOrder] = useQueryParamState('branchwater-detailed-order', '');
 
   const [selectedExample, setSelectedExample] = useState<
     'example-mag-1st' | 'example-mag-2nd' | 'example-mag-3rd'
   >('example-mag-1st');
 
   // Filtering state
-  const [filters, setFilters] = useState<Filters>({
+  const [filters, setFilters] = useState<BranchwaterFilters>({
     acc: '',
     assay_type: '',
     bioproject: '',
-    // cANI: '',
     collection_date_sam: '',
     containment: '',
     geo_loc_name_country_calc: '',
     organism: '',
+    query: '',
+    cani: '',
   });
 
   const sourmash = useRef<HTMLMgnifySourmashComponentElement | null>(null);
   const [signature, setSignature] = useState<Signature | null>(null);
-  const [visualizationData, setVisualizationData] =
-    useState<VisualizationData | null>(null);
-  const [mapSamples, setMapSamples] = useState<MapSample[]>([]);
   const [textQuery] = useQueryParamState('query', '');
   const [caniRange] = useQueryParamState('cani', '');
-
-  const parseLatLon = useCallback((raw: unknown): [number, number] | null => {
-    if (raw == null) return null;
-    if (Array.isArray(raw)) {
-      const [lat, lon] = raw;
-      const latNum = Number(lat);
-      const lonNum = Number(lon);
-      return Number.isFinite(latNum) && Number.isFinite(lonNum)
-        ? [latNum, lonNum]
-        : null;
-    }
-    let s = String(raw).trim();
-    if (!s || s === 'NP') return null;
-    // strip quotes then uppercase
-    s = s
-      .replace(/^"+|"+$/g, '')
-      .trim()
-      .toUpperCase();
-
-    // invalid markers
-    const bad = ['MISSING', 'NOT APPLICABLE', 'NA', 'N/A', 'NULL', 'NONE'];
-    if (bad.includes(s)) return null;
-
-    // Examples we want: "39.5886 N 20.1382 E", "12 N 32 W", "54.1883 N 7.9000 E"
-    // Allow commas or spaces between the pairs.
-    const re =
-      /^\s*([0-9]+(?:\.[0-9]+)?)\s*([NS])[\s,]+([0-9]+(?:\.[0-9]+)?)\s*([EW])\s*$/i;
-    const m = s.match(re);
-    if (!m) return null;
-
-    const lat = parseFloat(m[1]) * (m[2] === 'S' ? -1 : 1);
-    const lon = parseFloat(m[3]) * (m[4] === 'W' ? -1 : 1);
-
-    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
-    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
-
-    return [lat, lon];
-  }, []);
-
-  // Helper function to convert search results to map samples with valid lat/lng
-
-  const convertToMapSamples = useCallback(
-    (data: SearchResult[]): MapSample[] => {
-      if (!Array.isArray(data)) return [];
-
-      return data
-        .map((item) => {
-          // Skip missing/placeholder accessions
-          if (!item.acc || item.acc === 'NP') return null;
-
-          const coords = parseLatLon(item.lat_lon);
-          if (!coords) return null;
-
-          const [lat, lng] = coords;
-
-          // Clean up country label: hide NP/uncalculated
-          const countryRaw = (item.geo_loc_name_country_calc || '').trim();
-          const country =
-            !countryRaw ||
-            ['np', 'uncalculated'].includes(countryRaw.toLowerCase())
-              ? 'Unspecified'
-              : countryRaw;
-
-          const organism = item.organism || 'Unknown organism';
-
-          return {
-            id: item.acc,
-            attributes: {
-              latitude: lat,
-              longitude: lng,
-              assay_type: item.assay_type,
-              organism,
-              country,
-            },
-          } as MapSample;
-        })
-        .filter(Boolean) as MapSample[];
-    },
-    [parseLatLon]
+  const [pageQP, setPageQP] = useQueryParamState('branchwater-page', 1, Number);
+  const [detailedOrder, setDetailedOrder] = useQueryParamState(
+    'branchwater-detailed-order',
+    ''
   );
 
-  const getCountryCountsFromResults = useCallback((results: SearchResult[]) => {
-    const countsByCountry: Record<string, number> = {};
-
-    results.forEach((item) => {
-      if (
-        item.geo_loc_name_country_calc &&
-        item.geo_loc_name_country_calc !== 'NP' &&
-        item.geo_loc_name_country_calc !== 'uncalculated'
-      ) {
-        const country = item.geo_loc_name_country_calc;
-        countsByCountry[country] = (countsByCountry[country] || 0) + 1;
-      }
-    });
-
-    return countsByCountry;
-  }, []);
-
-  const countUniqueValuesAndOccurrences = useCallback(
-    (valueList: string[]): { uniqueValues: string[]; countVal: number[] } => {
-      // Single-pass frequency map to avoid O(n^2) behavior
-      const counts = new Map<string, number>();
-      valueList.forEach((item) => {
-        const key = String(item ?? '');
-        counts.set(key, (counts.get(key) ?? 0) + 1);
-      });
-      const uniqueValues = Array.from(counts.keys());
-      const countVal = uniqueValues.map((k) => counts.get(k) as number);
-      return { uniqueValues, countVal };
-    },
-    []
-  );
-
-  const getCountryColor = useCallback((count: number, maxCount: number) => {
-    if (count === 0) return '#FFEDA0';
-
-    const intensity = count / maxCount;
-
-    if (intensity > 0.8) return '#BD0026';
-    if (intensity > 0.6) return '#E31A1C';
-    if (intensity > 0.4) return '#FC4E2A';
-    if (intensity > 0.2) return '#FD8D3C';
-    return '#FEB24C';
-  }, []);
-
-  const createPlotData = useCallback(
-    (stringKeys: string[], stringValues: string[][]): PlotTrace[] => {
-      const plotData: PlotTrace[] = [];
-      const plotColor = 'rgba(100, 200, 102, 1)';
-
-      for (let i = 0; i < stringKeys.length; i++) {
-        const visible = i === 0;
-        const { uniqueValues, countVal } = countUniqueValuesAndOccurrences(
-          stringValues[i]
-        );
-        plotData.push({
-          x: uniqueValues,
-          y: countVal,
-          type: 'bar',
-          width: 0.2,
-          marker: {
-            color: 'rgba(100, 200, 102, 0.7)',
-            line: {
-              color: plotColor,
-              width: 1,
-            },
-          },
-          name: stringKeys[i],
-          visible,
-        });
-      }
-
-      return plotData;
-    },
-    [countUniqueValuesAndOccurrences]
-  );
-
-  const prepareVisualizationData = useCallback(
-    (data: SearchResult[]): VisualizationData | null => {
-      if (!data || data.length === 0) return null;
-
-      const commonKeys = Array.from(new Set(data.flatMap(Object.keys)));
-
-      const values: Record<string | number, unknown>[][] = commonKeys.map((k) =>
-        data.map((row) => row[k])
-      );
-
-      const stringKeys: string[] = [];
-      const stringValues: string[][] = [];
-
-      for (let i = 0; i < values.length; i++) {
-        const key = commonKeys[i];
-        if (['acc', 'biosample_link', 'lat_lon'].includes(key)) continue;
-
-        const col = values[i];
-        const isAllStrings = col.every((v) => v == null);
-        if (isAllStrings) {
-          stringKeys.push(key);
-          stringValues.push(col.map((v) => (v == null ? '' : String(v))));
-        }
-      }
-
-      const barPlotData = createPlotData(stringKeys, stringValues);
-
-      const numCol = (idx: number) =>
-        idx === -1
-          ? []
-          : (values[idx]
-              .map((v) => Number(v))
-              .filter((n) => Number.isFinite(n)) as number[]);
-
-      const containmentIndex = commonKeys.indexOf('containment');
-      const cANIIndex = commonKeys.indexOf('cANI');
-
-      const hist: Record<string, unknown>[] = [];
-
-      if (containmentIndex !== -1) {
-        const xs = numCol(containmentIndex);
-        if (xs.length) {
-          hist.push({
-            x: xs,
-            type: 'histogram',
-            autobinx: false,
-            xbins: { size: 0.1 },
-            name: 'containment',
-            visible: true,
-            marker: {
-              color: 'rgba(100, 200, 102, 0.7)',
-              line: { color: 'rgba(100, 200, 102, 1)', width: 1 },
-            },
-          });
-        }
-      }
-
-      if (cANIIndex !== -1) {
-        const xs = numCol(cANIIndex);
-        if (xs.length) {
-          hist.push({
-            x: xs,
-            type: 'histogram',
-            autobinx: false,
-            xbins: { size: 0.02 },
-            name: 'cANI',
-            visible: hist.length === 0, // show if only one
-            // visible: hist.length === 0 ? true : false, // show if only one
-            marker: {
-              color: 'rgba(100, 200, 102, 0.7)',
-              line: { color: 'rgba(100, 200, 102, 1)', width: 1 },
-            },
-          });
-        }
-      }
-
-      // ----- Map data: choropleth by country (skip NP/uncalculated)
-      const countryIndex = commonKeys.indexOf('geo_loc_name_country_calc');
-      let countryMap: Record<string, unknown> = {};
-
-      if (countryIndex !== -1) {
-        const cleanedCountries = values[countryIndex]
-          .map((v) => (v == null ? '' : String(v).trim()))
-          .filter((v) => {
-            const lc = v.toLowerCase();
-            return v && lc !== 'np' && lc !== 'uncalculated';
-          });
-
-        const uniqueCountryCounts =
-          countUniqueValuesAndOccurrences(cleanedCountries);
-        if (uniqueCountryCounts.uniqueValues.length > 0) {
-          const countryData = uniqueCountryCounts.uniqueValues.map(
-            (country, i) => ({
-              country,
-              count: uniqueCountryCounts.countVal[i],
-            })
-          );
-
-          countryMap = {
-            name: 'geo_loc_name_country_calc',
-            type: 'choropleth',
-            locationmode: 'country names',
-            locations: countryData.map((d) => d.country),
-            z: countryData.map((d) => d.count),
-            text: countryData.map((d) => `${d.country}: ${d.count}`),
-            autocolorscale: true,
-            marker: { line: { color: 'rgb(255,255,255)', width: 2 } },
-          };
-        }
-      }
-
-      // ----- Map data: scattergeo from lat_lon using parseLatLon
-      const latLonIndex = commonKeys.indexOf('lat_lon');
-      let latLonMap: Record<string, unknown> = {};
-
-      if (latLonIndex !== -1) {
-        const latLonData = values[latLonIndex]
-          .map((raw, i) => {
-            const coords = parseLatLon(raw);
-            const acc = data[i]?.acc;
-            if (!coords || !acc || acc === 'NP') return null;
-            return [coords[0], coords[1], acc] as [number, number, string];
-          })
-          .filter(Boolean) as [number, number, string][];
-
-        if (latLonData.length > 0) {
-          latLonMap = {
-            name: 'lat_lon',
-            type: 'scattergeo',
-            mode: 'markers',
-            marker: { color: 'rgba(100, 200, 102, 1)' },
-            lat: latLonData.map((t) => t[0]),
-            lon: latLonData.map((t) => t[1]),
-            text: latLonData.map((t) => `acc: ${t[2]}`),
-          };
-        }
-      }
-
-      console.log('HISTOGRAM DATA ', hist);
-
-      return {
-        barPlotData,
-        histogramData: hist,
-        mapData: [countryMap, latLonMap].filter(
-          (obj) => obj && Object.keys(obj).length > 0
-        ),
-        stringKeys,
-      };
-    },
-    [createPlotData, parseLatLon, countUniqueValuesAndOccurrences]
-  );
+  useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      query: textQuery,
+      cani: caniRange,
+    }));
+  }, [textQuery, caniRange]);
 
   // TODO: bring back request button
   // const handleRequestAnalysis = (entry: SearchResult) => {
@@ -447,259 +94,59 @@ const Branchwater = () => {
   //   window.open(submitUrl, '_blank');
   // };
 
-  const [locationFilter] = useQueryParamState('geo_loc_name_country_calc', '');
-  const [organismFilter] = useQueryParamState('organism', '');
-  const [assayTypeFilter] = useQueryParamState('assay_type', '');
-
-  // Update getFilteredResults to include faceted filters
-  const getFilteredResults = useCallback((): SearchResult[] => {
-    if (!Array.isArray(searchResults)) {
-      return [];
-    }
-
-    const globalQuery = (textQuery || '').toString().trim().toLowerCase();
-
-    return searchResults.filter((item) => {
-      // Apply global text query across common fields (if provided)
-      if (globalQuery) {
-        const haystack = [
-          item.acc,
-          item.assay_type,
-          item.bioproject,
-          item.collection_date_sam,
-          item.geo_loc_name_country_calc,
-          item.organism,
-        ]
-          .map((v) => (v == null ? '' : String(v).toLowerCase()))
-          .join(' ');
-        if (!haystack.includes(globalQuery)) return false;
-      }
-
-      // Apply text-based field-specific filters first
-      const matchesTextFilters = Object.keys(filters).every((key) => {
-        if (!filters[key]) return true;
-        const itemValue = String(item[key] || '').toLowerCase();
-        const filterValue = filters[key].toLowerCase();
-        return itemValue.includes(filterValue);
-      });
-      if (!matchesTextFilters) return false;
-
-      // Apply faceted filters from query params
-      if (locationFilter) {
-        const selectedLocations = locationFilter.split(',').filter(Boolean);
-        if (
-          selectedLocations.length > 0 &&
-          !selectedLocations.includes(item.geo_loc_name_country_calc)
-        ) {
-          return false;
-        }
-      }
-
-      if (organismFilter) {
-        const selectedOrganisms = organismFilter.split(',').filter(Boolean);
-        if (
-          selectedOrganisms.length > 0 &&
-          !selectedOrganisms.includes(item.organism)
-        ) {
-          return false;
-        }
-      }
-
-      if (assayTypeFilter) {
-        const selectedTypes = assayTypeFilter.split(',').filter(Boolean);
-        if (
-          selectedTypes.length > 0 &&
-          !selectedTypes.includes(item.assay_type)
-        ) {
-          return false;
-        }
-      }
-
-      // Apply cANI numeric range filter
-      if (caniRange) {
-        const [minStr, maxStr] = caniRange.split(',');
-        const min = Number(minStr);
-        const max = Number(maxStr);
-
-        if (!Number.isNaN(min) && !Number.isNaN(max)) {
-          const val = item.cANI;
-          const num = typeof val === 'number' ? val : Number(val);
-
-          if (Number.isNaN(num)) return false;
-
-          const EPSILON = 0.0001;
-          if (num < min - EPSILON || num > max + EPSILON) {
-            return false;
-          }
-        }
-      }
-
-      return true;
-    });
-  }, [
-    searchResults,
+  const {
+    filteredResults,
+    sortedResults,
+    paginatedResults,
+    total,
+    page,
+    order,
+    visualizationData,
+    mapSamples,
+    countryCounts,
+  } = useBranchwaterResults<SearchResult>({
+    items: searchResults,
+    namespace: 'branchwater-',
+    pageSize: itemsPerPage,
     filters,
-    caniRange,
-    locationFilter,
-    organismFilter,
-    assayTypeFilter,
-    textQuery,
-  ]);
+  });
 
-  // Apply sorting to filtered results
-  const getSortedResults = useCallback(
-    (filteredResults: SearchResult[]): SearchResult[] => {
-      // Prefer ordering from EMGTable's sortable query param if present
-      const orderStr = typeof detailedOrder === 'string' ? detailedOrder : '';
-      const effectiveField = orderStr ? orderStr.replace(/^-/, '') : sortField;
-      let effectiveDirection: 'asc' | 'desc' = sortDirection;
-      if (orderStr) {
-        effectiveDirection = orderStr.startsWith('-') ? 'desc' : 'asc';
-      }
-
-      if (!effectiveField) return filteredResults;
-
-      return [...filteredResults].sort((a, b) => {
-        const aValue = a[effectiveField] ?? '';
-        const bValue = b[effectiveField] ?? '';
-
-        // Handle numeric values
-
-        if (!isNaN(Number(aValue)) && !isNaN(Number(bValue))) {
-          return effectiveDirection === 'asc'
-            ? Number(aValue) - Number(bValue)
-            : Number(bValue) - Number(aValue);
-        }
-
-        // Handle string values (including dates treated as strings)
-        const comparison = String(aValue).localeCompare(String(bValue));
-        return effectiveDirection === 'asc' ? comparison : -comparison;
-      });
-    },
-    [detailedOrder, sortDirection, sortField]
-  );
-
-  // Get paginated results (memoized to keep stable identity for hooks deps)
-  const getPaginatedResults = useCallback(
-    (sortedResults: SearchResult[]): SearchResult[] => {
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      return sortedResults.slice(startIndex, startIndex + itemsPerPage);
-    },
-    [currentPage, itemsPerPage]
-  );
-
-  // Calculate total pages (memoized to keep stable identity for hooks deps)
-  const getTotalPages = useCallback(
-    (filteredResults: SearchResult[]): number => {
-      return Math.ceil(filteredResults.length / itemsPerPage);
-    },
-    [itemsPerPage]
-  );
-
-  // Memoized processed results to avoid recomputation on every render
-  const processedResults = useMemo(() => {
-    const filteredResults = getFilteredResults();
-    const sortedResults = getSortedResults(filteredResults);
-    const paginatedResults = getPaginatedResults(sortedResults);
-    const totalPages = getTotalPages(filteredResults);
-    return { filteredResults, sortedResults, paginatedResults, totalPages };
-  }, [
-    getFilteredResults,
-    getPaginatedResults,
-    getSortedResults,
-    getTotalPages,
-  ]);
-
-  // Keep existing API for children expecting a function
   const processResults = useCallback(
-    () => processedResults,
-    [processedResults]
+    () => ({
+      filteredResults,
+      sortedResults,
+      paginatedResults,
+      totalPages: Math.ceil(total / itemsPerPage),
+    }),
+    [filteredResults, sortedResults, paginatedResults, total, itemsPerPage]
   );
 
-  // Containment histogram bins/counts memoized
-  const containmentHistogram = useMemo(() => {
-    const binsAsc = Array.from(
-      { length: 10 },
-      (_, i) => `${(i / 10).toFixed(1)}-${((i + 1) / 10).toFixed(1)}`
-    );
-    const countsAsc = new Array(10).fill(0) as number[];
-    searchResults.forEach((searchResult) => {
-      if (typeof searchResult.containment === 'number') {
-        const idx = Math.min(Math.floor(searchResult.containment * 10), 9);
-        countsAsc[idx]++;
-      }
-    });
-    return {
-      binsDesc: [...binsAsc].reverse().slice(0, -1),
-      countsDesc: [...countsAsc].reverse().slice(0, -1),
-    };
-  }, [searchResults]);
+  const containmentHistogram = useMemo(
+    () => getContainmentHistogram(searchResults),
+    [searchResults]
+  );
 
-  // Scatter plot data: single pass + downsampling, memoized
-  const scatterData = useMemo(() => {
-    const xs: number[] = [];
-    const ys: number[] = [];
-    const texts: string[] = [];
-    const colors: string[] = [];
-    searchResults.forEach((result) => {
-      const hasNums =
-        typeof result.containment === 'number' &&
-        typeof result.cANI === 'number';
-      if (hasNums) {
-        xs.push(result.containment as number);
-        ys.push(result.cANI as number);
-        texts.push(
-          `${result.acc}\nCountry: ${
-            result.geo_loc_name_country_calc || 'Unknown'
-          }\nOrganism: ${result.organism || 'Unknown'}`
-        );
-        colors.push(
-          result.assay_type === 'WGS'
-            ? 'rgba(255, 99, 132, 0.8)'
-            : 'rgba(54, 162, 235, 0.8)'
-        );
-      }
-    });
-    const MAX_POINTS = 20000;
-    if (xs.length <= MAX_POINTS) {
-      return { xs, ys, texts, colors, sampled: false, total: xs.length };
-    }
-    // Downsample by deterministic stride to keep distribution without RNG
-    const stride = Math.ceil(xs.length / MAX_POINTS);
-    const sxs: number[] = [];
-    const sys: number[] = [];
-    const stexts: string[] = [];
-    const scols: string[] = [];
-    for (let i = 0; i < xs.length; i += stride) {
-      sxs.push(xs[i]);
-      sys.push(ys[i]);
-      stexts.push(texts[i]);
-      scols.push(colors[i]);
-    }
-    return {
-      xs: sxs,
-      ys: sys,
-      texts: stexts,
-      colors: scols,
-      sampled: true,
-      total: xs.length,
-    };
-  }, [searchResults]);
+  const caniHistogram = useMemo(
+    () => getCaniHistogram(searchResults),
+    [searchResults]
+  );
 
-  // Country totals memoized for stats table
+  const scatterData = useMemo(
+    () => getScatterData(searchResults),
+    [searchResults]
+  );
+
   const totalCountryCount = useMemo(
-    () => Object.values(countryCounts).reduce((sum, c) => sum + c, 0),
+    () => getTotalCountryCount(countryCounts),
     [countryCounts]
   );
 
-  // Limit number of map pins rendered; allow progressive loading
   const [mapPinsLimit, setMapPinsLimit] = useState<number>(1000);
   const displayedMapSamples = useMemo(
     () => (Array.isArray(mapSamples) ? mapSamples.slice(0, mapPinsLimit) : []),
     [mapSamples, mapPinsLimit]
   );
 
-  // Reset pin limit when new samples arrive
   useEffect(() => {
     setMapPinsLimit(1000);
   }, [searchResults]);
@@ -715,7 +162,6 @@ const Branchwater = () => {
       axios
         .post(
           'http://branchwater-dev.mgnify.org/',
-          // 'https://branchwater.jgi.doe.gov/',
           {
             // signatures: signature,
             signatures: JSON.stringify(signature[0]),
@@ -728,50 +174,16 @@ const Branchwater = () => {
           }
         )
         .then((response) => {
-          const resultsArray = Array.isArray(response.data)
-            ? (response.data as SearchResult[])
-            : [];
+          const { resultsArray } = processBranchwaterResults(response.data);
           setSearchResults(resultsArray);
-
-          const vizData = prepareVisualizationData(resultsArray);
-          setVisualizationData(vizData);
-          const mapData = convertToMapSamples(resultsArray);
-          setMapSamples(mapData);
-
-          const counts = getCountryCountsFromResults(resultsArray);
-          setCountryCounts(counts);
-
           setIsLoading(false);
         })
         .catch(() => {
           setIsLoading(false);
-          setVisualizationData(null);
-          setMapSamples([]);
-          setCountryCounts({});
+          setSearchResults([]);
         });
     }
   };
-
-  // Updated useEffect for handling search results
-  useEffect(() => {
-    if (searchResults.length > 0) {
-      const filteredResults = getFilteredResults();
-      const vizData = prepareVisualizationData(filteredResults);
-      setVisualizationData(vizData);
-
-      // Convert filtered results to map samples
-      const mapData = convertToMapSamples(filteredResults);
-      setMapSamples(mapData);
-    } else {
-      setMapSamples([]);
-    }
-  }, [
-    filters,
-    getFilteredResults,
-    prepareVisualizationData,
-    searchResults,
-    convertToMapSamples,
-  ]);
 
   useEffect(() => {
     const handleSketched = (evt: CustomEvent): void => {
@@ -787,143 +199,34 @@ const Branchwater = () => {
     };
   }, [signature]);
 
-  useEffect(() => {
-    if (searchResults.length > 0) {
-      const filteredResults = getFilteredResults();
-      const vizData = prepareVisualizationData(filteredResults);
-      setVisualizationData(vizData);
-
-      // Convert filtered results to map samples
-      const mapData = convertToMapSamples(filteredResults);
-      setMapSamples(mapData);
-
-      // Calculate country counts for heatmap
-      const counts = getCountryCountsFromResults(filteredResults);
-      setCountryCounts(counts);
-    } else {
-      // Clear data when no search results
-      setMapSamples([]);
-      setCountryCounts({});
-    }
-  }, [
-    filters,
-    getFilteredResults,
-    prepareVisualizationData,
-    searchResults,
-    convertToMapSamples,
-    getCountryCountsFromResults,
-  ]);
-
-  // Handle filter change
-  const handleFilterChange = (field: keyof Filters, value: string): void => {
+  const handleFilterChange = (
+    field: keyof BranchwaterFilters,
+    value: string
+  ): void => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [field]: value,
     }));
-    setCurrentPage(1); // Reset to first page when filter changes
   };
 
-  // Handle sort change
   const handleSortChange = (field: string): void => {
-    if (sortField === field) {
-      // If already sorting by this field, toggle direction
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    const orderStr = (detailedOrder || '').toString();
+    const isCurrentlyField = orderStr.replace(/^-/, '') === field;
+    const isCurrentlyDesc = orderStr.startsWith('-');
+
+    if (isCurrentlyField) {
+      setDetailedOrder(isCurrentlyDesc ? field : `-${field}`);
     } else {
-      // If sorting by a new field, set it and default to ascending
-      setSortField(field);
-      setSortDirection('asc');
+      setDetailedOrder(field);
     }
   };
 
   // Handle page change
   const handlePageChange = (page: number): void => {
-    setCurrentPage(page);
+    setPageQP(page);
   };
-
-  // Process results for display
-  // Replaced by memoized `processedResults` + `processResults` wrapper above
-
-  // Export helpers: build CSV and trigger download using current processed results
   const downloadCSV = () => {
-    const { sortedResults } = processResults();
-    if (!sortedResults || sortedResults.length === 0) return;
-
-    // Prefer a known set of columns first, then append any additional keys found
-    const preferredOrder = [
-      'acc',
-      'assay_type',
-      'bioproject',
-      'biosample_link',
-      'cANI',
-      'collection_date_sam',
-      'containment',
-      'geo_loc_name_country_calc',
-      'organism',
-    ];
-
-    const allKeys = new Set<string>();
-    sortedResults.forEach((r) => Object.keys(r).forEach((k) => allKeys.add(k)));
-
-    // Ensure lat_lon is exported as string
-    const remaining = Array.from(allKeys).filter(
-      (k) => !preferredOrder.includes(k)
-    );
-    const columns = [...preferredOrder, ...remaining];
-
-    const escape = (val: unknown): string => {
-      if (val === null || val === undefined) return '';
-      let s: string;
-      if (Array.isArray(val)) {
-        s = val.join(';');
-      } else if (typeof val === 'object') {
-        s = JSON.stringify(val);
-      } else {
-        s = String(val);
-      }
-      // Escape double quotes by doubling them and wrap in quotes if needed
-      const needsQuotes = /[",\n]/.test(s);
-      s = s.replace(/"/g, '""');
-      return needsQuotes ? `"${s}"` : s;
-    };
-
-    const header = columns.map((c) => escape(c)).join(',');
-    const rows = sortedResults.map((row) =>
-      columns
-        .map((col) => {
-          const v = row[col];
-          // Special handling for lat_lon column to map placeholder values
-          if (col === 'lat_lon') {
-            if (Array.isArray(v)) return escape(v.join(','));
-            const s = String(v ?? '').trim();
-            if (!s) return escape('');
-            const sl = s.toLowerCase();
-            if (sl === 'missing' || sl === 'np' || sl === 'uncalculated') {
-              return escape('Not provided');
-            }
-            return escape(s);
-          }
-          return escape(v);
-        })
-        .join(',')
-    );
-
-    const csv = [header, ...rows].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const date = new Date();
-    const ts = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-      2,
-      '0'
-    )}-${String(date.getDate()).padStart(2, '0')}_${String(
-      date.getHours()
-    ).padStart(2, '0')}${String(date.getMinutes()).padStart(2, '0')}`;
-    a.href = url;
-    a.download = `branchwater_results_${ts}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    downloadBranchwaterCSV(sortedResults);
   };
 
   const handleClearClick = (): void => {
@@ -931,22 +234,19 @@ const Branchwater = () => {
     setUploadedFile(null);
     setSearchResults([]);
     setSignature(null);
-    setVisualizationData(null);
-    setMapSamples([]);
     setFilters({
       acc: '',
       assay_type: '',
       bioproject: '',
-      // cANI: '',
       collection_date_sam: '',
       containment: '',
       geo_loc_name_country_calc: '',
       organism: '',
+      query: '',
+      cani: '',
     });
-    // Reset sorting to default: containment descending
-    setSortField('containment');
-    setSortDirection('desc');
-    setCurrentPage(1);
+    setDetailedOrder('containment');
+    setPageQP(1);
     const fileInput = document.getElementById(
       'file-upload'
     ) as HTMLInputElement;
@@ -960,22 +260,19 @@ const Branchwater = () => {
     setUploadedFile(null);
     setSearchResults([]);
     setSignature(null);
-    setVisualizationData(null);
-    setMapSamples([]);
     setFilters({
       acc: '',
       assay_type: '',
       bioproject: '',
-      // cANI: '',
       collection_date_sam: '',
       containment: '',
       geo_loc_name_country_calc: '',
       organism: '',
+      query: '',
+      cani: '',
     });
-    // Reset sorting to default: containment descending
-    setSortField('containment');
-    setSortDirection('desc');
-    setCurrentPage(1);
+    setDetailedOrder('containment');
+    setPageQP(1);
     const fileInput = document.getElementById(
       'file-upload'
     ) as HTMLInputElement;
@@ -1010,26 +307,13 @@ const Branchwater = () => {
         `http://branchwater-dev.mgnify.org/mags?accession=${selected.accession}&catalogue=${selected.catalogue}`
       )
       .then((response) => {
-        const resultsArray = Array.isArray(response.data)
-          ? (response.data as SearchResult[])
-          : [];
+        const { resultsArray } = processBranchwaterResults(response.data);
         setSearchResults(resultsArray);
-
-        const vizData = prepareVisualizationData(resultsArray);
-        setVisualizationData(vizData);
-        const mapData = convertToMapSamples(resultsArray);
-        setMapSamples(mapData);
-
-        const counts = getCountryCountsFromResults(resultsArray);
-        setCountryCounts(counts);
-
         setIsLoading(false);
       })
       .catch(() => {
         setIsLoading(false);
-        setVisualizationData(null);
-        setMapSamples([]);
-        setCountryCounts({});
+        setSearchResults([]);
       });
   };
 
@@ -1048,8 +332,8 @@ const Branchwater = () => {
           </p>
           <p className="vf-text-body vf-text-body--3">
             This search engine searches for the containment of a query genome
-            sequence in 1.6 million metagenomes available from INSDC archives as
-            of 12/08/2023
+            sequence in over 1 million metagenomes available from INSDC archives
+            as of {config.branchwaterDbDate}
           </p>
           <p className="vf-text-body vf-text-body--3">
             Sequences shorter than 10kb will rarely produce results. For better
@@ -1083,47 +367,6 @@ const Branchwater = () => {
               ref={sourmash}
               ksize={21}
             />
-
-            {/* TODO:  Confirm if this is still necessary, seeing as there is already a MAG search tab */}
-
-            {/* <fieldset className="vf-form__fieldset vf-stack vf-stack--400"> */}
-            {/*  <legend className="vf-form__legend"> */}
-            {/*    Select target database */}
-            {/*  </legend> */}
-
-            {/*  <div className="vf-form__item vf-form__item--radio"> */}
-            {/*    <input */}
-            {/*      type="radio" */}
-            {/*      name="targetDatabase" */}
-            {/*      value="MAGs" */}
-            {/*      id="target-db-mags" */}
-            {/*      className="vf-form__radio" */}
-            {/*      checked={targetDatabase === 'MAGs'} */}
-            {/*      onChange={() => setTargetDatabase('MAGs')} */}
-            {/*    /> */}
-            {/*    <label htmlFor="target-db-mags" className="vf-form__label"> */}
-            {/*      MAGs */}
-            {/*    </label> */}
-            {/*  </div> */}
-
-            {/*  <div className="vf-form__item vf-form__item--radio"> */}
-            {/*    <input */}
-            {/*      type="radio" */}
-            {/*      name="targetDatabase" */}
-            {/*      value="Metagenomes" */}
-            {/*      id="target-db-metagenomes" */}
-            {/*      className="vf-form__radio" */}
-            {/*      checked={targetDatabase === 'Metagenomes'} */}
-            {/*      onChange={() => setTargetDatabase('Metagenomes')} */}
-            {/*    /> */}
-            {/*    <label */}
-            {/*      htmlFor="target-db-metagenomes" */}
-            {/*      className="vf-form__label" */}
-            {/*    > */}
-            {/*      Metagenomes */}
-            {/*    </label> */}
-            {/*  </div> */}
-            {/* </fieldset> */}
 
             <button
               type="button"
@@ -1234,11 +477,11 @@ const Branchwater = () => {
           setIsTableVisible={setIsTableVisible}
           filters={filters}
           onFilterChange={handleFilterChange}
-          sortField={sortField}
-          sortDirection={sortDirection}
+          sortField={order.replace(/^-/, '')}
+          sortDirection={order.startsWith('-') ? 'desc' : 'asc'}
           onSortChange={handleSortChange}
           processResults={processResults}
-          currentPage={currentPage}
+          currentPage={page}
           itemsPerPage={itemsPerPage}
           onPageChange={handlePageChange}
           countryCounts={countryCounts}
@@ -1248,7 +491,9 @@ const Branchwater = () => {
           totalCountryCount={totalCountryCount}
           getCountryColor={getCountryColor}
           downloadCSV={downloadCSV}
+          queryParamPrefix=""
           containmentHistogram={containmentHistogram}
+          caniHistogram={caniHistogram}
           visualizationData={visualizationData}
           scatterData={scatterData}
         />

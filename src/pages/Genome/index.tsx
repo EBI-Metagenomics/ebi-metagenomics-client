@@ -1,4 +1,11 @@
-import React, { Suspense, lazy, useState, useMemo, useCallback } from 'react';
+import React, {
+  Suspense,
+  lazy,
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+} from 'react';
 import axios from 'axios';
 
 import Loading from 'components/UI/Loading';
@@ -13,10 +20,21 @@ import useURLAccession from '@/hooks/useURLAccession';
 import { cleanTaxLineage } from '@/utils/taxon';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 
-import type { BranchwaterFilters } from 'components/Branchwater/common/useBranchwaterResults';
+import useBranchwaterResults, {
+  type BranchwaterFilters,
+} from 'components/Branchwater/common/useBranchwaterResults';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import Results from 'pages/Branchwater/Results';
+import {
+  getContainmentHistogram,
+  getCaniHistogram,
+  getScatterData,
+  getTotalCountryCount,
+  getCountryColor,
+  downloadBranchwaterCSV,
+  type BranchwaterResult,
+} from 'utils/branchwater';
 
-// Lazy-loaded pages
 const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));
 const COGAnalysis = lazy(() => import('components/Genomes/COGAnalysis'));
 const KEGGClassAnalysis = lazy(
@@ -26,7 +44,6 @@ const KEGGModulesAnalysis = lazy(
   () => import('components/Genomes/KEGGModulesAnalysis')
 );
 
-// Navigation tabs
 const tabs = [
   { label: 'Overview', to: '#overview' },
   { label: 'Browse genome', to: '#genome-browser' },
@@ -40,33 +57,11 @@ const tabs = [
 const GenomePage: React.FC = () => {
   const accession = useURLAccession();
 
-  const [currentPage, setCurrentPage] = useState(1);
   const { data, loading, error } = useMGnifyData(`genomes/${accession}`);
 
-  // ---------------------------------------------------------------------------
-  // 2) LOCAL TYPES
-  // ---------------------------------------------------------------------------
-  type BranchwaterResult = {
-    acc: string;
-    assay_type: string;
-    bioproject: string;
-    cANI: number | string;
-    containment: number | string;
-    geo_loc_name_country_calc: string;
-    organism: string;
-    lat_lon?: string;
-    [key: string]: unknown;
-  };
-
-  // ---------------------------------------------------------------------------
-  // 3) SEARCH STATE
-  // ---------------------------------------------------------------------------
   const [searchResults, setSearchResults] = useState<BranchwaterResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  // ---------------------------------------------------------------------------
-  // 4) FILTER STATE
-  // ---------------------------------------------------------------------------
   const [filters, setFilters] = useState<BranchwaterFilters>({
     acc: '',
     assay_type: '',
@@ -75,7 +70,29 @@ const GenomePage: React.FC = () => {
     containment: '',
     geo_loc_name_country_calc: '',
     organism: '',
+    query: '',
+    cani: '',
   });
+
+  const [textQuery] = useQueryParamState('genome-query', '');
+  const [caniRange] = useQueryParamState('genome-cani', '');
+  const [, setPageQP] = useQueryParamState(
+    'genome-branchwater-page',
+    1,
+    Number
+  );
+  const [detailedOrder, setDetailedOrder] = useQueryParamState(
+    'genome-branchwater-detailed-order',
+    ''
+  );
+
+  useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      query: textQuery,
+      cani: caniRange,
+    }));
+  }, [textQuery, caniRange]);
 
   const onFilterChange = useCallback(
     (field: keyof BranchwaterFilters, value: string) => {
@@ -84,215 +101,86 @@ const GenomePage: React.FC = () => {
     []
   );
 
-  // ---------------------------------------------------------------------------
-  // 5) SORT STATE
-  // ---------------------------------------------------------------------------
-  // Default sorting for Branchwater results: containment descending
-  const [sortField, setSortField] = useState('containment');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-
   const onSortChange = useCallback(
     (field: string) => {
-      setCurrentPage(1);
-      if (sortField === field) {
-        setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+      const orderStr = (detailedOrder || '').toString();
+      const isCurrentlyField = orderStr.replace(/^-/, '') === field;
+      const isCurrentlyDesc = orderStr.startsWith('-');
+
+      if (isCurrentlyField) {
+        setDetailedOrder(isCurrentlyDesc ? field : `-${field}`);
       } else {
-        setSortField(field);
-        setSortDirection('asc');
+        setDetailedOrder(field);
       }
     },
-    [sortField]
+    [detailedOrder, setDetailedOrder]
   );
 
   const itemsPerPage = 25;
-
   const [isTableVisible, setIsTableVisible] = useState(false);
 
-  const filteredResults = useMemo(() => {
-    return searchResults.filter((row) =>
-      Object.entries(filters).every(([key, value]) => {
-        if (!value) return true;
-        const v = row[key] ?? '';
-        return String(v).toLowerCase().includes(value.toLowerCase());
-      })
-    );
-  }, [searchResults, filters]);
+  const {
+    filteredResults,
+    sortedResults,
+    paginatedResults,
+    total,
+    page,
+    order,
+    visualizationData,
+    mapSamples,
+    countryCounts,
+  } = useBranchwaterResults<BranchwaterResult>({
+    items: searchResults,
+    namespace: 'genome-branchwater-',
+    pageSize: itemsPerPage,
+    filters,
+  });
 
-  // ---------------------------------------------------------------------------
-  // 9) SORTING
-  // ---------------------------------------------------------------------------
-  const sortedResults = useMemo(() => {
-    if (!sortField) return filteredResults;
-    return [...filteredResults].sort((a, b) => {
-      const av = a[sortField];
-      const bv = b[sortField];
-
-      const an = Number(av);
-      const bn = Number(bv);
-
-      if (!isNaN(an) && !isNaN(bn)) {
-        return sortDirection === 'asc' ? an - bn : bn - an;
-      }
-      return sortDirection === 'asc'
-        ? String(av).localeCompare(String(bv))
-        : String(bv).localeCompare(String(av));
-    });
-  }, [filteredResults, sortField, sortDirection]);
-
-  // ---------------------------------------------------------------------------
-  // 10) PAGINATED RESULTS (processResults API for <Results />)
-  // ---------------------------------------------------------------------------
-  const processResults = useCallback(() => {
-    const totalPages = Math.ceil(sortedResults.length / itemsPerPage);
-    const start = (currentPage - 1) * itemsPerPage;
-    const paginatedResults = sortedResults.slice(start, start + itemsPerPage);
-    return {
+  const processResults = useCallback(
+    () => ({
       filteredResults,
       sortedResults,
       paginatedResults,
-      totalPages,
-    };
-  }, [sortedResults, filteredResults, currentPage]);
+      totalPages: Math.ceil(total / itemsPerPage),
+    }),
+    [filteredResults, sortedResults, paginatedResults, total, itemsPerPage]
+  );
 
-  // ---------------------------------------------------------------------------
-  // 11) MAP + GEO PROCESSING
-  // ---------------------------------------------------------------------------
   const [mapPinsLimit, setMapPinsLimit] = useState(1000);
 
-  const mapSamples = useMemo(() => {
-    return filteredResults
-      .map((r) => {
-        if (!r.lat_lon) return null;
-
-        const match = String(r.lat_lon).match(
-          /^(\d+(?:\.\d+)?)\s*([NS])[, ]+(\d+(?:\.\d+)?)\s*([EW])$/i
-        );
-        if (!match) return null;
-
-        const [, latStr, ns, lonStr, ew] = match;
-        const lat = Number(latStr) * (ns === 'S' ? -1 : 1);
-        const lon = Number(lonStr) * (ew === 'W' ? -1 : 1);
-
-        return {
-          id: r.acc,
-          attributes: {
-            latitude: lat,
-            longitude: lon,
-            organism: r.organism || 'Unknown',
-            assay_type: r.assay_type || 'Unknown',
-            country: r.geo_loc_name_country_calc || 'Unknown',
-          },
-        };
-      })
-      .filter(Boolean) as any[];
-  }, [filteredResults]);
+  useEffect(() => {
+    setMapPinsLimit(1000);
+  }, [searchResults]);
 
   const displayedMapSamples = useMemo(
-    () => mapSamples.slice(0, mapPinsLimit),
+    () => (Array.isArray(mapSamples) ? mapSamples.slice(0, mapPinsLimit) : []),
     [mapSamples, mapPinsLimit]
   );
 
-  const countryCounts = useMemo(() => {
-    return filteredResults.reduce((acc, r) => {
-      const c = r.geo_loc_name_country_calc || 'Unknown';
-      acc[c] = (acc[c] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-  }, [filteredResults]);
-
   const totalCountryCount = useMemo(
-    () => Object.values(countryCounts).reduce((a, b) => a + b, 0),
+    () => getTotalCountryCount(countryCounts),
     [countryCounts]
   );
 
-  const getCountryColor = useCallback((count: number, max: number) => {
-    const ratio = count / max;
-    if (ratio > 0.8) return '#BD0026';
-    if (ratio > 0.6) return '#E31A1C';
-    if (ratio > 0.4) return '#FC4E2A';
-    if (ratio > 0.2) return '#FD8D3C';
-    return '#FEB24C';
-  }, []);
-
-  // ---------------------------------------------------------------------------
-  // 12) HISTOGRAM
-  // ---------------------------------------------------------------------------
-  const containmentHistogram = useMemo(() => {
-    const bins = new Array(10).fill(0);
-    filteredResults.forEach((r) => {
-      const c = Number(r.containment);
-      if (!isNaN(c)) {
-        const i = Math.min(Math.floor(c * 10), 9);
-        bins[i] += 1;
-      }
-    });
-    return {
-      binsDesc: bins.map((_, i) => `${i / 10}-${(i + 1) / 10}`),
-      countsDesc: bins,
-    };
-  }, [filteredResults]);
-
-  // ---------------------------------------------------------------------------
-  // 13) SCATTER (cANI vs containment)
-  // ---------------------------------------------------------------------------
-  const scatterData = useMemo(() => {
-    const xs: number[] = [];
-    const ys: number[] = [];
-    const texts: string[] = [];
-    const colors: string[] = [];
-
-    filteredResults.forEach((r) => {
-      const c = Number(r.containment);
-      const a = Number(r.cANI);
-
-      if (!isNaN(c) && !isNaN(a)) {
-        xs.push(c);
-        ys.push(a);
-        texts.push(r.acc);
-        colors.push(r.assay_type === 'WGS' ? '#ff6384' : '#36a2eb');
-      }
-    });
-
-    return { xs, ys, texts, colors };
-  }, [filteredResults]);
-
-  // ---------------------------------------------------------------------------
-  // 14) CSV EXPORT
-  // ---------------------------------------------------------------------------
-  const downloadCSV = useCallback(() => {
-    const rows = sortedResults;
-    const keys = Array.from(new Set(rows.flatMap((r) => Object.keys(r))));
-
-    const header = keys.join(',');
-    const body = rows
-      .map((r) =>
-        keys.map((k) => `"${String(r[k] ?? '').replace(/"/g, '""')}"`).join(',')
-      )
-      .join('\n');
-
-    const blob = new Blob([`${header}\n${body}`], {
-      type: 'text/csv;charset=utf-8;',
-    });
-
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'results.csv';
-    a.click();
-    URL.revokeObjectURL(url);
-  }, [sortedResults]);
-
-  const visualizationData = useMemo(
-    () => ({
-      histogramData: [],
-      barPlotData: [],
-    }),
-    []
+  const containmentHistogram = useMemo(
+    () => getContainmentHistogram(searchResults),
+    [searchResults]
   );
 
-  // ---------------------------------------------------------------------------
-  // 16) HANDLE SEARCH BUTTON
-  // ---------------------------------------------------------------------------
+  const caniHistogram = useMemo(
+    () => getCaniHistogram(searchResults),
+    [searchResults]
+  );
+
+  const scatterData = useMemo(
+    () => getScatterData(searchResults),
+    [searchResults]
+  );
+
+  const downloadCSV = useCallback(() => {
+    downloadBranchwaterCSV(sortedResults);
+  }, [sortedResults]);
+
   const handleMetagenomeSearch = useCallback(() => {
     if (!data) return;
 
@@ -307,20 +195,19 @@ const GenomePage: React.FC = () => {
       .post<BranchwaterResult[]>(
         `http://branchwater-dev.mgnify.org/mags?accession=${accession}&catalogue=${relatedCatalogue.data.id}`
       )
-      .then(({ branchwaterResults }) => {
-        setSearchResults(branchwaterResults);
+      .then((response) => {
+        setSearchResults(response.data);
         setIsSearching(false);
       })
       .catch(() => setIsSearching(false));
   }, [data, accession]);
 
-  // ---------------------------------------------------------------------------
-  // 17) ONLY NOW DO WE HANDLE EARLY RETURNS (AFTER ALL HOOKS)
-  // ---------------------------------------------------------------------------
+  const handlePageChange = (p: number) => {
+    setPageQP(p);
+  };
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
-
   const { data: genomeData } = data as MGnifyResponseObj;
   const relatedCatalogue = genomeData.relationships.catalogue as {
     data: { id: string };
@@ -335,10 +222,6 @@ const GenomePage: React.FC = () => {
     },
     { label: accession },
   ];
-
-  // ---------------------------------------------------------------------------
-  // 18) RENDER
-  // ---------------------------------------------------------------------------
   return (
     <section className="vf-content">
       <Breadcrumbs links={breadcrumbs} />
@@ -416,22 +299,22 @@ const GenomePage: React.FC = () => {
                 </div>
               )}
 
-              {sortedResults.length > 0 && (
+              {searchResults.length > 0 && (
                 <div className="vf-u-padding__top--600">
                   <Results
                     isLoading={isSearching}
-                    searchResults={sortedResults}
+                    searchResults={searchResults}
                     isTableVisible={isTableVisible}
                     setIsTableVisible={setIsTableVisible}
                     filters={filters}
                     onFilterChange={onFilterChange}
-                    sortField={sortField}
-                    sortDirection={sortDirection}
+                    sortField={order.replace(/^-/, '')}
+                    sortDirection={order.startsWith('-') ? 'desc' : 'asc'}
                     onSortChange={onSortChange}
                     processResults={processResults}
-                    currentPage={currentPage}
+                    currentPage={page}
                     itemsPerPage={itemsPerPage}
-                    onPageChange={setCurrentPage}
+                    onPageChange={handlePageChange}
                     countryCounts={countryCounts}
                     mapSamples={mapSamples}
                     displayedMapSamples={displayedMapSamples}
@@ -439,7 +322,9 @@ const GenomePage: React.FC = () => {
                     totalCountryCount={totalCountryCount}
                     getCountryColor={getCountryColor}
                     downloadCSV={downloadCSV}
+                    queryParamPrefix="genome-"
                     containmentHistogram={containmentHistogram}
+                    caniHistogram={caniHistogram}
                     visualizationData={visualizationData}
                     scatterData={scatterData}
                   />
@@ -448,7 +333,6 @@ const GenomePage: React.FC = () => {
             </div>
           </RouteForHash>
 
-          {/* Downloads */}
           <RouteForHash hash="#downloads">
             <Downloads endpoint="genomes" accession={accession || ''} />
           </RouteForHash>

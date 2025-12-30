@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { createSharedQueryParamContext } from '@/hooks/queryParamState/useQueryParamState';
-import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
-const { useQuery, withQueryParamProvider } = createSharedQueryParamContext({
-  query: SharedTextQueryParam(''),
-});
+interface TextSearchProps {
+  queryParamKey?: string;
+}
 
-const TextSearch: React.FC = () => {
-  const [query, setQuery] = useQuery();
+const TextSearch: React.FC<TextSearchProps> = ({ queryParamKey = 'query' }) => {
+  const [query, setQuery] = useQueryParamState(queryParamKey, '');
 
   const [searchTerms, setSearchTerms] = useState(query as string);
   useEffect(() => {
@@ -29,7 +28,7 @@ const TextSearch: React.FC = () => {
           <input
             type="text"
             placeholder="Enter your search terms"
-            id="mg-text-search"
+            id={`mg-text-search-${queryParamKey}`}
             className="vf-form__input | st-default-search-input mg-text-search-textfield"
             value={searchTerms}
             onChange={(evt) => {
@@ -62,4 +61,4 @@ const TextSearch: React.FC = () => {
   );
 };
 
-export default withQueryParamProvider(TextSearch);
+export default TextSearch;

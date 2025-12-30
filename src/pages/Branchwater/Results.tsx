@@ -7,8 +7,22 @@ import DetailedResultsTable from 'pages/Branchwater/DetailedResultsTable';
 import Plot from 'react-plotly.js';
 import InfoBanner from 'components/UI/InfoBanner';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
-
+import config from 'utils/config';
 import './results.css';
+import 'leaflet/dist/leaflet.css';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import L from 'leaflet';
+
+const DefaultIcon = L.icon({
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 interface CountryCounts {
   [key: string]: number;
@@ -31,7 +45,7 @@ interface ResultsProps {
 
   // Table state
   isTableVisible: boolean;
-  setIsTableVisible: (v: boolean) => void;
+  setIsTableVisible: (isVisible: boolean) => void;
   filters: any;
   onFilterChange: (field: string, value: string) => void;
   sortField: string;
@@ -54,8 +68,13 @@ interface ResultsProps {
   getCountryColor: (count: number, max: number) => string;
 
   downloadCSV: () => void;
+  queryParamPrefix?: string;
 
   containmentHistogram: {
+    binsDesc: string[];
+    countsDesc: number[];
+  };
+  caniHistogram: {
     binsDesc: string[];
     countsDesc: number[];
   };
@@ -84,7 +103,9 @@ const Results: React.FC<ResultsProps> = ({
   setMapPinsLimit,
   getCountryColor,
   downloadCSV,
+  queryParamPrefix = '',
   containmentHistogram,
+  caniHistogram,
   visualizationData,
   scatterData,
 }) => {
@@ -172,8 +193,8 @@ const Results: React.FC<ResultsProps> = ({
         >
           <p className="vf-banner__text">
             This search engine searches for the containment of a query genome
-            sequence in 1.6 million metagenomes available from INSDC archives as
-            of 12/08/2023
+            sequence in over 1 million metagenomes available from INSDC archives
+            as of {config.branchwaterDbDate}
           </p>
         </InfoBanner>
       )}
@@ -182,16 +203,12 @@ const Results: React.FC<ResultsProps> = ({
           <div>
             <h3> Search Complete: {searchResults.length} matches found</h3>
             <p>
-              Found {searchResults.filter((r) => r.assay_type === 'WGS').length}{' '}
-              samples with assemblies • {Object.keys(countryCounts).length}{' '}
-              countries • Average containment:{' '}
-              {(
-                searchResults
-                  .filter((r) => typeof r.containment === 'number')
-                  .reduce((sum, r) => sum + Number(r.containment), 0) /
-                searchResults.filter((r) => typeof r.containment === 'number')
+              Found{' '}
+              {
+                searchResults.filter((result) => result.assay_type === 'WGS')
                   .length
-              ).toFixed(3)}
+              }{' '}
+              samples • {Object.keys(countryCounts).length} countries
             </p>
           </div>
 
@@ -208,12 +225,18 @@ const Results: React.FC<ResultsProps> = ({
         </div>
       </div>
 
-      <TextSearch />
+      <TextSearch
+        queryParamKey={`${queryParamPrefix}query`.replace(/^-/, '')}
+      />
 
       <section className="vf-grid mg-grid-search vf-u-padding__top--400">
         <div className="vf-stack vf-stack--800">
-          <ContainmentFilter />
-          <CANIFilter />
+          <ContainmentFilter
+            queryParamKey={`${queryParamPrefix}containment`.replace(/^-/, '')}
+          />
+          <CANIFilter
+            queryParamKey={`${queryParamPrefix}cani`.replace(/^-/, '')}
+          />
 
           <LocalMultipleOptionFilter
             facetName="geo_loc_name_country_calc"
@@ -281,7 +304,7 @@ const Results: React.FC<ResultsProps> = ({
               {Object.keys(countryCounts).length > 0 && (
                 <div className="country-tag-box">
                   {Object.entries(countryCounts)
-                    .sort(([, a], [, b]) => b - a)
+                    .sort(([, countA], [, countB]) => countB - countA)
                     .map(([country, count]) => {
                       const max = Math.max(...Object.values(countryCounts));
                       return (
@@ -367,6 +390,25 @@ const Results: React.FC<ResultsProps> = ({
           </div>
 
           <div className="vf-u-padding__top--400">
+            <h3>cANI Score Distribution</h3>
+            <Plot
+              data={[
+                {
+                  x: caniHistogram.binsDesc,
+                  y: caniHistogram.countsDesc,
+                  type: 'bar',
+                },
+              ]}
+              layout={{
+                title: 'cANI Distribution',
+                xaxis: { title: 'Bins' },
+                yaxis: { title: 'Count' },
+              }}
+              style={{ width: '100%', height: '400px' }}
+            />
+          </div>
+
+          <div className="vf-u-padding__top--400">
             <h3>Quality Assessment (cANI vs Containment)</h3>
             <Plot
               data={(() => {
@@ -391,16 +433,20 @@ const Results: React.FC<ResultsProps> = ({
                   Array.isArray(scatterData.texts) &&
                   Array.isArray(scatterData.colors)
                 ) {
-                  for (let i = 0; i < scatterData.xs.length; i += 1) {
-                    const color = scatterData.colors[i];
-                    if (color === WGS_COLOR) {
-                      wgs.x.push(scatterData.xs[i]);
-                      wgs.y.push(scatterData.ys[i]);
-                      wgs.text.push(scatterData.texts[i]);
+                  for (
+                    let index = 0;
+                    index < scatterData.xs.length;
+                    index += 1
+                  ) {
+                    const color = scatterData.colors[index];
+                    if (color === 'rgba(255, 99, 132, 0.8)') {
+                      wgs.x.push(scatterData.xs[index]);
+                      wgs.y.push(scatterData.ys[index]);
+                      wgs.text.push(scatterData.texts[index]);
                     } else {
-                      other.x.push(scatterData.xs[i]);
-                      other.y.push(scatterData.ys[i]);
-                      other.text.push(scatterData.texts[i]);
+                      other.x.push(scatterData.xs[index]);
+                      other.y.push(scatterData.ys[index]);
+                      other.text.push(scatterData.texts[index]);
                     }
                   }
                 }
@@ -433,17 +479,6 @@ const Results: React.FC<ResultsProps> = ({
                 showlegend: true,
               }}
               style={{ width: '100%', height: '450px' }}
-            />
-          </div>
-
-          <div className="vf-u-padding__top--400">
-            <h3>Detailed Score Distributions</h3>
-            <Plot
-              data={visualizationData.histogramData}
-              layout={{
-                title: 'Score Histograms',
-              }}
-              style={{ width: '100%', height: '400px' }}
             />
           </div>
 
