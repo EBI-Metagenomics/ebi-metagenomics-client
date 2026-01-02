@@ -112,7 +112,7 @@ const V2AssemblyPage: React.FC = () => {
 
     try {
       const response = await axios.get<GenomeLinksResponse>(
-        `${config.api_v2}assemblies/${accession}/genome-links`
+        `${config.dev_api_v2}assemblies/${accession}/genome-links`
       );
       const { items } = response.data;
       setGenomeLinksLastUpdated(items?.[0]?.updated_at ?? null);

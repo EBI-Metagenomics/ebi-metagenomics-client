@@ -37,18 +37,18 @@
   display: none;
 }
 
-.vf-details--summary::after {
-  content: '';
-  position: absolute;
-  right: 1.25rem;
-  top: 50%;
-  transform: translateY(-50%) rotate(135deg);
-  width: 0.5rem;
-  height: 0.5rem;
-  border-right: 2px solid #64748b;
-  border-bottom: 2px solid #64748b;
-  transition: transform 0.3s ease;
-}
+/*.vf-details--summary::after {*/
+/*  content: '';*/
+/*  position: absolute;*/
+/*  right: 1.25rem;*/
+/*  top: 50%;*/
+/*  transform: translateY(-50%) rotate(135deg);*/
+/*  width: 0.5rem;*/
+/*  height: 0.5rem;*/
+/*  border-right: 2px solid #64748b;*/
+/*  border-bottom: 2px solid #64748b;*/
+/*  transition: transform 0.3s ease;*/
+/*}*/
 
 .custom-vf-details[open] .vf-details--summary::after {
   transform: translateY(-30%) rotate(-45deg);

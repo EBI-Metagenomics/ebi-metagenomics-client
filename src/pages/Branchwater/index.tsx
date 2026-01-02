@@ -285,13 +285,13 @@ const Branchwater = () => {
     const examples = [
       {
         id: 'example-mag-1st',
-        accession: 'MGYG000304400',
-        catalogue: 'sheep-rumen-v1-0',
+        accession: 'MGYG000290005',
+        catalogue: 'cow-rumen-v1-0-1',
       },
       {
         id: 'example-mag-2nd',
-        accession: 'MGYG000485384',
-        catalogue: 'marine-v2-0',
+        accession: 'MGYG000518603',
+        catalogue: 'barley-rhizosphere-v2-0',
       },
       {
         id: 'example-mag-3rd',
@@ -402,14 +402,14 @@ const Branchwater = () => {
                   onChange={() => setSelectedExample('example-mag-1st')}
                 />
                 <label className="vf-form__label" htmlFor="example-mag-1st">
-                  Sodaliphilus sp900320055 — Sheep Rumen &nbsp;
+                  RUG705 — Cow Rumen &nbsp;
                   <a
                     className="vf-link"
-                    href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000304400#overview"
+                    href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000290005#overview"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    MGYG000304400
+                    MGYG000290005
                   </a>
                 </label>
               </div>
@@ -424,17 +424,18 @@ const Branchwater = () => {
                   onChange={() => setSelectedExample('example-mag-2nd')}
                 />
                 <label className="vf-form__label" htmlFor="example-mag-2nd">
-                  Rhizobiaceae BOKV01 sp— Marine &nbsp;
+                  Dyadobacter sp946482605— Barley Rhizosphere &nbsp;
                   <a
                     className="vf-link"
-                    href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000485384#overview"
+                    href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000518603#overview"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    MGYG000485384
+                    MGYG000518603
                   </a>
                 </label>
               </div>
+
               <div className="vf-form__item vf-form__item--radio">
                 <input
                   className="vf-form__radio"

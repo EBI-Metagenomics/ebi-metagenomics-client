@@ -73,18 +73,13 @@ const DerivedGenomes: React.FC = () => {
     {
       id: 'genome_accession',
       Header: 'Genome accession',
-      accessor: (row: GenomeLink) => (
-        <Link to={`/genomes/${row.genome.accession}`}>
-          {row.genome.accession}
-        </Link>
-      ),
+      accessor: (row: GenomeLink) => row.genome.accession,
     },
     {
       id: 'ena',
       Header: 'ENA',
       accessor: (row: GenomeLink) =>
         row.mag_accession ? (
-          // If mag_accession is an ENA/Browser-friendly accession, link it:
           <a
             href={`${ENA_VIEW_URL}${row.mag_accession}`}
             target="_blank"
@@ -101,19 +96,19 @@ const DerivedGenomes: React.FC = () => {
       Header: 'Species representative',
       accessor: (row: GenomeLink) =>
         row.genome.accession === row.species_rep ? (
-          <span
-            className="icon icon-common icon-check-circle"
-            style={{ fontSize: '1.3rem', color: 'green' }}
-            title="Species representative"
-          />
+          <>
+            <Link to={`/genomes/${row.genome.accession}`}>
+              {row.genome.accession}
+            </Link>
+            <span
+              className="icon icon-common icon-check-circle"
+              style={{ fontSize: '1.3rem', color: 'green', marginLeft: '5px' }}
+              title="Species representative"
+            />
+          </>
         ) : (
           <span title="Not species representative">—</span>
         ),
-    },
-    {
-      id: 'taxonomy',
-      Header: 'Taxonomy',
-      accessor: (row: GenomeLink) => row.genome.taxon_lineage,
     },
     {
       Header: 'Taxonomy',

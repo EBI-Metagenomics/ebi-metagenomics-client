@@ -36,7 +36,7 @@ const AdditionalContainedGenomes: React.FC = () => {
         setError(null);
 
         const resp = await axios.get(
-          `${config.api_v2}assemblies/${accession}/additional-contained-genomes`
+          `${config.dev_api_v2}assemblies/${accession}/additional-contained-genomes`
         );
 
         const raw = resp.data as unknown;
@@ -180,13 +180,16 @@ const AdditionalContainedGenomes: React.FC = () => {
           gap: '1rem',
         }}
       >
-        <p style={{ margin: 0 }}>
-          Additional contained genomes were identified by calculating the
-          containment of all species-representative genomes from the{' '}
-          <Link to={'/branchwater-search'}>MGnify Genomes</Link> catalogues in
-          the assembly using <Link to={'/browse/genomes'}>Branchwater</Link>.
-          Genomes with ≥50% containment are reported.
-        </p>
+        <details className="vf-details">
+          <summary className="vf-details--summary">More info</summary>
+          <p className="vf-text-body vf-text-body--3">
+            Additional contained genomes were identified by calculating the
+            containment of all species-representative genomes from the{' '}
+            <Link to={'/branchwater-search'}>MGnify Genomes</Link> catalogues in
+            the assembly using <Link to={'/browse/genomes'}>Branchwater</Link>.
+            Genomes with ≥50% containment are reported.
+          </p>
+        </details>
         <button
           type="button"
           className="vf-button vf-button--secondary vf-button--sm"
