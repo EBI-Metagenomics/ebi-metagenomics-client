@@ -7,7 +7,7 @@ import axios from 'utils/protectedAxios';
 import config from 'utils/config';
 import { ENA_VIEW_URL } from 'utils/urls';
 import useURLAccession from 'hooks/useURLAccession';
-import { cleanTaxLineage, getSimpleTaxLineage } from 'utils/taxon.ts';
+import { cleanTaxLineage, getSimpleTaxLineage } from 'utils/taxon';
 import Tooltip from 'components/UI/Tooltip';
 
 type ContainedGenome = {
