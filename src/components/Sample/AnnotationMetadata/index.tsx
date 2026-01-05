@@ -59,22 +59,24 @@ const AnnotationMetadata: React.FC<{ sample: SampleDetail }> = ({ sample }) => {
         Additional metadata that may relate to this sample is available via
         publications linked to the sample’s studies.
       </p>
-      {uniqBy(allPublications, 'pubmed_id').map((pub) => (
-        <article
-          className="vf-card vf-card--brand vf-card--bordered"
-          key={pub.pubmed_id}
-        >
-          <div className="vf-card__content | vf-stack vf-stack--400">
-            <h3 className="vf-card__heading">
-              <Link to={`/publications/${pub.pubmed_id}`}>{pub.title}</Link>
-            </h3>
-            <PublicationAnnotations
-              pubmedId={String(pub.pubmed_id)}
-              key={pub.pubmed_id}
-            />
-          </div>
-        </article>
-      ))}
+      <div className="vf-stack vf-stack-800">
+        {uniqBy(allPublications, 'pubmed_id').map((pub) => (
+          <article
+            className="vf-card vf-card--brand vf-card--bordered"
+            key={pub.pubmed_id}
+          >
+            <div className="vf-card__content | vf-stack vf-stack--400">
+              <h3 className="vf-card__heading">
+                <Link to={`/publications/${pub.pubmed_id}`}>{pub.title}</Link>
+              </h3>
+              <PublicationAnnotations
+                pubmedId={String(pub.pubmed_id)}
+                key={pub.pubmed_id}
+              />
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   );
 };
