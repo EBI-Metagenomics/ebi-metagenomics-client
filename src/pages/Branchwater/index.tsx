@@ -72,9 +72,23 @@ const Branchwater = () => {
 
   const sourmash = useRef<HTMLMgnifySourmashComponentElement | null>(null);
   const [signature, setSignature] = useState<Signature | null>(null);
-  const [textQuery] = useQueryParamState('query', '');
-  const [caniRange] = useQueryParamState('cani', '');
-  const [pageQP, setPageQP] = useQueryParamState('branchwater-page', 1, Number);
+  const [textQuery, setTextQuery] = useQueryParamState('query', '');
+  const [caniRange, setCaniRange] = useQueryParamState('cani', '');
+  const [containmentRange, setContainmentRange] = useQueryParamState(
+    'containment',
+    ''
+  );
+  const [locationParam, setLocationParam] = useQueryParamState(
+    'geo_loc_name_country_calc',
+    ''
+  );
+  const [organismParam, setOrganismParam] = useQueryParamState('organism', '');
+  const [assayTypeParam, setAssayTypeParam] = useQueryParamState(
+    'assay_type',
+    ''
+  );
+
+  const [, setPageQP] = useQueryParamState('branchwater-page', 1, Number);
   const [detailedOrder, setDetailedOrder] = useQueryParamState(
     'branchwater-detailed-order',
     ''
@@ -85,8 +99,19 @@ const Branchwater = () => {
       ...prev,
       query: textQuery,
       cani: caniRange,
+      containment: containmentRange,
+      geo_loc_name_country_calc: locationParam,
+      organism: organismParam,
+      assay_type: assayTypeParam,
     }));
-  }, [textQuery, caniRange]);
+  }, [
+    textQuery,
+    caniRange,
+    containmentRange,
+    locationParam,
+    organismParam,
+    assayTypeParam,
+  ]);
 
   // TODO: bring back request button
   // const handleRequestAnalysis = (entry: SearchResult) => {
@@ -222,8 +247,8 @@ const Branchwater = () => {
   };
 
   // Handle page change
-  const handlePageChange = (page: number): void => {
-    setPageQP(page);
+  const handlePageChange = (pageNumber: number): void => {
+    setPageQP(pageNumber);
   };
   const downloadCSV = () => {
     downloadBranchwaterCSV(sortedResults);
@@ -234,6 +259,15 @@ const Branchwater = () => {
     setUploadedFile(null);
     setSearchResults([]);
     setSignature(null);
+
+    // Clear query parameters
+    setTextQuery('');
+    setCaniRange('');
+    setContainmentRange('');
+    setLocationParam('');
+    setOrganismParam('');
+    setAssayTypeParam('');
+
     setFilters({
       acc: '',
       assay_type: '',
@@ -260,6 +294,15 @@ const Branchwater = () => {
     setUploadedFile(null);
     setSearchResults([]);
     setSignature(null);
+
+    // Clear query parameters
+    setTextQuery('');
+    setCaniRange('');
+    setContainmentRange('');
+    setLocationParam('');
+    setOrganismParam('');
+    setAssayTypeParam('');
+
     setFilters({
       acc: '',
       assay_type: '',

@@ -1,11 +1,11 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
+import useSharedQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
 interface LocalMultipleOptionFilterProps {
   facetName: string;
   header: string;
-  data: never[];
+  data: any[];
   includeTextFilter?: boolean;
 }
 
@@ -15,12 +15,15 @@ const LocalMultipleOptionFilter: React.FC<LocalMultipleOptionFilterProps> = ({
   data,
   includeTextFilter = false,
 }) => {
-  const [facet, setFacet] = useQueryParamState(facetName, '');
-  const [selected, setSelected] = useState(facet?.split(',').filter(Boolean));
+  const [facet, setFacet] = useSharedQueryParamState<string[]>(facetName);
+  // const [facet, setFacet] = useQueryParamState(facetName, '');
+  const [selected, setSelected] = useState(
+    facet?.split(',').filter(Boolean) || []
+  );
   const [textFilter, setTextFilter] = useState('');
 
   useEffect(() => {
-    setSelected(facet?.split(',').filter(Boolean));
+    setSelected(facet?.split(',').filter(Boolean) || []);
   }, [facet]);
 
   // Generate facet data from your search results
@@ -52,7 +55,9 @@ const LocalMultipleOptionFilter: React.FC<LocalMultipleOptionFilterProps> = ({
     } else {
       newSelected = selected.filter((s) => s !== value);
     }
-    setFacet(newSelected.sort().join(','));
+    const facetValue = newSelected.sort().join(',');
+    setFacet(facetValue);
+    setSelected(newSelected);
   };
 
   return (
