@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import L from 'leaflet';
 
@@ -12,6 +6,8 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import axios from 'axios';
 import Results from 'pages/Branchwater/Results';
+import Loading from 'components/UI/Loading';
+import LoadingDots from 'components/UI/LoadingDots';
 import config from 'utils/config';
 import useBranchwaterResults, {
   type BranchwaterFilters,
@@ -37,13 +33,8 @@ const DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-interface Signature {
-  [key: string]: unknown;
-}
-
 const Branchwater = () => {
-  const [showMgnifySourmash, setShowMgnifySourmash] = useState<boolean>(false);
-  const [, setUploadedFile] = useState<File | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   // const [targetDatabase, setTargetDatabase] = useState<string>('MAGs');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
@@ -70,8 +61,6 @@ const Branchwater = () => {
     cani: '',
   });
 
-  const sourmash = useRef<HTMLMgnifySourmashComponentElement | null>(null);
-  const [signature, setSignature] = useState<Signature | null>(null);
   const [textQuery, setTextQuery] = useQueryParamState('query', '');
   const [caniRange, setCaniRange] = useQueryParamState('cani', '');
   const [containmentRange, setContainmentRange] = useQueryParamState(
@@ -180,24 +169,18 @@ const Branchwater = () => {
     event: React.MouseEvent<HTMLButtonElement>
   ): void => {
     event.preventDefault();
-    setShowMgnifySourmash(true);
 
-    if (signature) {
+    if (uploadedFile) {
       setIsLoading(true);
+      const formData = new FormData();
+      formData.append('fasta', uploadedFile);
       axios
-        .post(
-          'http://branchwater-dev.mgnify.org/',
-          {
-            // signatures: signature,
-            signatures: JSON.stringify(signature[0]),
+        .post('http://branchwater-dev.mgnify.org/fasta', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Accept: '*/*',
           },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: '*/*',
-            },
-          }
-        )
+        })
         .then((response) => {
           const { resultsArray } = processBranchwaterResults(response.data);
           setSearchResults(resultsArray);
@@ -209,20 +192,6 @@ const Branchwater = () => {
         });
     }
   };
-
-  useEffect(() => {
-    const handleSketched = (evt: CustomEvent): void => {
-      evt.preventDefault();
-      const sig = JSON.parse(evt.detail.signature);
-      setSignature(sig);
-    };
-
-    document.addEventListener('sketched', handleSketched as EventListener);
-
-    return () => {
-      document.removeEventListener('sketched', handleSketched as EventListener);
-    };
-  }, [signature]);
 
   const handleFilterChange = (
     field: keyof BranchwaterFilters,
@@ -255,10 +224,8 @@ const Branchwater = () => {
   };
 
   const handleClearClick = (): void => {
-    setShowMgnifySourmash(false);
     setUploadedFile(null);
     setSearchResults([]);
-    setSignature(null);
 
     // Clear query parameters
     setTextQuery('');
@@ -290,10 +257,8 @@ const Branchwater = () => {
   };
 
   const handleExampleSubmit = () => {
-    setShowMgnifySourmash(false);
     setUploadedFile(null);
     setSearchResults([]);
-    setSignature(null);
 
     // Clear query parameters
     setTextQuery('');
@@ -323,7 +288,6 @@ const Branchwater = () => {
       fileInput.value = '';
     }
 
-    setShowMgnifySourmash(true);
     setIsLoading(true);
     const examples = [
       {
@@ -367,11 +331,11 @@ const Branchwater = () => {
         <details className="vf-details">
           <summary className="vf-details--summary">Instructions</summary>
           <p className="vf-text-body vf-text-body--3">
-            Use the Browse button below to select a FASTA file
+            Use the Browse button below to select a FASTA file (.fasta, .fna,
+            .fastq)
           </p>
           <p className="vf-text-body vf-text-body--3">
-            <strong>Sourmash</strong> runs in your browser to create compact
-            signatures which are then sent to our servers.
+            The file is then sent to our servers for processing.
           </p>
           <p className="vf-text-body vf-text-body--3">
             This search engine searches for the containment of a query genome
@@ -398,23 +362,24 @@ const Branchwater = () => {
       <div>
         <form className="vf-stack vf-stack--400">
           <div className="vf-form__item vf-stack">
-            {/*<MGnifySourmashComponent*/}
-            {/*  showDirectoryCheckbox*/}
-            {/*  showSignatures*/}
-            {/*  ksize={21}*/}
-            {/*  scaled={1000}*/}
-            {/*/>*/}
-
-            <mgnify-sourmash-component
-              id="sourmash"
-              ref={sourmash}
-              ksize={21}
+            <label className="vf-form__label" htmlFor="file-upload">
+              Upload FASTA file
+            </label>
+            <input
+              id="file-upload"
+              type="file"
+              accept=".fasta,.fna,.fastq"
+              onChange={(e) =>
+                setUploadedFile(e.target.files ? e.target.files[0] : null)
+              }
+              className="vf-form__input"
             />
 
             <button
               type="button"
               className="vf-button vf-button--sm vf-button--primary mg-button vf-u-margin__top--400"
               onClick={handleSearchClick}
+              disabled={!uploadedFile || isLoading}
             >
               Search
             </button>
@@ -423,13 +388,27 @@ const Branchwater = () => {
               type="button"
               className="vf-button vf-button--sm vf-button--tertiary"
               onClick={handleClearClick}
+              disabled={isLoading}
             >
               Clear
             </button>
           </div>
         </form>
 
-        <details className="vf-details">
+        {isLoading && (
+          <div className="vf-u-margin__top--400 vf-u-text-align--center">
+            <Loading size="large" />
+            <p className="vf-text-body vf-text-body--3">
+              Performing search, this may take a few minutes
+              <LoadingDots />
+            </p>
+          </div>
+        )}
+
+        <details
+          className="vf-details"
+          open={!isLoading && !searchResults.length}
+        >
           <summary className="vf-details--summary">Try an example</summary>
           <div className="vf-u-margin__top--200">
             <fieldset className="vf-form__fieldset">
@@ -506,6 +485,7 @@ const Branchwater = () => {
               type="button"
               className="vf-button vf-button--sm vf-button--secondary"
               onClick={handleExampleSubmit}
+              disabled={isLoading}
             >
               Use selected example
             </button>
@@ -513,7 +493,7 @@ const Branchwater = () => {
         </details>
       </div>
 
-      {showMgnifySourmash && (
+      {searchResults.length > 0 && (
         <Results
           isLoading={isLoading}
           searchResults={searchResults}

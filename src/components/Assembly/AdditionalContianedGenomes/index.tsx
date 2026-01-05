@@ -7,6 +7,8 @@ import axios from 'utils/protectedAxios';
 import config from 'utils/config';
 import { ENA_VIEW_URL } from 'utils/urls';
 import useURLAccession from 'hooks/useURLAccession';
+import { cleanTaxLineage, getSimpleTaxLineage } from 'utils/taxon.ts';
+import Tooltip from 'components/UI/Tooltip';
 
 type ContainedGenome = {
   genome: {
@@ -21,7 +23,13 @@ type ContainedGenome = {
   updated_at?: string;
 };
 
-const AdditionalContainedGenomes: React.FC = () => {
+interface AdditionalContainedGenomesProps {
+  derivedGenomes?: string[];
+}
+
+const AdditionalContainedGenomes: React.FC<AdditionalContainedGenomesProps> = ({
+  derivedGenomes = [],
+}) => {
   const accession = useURLAccession();
   const [rows, setRows] = useState<ContainedGenome[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -45,19 +53,25 @@ const AdditionalContainedGenomes: React.FC = () => {
             ? ((raw as any).items as Array<any>)
             : [];
 
-        const mapped: ContainedGenome[] = items.map((it) => ({
-          genome: {
-            accession: it?.genome?.accession ?? '',
-            taxon_lineage: it?.genome?.taxon_lineage ?? '',
-            catalogue_id: it?.genome?.catalogue_id ?? '',
-            catalogue_version: it?.genome?.catalogue_version ?? '',
-          },
-          ena_genome_accession: it?.genome?.ena_genome_accession ?? '',
-          containment:
-            typeof it?.containment === 'number' ? it.containment * 100 : 0,
-          cani: typeof it?.cani === 'number' ? it.cani * 100 : 0,
-          updated_at: it?.updated_at ?? '',
-        }));
+        const mapped: ContainedGenome[] = items
+          .map((it) => ({
+            genome: {
+              accession: it?.genome?.accession ?? '',
+              taxon_lineage: it?.genome?.taxon_lineage ?? '',
+              catalogue_id: it?.genome?.catalogue_id ?? '',
+              catalogue_version: it?.genome?.catalogue_version ?? '',
+            },
+            ena_genome_accession: it?.genome?.ena_genome_accession ?? '',
+            containment:
+              typeof it?.containment === 'number' ? it.containment * 100 : 0,
+            cani: typeof it?.cani === 'number' ? it.cani * 100 : 0,
+            updated_at: it?.updated_at ?? '',
+          }))
+          .filter(
+            (it) =>
+              it.containment > 50 &&
+              !derivedGenomes.includes(it.genome.accession)
+          );
 
         if (!cancelled) setRows(mapped);
       } catch (e) {
@@ -73,7 +87,7 @@ const AdditionalContainedGenomes: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [accession]);
+  }, [accession, derivedGenomes]);
 
   const downloadCSV = () => {
     if (!rows.length) return;
@@ -161,6 +175,16 @@ const AdditionalContainedGenomes: React.FC = () => {
       id: 'taxonomy',
       Header: 'Taxonomy',
       accessor: (row: ContainedGenome) => row.genome.taxon_lineage,
+      Cell: ({ cell }) => (
+        <>
+          {getSimpleTaxLineage(cell.value, true)}{' '}
+          <Tooltip content={cleanTaxLineage(cell.value, ' > ')}>
+            <sup>
+              <span className="icon icon-common icon-info" />
+            </sup>
+          </Tooltip>
+        </>
+      ),
     },
     {
       id: 'catalogue',

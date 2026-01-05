@@ -44,9 +44,15 @@ type GenomeLinksResponse = {
 };
 
 const Overview: React.FC = () => {
-  const { genomeLinksLastUpdated } = React.useContext(V2AssemblyContext);
+  const { genomeLinksLastUpdated, assemblyData } =
+    React.useContext(V2AssemblyContext);
 
   const [showBanner, setShowBanner] = React.useState(true);
+
+  const derivedGenomesAccessions = useMemo(
+    () => assemblyData?.genome_links?.map((gl) => gl.genome.accession) || [],
+    [assemblyData]
+  );
 
   return (
     <>
@@ -67,7 +73,7 @@ const Overview: React.FC = () => {
       )}
 
       <DerivedGenomes />
-      <AdditionalContainedGenomes />
+      <AdditionalContainedGenomes derivedGenomes={derivedGenomesAccessions} />
     </>
   );
 };

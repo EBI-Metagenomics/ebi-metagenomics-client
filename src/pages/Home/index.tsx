@@ -4,6 +4,7 @@ import InnerCard from 'components/UI/InnerCard';
 import './style.css';
 import SearchPage from 'pages/Search';
 import useReveal from 'hooks/useReveal';
+import TrainingResources from 'components/Home/TrainingResources';
 
 const HomePage: React.FC = () => {
   const SearchIcon = (
@@ -190,6 +191,13 @@ const HomePage: React.FC = () => {
         <h2 className="vf-section__title">How to Cite MGnify</h2>
         <MainPublication />
       </section>
+
+      <section className="vf-section">
+        <h2 className="vf-section__title">EMBL-EBI Training</h2>
+        <TrainingResources />
+      </section>
+
+      <h2></h2>
     </section>
   );
 };
