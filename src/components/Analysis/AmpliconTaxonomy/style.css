@@ -100,7 +100,7 @@
 /* Amplicon cell styling */
 .vf-table__cell:first-child {
   font-weight: 600;
-  color: #3182ce;
+  /*color: #3182ce;*/
 }
 
 /* Icon styling */

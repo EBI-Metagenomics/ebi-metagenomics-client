@@ -175,7 +175,7 @@ const Branchwater = () => {
       const formData = new FormData();
       formData.append('fasta', uploadedFile);
       axios
-        .post('http://branchwater-dev.mgnify.org/fasta', formData, {
+        .post('http://branchwater-dev.mgnify.org/gzipped', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Accept: '*/*',
@@ -331,8 +331,13 @@ const Branchwater = () => {
         <details className="vf-details">
           <summary className="vf-details--summary">Instructions</summary>
           <p className="vf-text-body vf-text-body--3">
-            Use the Browse button below to select a FASTA file (.fasta, .fna,
-            .fastq)
+            Use the Browse button below to select a file (.fasta, .fna, .gz,
+            .sig)
+          </p>
+          <p className="vf-text-body vf-text-body--3">
+            If your FASTA file is larger than 10MB, please gzip it. If your
+            gzipped file is larger than 20MB, please upload a sketch (.sig
+            file).
           </p>
           <p className="vf-text-body vf-text-body--3">
             The file is then sent to our servers for processing.
@@ -363,12 +368,12 @@ const Branchwater = () => {
         <form className="vf-stack vf-stack--400">
           <div className="vf-form__item vf-stack">
             <label className="vf-form__label" htmlFor="file-upload">
-              Upload FASTA file
+              Upload file
             </label>
             <input
               id="file-upload"
               type="file"
-              accept=".fasta,.fna,.fastq"
+              accept=".fasta,.fna,.gz,.sig"
               onChange={(e) =>
                 setUploadedFile(e.target.files ? e.target.files[0] : null)
               }
@@ -424,7 +429,7 @@ const Branchwater = () => {
                   onChange={() => setSelectedExample('example-mag-1st')}
                 />
                 <label className="vf-form__label" htmlFor="example-mag-1st">
-                  RUG705 — Cow Rumen &nbsp;
+                  RUG705 sp — Cow Rumen &nbsp;
                   <a
                     className="vf-link"
                     href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000290005#overview"

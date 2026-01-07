@@ -49,7 +49,9 @@ const DerivedGenomes: React.FC = () => {
       row.mag_accession ?? '',
       row.genome.accession === row.species_rep ? 'Yes' : 'No',
       row.genome.taxon_lineage,
-      `${row.genome.catalogue_id} v${row.genome.catalogue_version}`,
+      `${String(row.genome.catalogue_id).split('-v')[0]} v${
+        row.genome.catalogue_version
+      }`,
       new Date(row.updated_at || '').toLocaleDateString(),
     ]);
 
@@ -103,7 +105,7 @@ const DerivedGenomes: React.FC = () => {
             <span
               className="icon icon-common icon-check-circle"
               style={{ fontSize: '1.3rem', color: 'green', marginLeft: '5px' }}
-              title="Species representative"
+              title="The species representative is available on MGnify. Click to view"
             />
           </>
         ) : (
@@ -129,7 +131,9 @@ const DerivedGenomes: React.FC = () => {
       id: 'catalogue',
       Header: 'Genome Catalogue',
       accessor: (row: GenomeLink) =>
-        `${row.genome.catalogue_id} v${row.genome.catalogue_version}`,
+        `${String(row.genome.catalogue_id).split('-v')[0]} v${
+          row.genome.catalogue_version
+        }`,
     },
   ];
 

@@ -2,7 +2,7 @@
   "name": "mgportalv2",
   "version": "2.1.14",
   "description": "Web Client for the Mgnify service at EBI",
-  "homepage": "/metagenomics",
+  "homepage": "/https://github.com/EBI-Metagenomics/ebi-metagenomics-client#readme",
   "main": "src/index.tsx",
   "scripts": {
     "serve:fixtures": "http-server -p 5055 cypress/fixtures --cors",
@@ -65,7 +65,7 @@
     "leaflet": "^1.9.4",
     "lodash-es": "4.17.21",
     "lucide-react": "^0.476.0",
-    "mgnify-sourmash-component": "0.1.1",
+    "mgnify-sourmash-component": "0.2.4",
     "native-file-system-adapter": "^3.0.1",
     "pako": "^2.1.0",
     "papaparse": "^5.5.3",

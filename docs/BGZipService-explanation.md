@@ -1,81 +1,104 @@
-# Explanation of `examineFileStructure()` Method and Gzip Block Identification
+# Explanation of `parseGziIndex()` Method and GZI Index Handling
 
-## What are Gzip Blocks?
+## What are Gzip Blocks and GZI Files?
 
-Gzip is a file compression format that compresses data into blocks. Each gzip block:
+Gzip is a file compression format that compresses data into blocks. BGZip (Blocked GZip) is a specialized variant used in bioinformatics that divides data into fixed-size blocks, each independently compressed. This allows for random access to compressed data.
+
+Each gzip block:
 - Has a header with magic numbers (0x1f, 0x8b) that identify the start of a block
 - Contains compressed data
 - Has a footer with checksums and size information
 
-BGZip (Blocked GZip) is a specialized variant of gzip used in bioinformatics and other fields that need random access to compressed data. It divides data into fixed-size blocks, each independently compressed.
 
-## The `examineFileStructure()` Method
+A **GZI index** file stores the mapping between compressed offsets and uncompressed offsets for each block in a BGZF file. This mapping is essential for jumping to a specific position in the file without decompressing everything from the start.
 
-The `examineFileStructure()` method in BgZipService.ts (lines 306-345) serves a critical purpose:
+## The `parseGziIndex()` Method
+
+The `parseGziIndex()` method in `BgZipService.ts` handles the loading and validation of the GZI index:
 
 ```typescript
-private async examineFileStructure(): Promise<number | null> {
-  console.log('Calling examineFileStructure');
-  try {
-    const response = await fetch(this.dataFileUrl, {
-      headers: { Range: 'bytes=0-4096' },
+private async parseGziIndex(buffer: ArrayBuffer): Promise<GziBlock[]> {
+  console.groupCollapsed('Parsing the GZI');
+
+  const view = new DataView(buffer);
+  const numIndexEntries = Number(view.getBigUint64(0, true));
+  console.log('GZI has index block count of', numIndexEntries);
+
+  const blocks: GziBlock[] = [];
+
+  for (let i = 0; i < numIndexEntries; i++) {
+    const baseOffset = 8 + i * 16;
+
+    const compressedOffset = Number(view.getBigUint64(baseOffset, true));
+    const uncompressedOffset = Number(
+      view.getBigUint64(baseOffset + 8, true)
+    );
+
+    blocks.push({
+      compressedOffset,
+      uncompressedOffset,
     });
-
-    const buffer = await response.arrayBuffer();
-    const data = new Uint8Array(buffer);
-
-    // Look for gzip magic numbers
-    const blockStarts = [];
-    for (let i = 0; i < data.length - 1; i++) {
-      if (data[i] === 0x1f && data[i + 1] === 0x8b) {
-        blockStarts.push(i);
-        if (blockStarts.length >= 5) break;
-      }
-    }
-
-    console.log('Found gzip blocks at positions:', blockStarts);
-    return blockStarts.length > 0 ? blockStarts[0] : null;
-  } catch (err) {
-    this.errorHandler(`Error examining file structure: ${err}`);
-    return null;
   }
+
+  /*
+   Handle edge cases: if first uncompressed offset > 0, prepend artificial entry for offset 0.
+   If the index is empty, make fake block of the entire file unless it seems bizarrely large.
+  */
+  if (blocks.length === 0) {
+    console.log('Index file is empty');
+    const size = await this.getFileSize();
+    if (size > MAX_BLOCK_SIZE) {
+      throw new Error('Index file is empty, but compressed file is too big.');
+    }
+    console.warn(
+      'No index entries, but file is small so adding synthetic entry at 0'
+    );
+    blocks.unshift({
+      compressedOffset: 0,
+      uncompressedOffset: 0,
+    });
+  }
+  if (blocks[0].uncompressedOffset > 0) {
+    console.warn(
+      'First index entry uncompressed offset > 0, adding synthetic entry at 0'
+    );
+    blocks.unshift({
+      compressedOffset: 0,
+      uncompressedOffset: 0,
+    });
+  }
+
+  console.log('Parsed GZI blocks', blocks);
+
+  this.gziIndex = blocks;
+  console.groupEnd();
+  return blocks;
 }
 ```
 
 ### How It Works:
 
-1. **Fetching Initial Data**: The method fetches the first 4096 bytes of the compressed file using a Range request, which is efficient as it doesn't download the entire file.
+1.  **Reading the Header**: The GZI file format starts with an 8-byte little-endian integer indicating the number of entries.
+2.  **Iterating through Entries**: Each entry is 16 bytes: 8 bytes for the compressed offset and 8 bytes for the uncompressed offset (both little-endian).
+3.  **Handling Missing/Incomplete Indices**:
+    *   **Synthetic Zero Entry**: If the first entry's uncompressed offset is not 0, the service prepends a synthetic entry at `{0, 0}`. This ensures that the start of the file is always reachable.
+    *   **Empty Index Fallback**: If the GZI file is empty but the compressed file is small (under `MAX_BLOCK_SIZE`), the service creates a single synthetic block for the whole file. This allows the service to work even if the index is missing for small files.
 
-2. **Searching for Magic Numbers**: It then scans this data byte by byte, looking for the gzip magic numbers (0x1f, 0x8b) that indicate the start of a gzip block.
+## Why GZI Parsing Matters
 
-3. **Collecting Block Starts**: When it finds these magic numbers, it adds the position to the `blockStarts` array. It stops after finding 5 blocks to keep the operation efficient.
+Correctly parsing and "healing" the index is essential for:
 
-4. **Returning First Block Position**: Finally, it returns the position of the first block, which is crucial for validating and correcting the index.
-
-## Why Block Identification Matters
-
-Identifying the starting points of gzip blocks is essential for several reasons:
-
-1. **Random Access**: Without knowing where blocks start, you would need to decompress the entire file from the beginning to access data in the middle or end.
-
-2. **Index Validation**: The method helps validate the gzip index (GZI) file by comparing the actual first block position with what's recorded in the index.
-
-3. **Index Correction**: If the index is incorrect (as seen in `ensureValidIndex()`), knowing the actual block positions allows the service to apply corrections.
-
-4. **Fallback Mechanism**: If no valid index exists, the service can build one by scanning the file for block starts.
+1.  **Random Access**: Jumping to a specific "page" (block) in the compressed file.
+2.  **Robustness**: Handling cases where the index might be slightly malformed (e.g., missing the initial zero offset).
+3.  **Efficiency**: Avoiding full scans of large files by relying on the pre-computed index.
 
 ## How This Enables Efficient Data Access
 
-The BGZipService uses this block identification to:
+The `BGZipService` uses the parsed index to:
 
-1. **Validate the Index**: In `ensureValidIndex()`, it compares the first real block offset with the index's first entry.
+1.  **Map Pages to Offsets**: In `readPage()`, it uses the `pageNum` to look up the exact `compressedOffset` in the `gziIndex`.
+2.  **Selective Fetching**: `fetchAndDecompressBlock()` uses a `Range` request to download only the specific 64KB BGZF block containing the data.
+3.  **TSV Navigation**: In `readPageAsTSV()`, the service can handle files where the first page contains only comments (like headers), automatically skipping to the next data block if necessary.
+4.  **Selective Decompression**: Only the requested block is inflated using `pako.inflateRaw()`, saving CPU and memory.
 
-2. **Correct Offsets**: If there's a discrepancy, it applies a correction to all offsets in the index.
-
-3. **Rebuild the Index**: If correction fails, it can rebuild the entire index by scanning for block starts.
-
-4. **Fetch Specific Blocks**: When retrieving data, it can fetch only the needed blocks rather than the entire file.
-
-5. **Decompress Selectively**: It can decompress only the blocks containing the requested data, making data access much more efficient.
-
-This approach is particularly valuable for large genomic data files where loading the entire file would be impractical.
+This architecture is particularly valuable for large genomic data files (like TSVs or GFFs) where loading the entire file into the browser would be impossible.

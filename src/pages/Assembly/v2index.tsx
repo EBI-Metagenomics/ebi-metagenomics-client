@@ -12,7 +12,7 @@ import RouteForHash from 'components/Nav/RouteForHash';
 import config from 'utils/config';
 import InfoBanner from 'components/UI/InfoBanner';
 import DerivedGenomes from 'components/Assembly/DerivedGenomes';
-import AdditionalContainedGenomes from 'components/Assembly/AdditionalContianedGenomes';
+import AdditionalContainedGenomes from 'components/Assembly/AdditionalContainedGenomes';
 import V2AssemblyContext from './context';
 import { ErrorTypes } from 'hooks/data/useData';
 

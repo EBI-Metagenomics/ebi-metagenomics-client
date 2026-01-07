@@ -28,6 +28,7 @@ const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
       setDetails(null);
       return;
     }
+    console.log('setting login item');
     localStorage.setItem('mgnify.v2.token', newToken as string);
     setAuthTokenInternally(newToken);
     const userDetailsFromToken = jwtDecode(newToken as string) as TokenContent;

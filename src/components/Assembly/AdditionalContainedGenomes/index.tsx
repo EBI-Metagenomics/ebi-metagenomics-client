@@ -116,7 +116,9 @@ const AdditionalContainedGenomes: React.FC<AdditionalContainedGenomesProps> = ({
       `${row.containment.toFixed(2)}%`,
       `${row.cani.toFixed(2)}%`,
       row.genome.taxon_lineage,
-      `${row.genome.catalogue_id} v${row.genome.catalogue_version}`,
+      `${String(row.genome.catalogue_id).split('-v')[0]} v${
+        row.genome.catalogue_version
+      }`,
       new Date(row.updated_at || '').toLocaleDateString(),
     ]);
 
@@ -190,7 +192,9 @@ const AdditionalContainedGenomes: React.FC<AdditionalContainedGenomesProps> = ({
       id: 'catalogue',
       Header: 'Genome Catalogue',
       accessor: (row: ContainedGenome) =>
-        `${row.genome.catalogue_id} v${row.genome.catalogue_version}`,
+        `${String(row.genome.catalogue_id).split('-v')[0]} v${
+          row.genome.catalogue_version
+        }`,
     },
   ];
 

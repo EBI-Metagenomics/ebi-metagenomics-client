@@ -202,14 +202,6 @@ const Results: React.FC<ResultsProps> = ({
         <div className="results-summary">
           <div>
             <h3> Search Complete: {searchResults.length} matches found</h3>
-            <p>
-              Found{' '}
-              {
-                searchResults.filter((result) => result.assay_type === 'WGS')
-                  .length
-              }{' '}
-              samples • {Object.keys(countryCounts).length} countries
-            </p>
           </div>
 
           <div className="results-actions">
