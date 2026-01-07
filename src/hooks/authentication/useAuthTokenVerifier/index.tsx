@@ -5,7 +5,7 @@ import { useCallback, useContext } from 'react';
 
 const useAuthTokenVerifier = () => {
   const [authToken, setAuthToken] = useAuthToken();
-  const { setDetails } = useContext(UserContext);
+  const { isAuthenticated, setDetails } = useContext(UserContext);
 
   // Memoize to avoid changing identity on every render, which was
   // retriggering effects and causing repeated API calls.
@@ -19,7 +19,7 @@ const useAuthTokenVerifier = () => {
       });
       const accessToken = response?.data?.data?.token;
       // Avoid unnecessary state updates that can trigger re-renders.
-      if (accessToken && accessToken !== authToken) {
+      if (accessToken && (accessToken !== authToken || !isAuthenticated)) {
         setAuthToken(accessToken);
       }
     } catch (error) {
@@ -28,7 +28,7 @@ const useAuthTokenVerifier = () => {
       setAuthToken(null);
       setDetails(null);
     }
-  }, [authToken, setAuthToken, setDetails]);
+  }, [authToken, setAuthToken, setDetails, isAuthenticated]);
 };
 
 export default useAuthTokenVerifier;
