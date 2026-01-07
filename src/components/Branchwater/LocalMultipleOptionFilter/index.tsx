@@ -7,6 +7,8 @@ interface LocalMultipleOptionFilterProps {
   header: string;
   data: any[];
   includeTextFilter?: boolean;
+  filterValue?: string;
+  onFilterChange?: (value: string) => void;
 }
 
 const LocalMultipleOptionFilter: React.FC<LocalMultipleOptionFilterProps> = ({
@@ -14,17 +16,19 @@ const LocalMultipleOptionFilter: React.FC<LocalMultipleOptionFilterProps> = ({
   header,
   data,
   includeTextFilter = false,
+  filterValue,
+  onFilterChange,
 }) => {
   const [facet, setFacet] = useSharedQueryParamState<string[]>(facetName);
   // const [facet, setFacet] = useQueryParamState(facetName, '');
-  const [selected, setSelected] = useState(
-    facet?.split(',').filter(Boolean) || []
-  );
+  const selected = useMemo(() => {
+    if (filterValue !== undefined) {
+      return filterValue.split(',').filter(Boolean);
+    }
+    return facet?.split(',').filter(Boolean) || [];
+  }, [filterValue, facet]);
+  
   const [textFilter, setTextFilter] = useState('');
-
-  useEffect(() => {
-    setSelected(facet?.split(',').filter(Boolean) || []);
-  }, [facet]);
 
   // Generate facet data from your search results
   const facetData = useMemo(() => {
@@ -56,8 +60,12 @@ const LocalMultipleOptionFilter: React.FC<LocalMultipleOptionFilterProps> = ({
       newSelected = selected.filter((s) => s !== value);
     }
     const facetValue = newSelected.sort().join(',');
-    setFacet(facetValue);
-    setSelected(newSelected);
+    
+    if (onFilterChange) {
+      onFilterChange(facetValue);
+    } else {
+      setFacet(facetValue);
+    }
   };
 
   return (

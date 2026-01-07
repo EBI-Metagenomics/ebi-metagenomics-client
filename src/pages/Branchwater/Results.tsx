@@ -233,21 +233,27 @@ const Results: React.FC<ResultsProps> = ({
           <LocalMultipleOptionFilter
             facetName="geo_loc_name_country_calc"
             header="Location"
-            data={searchResults}
+            data={processedResults.filteredResults}
             includeTextFilter
+            filterValue={filters.geo_loc_name_country_calc}
+            onFilterChange={(value) => onFilterChange('geo_loc_name_country_calc', value)}
           />
 
           <LocalMultipleOptionFilter
             facetName="organism"
             header="Organism"
-            data={searchResults}
+            data={processedResults.filteredResults}
             includeTextFilter
+            filterValue={filters.organism}
+            onFilterChange={(value) => onFilterChange('organism', value)}
           />
 
           <LocalMultipleOptionFilter
             facetName="assay_type"
             header="Assay Type"
-            data={searchResults}
+            data={processedResults.filteredResults}
+            filterValue={filters.assay_type}
+            onFilterChange={(value) => onFilterChange('assay_type', value)}
           />
         </div>
 

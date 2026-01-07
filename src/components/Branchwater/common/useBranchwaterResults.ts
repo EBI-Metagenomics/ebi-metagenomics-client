@@ -108,7 +108,6 @@ export default function useBranchwaterResults<
         ['assay_type', f.assay_type],
         ['bioproject', f.bioproject],
         ['collection_date_sam', f.collection_date_sam],
-        ['containment', f.containment],
         ['geo_loc_name_country_calc', f.geo_loc_name_country_calc],
         ['organism', f.organism],
       ];
@@ -121,6 +120,25 @@ export default function useBranchwaterResults<
         if (!hay.includes(needle)) ok = false;
       });
       if (!ok) return false;
+      
+      // Apply containment range filter
+      if (f.containment) {
+        const [minStr, maxStr] = f.containment.split(',');
+        const min = Number(minStr);
+        const max = Number(maxStr);
+
+        if (!Number.isNaN(min) && !Number.isNaN(max)) {
+          const val = it.containment;
+          const num = typeof val === 'number' ? val : Number(val);
+
+          if (Number.isNaN(num)) return false;
+
+          const EPSILON = 0.0001;
+          if (num < min - EPSILON || num > max + EPSILON) {
+            return false;
+          }
+        }
+      }
 
       // Apply cANI numeric range filter
       if (f.cani) {

@@ -23,6 +23,13 @@ interface ProcessedResults {
 }
 
 interface DetailedResultsTableProps {
+  isOpen: boolean;
+  onToggleOpen: () => void;
+  filters: any;
+  onFilterChange: (field: string, value: string) => void;
+  sortField: string;
+  sortDirection: 'asc' | 'desc';
+  onSortChange: (field: string) => void;
   processResults: () => ProcessedResults;
   currentPage: number;
   itemsPerPage: number;
@@ -30,6 +37,13 @@ interface DetailedResultsTableProps {
 }
 
 const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
+  isOpen,
+  onToggleOpen,
+  filters,
+  onFilterChange,
+  sortField,
+  sortDirection,
+  onSortChange,
   processResults,
   currentPage,
   itemsPerPage,
@@ -49,16 +63,31 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
   }, [emgPage]);
 
   return (
-    <div
-      style={{
-        backgroundColor: '#fff',
-        border: '1px solid #dee2e6',
-        borderRadius: '8px',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Enhanced Table using EMGTable */}
-      <div style={{ overflowX: 'auto' }}>
+    <div>
+      <div
+        style={{
+          marginBottom: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          cursor: 'pointer',
+        }}
+        onClick={onToggleOpen}
+      >
+        <span style={{ fontSize: '18px' }}>{isOpen ? '▼' : '▶'}</span>
+        <h3 style={{ margin: 0 }}>Detailed Results Table</h3>
+      </div>
+      {isOpen && (
+        <div
+          style={{
+            backgroundColor: '#fff',
+            border: '1px solid #dee2e6',
+            borderRadius: '8px',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Enhanced Table using EMGTable */}
+          <div style={{ overflowX: 'auto' }}>
         {(() => {
           const columns: Column<BranchwaterResult>[] = [
             {
@@ -273,6 +302,8 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
           );
         })()}
       </div>
+    </div>
+      )}
     </div>
   );
 };
