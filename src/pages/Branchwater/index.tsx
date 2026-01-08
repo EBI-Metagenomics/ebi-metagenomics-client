@@ -24,18 +24,11 @@ import {
   downloadBranchwaterCSV,
   type BranchwaterResult as SearchResult,
 } from 'utils/branchwater';
-import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+import { branchwaterQueryParamConfig } from 'components/Branchwater/common/queryParamConfig';
 
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
   'branchwater-detailed',
-  {
-    query: SharedTextQueryParam(''),
-    cani: SharedTextQueryParam(''),
-    containment: SharedTextQueryParam(''),
-    geoLocNameCountryCalc: SharedTextQueryParam(''),
-    organism: SharedTextQueryParam(''),
-    assayType: SharedTextQueryParam(''),
-  }
+  branchwaterQueryParamConfig
 );
 
 const DefaultIcon = L.icon({
@@ -97,7 +90,7 @@ const Branchwater = () => {
     1,
     Number
   );
-  const [detailedOrder, setDetailedOrder] = useQueryParamState(
+  const [, setDetailedOrder] = useQueryParamState(
     'branchwaterDetailedOrder',
     ''
   );
@@ -245,15 +238,7 @@ const Branchwater = () => {
   };
 
   const handleSortChange = (field: string): void => {
-    const orderStr = (detailedOrder || '').toString();
-    const isCurrentlyField = orderStr.replace(/^-/, '') === field;
-    const isCurrentlyDesc = orderStr.startsWith('-');
-
-    if (isCurrentlyField) {
-      setDetailedOrder(isCurrentlyDesc ? field : `-${field}`);
-    } else {
-      setDetailedOrder(field);
-    }
+    // handled by EMGTable through shared query params
   };
 
   // Handle page change
@@ -550,6 +535,7 @@ const Branchwater = () => {
           sortField={order.replace(/^-/, '')}
           sortDirection={order.startsWith('-') ? 'desc' : 'asc'}
           onSortChange={handleSortChange}
+          order={order}
           processResults={processResults}
           currentPage={page}
           itemsPerPage={itemsPerPage}

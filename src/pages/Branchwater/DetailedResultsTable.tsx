@@ -30,6 +30,8 @@ interface DetailedResultsTableProps {
   sortField: string;
   sortDirection: 'asc' | 'desc';
   onSortChange: (field: string) => void;
+  order: string;
+  namespace?: string;
 }
 
 const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
@@ -38,10 +40,12 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
   itemsPerPage,
   onPageChange,
   onSortChange,
+  order,
+  namespace = 'branchwaterDetailed',
 }) => {
   // Synchronize EMGTable internal pagination (via query param) with parent state
-  const [emgPage] = useQueryParamState('branchwaterDetailedPage');
-  const [emgOrder] = useQueryParamState('branchwaterDetailedOrder', '');
+  const [emgPage] = useQueryParamState(`${namespace}Page`);
+  const [emgOrder] = useQueryParamState(`${namespace}Order`, '');
 
   useEffect(() => {
     if (typeof emgPage === 'number' && emgPage !== currentPage) {
@@ -51,10 +55,10 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
   }, [emgPage]);
 
   useEffect(() => {
-    if (emgOrder) {
+    if (emgOrder && emgOrder !== order) {
       onSortChange(emgOrder);
     }
-  }, [emgOrder, onSortChange]);
+  }, [emgOrder, onSortChange, order]);
 
   return (
     <div
@@ -255,7 +259,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               showPagination
               expectedPageSize={itemsPerPage}
               initialPage={Math.max(0, (currentPage || 1) - 1)}
-              namespace="branchwaterDetailed"
+              namespace={namespace}
               sortable
             />
           );

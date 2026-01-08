@@ -23,7 +23,9 @@ import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import useBranchwaterResults, {
   type BranchwaterFilters,
 } from 'components/Branchwater/common/useBranchwaterResults';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useQueryParamState, {
+  createSharedQueryParamContextForTable,
+} from '@/hooks/queryParamState/useQueryParamState';
 import Results from 'pages/Branchwater/Results';
 import {
   getContainmentHistogram,
@@ -34,6 +36,12 @@ import {
   downloadBranchwaterCSV,
   type BranchwaterResult,
 } from 'utils/branchwater';
+import { branchwaterQueryParamConfig } from 'components/Branchwater/common/queryParamConfig';
+
+const { withQueryParamProvider } = createSharedQueryParamContextForTable(
+  'genomeBranchwaterDetailed',
+  branchwaterQueryParamConfig
+);
 
 const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));
 const COGAnalysis = lazy(() => import('components/Genomes/COGAnalysis'));
@@ -74,15 +82,32 @@ const GenomePage: React.FC = () => {
     cani: '',
   });
 
-  const [textQuery] = useQueryParamState('genome-query', '');
-  const [caniRange] = useQueryParamState('genome-cani', '');
+  const [textQuery] = useQueryParamState('genomeBranchwaterDetailedQuery', '');
+  const [caniRange] = useQueryParamState('genomeBranchwaterDetailedCani', '');
+  const [containmentRange] = useQueryParamState(
+    'genomeBranchwaterDetailedContainment',
+    ''
+  );
+  const [locationParam] = useQueryParamState(
+    'genomeBranchwaterDetailedGeoLocNameCountryCalc',
+    ''
+  );
+  const [organismParam] = useQueryParamState(
+    'genomeBranchwaterDetailedOrganism',
+    ''
+  );
+  const [assayTypeParam] = useQueryParamState(
+    'genomeBranchwaterDetailedAssayType',
+    ''
+  );
+
   const [, setPageQP] = useQueryParamState(
-    'genome-branchwater-page',
+    'genomeBranchwaterDetailedPage',
     1,
     Number
   );
-  const [detailedOrder, setDetailedOrder] = useQueryParamState(
-    'genome-branchwater-detailed-order',
+  const [detailedOrder] = useQueryParamState(
+    'genomeBranchwaterDetailedOrder',
     ''
   );
 
@@ -91,8 +116,19 @@ const GenomePage: React.FC = () => {
       ...prev,
       query: textQuery,
       cani: caniRange,
+      containment: containmentRange,
+      geo_loc_name_country_calc: locationParam,
+      organism: organismParam,
+      assay_type: assayTypeParam,
     }));
-  }, [textQuery, caniRange]);
+  }, [
+    textQuery,
+    caniRange,
+    containmentRange,
+    locationParam,
+    organismParam,
+    assayTypeParam,
+  ]);
 
   const onFilterChange = useCallback(
     (field: keyof BranchwaterFilters, value: string) => {
@@ -101,20 +137,9 @@ const GenomePage: React.FC = () => {
     []
   );
 
-  const onSortChange = useCallback(
-    (field: string) => {
-      const orderStr = (detailedOrder || '').toString();
-      const isCurrentlyField = orderStr.replace(/^-/, '') === field;
-      const isCurrentlyDesc = orderStr.startsWith('-');
-
-      if (isCurrentlyField) {
-        setDetailedOrder(isCurrentlyDesc ? field : `-${field}`);
-      } else {
-        setDetailedOrder(field);
-      }
-    },
-    [detailedOrder, setDetailedOrder]
-  );
+  const onSortChange = useCallback((field: string) => {
+    // handled by EMGTable through shared query params
+  }, []);
 
   const itemsPerPage = 25;
   const [isTableVisible, setIsTableVisible] = useState(false);
@@ -131,7 +156,7 @@ const GenomePage: React.FC = () => {
     countryCounts,
   } = useBranchwaterResults<BranchwaterResult>({
     items: searchResults,
-    namespace: 'genome-branchwater-',
+    namespace: 'genomeBranchwaterDetailed',
     pageSize: itemsPerPage,
     filters,
   });
@@ -202,7 +227,7 @@ const GenomePage: React.FC = () => {
       .catch(() => setIsSearching(false));
   }, [data, accession]);
 
-  const handlePageChange = (p: number) => {
+  const onPageChange = (p: number) => {
     setPageQP(p);
   };
   if (loading) return <Loading size="large" />;
@@ -311,10 +336,11 @@ const GenomePage: React.FC = () => {
                     sortField={order.replace(/^-/, '')}
                     sortDirection={order.startsWith('-') ? 'desc' : 'asc'}
                     onSortChange={onSortChange}
+                    order={order}
                     processResults={processResults}
                     currentPage={page}
                     itemsPerPage={itemsPerPage}
-                    onPageChange={handlePageChange}
+                    onPageChange={onPageChange}
                     countryCounts={countryCounts}
                     mapSamples={mapSamples}
                     displayedMapSamples={displayedMapSamples}
@@ -322,7 +348,7 @@ const GenomePage: React.FC = () => {
                     totalCountryCount={totalCountryCount}
                     getCountryColor={getCountryColor}
                     downloadCSV={downloadCSV}
-                    queryParamPrefix="genome-"
+                    queryParamPrefix="genomeBranchwaterDetailed"
                     containmentHistogram={containmentHistogram}
                     caniHistogram={caniHistogram}
                     visualizationData={visualizationData}
@@ -342,4 +368,4 @@ const GenomePage: React.FC = () => {
   );
 };
 
-export default GenomePage;
+export default withQueryParamProvider(GenomePage);

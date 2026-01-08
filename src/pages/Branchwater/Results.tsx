@@ -50,6 +50,7 @@ interface ResultsProps {
   sortField: string;
   sortDirection: 'asc' | 'desc';
   onSortChange: (field: string) => void;
+  order: string;
   processResults: () => {
     filteredResults: any[];
     sortedResults: any[];
@@ -68,6 +69,7 @@ interface ResultsProps {
 
   downloadCSV: () => void;
   queryParamPrefix?: string;
+  order: string;
 
   containmentHistogram: {
     binsDesc: string[];
@@ -90,6 +92,7 @@ const Results: React.FC<ResultsProps> = ({
   sortField,
   sortDirection,
   onSortChange,
+  order,
   processResults,
   currentPage,
   itemsPerPage,
@@ -100,7 +103,7 @@ const Results: React.FC<ResultsProps> = ({
   setMapPinsLimit,
   getCountryColor,
   downloadCSV,
-  queryParamPrefix = '',
+  queryParamPrefix = 'branchwaterDetailed',
   containmentHistogram,
   caniHistogram,
   visualizationData,
@@ -295,6 +298,8 @@ const Results: React.FC<ResultsProps> = ({
             sortField={sortField}
             sortDirection={sortDirection}
             onSortChange={onSortChange}
+            order={order}
+            namespace={queryParamPrefix}
           />
         </section>
       </section>

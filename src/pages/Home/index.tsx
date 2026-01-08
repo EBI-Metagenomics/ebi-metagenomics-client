@@ -5,6 +5,8 @@ import './style.css';
 import SearchPage from 'pages/Search';
 import useReveal from 'hooks/useReveal';
 import TrainingResources from 'components/Home/TrainingResources';
+import Studies from 'components/Study/Studies';
+import LatestStudies from 'components/Home/Request/LatestStudies';
 
 const HomePage: React.FC = () => {
   const SearchIcon = (
@@ -140,6 +142,21 @@ const HomePage: React.FC = () => {
           />
         </div>
       </div>
+
+      <hr className="vf-divider" />
+
+      <section
+        ref={analysisRef}
+        className="vf-section vf-section--highlight request-analysis-section reveal"
+      >
+        <div className="request-analysis-bg-pattern" />
+        <h2 className="vf-section__title">Studies</h2>
+        <div className="home-search-cards vf-grid vf-grid__col-2">
+          <div className="vf-card home-search-card">
+            <LatestStudies />
+          </div>
+        </div>
+      </section>
 
       <hr className="vf-divider" />
 
