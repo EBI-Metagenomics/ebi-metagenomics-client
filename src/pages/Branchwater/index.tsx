@@ -201,6 +201,28 @@ const Branchwater = () => {
       ...prevFilters,
       [field]: value,
     }));
+    
+    // Update the corresponding query parameter
+    switch (field) {
+      case 'query':
+        setTextQuery(value);
+        break;
+      case 'cani':
+        setCaniRange(value);
+        break;
+      case 'containment':
+        setContainmentRange(value);
+        break;
+      case 'geo_loc_name_country_calc':
+        setLocationParam(value);
+        break;
+      case 'organism':
+        setOrganismParam(value);
+        break;
+      case 'assay_type':
+        setAssayTypeParam(value);
+        break;
+    }
   };
 
   const handleSortChange = (field: string): void => {

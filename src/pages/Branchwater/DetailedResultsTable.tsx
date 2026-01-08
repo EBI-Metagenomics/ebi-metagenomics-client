@@ -27,6 +27,9 @@ interface DetailedResultsTableProps {
   currentPage: number;
   itemsPerPage: number;
   onPageChange: (page: number) => void;
+  sortField: string;
+  sortDirection: 'asc' | 'desc';
+  onSortChange: (field: string) => void;
 }
 
 const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
@@ -64,7 +67,6 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
             {
               Header: 'Accession',
               accessor: 'acc',
-              disableSortBy: true,
               Cell: ({ row }) => {
                 const entry = row.original;
                 return (
@@ -123,7 +125,6 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
             {
               Header: 'Assay Type',
               accessor: 'assay_type',
-              disableSortBy: true,
               Cell: ({ row }) => {
                 const entry = row.original;
                 return (
