@@ -31,12 +31,12 @@ const useSamplesProvider = (
         setPage(page + 1);
       }
     }
-  }, [data, page, limit]);
+  }, [data, page, limit, isStale, samples, total]);
   useEffect(() => {
     if (data?.links?.next && samples.length < limit) {
       setPage(page + 1);
     }
-  }, [limit]);
+  }, [data?.links?.next, limit, page, samples.length]);
 
   return { samples, total, loading, error: error || undefined };
 };

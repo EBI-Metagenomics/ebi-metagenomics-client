@@ -1,0 +1,16 @@
+/* OutterCard Component Original Styling */
+
+.vf-card--brand.vf-card--bordered {
+  background-color: white;
+  border: 1px solid var(--vf-color--grey--light, #d8d8d8);
+}
+
+.vf-card--brand .vf-card__content {
+  padding: 1rem;
+}
+
+.vf-card--brand .vf-card__heading {
+  font-size: 1.25rem;
+  color: var(--vf-color--grey--dark, #333);
+  margin-bottom: 1rem;
+}

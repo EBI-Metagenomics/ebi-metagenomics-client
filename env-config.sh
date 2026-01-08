@@ -8,6 +8,7 @@ export INTERPRO_URL="http://localhost:9000/interpro/"
 export SEQUENCE_SEARCH_URL="http://localhost:9000/metagenomics/sequence-search/search/phmmer"
 export ENA_URL="http://localhost:9000/ena/browser/view/"
 export VITE_BASE_URL="/metagenomics"
+export VITE_BRANCHWATER_DATE="28/11/2024"
 export CYPRESS_WEBIN_USERNAME="Webin-000"
 export CYPRESS_WEBIN_PASSWORD="Webin-111"
 

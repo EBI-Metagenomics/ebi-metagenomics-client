@@ -1,6 +1,5 @@
 import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
-
 import config from 'utils/config';
 import EBIHeader from 'components/UI/EBIHeader';
 import HeroHeader from 'components/UI/HeroHeader';
@@ -24,9 +23,17 @@ import './styles/toast.css';
 import './styles/search.css';
 import { ToastContainer } from 'react-toastify';
 import Matomo from 'components/Analytics';
+import PersistLogin from 'components/PersistLogin';
+// import SearchPage from './pages/Search';
+// import Branchwater from './pages/Branchwater';
+// import PersistLogin from 'components/PersistLogin';
+import V2AssemblyPage from 'pages/Assembly/v2index';
+
+import LandingPage from 'pages/Branchwater/LandingPage';
+import MagSearch from 'pages/Branchwater/MagSearch';
+import GeneSearch from 'pages/Branchwater/GeneSearch';
 import V2AnalysisPage from 'pages/Analysis/v2index';
 import SessionExpiryBanner from 'components/UI/SessionExpiryBanner';
-import PersistLogin from 'components/PersistLogin';
 import MyDataStudies from './pages/MyData/MyDataStudies';
 import NotFoundError from 'components/UI/NotFoundError';
 
@@ -47,6 +54,7 @@ const Run = lazy(() => import('./pages/Run'));
 const Assembly = lazy(() => import('./pages/Assembly'));
 const Pipelines = lazy(() => import('./pages/Pipelines'));
 const Analysis = lazy(() => import('./pages/Analysis'));
+const Branchwater = lazy(() => import('pages/Branchwater'));
 
 const ResetScroll = () => {
   const { pathname } = useLocation();
@@ -95,6 +103,11 @@ const App: React.FC = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/help" element={<Help />} />
+                <Route path="/search-tools" element={<LandingPage />} />
+                {/* Branchwater card routes */}
+                <Route path="/branchwater-search" element={<Branchwater />} />
+                <Route path="/mag-search" element={<MagSearch />} />
+                <Route path="/gene-search" element={<GeneSearch />} />
                 {/* <Route path="/search/*" element={<TextSearch />} /> */}
                 {/* <Route path="/sequence-search" element={<SequenceSearch />} /> */}
                 <Route path="/browse/*" element={<Browse />} />
@@ -109,6 +122,7 @@ const App: React.FC = () => {
                 <Route path="/genomes/*" element={<Genome />} />
                 <Route path="/runs/*" element={<Run />} />
                 <Route path="/assemblies/*" element={<Assembly />} />
+                <Route path="/v2-assemblies/*" element={<V2AssemblyPage />} />
                 <Route path="/pipelines/*" element={<Pipelines />} />
                 <Route path="/analyses/*" element={<Analysis />} />
                 <Route

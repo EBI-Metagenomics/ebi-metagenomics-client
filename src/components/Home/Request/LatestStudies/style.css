@@ -1,15 +1,102 @@
+/* LatestStudies Component Styling - Latest Studies Section */
+
 .latest-studies-section {
   max-height: 44rem;
-  overflow-y: scroll;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d8d8d8 #f3f3f3;
+  border-radius: 8px;
+  background-color: white;
+  padding: 0.5rem;
+  border: 1px solid #f3f3f3;
 }
+
+.latest-studies-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+.latest-studies-section::-webkit-scrollbar-track {
+  background: #f3f3f3;
+  border-radius: 8px;
+}
+
+.latest-studies-section::-webkit-scrollbar-thumb {
+  background-color: #d8d8d8;
+  border-radius: 8px;
+  border: 2px solid #f3f3f3;
+}
+
 .latest-studies-section article.vf-summary {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  border: 1px solid #f3f3f3;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.latest-studies-section article.vf-summary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #d8d8d8;
+}
+
+article.study {
+  grid-template-columns: minmax(24px, auto) 1fr;
+  gap: 0.75rem;
+}
+
+.study .biome_icon {
+  margin-top: 0.25rem;
+  filter: grayscale(30%);
+  transition: filter 0.2s ease;
+}
+
+.study:hover .biome_icon {
+  filter: grayscale(0%);
+}
+
+.study .vf-summary__title {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.study .vf-summary__link {
+  color: #3b6fb6;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.study .vf-summary__link:hover {
+  color: #193f90;
+  text-decoration: underline;
+}
+
+.study .vf-summary__text {
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Responsive adjustments */
 @media (max-width: 1023px) {
   .latest-studies-section {
     max-height: 61rem;
   }
+  
+  .study .vf-summary__title {
+    font-size: 1rem;
+  }
 }
-article.study {
-  grid-template-columns: minmax(24px, auto) 1fr;
+
+@media (max-width: 768px) {
+  .latest-studies-section article.vf-summary {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  article.study {
+    gap: 0.5rem;
+  }
 }

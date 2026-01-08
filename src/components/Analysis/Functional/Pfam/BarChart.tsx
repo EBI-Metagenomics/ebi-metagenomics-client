@@ -28,8 +28,9 @@ const PfamBarChart: React.FC = () => {
   const categories = (data.data as MGnifyDatum[]).map(
     (d) => d.attributes.accession
   );
-  const categoriesDescriptions = (data.data as MGnifyDatum[])
-    .reduce<Record<string, string | undefined>>((memo, d) => {
+  const categoriesDescriptions = (data.data as MGnifyDatum[]).reduce<
+    Record<string, string | undefined>
+  >((memo, d) => {
     memo[String(d.attributes.accession)] = d.attributes.description as
       | string
       | undefined;

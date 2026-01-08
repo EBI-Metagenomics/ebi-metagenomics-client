@@ -1,4 +1,8 @@
-import { Link as DefaultLink, LinkProps as DefaultLinkProps, useLinkClickHandler } from 'react-router-dom';
+import {
+  Link as DefaultLink,
+  LinkProps as DefaultLinkProps,
+  useLinkClickHandler,
+} from 'react-router-dom';
 import React, { ForwardedRef } from 'react';
 
 const Link: React.FC<DefaultLinkProps> = React.forwardRef(

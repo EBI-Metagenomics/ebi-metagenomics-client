@@ -1,0 +1,150 @@
+/* SearchBy Component Styling - Modern Theme */
+
+.search-by-section {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.search-by-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.search-by-section .vf-card__heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #f0f0f0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-by-section .vf-card__heading::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, #3b6fb6, #5a94e6);
+}
+
+.search-by-section .heading-icon {
+  font-size: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.search-by-section .vf-grid {
+  gap: 1.25rem;
+}
+
+/* DataType component styling */
+.search-by-section .vf-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 1.5rem;
+}
+
+.search-by-section .vf-table__cell {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.search-by-section .vf-table__row:hover .vf-table__cell {
+  background-color: #f8f9fd;
+}
+
+.search-by-section .mg-link {
+  color: #3b6fb6;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: inline-block;
+}
+
+.search-by-section .mg-link:hover {
+  color: #193f90;
+  text-decoration: none;
+  transform: translateX(3px);
+}
+
+/* Biomes component styling */
+.search-by-section .search-by-biomes-section {
+  margin-top: 2rem;
+  padding-top: 1rem;
+}
+
+.search-by-section .responsive_biomes_grid {
+  gap: 1.25rem;
+}
+
+.search-by-section .biome_icon_hoverable {
+  filter: grayscale(30%);
+  transform: scale(1);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.search-by-section .biome_icon_hoverable:hover {
+  filter: grayscale(0%) drop-shadow(0 0 8px rgba(59, 111, 182, 0.3));
+  transform: scale(1.1);
+}
+
+.search-by-section .biome-text {
+  font-size: 1rem;
+  margin-top: 0.75rem;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.search-by-section a:hover .biome-text {
+  color: #3b6fb6;
+}
+
+.search-by-section .vf-button--primary {
+  background: linear-gradient(90deg, #3b6fb6, #5a94e6);
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  border: none;
+  box-shadow: 0 4px 12px rgba(59, 111, 182, 0.2);
+}
+
+.search-by-section .vf-button--primary:hover {
+  background: linear-gradient(90deg, #2d5a9a, #4a84d6);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 111, 182, 0.3);
+}
+
+.search-by-section .mg-right {
+  text-align: right;
+  margin-top: 1.5rem;
+}

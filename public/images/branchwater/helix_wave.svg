@@ -1,0 +1,31 @@
+<svg width="100%" height="100%" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="dnaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00a8e8" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#00c49a" stop-opacity="0.9"/>
+        </linearGradient>
+
+        <linearGradient id="dnaLine" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="white" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0.1"/>
+        </linearGradient>
+    </defs>
+
+    <rect width="100%" height="100%" fill="url(#dnaGrad)"/>
+
+    <!-- DNA sinusoidal strands -->
+    <path d="M0 150 C100 50, 200 250, 300 150 S500 50, 600 150"
+          stroke="url(#dnaLine)" stroke-width="6" fill="none" />
+    <path d="M0 150 C100 250, 200 50, 300 150 S500 250, 600 150"
+          stroke="url(#dnaLine)" stroke-width="6" fill="none" opacity="0.5"/>
+
+    <!-- Connecting lines -->
+    <g stroke="white" stroke-opacity="0.25" stroke-width="2">
+        <line x1="50" x2="50" y1="130" y2="170"/>
+        <line x1="150" x2="150" y1="130" y2="170"/>
+        <line x1="250" x2="250" y1="130" y2="170"/>
+        <line x1="350" x2="350" y1="130" y2="170"/>
+        <line x1="450" x2="450" y1="130" y2="170"/>
+        <line x1="550" x2="550" y1="130" y2="170"/>
+    </g>
+</svg>

@@ -41,7 +41,7 @@ const Nav: React.FC = () => {
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
     verifyAuthToken();
-  }, []);
+  }, [verifyAuthToken]);
   return (
     <nav className="vf-navigation vf-navigation--main | vf-cluster vf-u-fullbleed">
       <ul className="vf-navigation__list | vf-list | vf-cluster__inner">
@@ -81,7 +81,7 @@ const MobileNav: React.FC = () => {
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
     verifyAuthToken();
-  }, []);
+  }, [verifyAuthToken]);
   return (
     <div>
       <EMGModal
@@ -114,7 +114,7 @@ const MainMenu: React.FC = () => {
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
     verifyAuthToken();
-  }, []);
+  }, [verifyAuthToken]);
   useLayoutEffect(() => {
     const onScroll = (): void => {
       if (isSmall) return;

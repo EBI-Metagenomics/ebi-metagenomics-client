@@ -27,7 +27,7 @@ jobs:
         env: # Or as an environment variable
           MAPS_KEY: ${{ secrets.GOOGLE_MAPS_DEV_KEY }}
         run: |
-          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\", \"api_v2\": \"$API_V2_URL\"}" > "$(pwd)/config.private.json"
+          echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\", \"api_v2\": \"$API_V2_URL\", \"dev_api_v2\": \"$API_V2_URL\"}" > "$(pwd)/config.private.json"
 
       - name: 📜 - Set up JS Node 23
         uses: actions/setup-node@v4

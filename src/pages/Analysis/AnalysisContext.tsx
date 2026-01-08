@@ -1,8 +1,8 @@
 import React from 'react';
 
 interface AnalysisContextType {
-  overviewData: Record<string, any> | null;
-  included: Record<string, any> | null;
+  overviewData: Record<string, unknown> | null;
+  included: Record<string, unknown> | null;
 }
 
 const AnalysisContext = React.createContext<AnalysisContextType>({

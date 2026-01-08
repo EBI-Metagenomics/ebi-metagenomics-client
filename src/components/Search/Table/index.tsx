@@ -179,7 +179,8 @@ const SearchTable: React.FC = () => {
   const { searchData } = useContext(SearchQueryContext);
   const { data, loading, error, isStale, getDownloadURL } =
     searchData?.[pathname] || {};
-  const [selectedColumns, setSelectedColumns] = useState<Record<string, any>>(initialColumnsState);
+  const [selectedColumns, setSelectedColumns] =
+    useState<Record<string, any>>(initialColumnsState);
 
   const columns = useMemo(() => dataFor?.[pathname]?.columns, [pathname]);
   if (loading && (!isStale || !data)) return <Loading size="large" />;
