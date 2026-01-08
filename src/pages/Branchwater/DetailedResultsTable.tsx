@@ -37,9 +37,6 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
   currentPage,
   itemsPerPage,
   onPageChange,
-  sortField,
-  sortDirection,
-  onSortChange,
 }) => {
   // Synchronize EMGTable internal pagination (via query param) with parent state
   const [emgPage] = useQueryParamState(

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
 import useSharedQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 
@@ -27,7 +27,7 @@ const LocalMultipleOptionFilter: React.FC<LocalMultipleOptionFilterProps> = ({
     }
     return facet?.split(',').filter(Boolean) || [];
   }, [filterValue, facet]);
-  
+
   const [textFilter, setTextFilter] = useState('');
 
   // Generate facet data from your search results
@@ -60,7 +60,7 @@ const LocalMultipleOptionFilter: React.FC<LocalMultipleOptionFilterProps> = ({
       newSelected = selected.filter((s) => s !== value);
     }
     const facetValue = newSelected.sort().join(',');
-    
+
     if (onFilterChange) {
       onFilterChange(facetValue);
     } else {
