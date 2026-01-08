@@ -146,8 +146,6 @@ const GenomePage: React.FC = () => {
     [filteredResults, sortedResults, paginatedResults, total, itemsPerPage]
   );
 
-  // fopwfpwmwpfm
-
   const [mapPinsLimit, setMapPinsLimit] = useState(1000);
 
   useEffect(() => {
