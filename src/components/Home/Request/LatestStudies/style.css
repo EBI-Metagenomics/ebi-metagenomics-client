@@ -1,7 +1,7 @@
 /* LatestStudies Component Styling - Latest Studies Section */
 
 .latest-studies-section {
-  max-height: 44rem;
+  max-height: 400px;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #d8d8d8 #f3f3f3;
@@ -82,7 +82,7 @@ article.study {
 /* Responsive adjustments */
 @media (max-width: 1023px) {
   .latest-studies-section {
-    max-height: 61rem;
+    max-height: 400px;
   }
   
   .study .vf-summary__title {

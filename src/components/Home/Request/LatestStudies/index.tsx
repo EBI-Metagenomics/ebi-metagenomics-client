@@ -62,7 +62,7 @@ const LatestStudies: React.FC = () => {
     <section className="vf-stack vf-stack--200" style={{ width: '100%' }}>
       <FixedHeightScrollable
         className="vf-grid vf-grid__col-1 latest-studies-section"
-        heightPx={800}
+        heightPx={400}
       >
         {}
         {data.items.map(

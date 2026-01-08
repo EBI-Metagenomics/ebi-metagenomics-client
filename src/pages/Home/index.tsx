@@ -149,7 +149,7 @@ const HomePage: React.FC = () => {
         className="vf-section vf-section--highlight request-analysis-section reveal"
       >
         <div className="request-analysis-bg-pattern" />
-        <h2 className="vf-section__title">Studies</h2>
+        <h2 className="vf-section__title">Latest Studies</h2>
         <div className="home-search-cards vf-grid vf-grid__col-1">
           <div className="vf-card home-search-card">
             <LatestStudies />
