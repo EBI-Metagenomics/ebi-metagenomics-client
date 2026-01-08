@@ -237,7 +237,7 @@ const Branchwater = () => {
     }
   };
 
-  const handleSortChange = (field: string): void => {
+  const handleSortChange = (): void => {
     // handled by EMGTable through shared query params
   };
 

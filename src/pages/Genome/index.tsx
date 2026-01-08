@@ -106,10 +106,6 @@ const GenomePage: React.FC = () => {
     1,
     Number
   );
-  const [detailedOrder] = useQueryParamState(
-    'genomeBranchwaterDetailedOrder',
-    ''
-  );
 
   useEffect(() => {
     setFilters((prev) => ({
@@ -137,7 +133,7 @@ const GenomePage: React.FC = () => {
     []
   );
 
-  const onSortChange = useCallback((field: string) => {
+  const onSortChange = useCallback(() => {
     // handled by EMGTable through shared query params
   }, []);
 

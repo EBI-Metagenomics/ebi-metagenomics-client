@@ -270,6 +270,11 @@
     max-width: 1200px;
 }
 
+.home-search-cards.vf-grid__col-1 .home-search-card {
+    max-width: none;
+    width: 100%;
+}
+
 .home-search-card {
     flex: 1;
     min-width: 250px;
