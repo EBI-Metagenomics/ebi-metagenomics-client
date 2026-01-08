@@ -5,7 +5,7 @@ import { getBiomeIcon } from '@/utils/biomes';
 import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import EMGTable from 'components/UI/EMGTable';
-import { PaginatedList } from '@/interfaces';
+import { GenomeCatalogueList } from '@/interfaces';
 import BiomeSelector from 'components/UI/BiomeSelector';
 import { some } from 'lodash-es';
 import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
@@ -29,7 +29,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
   });
 
   // Apply biome filtering client-side and adapt to PaginatedList shape expected by EMGTable
-  const genomesList: PaginatedList | null = useMemo(() => {
+  const genomeCataloguesList: GenomeCatalogueList | null = useMemo(() => {
     if (!apiData) return null;
     const filteredItems = biome
       ? apiData.items.filter((item) =>
@@ -39,7 +39,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
     return {
       count: filteredItems.length,
       items: filteredItems,
-    } as PaginatedList;
+    } as GenomeCatalogueList;
   }, [apiData, biome]);
 
   const columns = React.useMemo(
@@ -114,8 +114,8 @@ const BrowseGenomesByCatalogue: React.FC = () => {
   );
 
   useEffect(() => {
-    setHasData(!!genomesList);
-  }, [genomesList]);
+    setHasData(!!genomeCataloguesList);
+  }, [genomeCataloguesList]);
 
   const isBiomeCatalogued = (lineage) => {
     if (!apiData?.items) return true;
@@ -125,7 +125,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
   };
 
   const handleDownloadCsv = () => {
-    if (!genomesList?.items?.length) return;
+    if (!genomeCataloguesList?.items?.length) return;
 
     const headers = [
       'Biome',
@@ -147,7 +147,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
       return str;
     };
 
-    const rows = (genomesList.items as any[]).map((item) => [
+    const rows = (genomeCataloguesList.items as any[]).map((item) => [
       item?.catalogue_biome_label ?? '',
       item?.catalogue_type
         ? String(item.catalogue_type).slice(0, 1).toUpperCase() +
@@ -177,7 +177,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
-  if (!genomesList && loading) return <Loading />;
+  if (!genomeCataloguesList && loading) return <Loading />;
   return (
     <section className="mg-browse-section">
       <p className="vf-text-body vf-text-body--3">
@@ -192,7 +192,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
       {hasData && (
         <EMGTable
           cols={columns}
-          data={genomesList as PaginatedList}
+          data={genomeCataloguesList as GenomeCatalogueList}
           initialPage={(page as number) - 1}
           sortable
           loading={loading}

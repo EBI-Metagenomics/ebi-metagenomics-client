@@ -10,6 +10,7 @@ import useApiData from '@/hooks/data/useApiData';
 import useURLAccession from '@/hooks/useURLAccession';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import UserContext from 'pages/Login/UserContext';
+import { GenomeApiResponse } from '@/interfaces';
 const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));
 const GenomeGenericAnalysis = lazy(
   () => import('components/Genomes/Annotations')
@@ -28,51 +29,7 @@ const GenomePage: React.FC = () => {
   const accession = useURLAccession();
   const { config } = useContext(UserContext);
 
-  type GenomeApiResponse = {
-    accession: string;
-    ena_genome_accession: string | null;
-    ena_sample_accession: string | null;
-    ncbi_genome_accession: string | null;
-    img_genome_accession: string | null;
-    patric_genome_accession: string | null;
-    length: number;
-    num_contigs: number;
-    n_50: number;
-    gc_content: number; // 0..1
-    type: string; // e.g. "MAG"
-    completeness: number;
-    contamination: number;
-    catalogue_id: string;
-    geographic_origin?: string | null;
-    geographic_range?: string[] | null;
-    biome?: {
-      biome_name: string;
-      lineage: string;
-    } | null;
-    downloads?: unknown[];
-    catalogue?: {
-      catalogue_id: string;
-      version: string;
-      name: string;
-      description: string;
-      protein_catalogue_name: string | null;
-      protein_catalogue_description: string | null;
-      updated_at: string;
-      result_directory: string | null;
-      genome_count: number;
-      unclustered_genome_count: number | null;
-      ftp_url: string;
-      pipeline_version_tag: string;
-      catalogue_biome_label: string;
-      catalogue_type: string;
-      other_stats: unknown;
-      biome: {
-        biome_name: string;
-        lineage: string;
-      };
-    } | null;
-  };
-
+  // const { data, loading, error } = useApiData<GenomeApiResponse>({
   const { data, loading, error } = useApiData<GenomeApiResponse>({
     // url: accession ? `${config.api_v2}/genomes/${accession}` : null,
     url: accession ? `${config.api_v2}/genomes/MGYG000000001` : null,

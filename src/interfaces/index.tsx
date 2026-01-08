@@ -113,27 +113,27 @@ export interface GenomeCatalogue extends Record<string, unknown> {
   version: string;
   name: string;
   description: string;
-  protein_catalogue_name: string;
-  protein_catalogue_description: string;
+  protein_catalogue_name: string | null;
+  protein_catalogue_description: string | null;
   updated_at: string;
-  result_directory: string;
+  result_directory: string | null;
   genome_count: number;
-  unclustered_genome_count: number;
+  unclustered_genome_count: number | null;
   ftp_url: string;
   pipeline_version_tag: string;
   catalogue_biome_label: string;
   catalogue_type: 'prokaryotes' | 'eukaryotes' | 'viruses' | string;
-  other_stats: KeyValue;
+  other_stats: KeyValue | unknown;
   biome: Biome;
 }
 
 export interface Genome {
   accession: string;
-  ena_genome_accession: string;
-  ena_sample_accession: string;
-  ncbi_genome_accession: string;
-  img_genome_accession: string;
-  patric_genome_accession: string;
+  ena_genome_accession: string | null;
+  ena_sample_accession: string | null;
+  ncbi_genome_accession: string | null;
+  img_genome_accession: string | null;
+  patric_genome_accession: string | null;
   length: number;
   num_contigs: number;
   n_50: number;
@@ -142,9 +142,14 @@ export interface Genome {
   completeness: number;
   contamination: number;
   catalogue_id: string;
-  geographic_origin: string;
-  geographic_range: string[];
-  biome: Biome;
+  geographic_origin: string | null;
+  geographic_range: string[] | null;
+  biome: Biome | null;
+}
+
+export interface GenomeApiResponse extends Genome {
+  downloads?: Download[];
+  catalogue?: GenomeCatalogue | null;
 }
 
 export type GenomeCatalogueList = PaginatedList<GenomeCatalogue>;
