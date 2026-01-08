@@ -1,5 +1,4 @@
 import React from 'react';
-import TextSearch from 'components/Search/Filter/Text';
 import CANIFilter from 'components/Search/Filter/CANI';
 import ContainmentFilter from 'components/Search/Filter/Containment';
 import LocalMultipleOptionFilter from 'components/Branchwater/LocalMultipleOptionFilter';
@@ -86,8 +85,6 @@ interface ResultsProps {
 const Results: React.FC<ResultsProps> = ({
   isLoading,
   searchResults,
-  isTableVisible,
-  setIsTableVisible,
   filters,
   onFilterChange,
   sortField,
@@ -217,9 +214,39 @@ const Results: React.FC<ResultsProps> = ({
         </div>
       </div>
 
-      <TextSearch
-        queryParamKey={`${queryParamPrefix}query`.replace(/^-/, '')}
-      />
+      <form
+        className="vf-form vf-form--search vf-sidebar vf-sidebar--end mg-text-search"
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <div className="vf-sidebar__inner">
+          <div className="vf-form__item | vf-search__item">
+            <input
+              type="text"
+              placeholder="Enter your search terms"
+              id="mg-text-search-query"
+              className="vf-form__input | st-default-search-input mg-text-search-textfield"
+              value={filters.query || ''}
+              onChange={(evt) => {
+                onFilterChange('query', evt.target.value);
+              }}
+            />
+          </div>
+          <div className="vf-form__item | vf-search__item">
+            <button
+              type="button"
+              className="vf-search__button | vf-button vf-button--tertiary mg-text-search-clear vf-button--sm"
+              onClick={() => {
+                onFilterChange('query', '');
+              }}
+            >
+              <span className="vf-button__text">Clear</span>
+              <span className="icon icon-common icon-times-circle" />
+            </button>
+          </div>
+        </div>
+      </form>
 
       <section className="vf-grid mg-grid-search vf-u-padding__top--400">
         <div className="vf-stack vf-stack--800">
@@ -236,7 +263,9 @@ const Results: React.FC<ResultsProps> = ({
             data={processedResults.filteredResults}
             includeTextFilter
             filterValue={filters.geo_loc_name_country_calc}
-            onFilterChange={(value) => onFilterChange('geo_loc_name_country_calc', value)}
+            onFilterChange={(value) =>
+              onFilterChange('geo_loc_name_country_calc', value)
+            }
           />
 
           <LocalMultipleOptionFilter
@@ -259,17 +288,13 @@ const Results: React.FC<ResultsProps> = ({
 
         <section>
           <DetailedResultsTable
-            isOpen={isTableVisible}
-            onToggleOpen={() => setIsTableVisible(!isTableVisible)}
-            filters={filters}
-            onFilterChange={onFilterChange}
-            sortField={sortField}
-            sortDirection={sortDirection}
-            onSortChange={onSortChange}
             processResults={getProcessedResults}
             currentPage={currentPage}
             itemsPerPage={itemsPerPage}
             onPageChange={onPageChange}
+            sortField={sortField}
+            sortDirection={sortDirection}
+            onSortChange={onSortChange}
           />
         </section>
       </section>
