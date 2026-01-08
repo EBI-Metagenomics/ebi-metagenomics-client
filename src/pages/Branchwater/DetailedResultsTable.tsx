@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import EMGTable from 'components/UI/EMGTable';
 import { Column } from 'react-table';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-// Shape of a single Branchwater result row used by this table
+
 interface BranchwaterResult {
   acc: string;
   assay_type: string;
@@ -37,19 +37,24 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
   currentPage,
   itemsPerPage,
   onPageChange,
+  onSortChange,
 }) => {
   // Synchronize EMGTable internal pagination (via query param) with parent state
-  const [emgPage] = useQueryParamState(
-    'branchwater-detailed-page',
-    currentPage || 1,
-    Number
-  );
+  const [emgPage] = useQueryParamState('branchwaterDetailedPage');
+  const [emgOrder] = useQueryParamState('branchwaterDetailedOrder', '');
+
   useEffect(() => {
     if (typeof emgPage === 'number' && emgPage !== currentPage) {
       onPageChange(emgPage);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emgPage]);
+
+  useEffect(() => {
+    if (emgOrder) {
+      onSortChange(emgOrder);
+    }
+  }, [emgOrder, onSortChange]);
 
   return (
     <div
@@ -209,15 +214,6 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
                 );
               },
             },
-
-            // {
-            //   Header: 'Collection Date',
-            //   accessor: 'collection_date_sam',
-            //   Cell: ({ row }) => {
-            //     const entry = row.original as any;
-            //     return <span>{entry.collection_date_sam}</span>;
-            //   },
-            // },
             {
               Header: 'Location',
               accessor: 'geo_loc_name_country_calc',
@@ -237,15 +233,6 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
                 );
               },
             },
-            // {
-            //   Header: 'Lat/Lng',
-            //   accessor: 'lat_lon',
-            //   disableSortBy: true,
-            //   Cell: ({ row }) => {
-            //     const entry = row.original as any;
-            //     return <span>{entry.lat_lon}</span>;
-            //   },
-            // },
             {
               Header: 'Metagenome',
               accessor: 'organism',
@@ -268,7 +255,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               showPagination
               expectedPageSize={itemsPerPage}
               initialPage={Math.max(0, (currentPage || 1) - 1)}
-              namespace="branchwater-detailed-"
+              namespace="branchwaterDetailed"
               sortable
             />
           );

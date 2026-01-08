@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useQueryParamState, {
+  createSharedQueryParamContextForTable,
+} from '@/hooks/queryParamState/useQueryParamState';
 import L from 'leaflet';
 
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -22,6 +24,19 @@ import {
   downloadBranchwaterCSV,
   type BranchwaterResult as SearchResult,
 } from 'utils/branchwater';
+import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+
+const { withQueryParamProvider } = createSharedQueryParamContextForTable(
+  'branchwater-detailed',
+  {
+    query: SharedTextQueryParam(''),
+    cani: SharedTextQueryParam(''),
+    containment: SharedTextQueryParam(''),
+    geoLocNameCountryCalc: SharedTextQueryParam(''),
+    organism: SharedTextQueryParam(''),
+    assayType: SharedTextQueryParam(''),
+  }
+);
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -68,18 +83,22 @@ const Branchwater = () => {
     ''
   );
   const [locationParam, setLocationParam] = useQueryParamState(
-    'geo_loc_name_country_calc',
+    'geoLocNameCountryCalc',
     ''
   );
   const [organismParam, setOrganismParam] = useQueryParamState('organism', '');
   const [assayTypeParam, setAssayTypeParam] = useQueryParamState(
-    'assay_type',
+    'assayType',
     ''
   );
 
-  const [, setPageQP] = useQueryParamState('branchwater-page', 1, Number);
+  const [, setPageQP] = useQueryParamState(
+    'branchwaterDetailedPage',
+    1,
+    Number
+  );
   const [detailedOrder, setDetailedOrder] = useQueryParamState(
-    'branchwater-detailed-order',
+    'branchwaterDetailedOrder',
     ''
   );
 
@@ -120,7 +139,7 @@ const Branchwater = () => {
     countryCounts,
   } = useBranchwaterResults<SearchResult>({
     items: searchResults,
-    namespace: 'branchwater-',
+    namespace: 'branchwaterDetailed',
     pageSize: itemsPerPage,
     filters,
   });
@@ -201,7 +220,7 @@ const Branchwater = () => {
       ...prevFilters,
       [field]: value,
     }));
-    
+
     // Update the corresponding query parameter
     switch (field) {
       case 'query':
@@ -553,4 +572,4 @@ const Branchwater = () => {
   );
 };
 
-export default Branchwater;
+export default withQueryParamProvider(Branchwater);

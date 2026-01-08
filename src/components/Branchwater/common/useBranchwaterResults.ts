@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { camelCase } from 'lodash-es';
 import {
   processBranchwaterResults,
   type VisualizationData,
@@ -79,8 +80,12 @@ export default function useBranchwaterResults<
   pageSize = 25,
   filters,
 }: UseBranchwaterResultsArgs<T>): UseBranchwaterResultsReturn<T> {
-  const [pageQP] = useQueryParamState(`${namespace}page`, 1, Number);
-  const [orderQP] = useQueryParamState(`${namespace}order`, '');
+  const [pageQP] = useQueryParamState(
+    camelCase(`${namespace} page`),
+    1,
+    Number
+  );
+  const [orderQP] = useQueryParamState(camelCase(`${namespace} order`), '');
 
   const filteredResults = useMemo(() => {
     const f = filters || ({} as BranchwaterFilters);
@@ -120,7 +125,7 @@ export default function useBranchwaterResults<
         if (!hay.includes(needle)) ok = false;
       });
       if (!ok) return false;
-      
+
       // Apply containment range filter
       if (f.containment) {
         const [minStr, maxStr] = f.containment.split(',');
