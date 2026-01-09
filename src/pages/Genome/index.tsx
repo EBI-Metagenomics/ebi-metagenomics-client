@@ -36,11 +36,14 @@ import {
   downloadBranchwaterCSV,
   type BranchwaterResult,
 } from 'utils/branchwater';
-import { branchwaterQueryParamConfig } from 'components/Branchwater/common/queryParamConfig';
+import {
+  branchwaterQueryParamConfig,
+  getPrefixedBranchwaterConfig,
+} from 'components/Branchwater/common/queryParamConfig';
 
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
   'genomeBranchwaterDetailed',
-  branchwaterQueryParamConfig
+  getPrefixedBranchwaterConfig('genomeBranchwaterDetailed')
 );
 
 const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));

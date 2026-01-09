@@ -11,3 +11,19 @@ export const branchwaterQueryParamConfig: SharedQueryParamSet = {
   organism: SharedTextQueryParam(''),
   assayType: SharedTextQueryParam(''),
 };
+
+export const getPrefixedBranchwaterConfig = (
+  namespace: string,
+  config: SharedQueryParamSet = branchwaterQueryParamConfig
+) => {
+  return Object.fromEntries(
+    Object.entries(config).map(([key, value]) => [
+      namespace
+        ? key.startsWith(namespace)
+          ? key
+          : `${namespace}${key.charAt(0).toUpperCase()}${key.slice(1)}`
+        : key,
+      value,
+    ])
+  );
+};

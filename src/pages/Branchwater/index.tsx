@@ -24,11 +24,14 @@ import {
   downloadBranchwaterCSV,
   type BranchwaterResult as SearchResult,
 } from 'utils/branchwater';
-import { branchwaterQueryParamConfig } from 'components/Branchwater/common/queryParamConfig';
+import {
+  branchwaterQueryParamConfig,
+  getPrefixedBranchwaterConfig,
+} from 'components/Branchwater/common/queryParamConfig';
 
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
-  'branchwater-detailed',
-  branchwaterQueryParamConfig
+  'branchwaterDetailed',
+  getPrefixedBranchwaterConfig('branchwaterDetailed')
 );
 
 const DefaultIcon = L.icon({
@@ -69,19 +72,28 @@ const Branchwater = () => {
     cani: '',
   });
 
-  const [textQuery, setTextQuery] = useQueryParamState('query', '');
-  const [caniRange, setCaniRange] = useQueryParamState('cani', '');
+  const [textQuery, setTextQuery] = useQueryParamState(
+    'branchwaterDetailedQuery',
+    ''
+  );
+  const [caniRange, setCaniRange] = useQueryParamState(
+    'branchwaterDetailedCani',
+    ''
+  );
   const [containmentRange, setContainmentRange] = useQueryParamState(
-    'containment',
+    'branchwaterDetailedContainment',
     ''
   );
   const [locationParam, setLocationParam] = useQueryParamState(
-    'geoLocNameCountryCalc',
+    'branchwaterDetailedGeoLocNameCountryCalc',
     ''
   );
-  const [organismParam, setOrganismParam] = useQueryParamState('organism', '');
+  const [organismParam, setOrganismParam] = useQueryParamState(
+    'branchwaterDetailedOrganism',
+    ''
+  );
   const [assayTypeParam, setAssayTypeParam] = useQueryParamState(
-    'assayType',
+    'branchwaterDetailedAssayType',
     ''
   );
 
@@ -547,7 +559,7 @@ const Branchwater = () => {
           totalCountryCount={totalCountryCount}
           getCountryColor={getCountryColor}
           downloadCSV={downloadCSV}
-          queryParamPrefix=""
+          queryParamPrefix="branchwaterDetailed"
           containmentHistogram={containmentHistogram}
           caniHistogram={caniHistogram}
           visualizationData={visualizationData}

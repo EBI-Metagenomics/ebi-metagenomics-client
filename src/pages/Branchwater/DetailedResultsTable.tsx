@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import EMGTable from 'components/UI/EMGTable';
 import { Column } from 'react-table';
+import { camelCase } from 'lodash-es';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
 interface BranchwaterResult {
@@ -44,8 +45,8 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
   namespace = 'branchwaterDetailed',
 }) => {
   // Synchronize EMGTable internal pagination (via query param) with parent state
-  const [emgPage] = useQueryParamState(`${namespace}Page`);
-  const [emgOrder] = useQueryParamState(`${namespace}Order`, '');
+  const [emgPage] = useQueryParamState(camelCase(`${namespace} page`));
+  const [emgOrder] = useQueryParamState(camelCase(`${namespace} order`));
 
   useEffect(() => {
     if (typeof emgPage === 'number' && emgPage !== currentPage) {
@@ -56,7 +57,7 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
 
   useEffect(() => {
     if (emgOrder && emgOrder !== order) {
-      onSortChange(emgOrder);
+      onSortChange(emgOrder as string);
     }
   }, [emgOrder, onSortChange, order]);
 
