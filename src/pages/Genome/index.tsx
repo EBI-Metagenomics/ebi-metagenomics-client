@@ -36,10 +36,7 @@ import {
   downloadBranchwaterCSV,
   type BranchwaterResult,
 } from 'utils/branchwater';
-import {
-  branchwaterQueryParamConfig,
-  getPrefixedBranchwaterConfig,
-} from 'components/Branchwater/common/queryParamConfig';
+import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
 
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
   'genomeBranchwaterDetailed',
