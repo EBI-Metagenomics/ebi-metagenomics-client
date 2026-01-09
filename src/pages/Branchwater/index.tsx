@@ -469,7 +469,7 @@ const Branchwater = () => {
                   onChange={() => setSelectedExample('example-mag-1st')}
                 />
                 <label className="vf-form__label" htmlFor="example-mag-1st">
-                  RUG705 sp — Cow Rumen &nbsp;
+                  RUG705 sp. — Cow Rumen &nbsp;
                   <a
                     className="vf-link"
                     href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000290005#overview"

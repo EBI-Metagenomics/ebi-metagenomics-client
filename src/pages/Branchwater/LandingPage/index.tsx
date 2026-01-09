@@ -49,7 +49,19 @@ const LandingPage: React.FC = () => {
           to="/branchwater-search"
           title="Search genomes against INSDC metagenomes"
           subheading="Branchwater  search"
-          text="Search INSDC metagenomes with genomic sequences (powered by Branchwater)"
+          text={
+            <>
+              Search INSDC metagenomes with genomic sequences (powered by{' '}
+              <a
+                href="https://github.com/sourmash-bio/branchwater"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Branchwater
+              </a>
+              )
+            </>
+          }
         />
 
         <BranchwaterCard
@@ -57,7 +69,19 @@ const LandingPage: React.FC = () => {
           to="/mag-search"
           title="Search genomes against MGnify catalogues"
           subheading="sourmash signature compare"
-          text="Search MGnify genome catalogues with genomic sequences (powered by sourmash)"
+          text={
+            <>
+              Search MGnify genome catalogues with genomic sequences (powered by{' '}
+              <a
+                href="https://sourmash.readthedocs.io/en/latest/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                sourmash
+              </a>
+              )
+            </>
+          }
         />
 
         <BranchwaterCard
@@ -65,7 +89,20 @@ const LandingPage: React.FC = () => {
           to="/gene-search"
           title="Search short DNA sequences against MGnify catalogues"
           subheading="COBS search"
-          text="Search MGnify genome catalogues with short DNA sequences (powered by COBS)"
+          text={
+            <>
+              Search MGnify genome catalogues with short DNA sequences (powered
+              by{' '}
+              <a
+                href="https://github.com/iqbal-lab-org/cobs"
+                target="_blank"
+                rel="noreferrer"
+              >
+                COBS
+              </a>
+              )
+            </>
+          }
         />
       </div>
     </div>
