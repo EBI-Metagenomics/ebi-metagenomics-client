@@ -1,26 +1,26 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
-import path, { resolve } from 'path';
+import path from 'path';
 // import { resolve } from 'path';
-import { copyFileSync } from 'fs';
+// import { copyFileSync } from 'fs';
 
-const wasmContentTypePlugin = {
-  name: 'wasm-content-type-plugin',
-  configureServer(server) {
-    server.middlewares.use((req, res, next) => {
-      if (req.url.endsWith('.worker.js')) {
-        res.setHeader('Content-Type', 'application/wasm');
-      }
-      next();
-    });
-  },
-};
+// const wasmContentTypePlugin = {
+//   name: 'wasm-content-type-plugin',
+//   configureServer(server) {
+//     server.middlewares.use((req, res, next) => {
+//       if (req.url.endsWith('.worker.js')) {
+//         res.setHeader('Content-Type', 'application/wasm');
+//       }
+//       next();
+//     });
+//   },
+// };
 
 export default defineConfig({
   base: '/metagenomics/',
   plugins: [
     react(),
-    wasmContentTypePlugin,
+    // wasmContentTypePlugin,
     // {
     //   name: 'copy-mgnify-component',
     //   writeBundle() {
