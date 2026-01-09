@@ -155,7 +155,7 @@ const MegaMenu: React.FC = () => {
               <a
                 id="about-link"
                 className="vf-navigation__link vf-mega-menu__link"
-                href={`${config.basename}about`}
+                href={`${config.basename}/about`}
                 onClick={() => setMenuVisible(false)}
               >
                 About
@@ -508,7 +508,7 @@ const MegaMenu: React.FC = () => {
                   <p className="vf-section-header__text">
                     Find out more about MGnify
                     <br />
-                    <a className="vf-link" href={`${config.basename}help`}>
+                    <a className="vf-link" href={`${config.basename}/help`}>
                       Go to the help page
                     </a>
                   </p>
