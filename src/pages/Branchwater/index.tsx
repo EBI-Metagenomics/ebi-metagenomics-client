@@ -31,7 +31,9 @@ import {
 
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
   'branchwaterDetailed',
-  getPrefixedBranchwaterConfig('branchwaterDetailed')
+  getPrefixedBranchwaterConfig('branchwaterDetailed'),
+  25,
+  '-containment'
 );
 
 const DefaultIcon = L.icon({
@@ -284,7 +286,7 @@ const Branchwater = () => {
       query: '',
       cani: '',
     });
-    setDetailedOrder('containment');
+    setDetailedOrder('-containment');
     setPageQP(1);
     const fileInput = document.getElementById(
       'file-upload'
@@ -317,7 +319,7 @@ const Branchwater = () => {
       query: '',
       cani: '',
     });
-    setDetailedOrder('containment');
+    setDetailedOrder('-containment');
     setPageQP(1);
     const fileInput = document.getElementById(
       'file-upload'

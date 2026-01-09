@@ -43,7 +43,9 @@ import {
 
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
   'genomeBranchwaterDetailed',
-  getPrefixedBranchwaterConfig('genomeBranchwaterDetailed')
+  getPrefixedBranchwaterConfig('genomeBranchwaterDetailed'),
+  25,
+  '-containment'
 );
 
 const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));
