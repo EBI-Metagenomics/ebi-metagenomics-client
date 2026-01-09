@@ -21,50 +21,50 @@ export default defineConfig({
   plugins: [
     react(),
     wasmContentTypePlugin,
-    {
-      name: 'copy-mgnify-component',
-      writeBundle() {
-        // Copy the component file to dist after build
-        // TODO, although not being used now, this code will be needed when we switch back to in browser sketching for Branchwater
-        copyFileSync(
-          resolve(
-            __dirname,
-            'node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.js'
-          ),
-          resolve(__dirname, 'dist/mgnify-sourmash-component.js')
-        );
-        copyFileSync(
-          resolve(
-            __dirname,
-            'node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.worker.js'
-          ),
-          resolve(
-            __dirname,
-            'dist/node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.worker.js'
-          )
-        );
-        copyFileSync(
-          resolve(
-            __dirname,
-            'node_modules/mgnify-sourmash-component/dist/646.mgnify-sourmash-component.worker.js'
-          ),
-          resolve(
-            __dirname,
-            'dist/node_modules/mgnify-sourmash-component/dist/646.mgnify-sourmash-component.worker.js'
-          )
-        );
-        copyFileSync(
-          resolve(
-            __dirname,
-            'node_modules/mgnify-sourmash-component/dist/c92d2c3be4e1b9242546.module.wasm'
-          ),
-          resolve(
-            __dirname,
-            'dist/node_modules/mgnify-sourmash-component/dist/c92d2c3be4e1b9242546.module.wasm'
-          )
-        );
-      },
-    },
+    // {
+    //   name: 'copy-mgnify-component',
+    //   writeBundle() {
+    //     // Copy the component file to dist after build
+    //     // TODO, although not being used now, this code will be needed when we switch back to in browser sketching for Branchwater
+    //     copyFileSync(
+    //       resolve(
+    //         __dirname,
+    //         'node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.js'
+    //       ),
+    //       resolve(__dirname, 'dist/mgnify-sourmash-component.js')
+    //     );
+    //     copyFileSync(
+    //       resolve(
+    //         __dirname,
+    //         'node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.worker.js'
+    //       ),
+    //       resolve(
+    //         __dirname,
+    //         'dist/node_modules/mgnify-sourmash-component/dist/mgnify-sourmash-component.worker.js'
+    //       )
+    //     );
+    //     copyFileSync(
+    //       resolve(
+    //         __dirname,
+    //         'node_modules/mgnify-sourmash-component/dist/646.mgnify-sourmash-component.worker.js'
+    //       ),
+    //       resolve(
+    //         __dirname,
+    //         'dist/node_modules/mgnify-sourmash-component/dist/646.mgnify-sourmash-component.worker.js'
+    //       )
+    //     );
+    //     copyFileSync(
+    //       resolve(
+    //         __dirname,
+    //         'node_modules/mgnify-sourmash-component/dist/c92d2c3be4e1b9242546.module.wasm'
+    //       ),
+    //       resolve(
+    //         __dirname,
+    //         'dist/node_modules/mgnify-sourmash-component/dist/c92d2c3be4e1b9242546.module.wasm'
+    //       )
+    //     );
+    //   },
+    // },
   ],
   resolve: {
     alias: {
