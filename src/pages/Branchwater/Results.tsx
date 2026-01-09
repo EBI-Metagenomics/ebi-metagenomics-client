@@ -263,7 +263,7 @@ const Results: React.FC<ResultsProps> = ({
           <LocalMultipleOptionFilter
             facetName="geo_loc_name_country_calc"
             header="Location"
-            data={processedResults.filteredResults}
+            data={searchResults}
             includeTextFilter
             filterValue={filters.geo_loc_name_country_calc}
             onFilterChange={(value) =>
@@ -274,7 +274,7 @@ const Results: React.FC<ResultsProps> = ({
           <LocalMultipleOptionFilter
             facetName="organism"
             header="Organism"
-            data={processedResults.filteredResults}
+            data={searchResults}
             includeTextFilter
             filterValue={filters.organism}
             onFilterChange={(value) => onFilterChange('organism', value)}
@@ -283,7 +283,7 @@ const Results: React.FC<ResultsProps> = ({
           <LocalMultipleOptionFilter
             facetName="assay_type"
             header="Assay Type"
-            data={processedResults.filteredResults}
+            data={searchResults}
             filterValue={filters.assay_type}
             onFilterChange={(value) => onFilterChange('assay_type', value)}
           />

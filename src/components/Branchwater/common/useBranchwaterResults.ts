@@ -110,11 +110,8 @@ export default function useBranchwaterResults<
       // Apply per-field contains filters (case-insensitive)
       const entries: Array<[keyof BranchwaterFilters, string]> = [
         ['acc', f.acc],
-        ['assay_type', f.assay_type],
         ['bioproject', f.bioproject],
         ['collection_date_sam', f.collection_date_sam],
-        ['geo_loc_name_country_calc', f.geo_loc_name_country_calc],
-        ['organism', f.organism],
       ];
       let ok = true;
       entries.forEach(([key, val]) => {
@@ -123,6 +120,24 @@ export default function useBranchwaterResults<
         const needle = val.toLowerCase();
         const hay = toLowerSafe((it as Record<string, unknown>)[key]);
         if (!hay.includes(needle)) ok = false;
+      });
+      if (!ok) return false;
+
+      // Handle multiple selection filters (OR logic within the same field)
+      const multipleChoiceFields: Array<keyof BranchwaterFilters> = [
+        'assay_type',
+        'geo_loc_name_country_calc',
+        'organism',
+      ];
+      multipleChoiceFields.forEach((key) => {
+        if (!ok) return;
+        const val = f[key];
+        if (!val) return;
+        const selectedOptions = val.toLowerCase().split(',').filter(Boolean);
+        if (selectedOptions.length === 0) return;
+
+        const hay = toLowerSafe((it as Record<string, unknown>)[key]);
+        if (!selectedOptions.includes(hay)) ok = false;
       });
       if (!ok) return false;
 
