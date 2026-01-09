@@ -5,6 +5,7 @@ import './style.css';
 import SearchPage from 'pages/Search';
 import useReveal from 'hooks/useReveal';
 import TrainingResources from 'components/Home/TrainingResources';
+import LatestStudies from 'components/Home/Request/LatestStudies';
 
 const HomePage: React.FC = () => {
   const SearchIcon = (
@@ -90,7 +91,7 @@ const HomePage: React.FC = () => {
     </svg>
   );
   const analysisRef = useReveal();
-  useReveal();
+  const studiesRef = useReveal();
   return (
     <section className="vf-content vf-stack vf-stack--800">
       {/* Hero section with stylized layout */}
@@ -140,6 +141,21 @@ const HomePage: React.FC = () => {
           />
         </div>
       </div>
+
+      <hr className="vf-divider" />
+
+      <section
+        ref={studiesRef}
+        className="vf-section vf-section--highlight request-analysis-section reveal"
+      >
+        <div className="request-analysis-bg-pattern" />
+        <h2 className="vf-section__title">Latest Studies</h2>
+        <div className="home-search-cards vf-grid vf-grid__col-1">
+          <div className="vf-card home-search-card">
+            <LatestStudies />
+          </div>
+        </div>
+      </section>
 
       <hr className="vf-divider" />
 

@@ -6,7 +6,7 @@ type Props = {
   to: string;
   title: string;
   subheading?: string;
-  text: string;
+  text: string | React.ReactNode;
   bg: 'dna' | 'hex' | 'protein';
 };
 

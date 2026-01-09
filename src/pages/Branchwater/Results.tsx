@@ -50,6 +50,7 @@ interface ResultsProps {
   sortField: string;
   sortDirection: 'asc' | 'desc';
   onSortChange: (field: string) => void;
+  order: string;
   processResults: () => {
     filteredResults: any[];
     sortedResults: any[];
@@ -68,6 +69,7 @@ interface ResultsProps {
 
   downloadCSV: () => void;
   queryParamPrefix?: string;
+  order: string;
 
   containmentHistogram: {
     binsDesc: string[];
@@ -90,6 +92,7 @@ const Results: React.FC<ResultsProps> = ({
   sortField,
   sortDirection,
   onSortChange,
+  order,
   processResults,
   currentPage,
   itemsPerPage,
@@ -100,7 +103,7 @@ const Results: React.FC<ResultsProps> = ({
   setMapPinsLimit,
   getCountryColor,
   downloadCSV,
-  queryParamPrefix = '',
+  queryParamPrefix = 'branchwaterDetailed',
   containmentHistogram,
   caniHistogram,
   visualizationData,
@@ -260,7 +263,7 @@ const Results: React.FC<ResultsProps> = ({
           <LocalMultipleOptionFilter
             facetName="geo_loc_name_country_calc"
             header="Location"
-            data={processedResults.filteredResults}
+            data={searchResults}
             includeTextFilter
             filterValue={filters.geo_loc_name_country_calc}
             onFilterChange={(value) =>
@@ -271,7 +274,7 @@ const Results: React.FC<ResultsProps> = ({
           <LocalMultipleOptionFilter
             facetName="organism"
             header="Organism"
-            data={processedResults.filteredResults}
+            data={searchResults}
             includeTextFilter
             filterValue={filters.organism}
             onFilterChange={(value) => onFilterChange('organism', value)}
@@ -280,7 +283,7 @@ const Results: React.FC<ResultsProps> = ({
           <LocalMultipleOptionFilter
             facetName="assay_type"
             header="Assay Type"
-            data={processedResults.filteredResults}
+            data={searchResults}
             filterValue={filters.assay_type}
             onFilterChange={(value) => onFilterChange('assay_type', value)}
           />
@@ -295,6 +298,8 @@ const Results: React.FC<ResultsProps> = ({
             sortField={sortField}
             sortDirection={sortDirection}
             onSortChange={onSortChange}
+            order={order}
+            namespace={queryParamPrefix}
           />
         </section>
       </section>

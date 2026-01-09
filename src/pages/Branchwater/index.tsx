@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import useQueryParamState, {
+  createSharedQueryParamContextForTable,
+} from '@/hooks/queryParamState/useQueryParamState';
 import L from 'leaflet';
 
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -22,6 +24,14 @@ import {
   downloadBranchwaterCSV,
   type BranchwaterResult as SearchResult,
 } from 'utils/branchwater';
+import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
+
+const { withQueryParamProvider } = createSharedQueryParamContextForTable(
+  'branchwaterDetailed',
+  getPrefixedBranchwaterConfig('branchwaterDetailed'),
+  25,
+  '-containment'
+);
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
@@ -61,25 +71,38 @@ const Branchwater = () => {
     cani: '',
   });
 
-  const [textQuery, setTextQuery] = useQueryParamState('query', '');
-  const [caniRange, setCaniRange] = useQueryParamState('cani', '');
+  const [textQuery, setTextQuery] = useQueryParamState(
+    'branchwaterDetailedQuery',
+    ''
+  );
+  const [caniRange, setCaniRange] = useQueryParamState(
+    'branchwaterDetailedCani',
+    ''
+  );
   const [containmentRange, setContainmentRange] = useQueryParamState(
-    'containment',
+    'branchwaterDetailedContainment',
     ''
   );
   const [locationParam, setLocationParam] = useQueryParamState(
-    'geo_loc_name_country_calc',
+    'branchwaterDetailedGeoLocNameCountryCalc',
     ''
   );
-  const [organismParam, setOrganismParam] = useQueryParamState('organism', '');
+  const [organismParam, setOrganismParam] = useQueryParamState(
+    'branchwaterDetailedOrganism',
+    ''
+  );
   const [assayTypeParam, setAssayTypeParam] = useQueryParamState(
-    'assay_type',
+    'branchwaterDetailedAssayType',
     ''
   );
 
-  const [, setPageQP] = useQueryParamState('branchwater-page', 1, Number);
-  const [detailedOrder, setDetailedOrder] = useQueryParamState(
-    'branchwater-detailed-order',
+  const [, setPageQP] = useQueryParamState(
+    'branchwaterDetailedPage',
+    1,
+    Number
+  );
+  const [, setDetailedOrder] = useQueryParamState(
+    'branchwaterDetailedOrder',
     ''
   );
 
@@ -120,7 +143,7 @@ const Branchwater = () => {
     countryCounts,
   } = useBranchwaterResults<SearchResult>({
     items: searchResults,
-    namespace: 'branchwater-',
+    namespace: 'branchwaterDetailed',
     pageSize: itemsPerPage,
     filters,
   });
@@ -201,7 +224,7 @@ const Branchwater = () => {
       ...prevFilters,
       [field]: value,
     }));
-    
+
     // Update the corresponding query parameter
     switch (field) {
       case 'query':
@@ -225,16 +248,8 @@ const Branchwater = () => {
     }
   };
 
-  const handleSortChange = (field: string): void => {
-    const orderStr = (detailedOrder || '').toString();
-    const isCurrentlyField = orderStr.replace(/^-/, '') === field;
-    const isCurrentlyDesc = orderStr.startsWith('-');
-
-    if (isCurrentlyField) {
-      setDetailedOrder(isCurrentlyDesc ? field : `-${field}`);
-    } else {
-      setDetailedOrder(field);
-    }
+  const handleSortChange = (): void => {
+    // handled by EMGTable through shared query params
   };
 
   // Handle page change
@@ -268,7 +283,7 @@ const Branchwater = () => {
       query: '',
       cani: '',
     });
-    setDetailedOrder('containment');
+    setDetailedOrder('-containment');
     setPageQP(1);
     const fileInput = document.getElementById(
       'file-upload'
@@ -301,7 +316,7 @@ const Branchwater = () => {
       query: '',
       cani: '',
     });
-    setDetailedOrder('containment');
+    setDetailedOrder('-containment');
     setPageQP(1);
     const fileInput = document.getElementById(
       'file-upload'
@@ -451,7 +466,7 @@ const Branchwater = () => {
                   onChange={() => setSelectedExample('example-mag-1st')}
                 />
                 <label className="vf-form__label" htmlFor="example-mag-1st">
-                  RUG705 sp — Cow Rumen &nbsp;
+                  RUG705 sp. — Cow Rumen &nbsp;
                   <a
                     className="vf-link"
                     href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000290005#overview"
@@ -531,6 +546,7 @@ const Branchwater = () => {
           sortField={order.replace(/^-/, '')}
           sortDirection={order.startsWith('-') ? 'desc' : 'asc'}
           onSortChange={handleSortChange}
+          order={order}
           processResults={processResults}
           currentPage={page}
           itemsPerPage={itemsPerPage}
@@ -542,7 +558,7 @@ const Branchwater = () => {
           totalCountryCount={totalCountryCount}
           getCountryColor={getCountryColor}
           downloadCSV={downloadCSV}
-          queryParamPrefix=""
+          queryParamPrefix="branchwaterDetailed"
           containmentHistogram={containmentHistogram}
           caniHistogram={caniHistogram}
           visualizationData={visualizationData}
@@ -553,4 +569,4 @@ const Branchwater = () => {
   );
 };
 
-export default Branchwater;
+export default withQueryParamProvider(Branchwater);

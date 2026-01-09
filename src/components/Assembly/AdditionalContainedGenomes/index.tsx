@@ -44,7 +44,7 @@ const AdditionalContainedGenomes: React.FC<AdditionalContainedGenomesProps> = ({
         setError(null);
 
         const resp = await axios.get(
-          `${config.dev_api_v2}assemblies/${accession}/additional-contained-genomes`
+          `${config.api_v2}assemblies/${accession}/additional-contained-genomes`
         );
 
         const raw = resp.data as unknown;
@@ -112,7 +112,9 @@ const AdditionalContainedGenomes: React.FC<AdditionalContainedGenomesProps> = ({
 
     const dataRows = rows.map((row) => [
       row.genome.accession,
-      row.ena_genome_accession ?? '',
+      row.ena_genome_accession?.startsWith('GUT_GENOME')
+        ? ''
+        : row.ena_genome_accession ?? '',
       `${row.containment.toFixed(2)}%`,
       `${row.cani.toFixed(2)}%`,
       row.genome.taxon_lineage,
@@ -151,7 +153,8 @@ const AdditionalContainedGenomes: React.FC<AdditionalContainedGenomesProps> = ({
       id: 'ena',
       Header: 'ENA',
       accessor: (row: ContainedGenome) =>
-        row.ena_genome_accession ? (
+        row.ena_genome_accession &&
+        !row.ena_genome_accession.startsWith('GUT_GENOME') ? (
           <a
             href={`${ENA_VIEW_URL}${row.ena_genome_accession}`}
             target="_blank"
@@ -213,8 +216,8 @@ const AdditionalContainedGenomes: React.FC<AdditionalContainedGenomesProps> = ({
           <p className="vf-text-body vf-text-body--3">
             Additional contained genomes were identified by calculating the
             containment of all species-representative genomes from the{' '}
-            <Link to={'/branchwater-search'}>MGnify Genomes</Link> catalogues in
-            the assembly using <Link to={'/browse/genomes'}>Branchwater</Link>.
+            <Link to={'/browse/genomes'}>MGnify Genomes</Link> catalogues in the
+            assembly using <Link to={'/branchwater-search'}>Branchwater</Link>.
             Genomes with ≥50% containment are reported.
           </p>
         </details>

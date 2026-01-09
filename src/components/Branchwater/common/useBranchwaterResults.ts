@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
+import { camelCase } from 'lodash-es';
 import {
   processBranchwaterResults,
   type VisualizationData,
@@ -79,8 +80,12 @@ export default function useBranchwaterResults<
   pageSize = 25,
   filters,
 }: UseBranchwaterResultsArgs<T>): UseBranchwaterResultsReturn<T> {
-  const [pageQP] = useQueryParamState(`${namespace}page`, 1, Number);
-  const [orderQP] = useQueryParamState(`${namespace}order`, '');
+  const [pageQP] = useQueryParamState(
+    camelCase(`${namespace} page`),
+    1,
+    Number
+  );
+  const [orderQP] = useQueryParamState(camelCase(`${namespace} order`), '');
 
   const filteredResults = useMemo(() => {
     const f = filters || ({} as BranchwaterFilters);
@@ -105,11 +110,8 @@ export default function useBranchwaterResults<
       // Apply per-field contains filters (case-insensitive)
       const entries: Array<[keyof BranchwaterFilters, string]> = [
         ['acc', f.acc],
-        ['assay_type', f.assay_type],
         ['bioproject', f.bioproject],
         ['collection_date_sam', f.collection_date_sam],
-        ['geo_loc_name_country_calc', f.geo_loc_name_country_calc],
-        ['organism', f.organism],
       ];
       let ok = true;
       entries.forEach(([key, val]) => {
@@ -120,7 +122,25 @@ export default function useBranchwaterResults<
         if (!hay.includes(needle)) ok = false;
       });
       if (!ok) return false;
-      
+
+      // Handle multiple selection filters (OR logic within the same field)
+      const multipleChoiceFields: Array<keyof BranchwaterFilters> = [
+        'assay_type',
+        'geo_loc_name_country_calc',
+        'organism',
+      ];
+      multipleChoiceFields.forEach((key) => {
+        if (!ok) return;
+        const val = f[key];
+        if (!val) return;
+        const selectedOptions = val.toLowerCase().split(',').filter(Boolean);
+        if (selectedOptions.length === 0) return;
+
+        const hay = toLowerSafe((it as Record<string, unknown>)[key]);
+        if (!selectedOptions.includes(hay)) ok = false;
+      });
+      if (!ok) return false;
+
       // Apply containment range filter
       if (f.containment) {
         const [minStr, maxStr] = f.containment.split(',');

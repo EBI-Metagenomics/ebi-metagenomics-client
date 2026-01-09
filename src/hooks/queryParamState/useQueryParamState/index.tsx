@@ -82,15 +82,16 @@ export function createSharedQueryParamContext<P extends SharedQueryParamSet>(
 type BaseContext = ReturnType<typeof createSharedQueryParamContext>;
 
 export function createSharedQueryParamContextForTable(
-  namespace: string = "",
+  namespace: string = '',
   extraParams?: SharedQueryParamSet,
-  initialPageSize: number = 10
+  initialPageSize: number = 10,
+  initialOrder: string = ''
 ): BaseContext {
   return createSharedQueryParamContext({
     [camelCase(`${namespace} page`)]: SharedNumberQueryParam(1),
     [camelCase(`${namespace} page size`)]: SharedNumberQueryParam(initialPageSize),
-    [camelCase(`${namespace} order`)]: SharedTextQueryParam(""),
-    [camelCase(`${namespace} search`)]: SharedTextQueryParam(""),
+    [camelCase(`${namespace} order`)]: SharedTextQueryParam(initialOrder),
+    [camelCase(`${namespace} search`)]: SharedTextQueryParam(''),
     ...extraParams,
   });
 }

@@ -88,6 +88,23 @@
     max-width: 22rem;
 }
 
+.bw-card__text a {
+    color: white;
+    text-decoration: underline;
+}
+
+.bw-card__text a:hover {
+    color: #e2e2e2;
+}
+
+.bw-card__logo {
+    height: 1.2rem;
+    width: auto;
+    vertical-align: middle;
+    margin-right: 0.1rem;
+    margin-top: -2px;
+}
+
 /* Improve contrast for VF arrow icon */
 .vf-icon-arrow--inline-end {
     filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));

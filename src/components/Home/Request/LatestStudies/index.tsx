@@ -59,10 +59,10 @@ const LatestStudies: React.FC = () => {
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
   return (
-    <section className="vf-stack vf-stack--200">
+    <section className="vf-stack vf-stack--200" style={{ width: '100%' }}>
       <FixedHeightScrollable
         className="vf-grid vf-grid__col-1 latest-studies-section"
-        heightPx={800}
+        heightPx={400}
       >
         {}
         {data.items.map(
