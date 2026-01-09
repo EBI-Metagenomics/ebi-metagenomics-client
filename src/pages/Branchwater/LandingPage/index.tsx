@@ -3,7 +3,7 @@ import BranchwaterCard from 'pages/Branchwater/BranchwaterCard';
 import './style.css';
 import SourmashLogo from 'images/sourmash_logo.png';
 import BranchwaterLogo from 'images/branchwater_logo.png';
-import COBSLogo from 'images/cobs_logo.png';
+import CobsLogo from 'images/cobs_logo.png';
 
 const LandingPage: React.FC = () => {
   return (
@@ -106,7 +106,7 @@ const LandingPage: React.FC = () => {
             <>
               Search MGnify genome catalogues with short DNA sequences (powered
               by{' '}
-              <img src={COBSLogo} alt="COBS logo" className="bw-card__logo" />{' '}
+              <img src={CobsLogo} alt="COBS logo" className="bw-card__logo" />{' '}
               <a
                 href="https://github.com/iqbal-lab-org/cobs"
                 target="_blank"
