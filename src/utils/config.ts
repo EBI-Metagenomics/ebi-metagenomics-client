@@ -6,6 +6,7 @@ export type ConfigType = {
   hmmer: string | (() => void);
   api: string;
   api_v2: string;
+  api_branchwater: string;
   ebisearch: string;
   website: string;
   blog: string;

@@ -37,6 +37,7 @@ import {
   type BranchwaterResult,
 } from 'utils/branchwater';
 import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
+import config from 'utils/config';
 
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
   'genomeBranchwaterDetailed',
@@ -216,7 +217,7 @@ const GenomePage: React.FC = () => {
 
     axios
       .post<BranchwaterResult[]>(
-        `http://branchwater-dev.mgnify.org/mags?accession=${accession}&catalogue=${relatedCatalogue.data.id}`
+        `${config.api_branchwater}/mags?accession=${accession}&catalogue=${relatedCatalogue.data.id}`
       )
       .then((response) => {
         setSearchResults(response.data);

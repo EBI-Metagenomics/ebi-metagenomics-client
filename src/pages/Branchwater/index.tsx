@@ -198,7 +198,7 @@ const Branchwater = () => {
       const formData = new FormData();
       formData.append('fasta', uploadedFile);
       axios
-        .post('http://branchwater-dev.mgnify.org/gzipped', formData, {
+        .post(`${config.api_branchwater}/gzipped`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Accept: '*/*',
@@ -348,7 +348,7 @@ const Branchwater = () => {
     });
     axios
       .post(
-        `http://branchwater-dev.mgnify.org/mags?accession=${selected.accession}&catalogue=${selected.catalogue}`
+        `${config.api_branchwater}/mags?accession=${selected.accession}&catalogue=${selected.catalogue}`
       )
       .then((response) => {
         const { resultsArray } = processBranchwaterResults(response.data);
