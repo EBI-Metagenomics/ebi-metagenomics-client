@@ -26,6 +26,7 @@ import {
 } from 'utils/branchwater';
 import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
 import BranchwaterLogo from 'images/branchwater_logo.png';
+import InfoBanner from 'components/UI/InfoBanner';
 
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
   'branchwaterDetailed',
@@ -51,6 +52,7 @@ const Branchwater = () => {
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
 
   // Pagination state
   const [itemsPerPage] = useState<number>(25);
@@ -210,9 +212,10 @@ const Branchwater = () => {
           setSearchResults(resultsArray);
           setIsLoading(false);
         })
-        .catch(() => {
+        .catch((err) => {
           setIsLoading(false);
           setSearchResults([]);
+          setSearchError(err.message);
         });
     }
   };
@@ -470,6 +473,13 @@ const Branchwater = () => {
               <LoadingDots />
             </p>
           </div>
+        )}
+
+        {searchError && (
+          <InfoBanner
+            type={'error'}
+            title={`Error whilst searching: ${searchError}`}
+          />
         )}
 
         <details
