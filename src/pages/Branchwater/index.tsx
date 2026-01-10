@@ -25,6 +25,7 @@ import {
   type BranchwaterResult as SearchResult,
 } from 'utils/branchwater';
 import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
+import BranchwaterLogo from 'images/branchwater_logo.png';
 
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
   'branchwaterDetailed',
@@ -363,7 +364,31 @@ const Branchwater = () => {
 
   return (
     <section className="vf-content mg-page-search">
-      <h2>Search for a genome within INSDC metagenomes</h2>
+      <div className="vf-sidebar vf-sidebar--end">
+        <div className="vf-sidebar__inner">
+          <div>
+            <h2>Search for a genome within INSDC metagenomes</h2>
+          </div>
+          <div className="vf-flag vf-flag--middle vf-flag--200 vf-flag--reversed">
+            <div className="vf-flag__body">
+              <span className="vf-text-body vf-text-body--4">
+                Powered by{' '}
+                <a href="https://github.com/sourmash-bio/branchwater">
+                  Branchwater
+                </a>
+                .
+              </span>
+            </div>
+            <div className="vf-flag__media">
+              <img
+                src={BranchwaterLogo}
+                style={{ height: '32px' }}
+                alt="Branchwater logo"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="vf-u-margin__top--400">
         <details className="vf-details">
           <summary className="vf-details--summary">Instructions</summary>
