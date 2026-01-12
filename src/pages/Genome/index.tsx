@@ -38,8 +38,6 @@ import {
   type BranchwaterResult,
 } from 'utils/branchwater';
 import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
-import config from 'utils/config';
-import useMGnifyData from 'hooks/data/useMGnifyData';
 
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
   'genomeBranchwaterDetailed',
@@ -66,15 +64,8 @@ const tabs = [
 const GenomePage: React.FC = () => {
   const accession = useURLAccession();
   const { config } = useContext(UserContext);
-  // dd
 
-  // const { data, loading, error } = useApiData<GenomeApiResponse>({
-  // const { data, loading, error } = useApiData<GenomeApiResponse>({
-  //   url: accession ? `${config.api_v2}/genomes/${accession}` : null,
-  //   // url: accession ? `${config.api_v2}/genomes/MGYG000000001` : null,
-  // });
-
-  const { data, loading, error, download } = useApiData<GenomeApiResponse>({
+  const { data, loading, error } = useApiData<GenomeApiResponse>({
     url: accession ? `${config.api_v2}genomes/${accession}` : null,
     // url: accession ? `${config.api_v2}/genomes/MGYG000000001` : null,
   });
