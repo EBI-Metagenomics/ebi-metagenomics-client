@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { last } from 'lodash-es';
+import config from '@/utils/config';
 
 type Breadcrumb = {
   url?: string;
@@ -36,7 +37,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
             ) : (
               <a
                 className="vf-breadcrumbs__item"
-                href={`/metagenomics${link.url}`}
+                href={`${config.basename}${link.url}`}
               >
                 {link.label}
               </a>

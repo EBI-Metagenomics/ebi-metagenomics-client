@@ -6,12 +6,14 @@ export type ConfigType = {
   hmmer: string | (() => void);
   api: string;
   api_v2: string;
+  api_branchwater: string;
   ebisearch: string;
   website: string;
   blog: string;
   basename: string;
   enaURL: string;
   googleMapsKey: string;
+  branchwaterDate: string;
   featureFlags?: {
     [feature: string]: boolean;
   };
@@ -41,7 +43,9 @@ export default merge(
   privateConfig || {},
   import.meta.env
     ? {
-        basename: import.meta.env.BASE_URL, // overrides config AND privateConfig
+        basename: import.meta.env.BASE_URL,
+        googleMapsKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
+        branchwaterDbDate: import.meta.env.VITE_BRANCHWATER_DB_DATE,
       }
     : {}
 );

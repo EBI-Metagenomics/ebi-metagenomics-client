@@ -1,14 +1,13 @@
 import {openPage} from '../util/util';
 import config from 'utils/config';
 const loginUrl = 'http://localhost:9000/metagenomics/login';
-const homePageUrl = 'http://localhost:9000/metagenomics';
+const homePageUrl = 'http://localhost:9000/metagenomics/';
 const myDataPageUrl = 'http://localhost:9000/metagenomics/mydata';
 const allowedUsername = 'Webin-000';
 const allowedPassword = 'secret';
 
 describe('JWT Login', () => {
   beforeEach(() => {
-    openPage('login');
     cy.intercept('POST', '**/auth/sliding', (req) => {
       const { username } = req.body;
 
@@ -30,12 +29,14 @@ describe('JWT Login', () => {
         });
       }
     }).as('authRequest');
-    cy.intercept('POST', '**/auth/verify', (req) => {
+    cy.intercept('POST', '**/utils/token/verify', (req) => {
       if (req && req.body && req.body.token && req.body.token.startsWith("ey")) {
         req.reply({
           statusCode: 200,
           body: {
-            username: allowedUsername,
+            data: {
+              token: req.body.token,
+            }
           },
         });
       } else {
@@ -45,6 +46,7 @@ describe('JWT Login', () => {
         });
       }
     }).as('authVerifyRequest');
+    openPage('login');
   });
 
   it('should log in successfully with valid credentials and the login should be persisted', () => {

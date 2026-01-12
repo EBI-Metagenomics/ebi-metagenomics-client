@@ -25,7 +25,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
     stale: isStale,
     download,
   } = useApiData<{ count: number; items: any[] }>({
-    url: `${config.api_v2}/genomes/catalogues/`,
+    url: `${config.api_v2}genomes/catalogues/`,
   });
   // Apply biome filtering client-side and adapt to PaginatedList shape expected by EMGTable
   const genomeCataloguesList: GenomeCatalogueList | null = useMemo(() => {

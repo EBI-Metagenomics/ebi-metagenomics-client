@@ -20,7 +20,8 @@ const TabsForQueryParameter: React.FC<TabsProps> = ({
     if (!tabQp || tabQp === '') {
       setTabQp(defaultValue);
     }
-  }, [tabQp, queryParameter]);
+  }, [tabQp, queryParameter, setTabQp, defaultValue]);
+  // }, [tabQp, queryParameter, setTabQp, defaultValue, setPage]);
 
   const tab = tabQp ?? defaultValue;
 

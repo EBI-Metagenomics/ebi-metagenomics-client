@@ -107,9 +107,7 @@ const SamplesMap: React.FC<MapProps> = ({ study, samples }) => {
   }, [theMap]);
 
   useEffect(() => {
-    console.log('samples or map changed', theMap, samples);
     if (theMap && samples) {
-      console.log(samples);
       if (markerCluster.current) {
         markerCluster.current.clearMarkers();
       }
@@ -121,7 +119,6 @@ const SamplesMap: React.FC<MapProps> = ({ study, samples }) => {
             lat: Number(sample?.metadata?.lat),
             lng: Number(sample?.metadata?.lon),
           };
-          console.log(position);
           const marker = new google.maps.Marker({
             position,
             title: sample.accession,

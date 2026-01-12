@@ -26,9 +26,15 @@ export default defineConfig(({ mode }) => {
         'config.private.json': path.resolve(__dirname, './config.private.json'),
       },
     },
-    assetsInclude: ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif'],
+    assetsInclude: [
+      '**/*.svg',
+      '**/*.png',
+      '**/*.jpg',
+      '**/*.jpeg',
+      '**/*.gif',
+    ],
     server: {
       port: 9000,
-    }
+    },
   };
 });

@@ -5,7 +5,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "moduleResolution": "node",  // Changed from "bundler" to "node"
+    "moduleResolution": "node", // Changed from "bundler" to "node"
     "allowImportingTsExtensions": true,
     "noImplicitAny": false,
     "resolveJsonModule": true,
@@ -32,10 +32,6 @@
     },
     "allowSyntheticDefaultImports": true
   },
-  "include": [
-    "src",
-    "src/types",
-    "custom.d.ts"
-  ],
-  "references": [{ "path": "./tsconfig.node.json" }],
+  "include": ["src", "src/types", "custom.d.ts"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

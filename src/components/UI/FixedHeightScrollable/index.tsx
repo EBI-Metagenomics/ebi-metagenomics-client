@@ -2,19 +2,19 @@ import React from 'react';
 import { useMeasure, useScroll } from 'react-use';
 
 const topBorderStyle = {
-  boxShadow: 'inset 0 15px 10px -10px var(--vf-color--neutral--200)',
+  boxShadow: 'inset 0 15px 10px -10px rgba(0,0,0,0.2)',
   borderTop: '1px solid var(--vf-color--neutral--200)',
 };
 
 const bottomBorderStyle = {
-  boxShadow: 'inset 0 -15px 10px -10px var(--vf-color--neutral--200)',
+  boxShadow: 'inset 0 -15px 10px -10px rgba(0,0,0,0.2)',
   borderBottom: '1px solid var(--vf-color--neutral--200)',
 };
 
 const bothBorderStyle = {
   boxShadow:
-    'inset 0 -15px 10px -10px var(--vf-color--neutral--200), ' +
-    'inset 0 15px 10px -10px var(--vf-color--neutral--200)',
+    'inset 0 -15px 10px -10px rgba(0,0,0,0.2), ' +
+    'inset 0 15px 10px -10px rgba(0,0,0,0.2)',
 };
 
 const FixedHeightScrollable: React.FC<{

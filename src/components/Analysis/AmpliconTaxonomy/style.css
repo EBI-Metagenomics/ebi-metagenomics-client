@@ -37,18 +37,18 @@
   display: none;
 }
 
-.vf-details--summary::after {
-  content: '';
-  position: absolute;
-  right: 1.25rem;
-  top: 50%;
-  transform: translateY(-50%) rotate(135deg);
-  width: 0.5rem;
-  height: 0.5rem;
-  border-right: 2px solid #64748b;
-  border-bottom: 2px solid #64748b;
-  transition: transform 0.3s ease;
-}
+/*.vf-details--summary::after {*/
+/*  content: '';*/
+/*  position: absolute;*/
+/*  right: 1.25rem;*/
+/*  top: 50%;*/
+/*  transform: translateY(-50%) rotate(135deg);*/
+/*  width: 0.5rem;*/
+/*  height: 0.5rem;*/
+/*  border-right: 2px solid #64748b;*/
+/*  border-bottom: 2px solid #64748b;*/
+/*  transition: transform 0.3s ease;*/
+/*}*/
 
 .custom-vf-details[open] .vf-details--summary::after {
   transform: translateY(-30%) rotate(-45deg);
@@ -100,42 +100,7 @@
 /* Amplicon cell styling */
 .vf-table__cell:first-child {
   font-weight: 600;
-  color: #3182ce;
-}
-
-/* Button styling */
-.vf-button {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-  text-decoration: none;
-}
-
-.vf-button--primary {
-  background-color: #10b981; /* Updated to a pleasant green */
-  color: white;
-  transition: all 0.2s ease;
-}
-
-.vf-button--primary:hover {
-  background-color: #0d9669; /* Darker on hover */
-  box-shadow: 0 2px 4px rgba(13, 150, 105, 0.2);
-  transform: translateY(-1px);
-}
-
-.vf-button--sm {
-  font-size: 0.75rem;
-  padding: 0.4rem 0.65rem;
-}
-
-.vf-button__text {
-  margin-left: 0.25rem;
+  /*color: #3182ce;*/
 }
 
 /* Icon styling */

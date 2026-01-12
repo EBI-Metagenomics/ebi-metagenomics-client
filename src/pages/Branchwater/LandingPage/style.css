@@ -1,0 +1,25 @@
+/* Landing page container spacing */
+.bw-landing {
+    padding: 2rem 1rem;
+}
+
+/* Intro text spacing + VF typography */
+.bw-landing__intro {
+    max-width: 60rem;
+    margin-bottom: 2.5rem;
+}
+
+.vf-intro {
+    font-size: 1.1rem;
+    color: var(--vf-color--grey--700);
+}
+
+.vf-lede {
+    font-size: 1rem;
+    color: var(--vf-color--grey--600);
+}
+
+/* Add top spacing to the cards grid */
+.bw-landing__cards {
+    margin-top: 1rem;
+}

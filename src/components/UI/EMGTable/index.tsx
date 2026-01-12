@@ -81,15 +81,23 @@ function getOrderingQueryParamFromSortedColumn(
 }
 
 function getSortedColumnFromOrderingQueryParam(
-  ordering: string
+  ordering: string,
+  cols: Column<any>[]
 ): Array<{ id: string; desc: boolean }> {
   if (!ordering) return [];
   const desc = ordering.startsWith('-');
-  const id = ordering
-    .replace(/^-/, '')
-    .replace(/attributes\./g, '')
-    .replace(/-/g, '_');
-  return [{ id, desc }];
+  const field = ordering.replace(/^-/, '');
+
+  // Try to find the matching column from cols to get the correct ID
+  const match = cols.find((c) => {
+    const id = (c.id ||
+      (typeof c.accessor === 'string' ? c.accessor : '')) as string;
+    if (!id) return false;
+    const transformedId = id.replace(/attributes\./g, '').replace(/-/g, '_');
+    return transformedId === field;
+  });
+
+  return [{ id: match?.id || (match?.accessor as string) || field, desc }];
 }
 
 type EMGTableProps<T extends object> = {
@@ -175,7 +183,7 @@ const EMGTable = <T extends object>({
       data: tableData,
       initialState: {
         pageIndex: initialPage,
-        sortBy: getSortedColumnFromOrderingQueryParam(ordering),
+        sortBy: getSortedColumnFromOrderingQueryParam(ordering, cols),
       },
       pageCount: pageCount || 1,
       manualPagination: true,
@@ -201,7 +209,7 @@ const EMGTable = <T extends object>({
 
   useEffect(() => {
     // Handle table-initiated change of sorting column
-    if (!sortable || !sortBy?.length) return;
+    if (!sortable) return;
     const orderParamRequestedByTable =
       getOrderingQueryParamFromSortedColumn(sortBy);
     if (ordering !== orderParamRequestedByTable) {
@@ -218,11 +226,14 @@ const EMGTable = <T extends object>({
       getOrderingQueryParamFromSortedColumn(sortBy);
     if (orderParamSpecifiedExternally !== orderParamCurrentlyInTable) {
       setSortBy(
-        getSortedColumnFromOrderingQueryParam(orderParamSpecifiedExternally)
+        getSortedColumnFromOrderingQueryParam(
+          orderParamSpecifiedExternally,
+          cols
+        )
       );
       setPage(1);
     }
-  }, [ordering, sortable]);
+  }, [ordering, sortable, cols]);
 
   const paginationRanges = useMemo(
     () => getPaginationRanges(pageIndex, pageCount),

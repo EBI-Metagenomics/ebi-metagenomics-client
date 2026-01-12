@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import UserContext from 'pages/Login/UserContext';
 import { jwtDecode } from 'jwt-decode';
 
@@ -16,28 +16,33 @@ const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
   });
   const { setUser, setDetails } = useContext(UserContext);
 
-  const setAuthToken = (newToken: AuthToken) => {
-    if (!newToken) {
-      localStorage.removeItem('mgnify.v2.token');
-      localStorage.removeItem('mgnify.v2.username');
+  const setAuthToken = useCallback(
+    (newToken: AuthToken) => {
+      if (!newToken) {
+        localStorage.removeItem('mgnify.v2.token');
+        localStorage.removeItem('mgnify.v2.username');
+        setUser({
+          username: '',
+          token: '',
+          isAuthenticated: false,
+        });
+        setDetails(null);
+        return;
+      }
+      localStorage.setItem('mgnify.v2.token', newToken as string);
+      setAuthTokenInternally(newToken);
+      const userDetailsFromToken = jwtDecode(
+        newToken as string
+      ) as TokenContent;
+      localStorage.setItem('mgnify.v2.username', userDetailsFromToken.username);
       setUser({
-        username: '',
-        token: '',
-        isAuthenticated: false,
+        username: userDetailsFromToken.username,
+        token: newToken,
+        isAuthenticated: true,
       });
-      setDetails(null);
-      return;
-    }
-    localStorage.setItem('mgnify.v2.token', newToken as string);
-    setAuthTokenInternally(newToken);
-    const userDetailsFromToken = jwtDecode(newToken as string) as TokenContent;
-    localStorage.setItem('mgnify.v2.username', userDetailsFromToken.username);
-    setUser({
-      username: userDetailsFromToken.username,
-      token: newToken,
-      isAuthenticated: true,
-    });
-  };
+    },
+    [setUser, setDetails]
+  );
 
   return [authToken, setAuthToken];
 };

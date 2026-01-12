@@ -312,6 +312,7 @@ const useData: (
       setFullState(EmptyResponse);
     }
     return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       isActive = false;
     };
   }, [

@@ -1,0 +1,111 @@
+/* Core VF card but with Branchwater flavour */
+.bw-card {
+    min-width: 23rem;
+    height: 220px;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    transition: transform 0.2s ease, box-shadow 0.25s ease;
+    border: 2px solid #00526c;
+}
+
+/* Backgrounds */
+.bg-dna {
+    /*background-image: url('images/branchwater/helix_wave.svg');*/
+    /*background-size: cover;*/
+    /*background-position: center;*/
+
+    background-image:
+            linear-gradient(rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.50)),
+            url('images/branchwater/helix_wave.svg');
+    background-size: cover;
+    background-position: center;
+}
+
+.bg-hex {
+    /*background-image: url('images/branchwater/molecule_hex.svg');*/
+    /*background-size: cover;*/
+    /*background-position: center;*/
+
+    background-image:
+            linear-gradient(rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.50)),
+            url('images/branchwater/molecule_hex.svg');
+    background-size: cover;
+    background-position: center;
+}
+
+.bg-protein {
+    /*background-image: url('images/branchwater/alpha_helix.svg');*/
+    /*background-size: cover;*/
+    /*background-position: center;*/
+
+    background-image:
+            linear-gradient(rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.50)),
+            url('images/branchwater/alpha_helix.svg');
+    background-size: cover;
+    background-position: center;
+}
+
+/* Hover elevation */
+.bw-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 22px rgba(0, 40, 60, 0.25);
+}
+
+/* Content spacing */
+.bw-card .vf-card__content {
+    position: relative;
+    z-index: 2;
+    padding: 1.4rem 1.6rem;
+    color: white;
+}
+
+/* Heading link layout */
+.bw-card__heading-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: white;
+}
+
+/* Subheading */
+.bw-card__subheading {
+    font-size: 1rem;
+    font-weight: 500;
+    /*opacity: 0.9;*/
+    color: white;
+}
+
+/* Description */
+.bw-card__text {
+    font-size: 0.95rem;
+    /*opacity: 0.85;*/
+    font-weight: 400;
+    color: white;
+    max-width: 22rem;
+}
+
+.bw-card__text a {
+    color: white;
+    text-decoration: underline;
+}
+
+.bw-card__text a:hover {
+    color: #e2e2e2;
+}
+
+.bw-card__logo {
+    height: 1.2rem;
+    width: auto;
+    vertical-align: middle;
+    margin-right: 0.1rem;
+    margin-top: -2px;
+}
+
+/* Improve contrast for VF arrow icon */
+.vf-icon-arrow--inline-end {
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+}

@@ -31,7 +31,7 @@ const GenomePage: React.FC = () => {
   const accession = useURLAccession();
   const { config } = useContext(UserContext);
   const { data, loading, error } = useApiData<GenomeCatalogue>({
-    url: `${config.api_v2}/genomes/catalogues/${accession}`,
+    url: `${config.api_v2}genomes/catalogues/${accession}`,
   });
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;

@@ -63,12 +63,12 @@ const useInterProMatchesProvider = (
         setFetchedAllOrLimit(true);
       }
     }
-  }, [data, page, limit]);
+  }, [data, page, limit, isStale, matches, processed, total]);
   useEffect(() => {
     if (data?.links?.next && matches.length < limit) {
       setPage(page + 1);
     }
-  }, [limit]);
+  }, [data?.links?.next, limit, matches.length, page]);
   return {
     matches,
     processed,
