@@ -25,7 +25,7 @@ const KeyValueList: React.FC<KeyValueProps> = ({ list, dataCy }) => (
           {key}:
         </div>
         <div data-cy="kvl-value">
-          {typeof Value === 'string' ? Value : <Value />}
+          {typeof Value === 'string' ? Value : Value && <Value />}
         </div>
       </React.Fragment>
     ))}

@@ -29,6 +29,7 @@ const GenomesTextSearch: React.FC = () => {
     loading,
     stale: isStale,
     error,
+    download,
   } = useApiData<PaginatedList<any>>({
     url: buildURL(),
   });
@@ -69,59 +70,7 @@ const GenomesTextSearch: React.FC = () => {
       accessor: 'type',
       disableSortBy: true,
     },
-    // {
-    //   Header: 'Taxonomy',
-    //   accessor: (genome) => genome?.biome?.lineage,
-    //   Cell: ({ cell }) => (
-    //     <>
-    //       {getSimpleTaxLineage(cell.value, true)}{' '}
-    //       <Tooltip content={cleanTaxLineage(cell.value, ' > ')}>
-    //         <sup>
-    //           <span className="icon icon-common icon-info" />
-    //         </sup>
-    //       </Tooltip>
-    //     </>
-    //   ),
-    //   disableSortBy: true,
-    // },
   ];
-
-  const handleDownloadCsv = () => {
-    if (!genomesList?.items?.length) return;
-
-    const headers = ['Biome', 'Accession', 'Catalogue', 'Type'];
-
-    const escapeCSV = (value: unknown): string => {
-      if (value === null || value === undefined) return '';
-      const str = String(value);
-      if (/[",\n]/.test(str)) {
-        return '"' + str.replace(/"/g, '""') + '"';
-      }
-      return str;
-    };
-
-    const rows = (genomesList.items as any[]).map((genome) => [
-      genome?.biome?.lineage ?? '',
-      genome?.accession ?? '',
-      genome?.catalogue_id ?? '',
-      genome?.type ?? '',
-    ]);
-
-    const csv = [headers, ...rows]
-      .map((row) => row.map(escapeCSV).join(','))
-      .join('\n');
-
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    const ts = new Date().toISOString().slice(0, 10);
-    link.setAttribute('download', `genomes-${ts}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
 
   if (loading && !isStale) return <Loading size="small" />;
   if (error || !genomesList) return <FetchError error={error} />;
@@ -141,7 +90,7 @@ const GenomesTextSearch: React.FC = () => {
         loading={loading}
         isStale={isStale}
         showTextFilter
-        onDownloadRequested={handleDownloadCsv}
+        onDownloadRequested={download}
       />
     </div>
   );

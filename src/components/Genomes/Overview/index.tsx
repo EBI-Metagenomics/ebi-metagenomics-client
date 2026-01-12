@@ -65,7 +65,7 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
                   ? (data.geographic_range as string[]).join(', ')
                   : undefined,
               },
-            ]}
+            ].filter(({ value }) => notEmpty(value))}
           />
         </details>
         <details open>

@@ -22,7 +22,7 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
         accessor: 'file_type',
       },
       {
-        Header: 'Action',
+        Header: 'Acffetion',
         accessor: 'url',
         Cell: ({ cell }) => (
           <a

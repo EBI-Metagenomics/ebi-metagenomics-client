@@ -31,8 +31,8 @@ const GenomePage: React.FC = () => {
 
   // const { data, loading, error } = useApiData<GenomeApiResponse>({
   const { data, loading, error } = useApiData<GenomeApiResponse>({
-    // url: accession ? `${config.api_v2}/genomes/${accession}` : null,
-    url: accession ? `${config.api_v2}/genomes/MGYG000000001` : null,
+    url: accession ? `${config.api_v2}/genomes/${accession}` : null,
+    // url: accession ? `${config.api_v2}/genomes/MGYG000000001` : null,
   });
 
   const genomeAnnotationsData = useApiData({

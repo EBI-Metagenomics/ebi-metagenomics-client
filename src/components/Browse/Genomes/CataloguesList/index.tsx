@@ -10,7 +10,6 @@ import BiomeSelector from 'components/UI/BiomeSelector';
 import { some } from 'lodash-es';
 import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 import config from 'utils/config';
-
 const { usePage, useBiome, withQueryParamProvider } =
   createSharedQueryParamContextForTable('', {
     biome: SharedTextQueryParam(''),
@@ -24,10 +23,10 @@ const BrowseGenomesByCatalogue: React.FC = () => {
     data: apiData,
     loading,
     stale: isStale,
+    download,
   } = useApiData<{ count: number; items: any[] }>({
     url: `${config.api_v2}/genomes/catalogues/`,
   });
-
   // Apply biome filtering client-side and adapt to PaginatedList shape expected by EMGTable
   const genomeCataloguesList: GenomeCatalogueList | null = useMemo(() => {
     if (!apiData) return null;
@@ -124,59 +123,6 @@ const BrowseGenomesByCatalogue: React.FC = () => {
     );
   };
 
-  const handleDownloadCsv = () => {
-    if (!genomeCataloguesList?.items?.length) return;
-
-    const headers = [
-      'Biome',
-      'Type',
-      'Catalogue ID',
-      'Catalogue name',
-      'Catalogue version',
-      'Species count',
-      'Total genomes count',
-      'Last Updated',
-    ];
-
-    const escapeCSV = (value: unknown): string => {
-      if (value === null || value === undefined) return '';
-      const str = String(value);
-      if (/[",\n]/.test(str)) {
-        return '"' + str.replace(/"/g, '""') + '"';
-      }
-      return str;
-    };
-
-    const rows = (genomeCataloguesList.items as any[]).map((item) => [
-      item?.catalogue_biome_label ?? '',
-      item?.catalogue_type
-        ? String(item.catalogue_type).slice(0, 1).toUpperCase() +
-          String(item.catalogue_type).slice(1)
-        : '',
-      item?.catalogue_id ?? '',
-      item?.name ?? '',
-      item?.version ?? '',
-      item?.genome_count ?? '',
-      item?.unclustered_genome_count ?? '',
-      item?.updated_at ? new Date(item.updated_at).toISOString() : '',
-    ]);
-
-    const csv = [headers, ...rows]
-      .map((row) => row.map(escapeCSV).join(','))
-      .join('\n');
-
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    const ts = new Date().toISOString().slice(0, 10);
-    link.setAttribute('download', `genome-catalogues-${ts}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
   if (!genomeCataloguesList && loading) return <Loading />;
   return (
     <section className="mg-browse-section">
@@ -197,7 +143,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
           sortable
           loading={loading}
           isStale={isStale}
-          onDownloadRequested={handleDownloadCsv}
+          onDownloadRequested={download}
         />
       )}
     </section>
