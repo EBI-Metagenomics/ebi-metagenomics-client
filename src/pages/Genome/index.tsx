@@ -225,16 +225,18 @@ const GenomePage: React.FC = () => {
   const handleMetagenomeSearch = useCallback(() => {
     if (!data) return;
 
-    const { data: genomeData } = data as MGnifyResponseObj;
-    const relatedCatalogue = genomeData.relationships.catalogue as {
-      data: { id: string };
-    };
+    let catalogueId = data.catalogue?.catalogue_id || data.catalogue_id;
+
+    if (!catalogueId && (data as any).data) {
+      const genomeData = (data as any).data;
+      catalogueId = genomeData.relationships?.catalogue?.data?.id;
+    }
 
     setIsSearching(true);
 
     axios
       .post<BranchwaterResult[]>(
-        `${config.api_branchwater}/mags?accession=${accession}&catalogue=${relatedCatalogue.data.id}`
+        `${config.api_branchwater}/mags?accession=${accession}&catalogue=${catalogueId}`
       )
       .then((response) => {
         setSearchResults(response.data);
