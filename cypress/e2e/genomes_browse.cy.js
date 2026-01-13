@@ -25,11 +25,11 @@ describe('Browse Genomes', () => {
     cy.get('[data-cy="emg-table-download-button"]').should('exist');
   });
 
-  // it('Shows All genomes search table and supports download', () => {
-  //   openPage('browse/genomes?browseBy=search-all');
-  //   waitForPageLoad('Browse MGnify');
-  //   cy.get('table.vf-table--striped tbody tr').should('have.length', 2);
-  //   cy.get('.mg-table-caption').should('contain.text', 'Genomes (2)');
-  //   cy.get('[data-cy="emg-table-download-button"]').should('exist');
-  // });
+  it('Shows All genomes search table and supports download', () => {
+    openPage('browse/genomes?browseBy=search-all');
+    waitForPageLoad('Browse MGnify');
+    cy.get('table.vf-table--striped tbody tr').should('have.length', 2);
+    // cy.get('.mg-table-caption').should('contain.text', 'Genomes (2)');
+    cy.get('[data-cy="emg-table-download-button"]').should('exist');
+  });
 });

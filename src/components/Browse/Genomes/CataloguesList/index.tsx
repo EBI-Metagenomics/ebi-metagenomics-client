@@ -47,7 +47,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
         id: 'catalogue-biome-label',
         Header: 'Biome',
         accessor: (catalogue: any) => catalogue?.catalogue_biome_label,
-        Cell: ({ cell }) => cell?.value,
+        Cell: ({ cell }) => cell?.value || '',
         disableSortBy: true,
         className: 'mg-biome',
       },
@@ -58,7 +58,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
         Cell: ({ cell }) => (
           <>
             <span
-              className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
+              className={`biome_icon icon_xs ${getBiomeIcon(cell.value || '')}`}
               style={{ float: 'initial' }}
             />
           </>
@@ -71,16 +71,20 @@ const BrowseGenomesByCatalogue: React.FC = () => {
         id: 'catalogue-type',
         Header: 'Type',
         accessor: (catalogue: any) => catalogue?.catalogue_type,
-        Cell: ({ cell }) => cell.value[0].toUpperCase() + cell.value.slice(1),
+        Cell: ({ cell }) =>
+          cell.value ? cell.value[0].toUpperCase() + cell.value.slice(1) : '',
         aggregate: (catTypes) => catTypes,
       },
       {
         id: 'catalogue_id',
         Header: () => <span className="nowrap">Catalogue ID</span>,
         accessor: 'catalogue_id',
-        Cell: ({ cell }) => (
-          <Link to={`/genome-catalogues/${cell.value}`}>{cell.value}</Link>
-        ),
+        Cell: ({ cell }) =>
+          cell.value ? (
+            <Link to={`/genome-catalogues/${cell.value}`}>{cell.value}</Link>
+          ) : (
+            ''
+          ),
         className: 'nowrap',
       },
       {
