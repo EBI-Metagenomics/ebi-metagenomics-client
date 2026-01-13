@@ -393,7 +393,7 @@ const MegaMenu: React.FC = () => {
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="http://branchwater-dev.mgnify.org/"
+                            href="https://www.ebi.ac.uk/metagenomics/v6-early-data-release/branchwater-search"
                             className="vf-navigation__link rotating-link"
                           >
                             Branchwater search
