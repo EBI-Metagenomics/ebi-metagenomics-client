@@ -1,0 +1,27 @@
+{
+  "count": 2,
+  "items": [
+    {
+      "catalogue_biome_label": "Marine",
+      "catalogue_type": "mag",
+      "catalogue_id": "mar1",
+      "name": "Marine MAGs",
+      "version": "1",
+      "genome_count": 5,
+      "unclustered_genome_count": 8,
+      "updated_at": "2024-10-01T00:00:00Z",
+      "biome": {"biome_name": "Marine", "lineage": "root:Environmental:Marine"}
+    },
+    {
+      "catalogue_biome_label": "Soil",
+      "catalogue_type": "isolate",
+      "catalogue_id": "sol1",
+      "name": "Soil isolates",
+      "version": "3",
+      "genome_count": 2,
+      "unclustered_genome_count": 2,
+      "updated_at": "2024-11-15T00:00:00Z",
+      "biome": {"biome_name": "Soil", "lineage": "root:Environmental:Terrestrial:Soil"}
+    }
+  ]
+}

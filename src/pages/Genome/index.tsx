@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useCallback,
   useEffect,
+  useContext,
 } from 'react';
 import axios from 'axios';
 
@@ -13,12 +14,12 @@ import FetchError from 'components/UI/FetchError';
 import Tabs from 'components/UI/Tabs';
 import RouteForHash from 'components/Nav/RouteForHash';
 import Overview from 'components/Genomes/Overview';
-import Downloads from 'components/Downloads';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseObj } from '@/hooks/data/useData';
+import Downloads from 'components/Downloads/v2index';
+import useApiData from '@/hooks/data/useApiData';
 import useURLAccession from '@/hooks/useURLAccession';
-import { cleanTaxLineage } from '@/utils/taxon';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
+import UserContext from 'pages/Login/UserContext';
+import { GenomeApiResponse } from '@/interfaces';
 
 import useBranchwaterResults, {
   type BranchwaterFilters,
@@ -37,7 +38,6 @@ import {
   type BranchwaterResult,
 } from 'utils/branchwater';
 import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
-import config from 'utils/config';
 
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
   'genomeBranchwaterDetailed',
@@ -47,12 +47,8 @@ const { withQueryParamProvider } = createSharedQueryParamContextForTable(
 );
 
 const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));
-const COGAnalysis = lazy(() => import('components/Genomes/COGAnalysis'));
-const KEGGClassAnalysis = lazy(
-  () => import('components/Genomes/KEGGClassAnalysis')
-);
-const KEGGModulesAnalysis = lazy(
-  () => import('components/Genomes/KEGGModulesAnalysis')
+const GenomeGenericAnalysis = lazy(
+  () => import('components/Genomes/Annotations')
 );
 
 const tabs = [
@@ -67,8 +63,20 @@ const tabs = [
 
 const GenomePage: React.FC = () => {
   const accession = useURLAccession();
+  const { config } = useContext(UserContext);
 
-  const { data, loading, error } = useMGnifyData(`genomes/${accession}`);
+  const { data, loading, error } = useApiData<GenomeApiResponse>({
+    url: accession ? `${config.api_v2}genomes/${accession}` : null,
+    // url: accession ? `${config.api_v2}/genomes/MGYG000000001` : null,
+  });
+
+  const genomeAnnotationsData = useApiData({
+    url: accession ? `${config.api_v2}genomes/${accession}/annotations` : null,
+  });
+
+  // console.log('genomeAnnotationsData ', genomeAnnotationsData);
+
+  // const { data, loading, error } = useMGnifyData(`genomes/${accession}`);
 
   const [searchResults, setSearchResults] = useState<BranchwaterResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -208,16 +216,18 @@ const GenomePage: React.FC = () => {
   const handleMetagenomeSearch = useCallback(() => {
     if (!data) return;
 
-    const { data: genomeData } = data as MGnifyResponseObj;
-    const relatedCatalogue = genomeData.relationships.catalogue as {
-      data: { id: string };
-    };
+    let catalogueId = data.catalogue?.catalogue_id || data.catalogue_id;
+
+    if (!catalogueId && (data as any).data) {
+      const genomeData = (data as any).data;
+      catalogueId = genomeData.relationships?.catalogue?.data?.id;
+    }
 
     setIsSearching(true);
 
     axios
       .post<BranchwaterResult[]>(
-        `${config.api_branchwater}/mags?accession=${accession}&catalogue=${relatedCatalogue.data.id}`
+        `${config.api_branchwater}/mags?accession=${accession}&catalogue=${catalogueId}`
       )
       .then((response) => {
         setSearchResults(response.data);
@@ -232,74 +242,95 @@ const GenomePage: React.FC = () => {
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
-  const { data: genomeData } = data as MGnifyResponseObj;
-  const relatedCatalogue = genomeData.relationships.catalogue as {
-    data: { id: string };
-  };
 
+  const catalogueId = data.catalogue?.catalogue_id || data.catalogue_id;
   const breadcrumbs = [
     { label: 'Home', url: '/' },
-    { label: 'Genomes', url: '/browse/genomes' },
     {
-      label: relatedCatalogue.data.id,
-      url: `/genome-catalogues/${relatedCatalogue.data.id}`,
+      label: 'Genomes',
+      url: '/browse/genomes',
     },
-    { label: accession },
+    {
+      label: catalogueId,
+      url: `/genome-catalogues/${catalogueId}`,
+    },
+    { label: accession ?? '' },
   ];
+
+  if (!accession) return null;
+
   return (
     <section className="vf-content">
       <Breadcrumbs links={breadcrumbs} />
       <h2>Genome {accession}</h2>
-
       <p>
-        <b>Type:</b> {genomeData.attributes.type}
+        <b>Type:</b> {data.type}
       </p>
-      <p>
-        <b>Taxonomic lineage:</b>{' '}
-        {cleanTaxLineage(
-          genomeData.attributes['taxon-lineage'] as string,
-          ' > '
-        )}
-      </p>
-
+      {/*TODO: Put back when taxon lineage is  made available on endpoint*/}
+      {/*<p>*/}
+      {/*  <b>Taxonomic lineage:</b>{' '}*/}
+      {/*  {cleanTaxLineage(*/}
+      {/*    data.biome?.lineage || '',*/}
+      {/*    ' > '*/}
+      {/*  )}*/}
+      {/*</p>*/}
       <Tabs tabs={tabs} />
-
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
-          {/* Overview */}
           <RouteForHash hash="#overview" isDefault>
-            <Overview data={genomeData} />
+            {/*feeo*/}
+            <Overview data={data} />
           </RouteForHash>
-
-          {/* Genome browser */}
           <RouteForHash hash="#genome-browser">
             <Suspense fallback={<Loading size="large" />}>
               <GenomeBrowser />
             </Suspense>
           </RouteForHash>
-
-          {/* COG analysis */}
           <RouteForHash hash="#cog-analysis">
             <Suspense fallback={<Loading size="large" />}>
-              <COGAnalysis />
+              <GenomeGenericAnalysis
+                items={genomeAnnotationsData.data?.annotations.cog_categories}
+                chartTitle="Top 10 COG categories"
+                subtitleSuffix="Genome COG matches"
+                tooltipEntityLabel="COG"
+                tableType="cog"
+                tableTitlePrefix="COG categories"
+                labelAccessor={(d: any) => String(d.name)}
+                dataCy="genome-cog-analysis"
+              />
             </Suspense>
           </RouteForHash>
-
-          {/* KEGG class */}
           <RouteForHash hash="#kegg-class-analysis">
             <Suspense fallback={<Loading size="large" />}>
-              <KEGGClassAnalysis />
+              <GenomeGenericAnalysis
+                items={genomeAnnotationsData.data?.annotations.kegg_classes}
+                chartTitle="Top 10 KEGG brite categories"
+                subtitleSuffix="KEGG matches"
+                tooltipEntityLabel="KEGG Class"
+                tableType="kegg-class"
+                tableTitlePrefix="KEGG classes"
+                labelAccessor={(d: any) =>
+                  String((d as any).class_id ?? (d as any).name)
+                }
+                dataCy="genome-kegg-analysis"
+              />
             </Suspense>
           </RouteForHash>
-
-          {/* KEGG module */}
           <RouteForHash hash="#kegg-module-analysis">
             <Suspense fallback={<Loading size="large" />}>
-              <KEGGModulesAnalysis />
+              <GenomeGenericAnalysis
+                items={genomeAnnotationsData.data?.annotations.kegg_modules}
+                chartTitle="Top 10 KEGG module categories"
+                subtitleSuffix="KEGG module matches"
+                tooltipEntityLabel="KEGG Module"
+                tableType="kegg-module"
+                tableTitlePrefix="KEGG modules"
+                labelAccessor={(d: any) => String(d.name)}
+                firstColumnHeaderOverride="Module ID"
+                dataCy="genome-kegg-module-analysis"
+              />
             </Suspense>
           </RouteForHash>
-
-          {/* Metagenome search */}
           <RouteForHash hash="#metagenome-search">
             <div className="vf-stack vf-stack--400">
               <h3>Branchwater</h3>
@@ -357,9 +388,8 @@ const GenomePage: React.FC = () => {
               )}
             </div>
           </RouteForHash>
-
           <RouteForHash hash="#downloads">
-            <Downloads endpoint="genomes" accession={accession || ''} />
+            <Downloads downloads={data.downloads} />
           </RouteForHash>
         </div>
       </section>

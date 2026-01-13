@@ -22,8 +22,6 @@ import AmpliconTaxonomy from 'components/Analysis/AmpliconTaxonomy/v2index';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-// TODO: find v2 counterpart
-
 const isAssembly = (
   experimentType: AnalysisDetail['experiment_type']
 ): boolean => experimentType.toLowerCase().endsWith('assembly');

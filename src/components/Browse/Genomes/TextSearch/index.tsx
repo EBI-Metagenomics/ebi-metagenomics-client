@@ -2,49 +2,43 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseList } from '@/hooks/data/useData';
+import useApiData from 'hooks/data/useApiData';
+import { GenomeList, PaginatedList } from '@/interfaces';
 import Loading from 'components/UI/Loading';
-import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
-import { getBiomeIcon } from '@/utils/biomes';
-import { cleanTaxLineage, getSimpleTaxLineage } from 'utils/taxon';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { getBiomeIcon } from 'utils/biomes';
 import FetchError from 'components/UI/FetchError';
-import Tooltip from 'components/UI/Tooltip';
-import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
-
-const {
-  useGenomesPage,
-  useGenomesageSize,
-  useGenomesOrder,
-  useGenomesSearch,
-  withQueryParamProvider,
-} = createSharedQueryParamContextForTable('genomes', {
-  genomesSearch: SharedTextQueryParam(''),
-});
+import config from 'utils/config';
 
 const GenomesTextSearch: React.FC = () => {
-  const [page] = useGenomesPage<number>();
-  const [order] = useGenomesOrder<string>();
-  const [pageSize] = useGenomesageSize<number>();
-  const [search] = useGenomesSearch<string>();
+  const [page] = useQueryParamState('page', 1, Number);
+  const [order] = useQueryParamState('order', '');
+  const [pageSize] = useQueryParamState('page_size', 25, Number);
+  const [search] = useQueryParamState('search', '');
+  const buildURL = () => {
+    const params = new URLSearchParams();
+    if (page) params.set('page', String(page));
+    if (pageSize) params.set('page_size', String(pageSize));
+    if (order) params.set('ordering', String(order));
+    if (search) params.set('search', String(search));
+    const qs = params.toString();
+    return `${config.api_v2}/genomes/${qs ? `?${qs}` : ''}`;
+  };
   const {
     data: genomesList,
     loading,
-    isStale,
-    downloadURL,
+    stale: isStale,
     error,
-  } = useMGnifyData('genomes', {
-    page,
-    ordering: order,
-    page_size: pageSize,
-    search: (search as string) || '',
+    download,
+  } = useApiData<GenomeList>({
+    url: buildURL(),
   });
 
   const columns = [
     {
       id: 'biome_id',
       Header: 'Biome',
-      accessor: (genome) => genome.relationships.biome.data?.id,
+      accessor: (genome) => genome?.biome?.lineage,
       Cell: ({ cell }) => (
         <span
           className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
@@ -57,7 +51,7 @@ const GenomesTextSearch: React.FC = () => {
     {
       id: 'accession',
       Header: 'Accession',
-      accessor: 'id',
+      accessor: 'accession',
       Cell: ({ cell }) => (
         <Link to={`/genomes/${cell.value}`}>{cell.value}</Link>
       ),
@@ -65,7 +59,7 @@ const GenomesTextSearch: React.FC = () => {
     {
       id: 'catalogue',
       Header: 'Catalogue',
-      accessor: (genome) => genome.relationships.catalogue.data?.id,
+      accessor: 'catalogue_id',
       Cell: ({ cell }) => (
         <Link to={`/genome-catalogues/${cell.value}`}>{cell.value}</Link>
       ),
@@ -73,49 +67,33 @@ const GenomesTextSearch: React.FC = () => {
     },
     {
       Header: 'Type',
-      accessor: 'attributes.type',
-      disableSortBy: true,
-    },
-    {
-      Header: 'Taxonomy',
-      accessor: 'attributes.taxon-lineage',
-      Cell: ({ cell }) => (
-        <>
-          {getSimpleTaxLineage(cell.value, true)}{' '}
-          <Tooltip content={cleanTaxLineage(cell.value, ' > ')}>
-            <sup>
-              <span className="icon icon-common icon-info" />
-            </sup>
-          </Tooltip>
-        </>
-      ),
+      accessor: 'type',
       disableSortBy: true,
     },
   ];
 
   if (loading && !isStale) return <Loading size="small" />;
-  if (error) return <FetchError error={error} />;
-  if (!genomesList) return null;
+  if (error || !genomesList) return <FetchError error={error} />;
 
   return (
-    <>
+    <div>
       <p className="vf-text-body vf-text-body--3">
         Search for genomes across all catalogues.
       </p>
       <EMGTable
         cols={columns}
-        data={genomesList as MGnifyResponseList}
-        Title={`Genomes (${genomesList.meta.pagination.count})`}
+        data={genomesList as PaginatedList}
+        Title={`Genomes (${genomesList.count})`}
         initialPage={(page as number) - 1}
+        expectedPageSize={pageSize as number}
         sortable
         loading={loading}
         isStale={isStale}
         showTextFilter
-        downloadURL={downloadURL}
-        namespace={'genomes'}
+        onDownloadRequested={download}
       />
-    </>
+    </div>
   );
 };
 
-export default withQueryParamProvider(GenomesTextSearch);
+export default GenomesTextSearch;

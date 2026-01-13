@@ -60,9 +60,13 @@ export const EezInfo: React.FC<{ eezData: EezMetadata }> = ({ eezData }) => {
             </abbr>
           </span>
           &nbsp;
-          {`${prefix} a region beyond an EEZ. While this means there are no national ABS obligations under individual countries' jurisdiction, benefit-sharing obligations may still apply for the use of Marine Genetic Resource (MGR) in areas beyond national jurisdictions, as outlined in the `}
+          {`${prefix} a region beyond an EEZ. While this means there are no 
+          national ABS obligations under individual countries' 
+          jurisdiction, benefit-sharing obligations may still apply for the use of 
+          Marine Genetic Resource (MGR) in areas beyond national jurisdictions, as outlined in the `}
           <a href="https://www.un.org/bbnj/">BBNJ agreement</a>
-          {`. Although this agreement is not yet in force, its provisions, including obligations for MGR users, will apply retroactively once enacted.`}
+          {`. Although this agreement is not yet in force, its provisions, 
+          including obligations for MGR users, will apply retroactively once enacted.`}
         </p>
       </div>
     );

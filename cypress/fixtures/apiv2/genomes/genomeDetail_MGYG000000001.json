@@ -1,0 +1,48 @@
+{
+  "accession": "MGYG000000001",
+  "ena_genome_accession": null,
+  "ena_sample_accession": null,
+  "ncbi_genome_accession": null,
+  "img_genome_accession": null,
+  "patric_genome_accession": null,
+  "length": 123456,
+  "num_contigs": 10,
+  "n_50": 12345,
+  "gc_content": 0.51,
+  "type": "MAG",
+  "completeness": 95,
+  "contamination": 2,
+  "catalogue_id": "mar1",
+  "catalogue": {
+    "catalogue_id": "mar1",
+    "version": "1",
+    "name": "Marine MAGs",
+    "description": "Marine genomes catalogue",
+    "protein_catalogue_name": null,
+    "protein_catalogue_description": null,
+    "updated_at": "2024-10-01T00:00:00Z",
+    "result_directory": null,
+    "genome_count": 5,
+    "unclustered_genome_count": 8,
+    "ftp_url": "https://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/",
+    "pipeline_version_tag": "v1.0.0",
+    "catalogue_biome_label": "Marine",
+    "catalogue_type": "mag",
+    "other_stats": {},
+    "biome": {"biome_name": "Marine", "lineage": "root:Environmental:Marine"}
+  },
+  "downloads": [
+    {
+      "long_description": "Genome FASTA",
+      "file_type": "fna",
+      "url": "http://localhost/file.fna",
+      "download_type": "Genome files"
+    },
+    {
+      "long_description": "Annotations GFF",
+      "file_type": "gff",
+      "url": "http://localhost/file.gff",
+      "download_type": "Annotation files"
+    }
+  ]
+}

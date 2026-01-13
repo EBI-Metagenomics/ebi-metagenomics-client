@@ -48,10 +48,10 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
 
   const getAccessionFromCataloguesFirstGenome = async (): Promise<string> => {
     const genomeCatalogueSlug = catalogueID || selectedCatalogues[0];
-    const url = `${config.api}genome-catalogues/${genomeCatalogueSlug}/genomes?page=1&ordering=accession&page_size=1`;
+    const url = `${config.api_v2}genomes/catalogues/${genomeCatalogueSlug}/genomes?page=1&ordering=accession&page_size=1`;
     try {
       const response = await axios.get(url);
-      return response.data.data[0].attributes.accession;
+      return response.data.items[0].accession;
     } catch {
       return '';
     }

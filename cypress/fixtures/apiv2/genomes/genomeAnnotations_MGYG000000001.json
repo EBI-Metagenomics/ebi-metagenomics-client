@@ -1,0 +1,16 @@
+{
+  "annotations": {
+    "cog_categories": [
+      { "name": "Information storage and processing", "count": 10 },
+      { "name": "Cellular processes and signaling", "count": 8 }
+    ],
+    "kegg_classes": [
+      { "class_id": "A", "name": "Metabolism", "count": 12 },
+      { "class_id": "B", "name": "Genetic Information Processing", "count": 6 }
+    ],
+    "kegg_modules": [
+      { "name": "Module1", "count": 3 },
+      { "name": "Module2", "count": 2 }
+    ]
+  }
+}
