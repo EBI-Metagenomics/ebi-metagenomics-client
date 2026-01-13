@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import EMGTable from 'components/UI/EMGTable';
 import useApiData from 'hooks/data/useApiData';
-import { PaginatedList } from '@/interfaces';
+import { GenomeList, PaginatedList } from '@/interfaces';
 import Loading from 'components/UI/Loading';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
@@ -30,7 +30,7 @@ const GenomesTextSearch: React.FC = () => {
     stale: isStale,
     error,
     download,
-  } = useApiData<PaginatedList<any>>({
+  } = useApiData<GenomeList>({
     url: buildURL(),
   });
 
