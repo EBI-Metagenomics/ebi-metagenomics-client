@@ -33,7 +33,7 @@
     "@googlemaps/react-wrapper": "1.1.19",
     "@jonkoops/matomo-tracker-react": "^0.7.0",
     "@react-hooks-library/core": "^0.5.1",
-    "@sentry/react": "^6.17.2",
+    "@sentry/react": "^9.8.0",
     "@sentry/tracing": "^6.17.2",
     "@tippyjs/react": "4.2.6",
     "@visual-framework/vf-banner-elixir": "^1.0.0-alpha.2",
