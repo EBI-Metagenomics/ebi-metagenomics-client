@@ -104,7 +104,6 @@ const App: React.FC = () => {
                 <Route path="/about" element={<About />} />
                 <Route path="/help" element={<Help />} />
                 <Route path="/search-tools" element={<LandingPage />} />
-                {/* Branchwater card routes */}
                 <Route path="/branchwater-search" element={<Branchwater />} />
                 <Route path="/mag-search" element={<MagSearch />} />
                 <Route path="/gene-search" element={<GeneSearch />} />
