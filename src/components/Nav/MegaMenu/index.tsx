@@ -195,7 +195,7 @@ const MegaMenu: React.FC = () => {
                 <a
                   id="login-link"
                   className="vf-navigation__link vf-mega-menu__link"
-                  href="/metagenomics/login"
+                  href={`${config.basename}/login`}
                   onClick={() => setMenuVisible(false)}
                 >
                   Login
