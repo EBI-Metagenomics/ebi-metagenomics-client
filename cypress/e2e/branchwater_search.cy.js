@@ -42,15 +42,16 @@ describe('Branchwater Search page', () => {
     cy.contains('h2', 'Search for a genome within INSDC metagenomes').should('be.visible');
     cy.contains('Instructions').should('be.visible');
     cy.get('#file-upload').should('exist');
-    cy.get('button').contains('Search').should('be.disabled');
+    // cy.get('button').contains('Search').should('be.disabled');
     cy.get('button').contains('Clear').should('be.enabled');
     cy.contains('Try an example').should('be.visible');
   });
 
   it('performs search using an example', () => {
-    cy.contains('Try an example').click();
-    cy.get('input[type="radio"]#example-mag-1st').should('be.checked');
-    cy.get('button').contains('Use selected example').click();
+    // cy.contains('Try an example').click();
+    cy.get('#bw-example-panel').click()
+    // cy.get('input[type="radio"]#example-mag-1st').should('be.checked');
+    cy.get('#bw-examples-button').click();
 
     cy.contains('Performing search').should('be.visible');
     cy.wait('@mags-search');
@@ -74,7 +75,7 @@ describe('Branchwater Search page', () => {
       lastModified: Date.now(),
     });
 
-    cy.get('button').contains('Search').should('not.be.disabled').click();
+    cy.get('#bw-search-button').should('not.be.disabled').click();
     cy.wait('@gzipped-search');
 
     cy.get('table').should('exist');

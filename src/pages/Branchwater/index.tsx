@@ -446,6 +446,7 @@ const Branchwater = () => {
             />
 
             <button
+              id="bw-search-button"
               type="button"
               className="vf-button vf-button--sm vf-button--primary mg-button vf-u-margin__top--400"
               onClick={handleSearchClick}
@@ -486,7 +487,9 @@ const Branchwater = () => {
           className="vf-details"
           open={!isLoading && !searchResults.length}
         >
-          <summary className="vf-details--summary">Try an example</summary>
+          <summary id="bw-example-panel" className="vf-details--summary">
+            Try an example
+          </summary>
           <div className="vf-u-margin__top--200">
             <fieldset className="vf-form__fieldset">
               <legend className="vf-form__legend">Choose an organism</legend>
@@ -559,6 +562,7 @@ const Branchwater = () => {
               </div>
             </fieldset>
             <button
+              id="bw-examples-button"
               type="button"
               className="vf-button vf-button--sm vf-button--secondary"
               onClick={handleExampleSubmit}
