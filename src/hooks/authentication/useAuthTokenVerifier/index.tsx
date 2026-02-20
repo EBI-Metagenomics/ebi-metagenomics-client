@@ -23,10 +23,10 @@ const useAuthTokenVerifier = () => {
         setAuthToken(accessToken);
       }
     } catch (error) {
-      // On failure, clear token and user details.
+      // On failure, don't clear token and user details to persist login on reload.
       console.error(error);
-      setAuthToken(null);
-      setDetails(null);
+      // setAuthToken(null);
+      // setDetails(null);
     }
   }, [authToken, setAuthToken, setDetails, isAuthenticated]);
 };

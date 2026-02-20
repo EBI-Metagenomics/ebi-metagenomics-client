@@ -66,10 +66,21 @@ const ResetScroll = () => {
 };
 
 const App: React.FC = () => {
-  const [user, setUser] = useState<UserType | null>({
-    username: null,
-    isAuthenticated: false,
-    token: null,
+  const [user, setUser] = useState<UserType | null>(() => {
+    const token = localStorage.getItem('mgnify.v2.token');
+    const username = localStorage.getItem('mgnify.v2.username');
+    if (token && username) {
+      return {
+        username,
+        isAuthenticated: true,
+        token,
+      };
+    }
+    return {
+      username: null,
+      isAuthenticated: false,
+      token: null,
+    };
   });
   const [details, setDetails] = useState<UserDetails | null>([]);
   const value = useMemo<UserContextType>(
