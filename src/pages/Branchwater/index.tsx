@@ -485,7 +485,8 @@ const Branchwater = () => {
 
         <details
           className="vf-details"
-          open={!isLoading && !searchResults.length}
+          open={true}
+          // open={!isLoading && !searchResults.length}
         >
           <summary id="bw-example-panel" className="vf-details--summary">
             Try an example
