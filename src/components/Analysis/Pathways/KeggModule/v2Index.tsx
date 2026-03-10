@@ -1,31 +1,74 @@
 import React, { useContext } from 'react';
-import SlimVisualisationCard from 'components/Analysis/VisualisationCards/SlimVisualisationCard';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import { Download } from '@/interfaces';
+import { sortBy } from 'lodash-es';
+import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 
 const KeggModuleTab: React.FC = () => {
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
 
-  // This is used as a placeholder until the actual KEGG Module data is available on the API
-  const dataFile = analysisOverviewData?.downloads[0];
+  let dataFiles: Download[] | undefined =
+    analysisOverviewData?.downloads.filter(
+      (file: Download) =>
+        file.download_group === 'pathways_and_systems.kegg_modules'
+    );
 
-  if (!dataFile) return null;
+  if (dataFiles) {
+    dataFiles = sortBy(dataFiles, (file) => file.index_files?.length).reverse();
+  }
+
+  if (!dataFiles) {
+    return (
+      <div className="vf-stack vf-stack--200" data-cy="assembly-interpro-chart">
+        <p>No KEGG module files available</p>
+      </div>
+    );
+  }
 
   return (
     <div>
-      <SlimVisualisationCard fileData={dataFile}>
-        <div className="p-4">
-          <h3 className="text-lg font-medium mb-2">KEGG Modules</h3>
-          <p className="text-sm text-gray-600 mb-4">
-            KEGG Modules represent functional units in metabolic and signaling
-            pathways, providing insights into the completeness of biological
-            processes.
-          </p>
-          <p className="text-sm">
-            Download this file to view the complete KEGG Module annotations for
-            this analysis.
-          </p>
-        </div>
-      </SlimVisualisationCard>
+      <p className="text-sm text-gray-600 mb-4">
+        KEGG Modules represent functional units in metabolic and signaling
+        pathways, providing insights into the completeness of biological
+        processes.
+      </p>
+      {dataFiles.map((dataFile) => (
+        <DetailedVisualisationCard
+          ftpLink={dataFile.url}
+          title={dataFile.alias}
+          key={dataFile.alias}
+        >
+          <div className="p-4">
+            <h5>{dataFile.short_description}</h5>
+            <p className="vf-text text-body--1">{dataFile.long_description}</p>
+          </div>
+          {!!dataFile.index_files?.length && (
+            <>
+              <CompressedTSVTable
+                download={dataFile}
+                barChartSpec={{
+                  title: 'KEGG Modules',
+                  labelsCol: {
+                    id: 'module_accession',
+                    Header: 'Module identifier',
+                    accessor: (d) => d[1],
+                  },
+                  countsCol: {
+                    id: 'completeness',
+                    Header: 'Completeness',
+                    accessor: (d) => Number(d[2]),
+                  },
+                }}
+              />
+              <p className="text-sm">
+                Download this file to view the complete KEGG modules for this
+                analysis.
+              </p>
+            </>
+          )}
+        </DetailedVisualisationCard>
+      ))}
     </div>
   );
 };

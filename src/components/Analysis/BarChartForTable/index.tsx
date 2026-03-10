@@ -37,14 +37,18 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
     if (!data?.items) return [[], []];
     return unzip(
       data.items
-        .map((d, idx) => [
-          typeof labelAccessor === 'function'
-            ? labelAccessor(d, idx)
-            : get(d, labelAccessor),
-          typeof dataAccessor === 'function'
-            ? dataAccessor(d, idx)
-            : get(d, dataAccessor),
-        ])
+        .map((d, idx) => {
+          const countValue =
+            typeof dataAccessor === 'function'
+              ? dataAccessor(d, idx)
+              : get(d, dataAccessor);
+          return [
+            typeof labelAccessor === 'function'
+              ? labelAccessor(d, idx)
+              : get(d, labelAccessor),
+            Number.isNaN(countValue) ? 0 : countValue,
+          ];
+        })
         .slice(0, maxLabels)
     );
   }, [data.items, dataAccessor, labelAccessor, maxLabels]);

@@ -17,12 +17,13 @@ const tabs = [
   { label: 'antiSMASH', to: 'antismash' },
 ];
 
-const { useType } = createSharedQueryParamContext({
+const { useType, withQueryParamProvider } = createSharedQueryParamContext({
   type: SharedTextQueryParam(PARAMETER_DEFAULT),
 });
 
 const PathwaysSubPage: React.FC = () => {
   const [type] = useType();
+  console.log('PATHWAYS type ', type);
   return (
     <div>
       <p>
@@ -56,4 +57,4 @@ const PathwaysSubPage: React.FC = () => {
   );
 };
 
-export default PathwaysSubPage;
+export default withQueryParamProvider(PathwaysSubPage);

@@ -46,6 +46,8 @@ const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
   const columnsAreFirstRowOfFirstPage = !columns.length;
   const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
 
+  console.log('pageData ', pageData);
+
   useEffect(() => {
     let cancelled = false;
 
@@ -116,7 +118,17 @@ const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
   }, [pageNum, bgzipReader, estimatedPageSize, columnsAreFirstRowOfFirstPage]);
 
   const viewModeSelector = barChartSpec ? (
-    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        position: 'sticky',
+        top: 0,
+        zIndex: 1,
+        backgroundColor: 'white',
+        padding: '0.5rem 0',
+      }}
+    >
       <button
         type="button"
         className={`vf-search__button | vf-button vf-button--primary mg-text-search-button vf-button--sm`}
