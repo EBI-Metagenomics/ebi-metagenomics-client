@@ -6,7 +6,7 @@ import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/De
 import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 
 const KeggModuleTab: React.FC = () => {
-  const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
+  const { overviewData: analysisData } = useContext(AnalysisContext);
 
   let dataFiles: Download[] | undefined =
     analysisOverviewData?.downloads.filter(
@@ -27,7 +27,7 @@ const KeggModuleTab: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="vf-stack">
       <p className="text-sm text-gray-600 mb-4">
         KEGG Modules represent functional units in metabolic and signaling
         pathways, providing insights into the completeness of biological
