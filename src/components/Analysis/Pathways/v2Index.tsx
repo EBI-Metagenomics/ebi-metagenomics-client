@@ -23,7 +23,6 @@ const { useType, withQueryParamProvider } = createSharedQueryParamContext({
 
 const PathwaysSubPage: React.FC = () => {
   const [type] = useType();
-  console.log('PATHWAYS type ', type);
   return (
     <div>
       <p>

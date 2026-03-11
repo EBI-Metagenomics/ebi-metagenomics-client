@@ -46,8 +46,6 @@ const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
   const columnsAreFirstRowOfFirstPage = !columns.length;
   const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
 
-  console.log('pageData ', pageData);
-
   useEffect(() => {
     let cancelled = false;
 
