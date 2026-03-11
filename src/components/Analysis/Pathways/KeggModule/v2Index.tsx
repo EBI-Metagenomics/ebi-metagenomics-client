@@ -6,7 +6,7 @@ import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/De
 import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 
 const KeggModuleTab: React.FC = () => {
-  const { overviewData: analysisData } = useContext(AnalysisContext);
+  const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
 
   let dataFiles: Download[] | undefined =
     analysisOverviewData?.downloads.filter(
