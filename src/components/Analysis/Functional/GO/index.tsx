@@ -17,7 +17,7 @@ const tabs = [
 
 const GO: React.FC = () => {
   const { overviewData } = useContext(AnalysisContext);
-  const [chart] = useQueryParamState('chart');
+  const [chart] = useQueryParamState('chart');  
   const { data, loading, error } = useMGnifyData(
     overviewData ? `analyses/${overviewData.id}/go-slim` : undefined
   );
