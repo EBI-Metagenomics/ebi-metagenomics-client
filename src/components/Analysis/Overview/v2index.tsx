@@ -135,10 +135,13 @@ const AnalysisOverview: React.FC = () => {
   ];
 
   const pipelineSetMeta =
-    config.pipelines[data?.pipeline_version.toLowerCase() || ''] || {};
-  const pipelineMeta = data
-    ? pipelineSetMeta[data.experiment_type.toLowerCase()]
-    : config.pipelines['default']['default'];
+    config.pipelines[data?.pipeline_version.toLowerCase() || ''] ||
+    config.pipelines['default'] ||
+    {};
+  const pipelineMeta =
+    (data && pipelineSetMeta[data.experiment_type.toLowerCase()]) ||
+    pipelineSetMeta['default'] ||
+    config.pipelines['default']['default'];
 
   const pipelineInformationItems = [
     {
