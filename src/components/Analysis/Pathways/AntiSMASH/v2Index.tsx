@@ -20,7 +20,7 @@ const AntiSmashTab: React.FC = () => {
 
   if (!dataFiles) {
     return (
-      <div className="vf-stack vf-stack--200" data-cy="assembly-interpro-chart">
+      <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
         <p>No antiSMASH files available</p>
       </div>
     );
@@ -43,30 +43,28 @@ const AntiSmashTab: React.FC = () => {
             <h5>{dataFile.short_description}</h5>
             <p className="vf-text text-body--1">{dataFile.long_description}</p>
           </div>
-          {!!dataFile.index_files?.length && (
-            <>
-              <CompressedTSVTable
-                download={dataFile}
-                barChartSpec={{
-                  title: 'antiSMASH Clusters',
-                  labelsCol: {
-                    id: 'cluster_type',
-                    Header: 'Cluster type',
-                    accessor: (d) => d[1],
-                  },
-                  countsCol: {
-                    id: 'count',
-                    Header: 'Count',
-                    accessor: (d) => Number(d[2]),
-                  },
-                }}
-              />
-              <p className="text-sm">
-                Download this file to view the complete antiSMASH cluster
-                annotations for this analysis.
-              </p>
-            </>
-          )}
+          <div className="p-4">
+            <CompressedTSVTable
+              download={dataFile}
+              barChartSpec={{
+                title: 'antiSMASH Clusters',
+                labelsCol: {
+                  id: 'cluster_type',
+                  Header: 'Cluster type',
+                  accessor: (d) => d[1],
+                },
+                countsCol: {
+                  id: 'count',
+                  Header: 'Count',
+                  accessor: (d) => Number(d[2]),
+                },
+              }}
+            />
+            <p className="text-sm mt-4">
+              Download this file to view the complete antiSMASH cluster
+              annotations for this analysis.
+            </p>
+          </div>
         </DetailedVisualisationCard>
       ))}
     </div>

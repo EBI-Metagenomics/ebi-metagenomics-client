@@ -4,6 +4,7 @@ import { Download } from '@/interfaces';
 import { sortBy } from 'lodash-es';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import CompressedTSVTable from 'components/UI/CompressedTSVTable';
+import GenomePropertiesVisualiser from './GenomePropertiesVisualiser';
 
 const GenomePropertiesTab: React.FC = () => {
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
@@ -11,7 +12,8 @@ const GenomePropertiesTab: React.FC = () => {
   let dataFiles: Download[] | undefined =
     analysisOverviewData?.downloads.filter(
       (file: Download) =>
-        file.download_group === 'pathways_and_systems.genome_properties'
+        file.download_group === 'pathways_and_systems.genome_properties' &&
+        (file.alias.includes('tsv') || file.alias.includes('json'))
     );
 
   if (dataFiles) {
@@ -20,7 +22,7 @@ const GenomePropertiesTab: React.FC = () => {
 
   if (!dataFiles) {
     return (
-      <div className="vf-stack vf-stack--200" data-cy="assembly-interpro-chart">
+      <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
         <p>No Genome properties files available</p>
       </div>
     );
@@ -33,42 +35,52 @@ const GenomePropertiesTab: React.FC = () => {
         pathways, genome architecture, and biological systems, providing
         insights into the functional capabilities of organisms.
       </p>
-      {dataFiles.map((dataFile) => (
-        <DetailedVisualisationCard
-          ftpLink={dataFile.url}
-          title={dataFile.alias}
-          key={dataFile.alias}
-        >
-          <div className="p-4">
-            <h5>{dataFile.short_description}</h5>
-            <p className="vf-text text-body--1">{dataFile.long_description}</p>
-          </div>
-          {!!dataFile.index_files?.length && (
-            <>
-              <CompressedTSVTable
-                download={dataFile}
-                barChartSpec={{
-                  title: 'Genome Properties',
-                  labelsCol: {
-                    id: 'property_name',
-                    Header: 'Property name',
-                    accessor: (d) => d[1],
-                  },
-                  countsCol: {
-                    id: 'result',
-                    Header: 'Result',
-                    accessor: (d) => d[2],
-                  },
-                }}
-              />
-              <p className="text-sm">
+
+      {dataFiles.map((dataFile, index) => {
+        const viewModeKey = dataFile.alias || `genome-properties-${index}`;
+        return (
+          <DetailedVisualisationCard
+            ftpLink={dataFile.url}
+            title={dataFile.alias}
+            key={viewModeKey}
+          >
+            <div className="p-4">
+              <h5>{dataFile.short_description}</h5>
+              <p className="vf-text text-body--1">
+                {dataFile.long_description}
+              </p>
+            </div>
+
+            <div className="p-4">
+              {dataFile.alias.includes('json.gz') ? (
+                <GenomePropertiesVisualiser download={dataFile} />
+              ) : (
+                <CompressedTSVTable
+                  download={dataFile}
+                  barChartSpec={{
+                    title: 'Genome Properties',
+                    labelsCol: {
+                      id: 'property_name',
+                      Header: 'Property name',
+                      accessor: (d) => d[1],
+                    },
+                    countsCol: {
+                      id: 'result',
+                      Header: 'Result',
+                      accessor: (d) => d[2],
+                    },
+                  }}
+                />
+              )}
+
+              <p className="text-sm mt-4">
                 Download this file to view the complete Genome Properties
                 annotations for this analysis.
               </p>
-            </>
-          )}
-        </DetailedVisualisationCard>
-      ))}
+            </div>
+          </DetailedVisualisationCard>
+        );
+      })}
     </div>
   );
 };

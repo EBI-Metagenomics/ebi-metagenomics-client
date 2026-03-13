@@ -11,16 +11,6 @@ export interface GziBlock {
   uncompressedOffset: number;
 }
 
-/**
- * Service for handling BGZF (Blocked GNU Zip Format) compressed files with random access capabilities.
- * Specifically: allows the random fetching of "pages" (blocks) of text files like TSV and GFF.
- *
- *
- * @param download - Download object containing URL and index file information
- * @param autoInitialize - Whether to automatically initialize the service (default: true)
- * @param leadingTsvCommentChars - Characters to treat as comment lines (default: "#"),
- * in which case those lines are removed from pages (and empty pages are made invisible)
- */
 export class BGZipService {
   private gziIndex: GziBlock[] = [];
 
@@ -28,18 +18,12 @@ export class BGZipService {
 
   private readonly dataFileUrl: string;
 
-  private readonly indexFileUrl: string;
+  private readonly indexFileUrl?: string;
 
   private readonly leadingTsvCommentChars: string;
 
   private firstPageIsOnlyComments: boolean = false;
 
-  /**
-   * Generates the full URL for a GZI index file based on the download object
-   * @param download - Download object containing URL and index file information
-   * @param index_type - E.g. gzi (default) or fai
-   * @returns The full URL for the GZI index file
-   */
   public static getIndexFileUrl(
     download: Download,
     index_type: string = 'gzi'
@@ -63,21 +47,25 @@ export class BGZipService {
     this.dataFileUrl = this.download.url;
     this.leadingTsvCommentChars = leadingTsvCommentChars;
     const idx = BGZipService.getIndexFileUrl(this.download);
+
     if (idx) {
       this.indexFileUrl = idx;
-    } else {
-      throw new Error('No index file found for BGZip download');
     }
-    if (autoInitialize) {
+
+    if (autoInitialize && this.indexFileUrl) {
       this.initialize().then(() => console.groupEnd());
     }
   }
 
-  /**
-   * Initialize the service by loading the index file
-   */
   public async initialize(): Promise<boolean> {
     if (this.isInitialized) return true;
+
+    if (!this.indexFileUrl) {
+      console.warn(
+        'No index file found for BGZip download; random-access BGZF methods will not be available.'
+      );
+      return false;
+    }
 
     try {
       console.groupCollapsed('Initialize BGZip Service');
@@ -96,7 +84,6 @@ export class BGZipService {
       }
 
       this.gziIndex = parsedGziMapping;
-
       this.isInitialized = true;
       return true;
     } catch (err) {
@@ -140,10 +127,6 @@ export class BGZipService {
       });
     }
 
-    /*
-     Handle edge cases: if first uncompressed offset > 0, prepend artificial entry for offset 0.
-     If the index is empty, make fake block of the entire file unless it seems bizarrely large.
-    */
     if (blocks.length === 0) {
       console.log('Index file is empty');
       const size = await this.getFileSize();
@@ -158,6 +141,7 @@ export class BGZipService {
         uncompressedOffset: 0,
       });
     }
+
     if (blocks[0].uncompressedOffset > 0) {
       console.warn(
         'First index entry uncompressed offset > 0, adding synthetic entry at 0'
@@ -182,22 +166,22 @@ export class BGZipService {
     if (block.length < 18) {
       throw new Error('Block too small to be valid BGZF');
     }
-    // Block size stored at bytes 16 and 17 (0-based)
+
     const blockSize = block[16] + (block[17] << 8) + 1;
     if (blockSize > block.length) {
       throw new Error(
         `Block size ${blockSize} larger than buffer length ${block.length}`
       );
     }
+
     const deflateStart = 18;
-    const deflateEnd = blockSize - 8; // footer 8 bytes
+    const deflateEnd = blockSize - 8;
     const deflateData = block.subarray(deflateStart, deflateEnd);
     console.debug(`Decompressing block of size ${deflateData.length}`);
     return pako.inflateRaw(deflateData);
   }
 
   async fetchAndDecompressBlock(compressedOffset: number): Promise<Uint8Array> {
-    // BGZF max block size is 64KB (65536 bytes)
     const maxBlockSize = 65536;
     const start = Number(compressedOffset);
     const end = start + maxBlockSize - 1;
@@ -218,16 +202,13 @@ export class BGZipService {
     return this.firstPageIsOnlyComments ? pageNum + 1 : pageNum;
   }
 
-  /**
-   * Fetches one full BGZF block as a page.
-   */
   async readPage(pageNum: number): Promise<Uint8Array> {
     if (!this.isInitialized) {
       throw new Error('Service not initialized yet');
     }
     if (pageNum < 0 || pageNum >= this.gziIndex.length) {
       console.log(`No data for page ${pageNum}`);
-      return new Uint8Array(0); // Out of range → empty
+      return new Uint8Array(0);
     }
     console.debug(
       `Fetching block ${pageNum} from ${this.gziIndex.length} index entries`
@@ -246,7 +227,6 @@ export class BGZipService {
     const decoder = new TextDecoder('utf-8');
     const text = decoder.decode(pageBytes);
 
-    // Split lines and filter empty lines
     const lines = text
       .split('\n')
       .filter(
@@ -254,6 +234,7 @@ export class BGZipService {
           line.trim().length > 0 &&
           !line.startsWith(this.leadingTsvCommentChars)
       );
+
     console.debug(`Lines ${lines.length}`);
     if (lines.length === 0 && pageNum === 1) {
       this.firstPageIsOnlyComments = true;
@@ -264,7 +245,6 @@ export class BGZipService {
       return this.readPageAsTSV(pageNum);
     }
 
-    // Split columns by tab
     const rows = lines.map((line) => line.split('\t'));
     console.debug(`Rows ${rows.length}`);
     console.groupEnd();
@@ -272,8 +252,91 @@ export class BGZipService {
   }
 
   /**
-   * Returns the total number of pages = total BGZF blocks
+   * Reads a full ordinary .gz file into text.
+   * This is for non-indexed gzip files like .json.gz, not BGZF random access.
    */
+  async readGzipFileAsText(): Promise<string> {
+    console.groupCollapsed('Read full gzip file as text');
+
+    const response = await fetch(this.dataFileUrl);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch gzip file: ${response.status} ${response.statusText}`
+      );
+    }
+
+    const compressed = new Uint8Array(await response.arrayBuffer());
+    console.debug(`Compressed gzip file size: ${compressed.length}`);
+
+    const decompressed = pako.ungzip(compressed);
+    console.debug(`Decompressed gzip file size: ${decompressed.length}`);
+
+    const text = new TextDecoder('utf-8').decode(decompressed);
+
+    console.groupEnd();
+    return text;
+  }
+
+  /**
+   * Reads a full ordinary .json.gz file and parses it as JSON.
+   */
+  async readGzipJSON<T = unknown>(): Promise<T> {
+    const text = await this.readGzipFileAsText();
+
+    try {
+      return JSON.parse(text) as T;
+    } catch (error) {
+      throw new Error(
+        `Failed to parse JSON from gzip file: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
+  }
+
+  /**
+   * Reads Genome Properties JSON and converts it into the same
+   * presence/absence count map used by the hierarchy visualiser.
+   */
+  async readGenomePropertiesCountsFromGzipJSON(): Promise<
+    Record<string, number>
+  > {
+    type GenomePropertyJSON = Record<
+      string,
+      {
+        property?: string;
+        values?: Record<string, unknown>;
+        name?: string;
+        steps?: unknown[];
+      }
+    >;
+
+    const data = await this.readGzipJSON<GenomePropertyJSON>();
+    const counts: Record<string, number> = {};
+
+    Object.entries(data).forEach(([fallbackId, propertyRecord]) => {
+      const id = propertyRecord.property || fallbackId;
+      const values = propertyRecord.values || {};
+
+      const accessionKey = Object.keys(values).find((key) => key !== 'TOTAL');
+
+      if (!accessionKey) {
+        counts[id] = 0;
+        return;
+      }
+
+      const rawValue = values[accessionKey];
+
+      const normalizedValue =
+        typeof rawValue === 'string' ? rawValue.toUpperCase() : '';
+
+      counts[id] =
+        normalizedValue === 'YES' || normalizedValue === 'PARTIAL' ? 1 : 0;
+    });
+
+    return counts;
+  }
+
   getPageCount() {
     console.debug(`Page count is ${this.gziIndex.length}`);
     return this.firstPageIsOnlyComments
