@@ -21,7 +21,7 @@ const KeggModuleTab: React.FC = () => {
   if (!dataFiles) {
     return (
       <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
-        <p>No KEGG module files available</p>
+        <p>No KEGG modules available</p>
       </div>
     );
   }
