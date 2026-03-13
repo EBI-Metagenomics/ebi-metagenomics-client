@@ -330,6 +330,7 @@ export class BGZipService {
       const normalizedValue =
         typeof rawValue === 'string' ? rawValue.toUpperCase() : '';
 
+      // TODO: review this rule
       counts[id] =
         normalizedValue === 'YES' || normalizedValue === 'PARTIAL' ? 1 : 0;
     });
