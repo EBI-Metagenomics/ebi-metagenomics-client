@@ -44,15 +44,20 @@ export class BGZipService {
     download: Download,
     index_type: string = 'gzi'
   ): string | undefined {
-    const relative_url = find(
+    const indexFile = find(
       download.index_files ?? [],
       (index) => index.index_type === index_type
-    )?.relative_url;
-
-    return (
-      relative_url &&
-      new URL(relative_url, download.url.replace(/[^/]+$/, '')).toString()
     );
+
+    if (!indexFile) return undefined;
+
+    // Prefer absolute pre-signed URL from API when available
+    if (indexFile.url) return indexFile.url;
+
+    return new URL(
+      indexFile.relative_url,
+      download.url.replace(/[^/]+$/, '')
+    ).toString();
   }
 
   constructor(

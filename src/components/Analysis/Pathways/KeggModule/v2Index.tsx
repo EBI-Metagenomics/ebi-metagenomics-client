@@ -9,7 +9,9 @@ const KeggModuleTab: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
 
   let dataFiles: Download[] | undefined = analysisData?.downloads.filter(
-    (file) => file.download_group === 'pathways_and_systems.kegg_modules'
+    (file) =>
+      file.download_group === 'pathways_and_systems.kegg_modules' &&
+      file.alias.includes('_summary')
   );
   if (dataFiles) {
     dataFiles = sortBy(dataFiles, (file) => file.index_files?.length).reverse();

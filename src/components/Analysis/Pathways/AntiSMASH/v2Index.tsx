@@ -9,7 +9,9 @@ const AntiSmashTab: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
 
   let dataFiles: Download[] | undefined = analysisData?.downloads.filter(
-    (file) => file.download_group === 'pathways_and_systems.antismash'
+    (file) =>
+      file.download_group === 'pathways_and_systems.antismash' &&
+      file.alias.includes('_summary')
   );
   if (dataFiles) {
     dataFiles = sortBy(dataFiles, (file) => file.index_files?.length).reverse();
