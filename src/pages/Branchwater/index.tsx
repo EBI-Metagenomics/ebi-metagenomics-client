@@ -1,9 +1,9 @@
 import React, {
-  useEffect,
-  useState,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import useQueryParamState, {
   createSharedQueryParamContextForTable,
@@ -21,14 +21,14 @@ import useBranchwaterResults, {
   type BranchwaterFilters,
 } from 'components/Branchwater/common/useBranchwaterResults';
 import {
-  getContainmentHistogram,
+  type BranchwaterResult as SearchResult,
+  downloadBranchwaterCSV,
   getCaniHistogram,
+  getContainmentHistogram,
+  getCountryColor,
   getScatterData,
   getTotalCountryCount,
-  getCountryColor,
   processBranchwaterResults,
-  downloadBranchwaterCSV,
-  type BranchwaterResult as SearchResult,
 } from 'utils/branchwater';
 import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
 import BranchwaterLogo from 'images/branchwater_logo.png';
@@ -59,9 +59,7 @@ L.Marker.prototype.options.icon = DefaultIcon;
 const Branchwater = () => {
   const sourmash = useRef<HTMLMgnifySourmashComponentElement>(null);
   const [signatures, setSignatures] = useState<Record<string, string>>({});
-  const [signatureErrors, setSignatureErrors] = useState<
-    Record<string, string>
-  >({});
+  const [, setSignatureErrors] = useState<Record<string, string>>({});
   // const [targetDatabase, setTargetDatabase] = useState<string>('MAGs');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
@@ -143,12 +141,6 @@ const Branchwater = () => {
     assayTypeParam,
   ]);
 
-  // TODO: bring back request button
-  // const handleRequestAnalysis = (entry: SearchResult) => {
-  //   const submitUrl = `https://www.ebi.ac.uk/metagenomics/submit?accession=${entry.acc}&bioproject=${entry.bioproject}`;
-  //   window.open(submitUrl, '_blank');
-  // };
-
   const {
     filteredResults,
     sortedResults,
@@ -207,19 +199,19 @@ const Branchwater = () => {
   }, [searchResults]);
 
   useEffect(() => {
-    // Only import the component if we are on the client side
-    // import('mgnify-sourmash-component');
-
     let sourmashElement: HTMLMgnifySourmashComponentElement | null;
+
     const sketchedAll = (evt: Event): void => {
       const event = evt as CustomEvent<SourmashEventDetail>;
       setSignatures(event.detail.signatures);
       setSignatureErrors(event.detail.errors);
     };
+
     const changedFiles = (): void => {
       setSignatures({});
       setSignatureErrors({});
     };
+
     if (sourmash.current) {
       sourmashElement = sourmash.current;
       sourmashElement.addEventListener('sketchedall', sketchedAll);
@@ -240,14 +232,13 @@ const Branchwater = () => {
 
     if (Object.keys(signatures).length > 0) {
       setIsLoading(true);
-      // Use the first signature for now, as Branchwater seems to expect one signature
-      const signature = Object.values(signatures)[0];
+      const sigString = Object.values(signatures)[0];
 
       axios
         .post(
           `${config.api_branchwater}`,
           {
-            signatures: signature,
+            signatures: sigString,
           },
           {
             headers: {
@@ -278,7 +269,6 @@ const Branchwater = () => {
       [field]: value,
     }));
 
-    // Update the corresponding query parameter
     switch (field) {
       case 'query':
         setTextQuery(value);
@@ -305,10 +295,10 @@ const Branchwater = () => {
     // handled by EMGTable through shared query params
   };
 
-  // Handle page change
   const handlePageChange = (pageNumber: number): void => {
     setPageQP(pageNumber);
   };
+
   const downloadCSV = () => {
     downloadBranchwaterCSV(sortedResults);
   };
@@ -319,7 +309,6 @@ const Branchwater = () => {
     setSignatureErrors({});
     setSearchResults([]);
 
-    // Clear query parameters
     setTextQuery('');
     setCaniRange('');
     setContainmentRange('');
@@ -452,7 +441,11 @@ const Branchwater = () => {
       <div>
         <form className="vf-stack vf-stack--400">
           <div className="vf-form__item vf-stack">
-            <mgnify-sourmash-component id="sourmash" ref={sourmash} />
+            <mgnify-sourmash-component
+              id="sourmash"
+              ref={sourmash}
+              ksize={21}
+            />
 
             <div style={{ display: 'flex', gap: '10px' }}>
               <button
