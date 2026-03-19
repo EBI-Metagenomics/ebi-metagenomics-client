@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 import useQueryParamState, {
   createSharedQueryParamContextForTable,
 } from '@/hooks/queryParamState/useQueryParamState';
@@ -28,6 +34,11 @@ import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/quer
 import BranchwaterLogo from 'images/branchwater_logo.png';
 import InfoBanner from 'components/UI/InfoBanner';
 
+type SourmashEventDetail = {
+  signatures: Record<string, string>;
+  errors: Record<string, string>;
+};
+
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
   'branchwaterDetailed',
   getPrefixedBranchwaterConfig('branchwaterDetailed'),
@@ -46,7 +57,11 @@ const DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 const Branchwater = () => {
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const sourmash = useRef<HTMLMgnifySourmashComponentElement>(null);
+  const [signatures, setSignatures] = useState<Record<string, string>>({});
+  const [signatureErrors, setSignatureErrors] = useState<
+    Record<string, string>
+  >({});
   // const [targetDatabase, setTargetDatabase] = useState<string>('MAGs');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
@@ -191,15 +206,47 @@ const Branchwater = () => {
     setMapPinsLimit(1000);
   }, [searchResults]);
 
+  useEffect(() => {
+    // Only import the component if we are on the client side
+    import('mgnify-sourmash-component');
+
+    let sourmashElement: HTMLMgnifySourmashComponentElement | null;
+    const sketchedAll = (evt: Event): void => {
+      const event = evt as CustomEvent<SourmashEventDetail>;
+      setSignatures(event.detail.signatures);
+      setSignatureErrors(event.detail.errors);
+    };
+    const changedFiles = (): void => {
+      setSignatures({});
+      setSignatureErrors({});
+    };
+    if (sourmash.current) {
+      sourmashElement = sourmash.current;
+      sourmashElement.addEventListener('sketchedall', sketchedAll);
+      sourmashElement.addEventListener('change', changedFiles);
+    }
+    return () => {
+      if (sourmashElement) {
+        sourmashElement.removeEventListener('sketchedall', sketchedAll);
+        sourmashElement.removeEventListener('change', changedFiles);
+      }
+    };
+  }, []);
+
   const handleSearchClick = (
     event: React.MouseEvent<HTMLButtonElement>
   ): void => {
     event.preventDefault();
 
-    if (uploadedFile) {
+    if (Object.keys(signatures).length > 0) {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append('fasta', uploadedFile);
+      // Use the first signature for now, as Branchwater /gzipped seems to expect one file
+      const [fileName, signature] = Object.entries(signatures)[0];
+      const blob = new Blob([signature], { type: 'application/json' });
+      const file = new File([blob], fileName.replace(/\.[^/.]+$/, '') + '.sig');
+
+      formData.append('fasta', file);
       axios
         .post(`${config.api_branchwater}/gzipped`, formData, {
           headers: {
@@ -265,7 +312,9 @@ const Branchwater = () => {
   };
 
   const handleClearClick = (): void => {
-    setUploadedFile(null);
+    sourmash.current?.clear();
+    setSignatures({});
+    setSignatureErrors({});
     setSearchResults([]);
 
     // Clear query parameters
@@ -289,45 +338,13 @@ const Branchwater = () => {
     });
     setDetailedOrder('-containment');
     setPageQP(1);
-    const fileInput = document.getElementById(
-      'file-upload'
-    ) as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = '';
-    }
   };
 
   const handleExampleSubmit = () => {
-    setUploadedFile(null);
+    sourmash.current?.clear();
+    setSignatures({});
+    setSignatureErrors({});
     setSearchResults([]);
-
-    // Clear query parameters
-    setTextQuery('');
-    setCaniRange('');
-    setContainmentRange('');
-    setLocationParam('');
-    setOrganismParam('');
-    setAssayTypeParam('');
-
-    setFilters({
-      acc: '',
-      assay_type: '',
-      bioproject: '',
-      collection_date_sam: '',
-      containment: '',
-      geo_loc_name_country_calc: '',
-      organism: '',
-      query: '',
-      cani: '',
-    });
-    setDetailedOrder('-containment');
-    setPageQP(1);
-    const fileInput = document.getElementById(
-      'file-upload'
-    ) as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = '';
-    }
 
     setIsLoading(true);
     const examples = [
@@ -405,7 +422,8 @@ const Branchwater = () => {
             file).
           </p>
           <p className="vf-text-body vf-text-body--3">
-            The file is then sent to our servers for processing.
+            The file is then sketched in your browser and sent to our servers
+            for processing.
           </p>
           <p className="vf-text-body vf-text-body--3">
             This search engine searches for the containment of a query genome
@@ -432,36 +450,27 @@ const Branchwater = () => {
       <div>
         <form className="vf-stack vf-stack--400">
           <div className="vf-form__item vf-stack">
-            <label className="vf-form__label" htmlFor="file-upload">
-              Upload file
-            </label>
-            <input
-              id="file-upload"
-              type="file"
-              accept=".fasta,.fna,.gz,.sig"
-              onChange={(e) =>
-                setUploadedFile(e.target.files ? e.target.files[0] : null)
-              }
-              className="vf-form__input"
-            />
+            <mgnify-sourmash-component id="sourmash" ref={sourmash} />
 
-            <button
-              type="button"
-              className="vf-button vf-button--sm vf-button--primary mg-button vf-u-margin__top--400"
-              onClick={handleSearchClick}
-              disabled={!uploadedFile || isLoading}
-            >
-              Search
-            </button>
-            <button
-              id="clear-button-mag"
-              type="button"
-              className="vf-button vf-button--sm vf-button--tertiary"
-              onClick={handleClearClick}
-              disabled={isLoading}
-            >
-              Clear
-            </button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                type="button"
+                className="vf-button vf-button--sm vf-button--primary mg-button vf-u-margin__top--400"
+                onClick={handleSearchClick}
+                disabled={Object.keys(signatures).length === 0 || isLoading}
+              >
+                Search
+              </button>
+              <button
+                id="clear-button-mag"
+                type="button"
+                className="vf-button vf-button--sm vf-button--tertiary vf-u-margin__top--400"
+                onClick={handleClearClick}
+                disabled={isLoading}
+              >
+                Clear
+              </button>
+            </div>
           </div>
         </form>
 
