@@ -240,20 +240,22 @@ const Branchwater = () => {
 
     if (Object.keys(signatures).length > 0) {
       setIsLoading(true);
-      const formData = new FormData();
-      // Use the first signature for now, as Branchwater /gzipped seems to expect one file
-      const [fileName, signature] = Object.entries(signatures)[0];
-      const blob = new Blob([signature], { type: 'application/json' });
-      const file = new File([blob], fileName.replace(/\.[^/.]+$/, '') + '.sig');
+      // Use the first signature for now, as Branchwater seems to expect one signature
+      const signature = Object.values(signatures)[0];
 
-      formData.append('fasta', file);
       axios
-        .post(`${config.api_branchwater}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Accept: '*/*',
+        .post(
+          `${config.api_branchwater}`,
+          {
+            signatures: signature,
           },
-        })
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: '*/*',
+            },
+          }
+        )
         .then((response) => {
           const { resultsArray } = processBranchwaterResults(response.data);
           setSearchResults(resultsArray);
