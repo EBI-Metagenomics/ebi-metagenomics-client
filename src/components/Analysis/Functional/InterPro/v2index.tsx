@@ -22,7 +22,7 @@ const InterPro: React.FC = () => {
 
   if (!dataFiles) {
     return (
-      <div className="vf-stack vf-stack--200" data-cy="assembly-interpro-chart">
+      <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
         <p>No InterPro identifiers file available</p>
       </div>
     );

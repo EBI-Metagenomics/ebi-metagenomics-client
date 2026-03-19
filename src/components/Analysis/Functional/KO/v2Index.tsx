@@ -13,7 +13,7 @@ const KOTab: React.FC = () => {
 
   if (!dataFile) {
     return (
-      <div className="vf-stack vf-stack--200" data-cy="assembly-interpro-chart">
+      <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
         <p>No KO identifiers file available</p>
       </div>
     );
