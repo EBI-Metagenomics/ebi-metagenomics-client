@@ -208,7 +208,7 @@ const Branchwater = () => {
 
   useEffect(() => {
     // Only import the component if we are on the client side
-    import('mgnify-sourmash-component');
+    // import('mgnify-sourmash-component');
 
     let sourmashElement: HTMLMgnifySourmashComponentElement | null;
     const sketchedAll = (evt: Event): void => {
@@ -248,7 +248,7 @@ const Branchwater = () => {
 
       formData.append('fasta', file);
       axios
-        .post(`${config.api_branchwater}/gzipped`, formData, {
+        .post(`${config.api_branchwater}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Accept: '*/*',
