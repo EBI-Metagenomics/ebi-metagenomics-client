@@ -30,3 +30,5 @@ config.private.json
 
 .sha1.sha1
 /npm-debug.log
+
+public/mgnify-sourmash-component

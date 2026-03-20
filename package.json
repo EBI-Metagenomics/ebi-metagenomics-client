@@ -23,7 +23,8 @@
     "eslint": "eslint src",
     "eslint:fix": "eslint src --fix",
     "prettier": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "node scripts/copy-mgnify-sourmash-component-assets.mjs"
   },
   "author": "MGnify Team",
   "license": "ISC",
