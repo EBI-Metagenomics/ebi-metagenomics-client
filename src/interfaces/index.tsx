@@ -27,7 +27,7 @@ export interface Download {
   url: string;
   index_files?: {
     index_type: string;
-    relative_url: string;
+    url: string;
   }[];
 }
 

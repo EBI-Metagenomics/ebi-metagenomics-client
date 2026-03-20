@@ -38,11 +38,11 @@
       "index_files": [
         {
           "index_type": "gzi",
-          "relative_url": "ERZ857107_filtered_contigs.fasta.gz.gzi"
+          "url": "http://127.0.0.1:5055/apiv2/analyses/contigviewer/ERZ857107_filtered_contigs.fasta.gz.gzi"
         },
         {
           "index_type": "fai",
-          "relative_url": "ERZ857107_filtered_contigs.fasta.gz.fai"
+          "url": "http://127.0.0.1:5055/apiv2/analyses/contigviewer/ERZ857107_filtered_contigs.fasta.gz.fai"
         }
       ],
       "url": "http://127.0.0.1:5055/apiv2/analyses/contigviewer/ERZ857107_filtered_contigs.fasta.gz"
@@ -69,7 +69,7 @@
       "index_files": [
         {
           "index_type": "gzi",
-          "relative_url": "ERZ857107_go_summary.tsv.gz.gzi"
+          "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/go/ERZ857107_go_summary.tsv.gz.gzi"
         }
       ],
       "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/go/ERZ857107_go_summary.tsv.gz"
@@ -85,7 +85,7 @@
       "index_files": [
         {
           "index_type": "gzi",
-          "relative_url": "ERZ857107_goslim_summary.tsv.gz.gzi"
+          "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/go/ERZ857107_goslim_summary.tsv.gz.gzi"
         }
       ],
       "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/go/ERZ857107_goslim_summary.tsv.gz"
@@ -101,7 +101,7 @@
       "index_files": [
         {
           "index_type": "gzi",
-          "relative_url": "ERZ857107_interpro_summary.tsv.gz.gzi"
+          "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/interpro/ERZ857107_interpro_summary.tsv.gz.gzi"
         }
       ],
       "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/interpro/ERZ857107_interpro_summary.tsv.gz"
@@ -117,7 +117,7 @@
       "index_files": [
         {
           "index_type": "gzi",
-          "relative_url": "ERZ857107_pfam_summary.tsv.gz.gzi"
+          "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/pfam/ERZ857107_pfam_summary.tsv.gz.gzi"
         }
       ],
       "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/pfam/ERZ857107_pfam_summary.tsv.gz"
@@ -133,7 +133,7 @@
       "index_files": [
         {
           "index_type": "gzi",
-          "relative_url": "ERZ857107_proteins2rhea.tsv.gz.gzi"
+          "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/rhea-reactions/ERZ857107_proteins2rhea.tsv.gz.gzi"
         }
       ],
       "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/functional-annotation/rhea-reactions/ERZ857107_proteins2rhea.tsv.gz"
@@ -149,11 +149,11 @@
       "index_files": [
         {
           "index_type": "gzi",
-          "relative_url": "ERZ857107_annotation_summary.gff.gz.gzi"
+          "url": "http://127.0.0.1:5055/apiv2/analyses/contigviewer/ERZ857107_annotation_summary.gff.gz.gzi"
         },
         {
           "index_type": "csi",
-          "relative_url": "ERZ857107_annotation_summary.gff.gz.csi"
+          "url": "http://127.0.0.1:5055/apiv2/analyses/contigviewer/ERZ857107_annotation_summary.gff.gz.csi"
         }
       ],
       "url": "http://127.0.0.1:5055/apiv2/analyses/contigviewer/ERZ857107_annotation_summary.gff.gz"
@@ -169,11 +169,11 @@
       "index_files": [
         {
           "index_type": "gzi",
-          "relative_url": "ERZ857107_user_mobilome_full.gff.gz.gzi"
+          "url": "http://127.0.0.1:5055/apiv2/analyses/contigviewer/ERZ857107_user_mobilome_full.gff.gz.gzi"
         },
         {
           "index_type": "csi",
-          "relative_url": "ERZ857107_user_mobilome_full.gff.gz.csi"
+          "url": "http://127.0.0.1:5055/apiv2/analyses/contigviewer/ERZ857107_user_mobilome_full.gff.gz.csi"
         }
       ],
       "url": "http://127.0.0.1:5055/apiv2/analyses/contigviewer/ERZ857107_user_mobilome_full.gff.gz"

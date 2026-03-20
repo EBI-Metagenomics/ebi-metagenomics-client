@@ -11,7 +11,8 @@ const KeggModuleTab: React.FC = () => {
   let dataFiles: Download[] | undefined =
     analysisOverviewData?.downloads.filter(
       (file: Download) =>
-        file.download_group === 'pathways_and_systems.kegg_modules'
+        file.download_group === 'pathways_and_systems.kegg_modules' &&
+        file.alias.includes('_summary')
     );
 
   if (dataFiles) {

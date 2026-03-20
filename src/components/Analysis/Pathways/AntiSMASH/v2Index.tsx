@@ -11,7 +11,8 @@ const AntiSmashTab: React.FC = () => {
   let dataFiles: Download[] | undefined =
     analysisOverviewData?.downloads.filter(
       (file: Download) =>
-        file.download_group === 'pathways_and_systems.antismash'
+        file.download_group === 'pathways_and_systems.antismash' &&
+        file.alias.includes('_summary')
     );
 
   if (dataFiles) {

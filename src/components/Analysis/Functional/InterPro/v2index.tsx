@@ -12,7 +12,9 @@ const InterPro: React.FC = () => {
     useContext<AnalysisContextType>(AnalysisContext);
 
   let dataFiles: Download[] | undefined = analysisData?.downloads.filter(
-    (file) => file.download_group === 'functional_annotation.interpro'
+    (file) =>
+      file.download_group === 'functional_annotation.interpro' &&
+      file.alias.includes('_summary')
   );
   if (dataFiles) {
     dataFiles = sortBy(dataFiles, (file) => file.index_files?.length).reverse();

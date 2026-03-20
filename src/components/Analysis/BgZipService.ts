@@ -28,15 +28,14 @@ export class BGZipService {
     download: Download,
     index_type: string = 'gzi'
   ): string | undefined {
-    const relative_url = find(
+    const indexFile = find(
       download.index_files ?? [],
       (index) => index.index_type === index_type
-    )?.relative_url;
-
-    return (
-      relative_url &&
-      new URL(relative_url, download.url.replace(/[^/]+$/, '')).toString()
     );
+
+    if (!indexFile) return undefined;
+
+    return indexFile.url;
   }
 
   constructor(
