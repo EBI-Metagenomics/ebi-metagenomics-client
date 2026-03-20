@@ -35,13 +35,7 @@ export class BGZipService {
 
     if (!indexFile) return undefined;
 
-    // Prefer absolute pre-signed URL from API when available
-    if (indexFile.url) return indexFile.url;
-
-    return new URL(
-      indexFile.relative_url,
-      download.url.replace(/[^/]+$/, '')
-    ).toString();
+    return indexFile.url;
   }
 
   constructor(
