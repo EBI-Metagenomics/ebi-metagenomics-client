@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import useQueryParamState, {
   createSharedQueryParamContextForTable,
 } from '@/hooks/queryParamState/useQueryParamState';
@@ -15,18 +21,23 @@ import useBranchwaterResults, {
   type BranchwaterFilters,
 } from 'components/Branchwater/common/useBranchwaterResults';
 import {
-  getContainmentHistogram,
+  type BranchwaterResult as SearchResult,
+  downloadBranchwaterCSV,
   getCaniHistogram,
+  getContainmentHistogram,
+  getCountryColor,
   getScatterData,
   getTotalCountryCount,
-  getCountryColor,
   processBranchwaterResults,
-  downloadBranchwaterCSV,
-  type BranchwaterResult as SearchResult,
 } from 'utils/branchwater';
 import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
 import BranchwaterLogo from 'images/branchwater_logo.png';
 import InfoBanner from 'components/UI/InfoBanner';
+
+type SourmashEventDetail = {
+  signatures: Record<string, string>;
+  errors: Record<string, string>;
+};
 
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
   'branchwaterDetailed',
@@ -46,7 +57,9 @@ const DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 const Branchwater = () => {
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const sourmash = useRef<HTMLMgnifySourmashComponentElement>(null);
+  const [signatures, setSignatures] = useState<Record<string, string>>({});
+  const [, setSignatureErrors] = useState<Record<string, string>>({});
   // const [targetDatabase, setTargetDatabase] = useState<string>('MAGs');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
@@ -128,12 +141,6 @@ const Branchwater = () => {
     assayTypeParam,
   ]);
 
-  // TODO: bring back request button
-  // const handleRequestAnalysis = (entry: SearchResult) => {
-  //   const submitUrl = `https://www.ebi.ac.uk/metagenomics/submit?accession=${entry.acc}&bioproject=${entry.bioproject}`;
-  //   window.open(submitUrl, '_blank');
-  // };
-
   const {
     filteredResults,
     sortedResults,
@@ -191,22 +198,55 @@ const Branchwater = () => {
     setMapPinsLimit(1000);
   }, [searchResults]);
 
+  useEffect(() => {
+    let sourmashElement: HTMLMgnifySourmashComponentElement | null;
+
+    const sketchedAll = (evt: Event): void => {
+      const event = evt as CustomEvent<SourmashEventDetail>;
+      setSignatures(event.detail.signatures);
+      setSignatureErrors(event.detail.errors);
+    };
+
+    const changedFiles = (): void => {
+      setSignatures({});
+      setSignatureErrors({});
+    };
+
+    if (sourmash.current) {
+      sourmashElement = sourmash.current;
+      sourmashElement.addEventListener('sketchedall', sketchedAll);
+      sourmashElement.addEventListener('change', changedFiles);
+    }
+    return () => {
+      if (sourmashElement) {
+        sourmashElement.removeEventListener('sketchedall', sketchedAll);
+        sourmashElement.removeEventListener('change', changedFiles);
+      }
+    };
+  }, []);
+
   const handleSearchClick = (
     event: React.MouseEvent<HTMLButtonElement>
   ): void => {
     event.preventDefault();
 
-    if (uploadedFile) {
+    if (Object.keys(signatures).length > 0) {
       setIsLoading(true);
-      const formData = new FormData();
-      formData.append('fasta', uploadedFile);
+      const sigString = Object.values(signatures)[0];
+
       axios
-        .post(`${config.api_branchwater}/gzipped`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Accept: '*/*',
+        .post(
+          `${config.api_branchwater}`,
+          {
+            signatures: sigString,
           },
-        })
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: '*/*',
+            },
+          }
+        )
         .then((response) => {
           const { resultsArray } = processBranchwaterResults(response.data);
           setSearchResults(resultsArray);
@@ -229,7 +269,6 @@ const Branchwater = () => {
       [field]: value,
     }));
 
-    // Update the corresponding query parameter
     switch (field) {
       case 'query':
         setTextQuery(value);
@@ -256,19 +295,20 @@ const Branchwater = () => {
     // handled by EMGTable through shared query params
   };
 
-  // Handle page change
   const handlePageChange = (pageNumber: number): void => {
     setPageQP(pageNumber);
   };
+
   const downloadCSV = () => {
     downloadBranchwaterCSV(sortedResults);
   };
 
   const handleClearClick = (): void => {
-    setUploadedFile(null);
+    sourmash.current?.clear();
+    setSignatures({});
+    setSignatureErrors({});
     setSearchResults([]);
 
-    // Clear query parameters
     setTextQuery('');
     setCaniRange('');
     setContainmentRange('');
@@ -289,45 +329,13 @@ const Branchwater = () => {
     });
     setDetailedOrder('-containment');
     setPageQP(1);
-    const fileInput = document.getElementById(
-      'file-upload'
-    ) as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = '';
-    }
   };
 
   const handleExampleSubmit = () => {
-    setUploadedFile(null);
+    sourmash.current?.clear();
+    setSignatures({});
+    setSignatureErrors({});
     setSearchResults([]);
-
-    // Clear query parameters
-    setTextQuery('');
-    setCaniRange('');
-    setContainmentRange('');
-    setLocationParam('');
-    setOrganismParam('');
-    setAssayTypeParam('');
-
-    setFilters({
-      acc: '',
-      assay_type: '',
-      bioproject: '',
-      collection_date_sam: '',
-      containment: '',
-      geo_loc_name_country_calc: '',
-      organism: '',
-      query: '',
-      cani: '',
-    });
-    setDetailedOrder('-containment');
-    setPageQP(1);
-    const fileInput = document.getElementById(
-      'file-upload'
-    ) as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = '';
-    }
 
     setIsLoading(true);
     const examples = [
@@ -405,7 +413,8 @@ const Branchwater = () => {
             file).
           </p>
           <p className="vf-text-body vf-text-body--3">
-            The file is then sent to our servers for processing.
+            The file is then sketched in your browser and sent to our servers
+            for processing.
           </p>
           <p className="vf-text-body vf-text-body--3">
             This search engine searches for the containment of a query genome
@@ -432,36 +441,31 @@ const Branchwater = () => {
       <div>
         <form className="vf-stack vf-stack--400">
           <div className="vf-form__item vf-stack">
-            <label className="vf-form__label" htmlFor="file-upload">
-              Upload file
-            </label>
-            <input
-              id="file-upload"
-              type="file"
-              accept=".fasta,.fna,.gz,.sig"
-              onChange={(e) =>
-                setUploadedFile(e.target.files ? e.target.files[0] : null)
-              }
-              className="vf-form__input"
+            <mgnify-sourmash-component
+              id="sourmash"
+              ref={sourmash}
+              ksize={21}
             />
 
-            <button
-              type="button"
-              className="vf-button vf-button--sm vf-button--primary mg-button vf-u-margin__top--400"
-              onClick={handleSearchClick}
-              disabled={!uploadedFile || isLoading}
-            >
-              Search
-            </button>
-            <button
-              id="clear-button-mag"
-              type="button"
-              className="vf-button vf-button--sm vf-button--tertiary"
-              onClick={handleClearClick}
-              disabled={isLoading}
-            >
-              Clear
-            </button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                type="button"
+                className="vf-button vf-button--sm vf-button--primary mg-button vf-u-margin__top--400"
+                onClick={handleSearchClick}
+                disabled={Object.keys(signatures).length === 0 || isLoading}
+              >
+                Search
+              </button>
+              <button
+                id="clear-button-mag"
+                type="button"
+                className="vf-button vf-button--sm vf-button--tertiary vf-u-margin__top--400"
+                onClick={handleClearClick}
+                disabled={isLoading}
+              >
+                Clear
+              </button>
+            </div>
           </div>
         </form>
 

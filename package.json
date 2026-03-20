@@ -65,7 +65,7 @@
     "leaflet": "^1.9.4",
     "lodash-es": "4.17.21",
     "lucide-react": "^0.476.0",
-    "mgnify-sourmash-component": "0.2.4",
+    "mgnify-sourmash-component": "0.3.3",
     "native-file-system-adapter": "^3.0.1",
     "pako": "^2.1.0",
     "papaparse": "^5.5.3",
