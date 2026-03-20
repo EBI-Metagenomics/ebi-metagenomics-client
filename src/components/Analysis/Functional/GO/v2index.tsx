@@ -32,7 +32,7 @@ const GO: React.FC = () => {
             analysis.
           </p>
         </div>
-        <CompressedTSVTable download={dataFile} />
+        <CompressedTSVTable download={dataFile} columnHeaders={['GO', 'Term']} />
       </DetailedVisualisationCard>
 
       <div className="vf-grid mg-grid-30-70" />

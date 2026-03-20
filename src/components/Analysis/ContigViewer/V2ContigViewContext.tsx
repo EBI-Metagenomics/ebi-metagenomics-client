@@ -34,6 +34,15 @@ export function LGVProvider({
 }) {
   const assemblyKey = React.useMemo(() => fasta.alias, [fasta]);
 
+  const fastaFaiUrl = React.useMemo(
+    () => BGZipService.getIndexFileUrl(fasta, 'fai'),
+    [fasta]
+  );
+  const fastaGziUrl = React.useMemo(
+    () => BGZipService.getIndexFileUrl(fasta, 'gzi'),
+    [fasta]
+  );
+
   const viewState = React.useMemo(
     () =>
       createViewState({
@@ -44,14 +53,16 @@ export function LGVProvider({
             trackId: 'refseq',
             adapter: {
               type: 'BgzipFastaAdapter',
-              uri: fasta.url,
+              fastaLocation: { uri: fasta.url },
+              ...(fastaFaiUrl && { faiLocation: { uri: fastaFaiUrl } }),
+              ...(fastaGziUrl && { gziLocation: { uri: fastaGziUrl } }),
             },
           },
         },
         tracks: [],
         location: initialLoc,
       }),
-    [fasta.alias, fasta.url, initialLoc]
+    [fasta.alias, fasta.url, fastaFaiUrl, fastaGziUrl, initialLoc]
   );
 
   const view = (viewState as any)?.session?.view;

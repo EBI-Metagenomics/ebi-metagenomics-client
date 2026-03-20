@@ -21,7 +21,7 @@ const KOTab: React.FC = () => {
 
   return (
     <div className="vf-stack">
-      <h5>Kegg Orthologs</h5>
+      <h5>KEGG Orthologs</h5>
       <DetailedVisualisationCard ftpLink={dataFile.url} title={dataFile.alias}>
         <div className="p-4">
           <p className="text-sm text-gray-600 mb-4">
@@ -33,7 +33,7 @@ const KOTab: React.FC = () => {
             analysis.
           </p>
         </div>
-        <CompressedTSVTable download={dataFile} />
+        <CompressedTSVTable download={dataFile} columnHeaders={['KO', 'Description']} />
       </DetailedVisualisationCard>
 
       <div className="vf-grid mg-grid-30-70" />

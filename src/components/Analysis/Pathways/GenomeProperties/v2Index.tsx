@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import { Download } from '@/interfaces';
-import { sortBy } from 'lodash-es';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 import GenomePropertiesVisualiser from './GenomePropertiesVisualiser';
@@ -17,10 +16,11 @@ const GenomePropertiesTab: React.FC = () => {
     );
 
   if (dataFiles) {
-    dataFiles = sortBy(dataFiles, (file) => file.index_files?.length).reverse();
+    const jsonFiles = dataFiles.filter((f) => f.alias.includes('json'));
+    if (jsonFiles.length) dataFiles = jsonFiles;
   }
 
-  if (!dataFiles) {
+  if (!dataFiles?.length) {
     return (
       <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
         <p>No Genome properties files available</p>

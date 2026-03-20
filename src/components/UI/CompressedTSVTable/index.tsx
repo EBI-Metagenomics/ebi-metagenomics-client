@@ -19,6 +19,7 @@ type BarChartSpec = Pick<
 
 interface CompressedTSVTableProps {
   columns?: Column[];
+  columnHeaders?: string[];
   download: Download;
   barChartSpec?: BarChartSpec;
 }
@@ -31,6 +32,7 @@ const { usePage, withQueryParamProvider } =
  */
 const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
   columns = [],
+  columnHeaders,
   download,
   barChartSpec,
 }) => {
@@ -91,7 +93,7 @@ const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
 
           setCols(
             rowToUseAsHeaders.map((header, colNum) => ({
-              Header: startCase(header),
+              Header: columnHeaders?.[colNum] ?? (header.includes('_') ? startCase(header) : header),
               accessor: (row) => row[colNum],
               id: `col_${colNum}`,
             }))
