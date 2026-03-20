@@ -62,7 +62,8 @@ declare global {
       HTMLElement
     > {
     id: string;
-    show_directory_checkbox: boolean;
+    show_directory_checkbox?: boolean;
+    ksize: number;
   }
 
   interface ImportMeta {
