@@ -1,43 +1,23 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-
-import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import React, { useContext, useMemo, useState } from 'react';
+import { groupBy, last, map, startCase } from 'lodash-es';
+import { toast } from 'react-toastify';
 import { Download } from '@/interfaces';
-
-import './v2style.css';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 
 interface DownloadsProps {
   downloads?: Array<Download>;
 }
 
-const fileTypeLabel: Record<string, string> = {
-  fasta: 'FASTA',
-  tsv: 'TSV',
-  gff: 'GFF',
-  html: 'HTML',
-  json: 'JSON',
-  gbk: 'GBK',
-  txt: 'TXT',
-  xlsx: 'XLSX',
-  csv: 'CSV',
-};
-
 function getFileFormat(file: Download): string {
-  if (file.file_type !== 'other' && fileTypeLabel[file.file_type]) {
-    return fileTypeLabel[file.file_type];
+  if (file.file_type && file.file_type !== 'other') {
+    return file.file_type.toUpperCase();
   }
-  // Detect from filename, stripping .gz
-  const name = file.alias.replace(/\.gz$/, '');
-  const ext = name.split('.').pop()?.toLowerCase() || '';
-  return fileTypeLabel[ext] || ext.toUpperCase() || 'File';
+  return (
+    last(file.alias.replace(/\.gz$/, '').split('.'))?.toUpperCase() || 'File'
+  );
 }
 
+// TODO: move to a shared string store (also useful in contig browser feature panel)
 const nameOverrides: Record<string, string> = {
   kegg: 'KEGG',
   kegg_modules: 'KEGG Modules',
@@ -63,9 +43,7 @@ function formatGroupLabel(group: string): string {
   const lastPart = group.includes('.') ? group.split('.').pop() : group;
   const key = lastPart || group;
   if (nameOverrides[key]) return nameOverrides[key];
-  return key
-    .replace(/_/g, ' ')
-    .replace(/^\w/, (c) => c.toUpperCase());
+  return startCase(key);
 }
 
 type GroupedDownloads = {
@@ -73,48 +51,36 @@ type GroupedDownloads = {
   subgroups: { label: string; files: Download[] }[];
 };
 
+const sayCopied = (message: string) =>
+  toast.success(message, {
+    position: 'bottom-left',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+
 const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
   const { overviewData } = useContext(AnalysisContext);
   const downloads = propDownloads ?? overviewData?.downloads;
 
   const grouped = useMemo((): GroupedDownloads[] => {
     if (!downloads?.length) return [];
-    const categoryOrder: string[] = [];
-    const categoryMap: Record<
-      string,
-      { subgroupOrder: string[]; subgroups: Record<string, Download[]> }
-    > = {};
-
-    downloads.forEach((dl) => {
-      const cat = dl.download_type;
-      const sub = dl.download_group;
-      if (!categoryMap[cat]) {
-        categoryMap[cat] = { subgroupOrder: [], subgroups: {} };
-        categoryOrder.push(cat);
-      }
-      if (!categoryMap[cat].subgroups[sub]) {
-        categoryMap[cat].subgroups[sub] = [];
-        categoryMap[cat].subgroupOrder.push(sub);
-      }
-      categoryMap[cat].subgroups[sub].push(dl);
+    const byCategory = groupBy(downloads, 'download_type');
+    return map(byCategory, (catFiles, category) => {
+      const bySubgroup = groupBy(catFiles, 'download_group');
+      return {
+        category,
+        subgroups: map(bySubgroup, (files, sub) => ({
+          label: formatGroupLabel(sub),
+          files,
+        })),
+      };
     });
-
-    return categoryOrder.map((cat) => ({
-      category: cat,
-      subgroups: categoryMap[cat].subgroupOrder.map((sub) => ({
-        label: formatGroupLabel(sub),
-        files: categoryMap[cat].subgroups[sub],
-      })),
-    }));
   }, [downloads]);
 
   const [showCurlScript, setShowCurlScript] = useState(false);
-  const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
-  const feedbackTimeout = useRef<ReturnType<typeof setTimeout>>();
-
-  useEffect(() => {
-    return () => clearTimeout(feedbackTimeout.current);
-  }, []);
 
   const accession = overviewData?.accession || 'analysis';
 
@@ -129,39 +95,6 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
     ].join('\n');
   }, [downloads, accession]);
 
-  const copyToClipboard = useCallback(
-    (text: string, label: string) => {
-      clearTimeout(feedbackTimeout.current);
-      navigator.clipboard.writeText(text).then(
-        () => {
-          setCopyFeedback(label);
-          feedbackTimeout.current = setTimeout(
-            () => setCopyFeedback(null),
-            2000
-          );
-        },
-        () => {
-          setCopyFeedback('Failed to copy');
-          feedbackTimeout.current = setTimeout(
-            () => setCopyFeedback(null),
-            2000
-          );
-        }
-      );
-    },
-    []
-  );
-
-  const handleCopyUrls = useCallback(() => {
-    if (!downloads?.length) return;
-    const urls = downloads.map((dl) => dl.url).join('\n');
-    copyToClipboard(urls, 'Links copied');
-  }, [downloads, copyToClipboard]);
-
-  const handleCopyCurl = useCallback(() => {
-    copyToClipboard(curlScript, 'Script copied');
-  }, [curlScript, copyToClipboard]);
-
   if (!downloads?.length) {
     return <p>No downloads available for this analysis.</p>;
   }
@@ -169,18 +102,39 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
   return (
     <div className="vf-stack vf-stack--400">
       <h4>Bulk download</h4>
-      <p className="downloads-bulk-description">
+      <p>
         Copy all the file URLs to your clipboard, or generate a ready-to-use{' '}
-        <a href="https://en.wikipedia.org/wiki/Curl_(software)" target="_blank" rel="noreferrer" className="vf-link">curl</a>{' '}
+        <a
+          href="https://en.wikipedia.org/wiki/Curl_(software)"
+          target="_blank"
+          rel="noreferrer"
+          className="vf-link"
+        >
+          curl
+        </a>{' '}
         script to download everything from your terminal.
       </p>
-      <div className="downloads-bulk-actions">
+      <div>
         <button
           type="button"
           className="vf-button vf-button--secondary vf-button--sm"
-          onClick={handleCopyUrls}
+          onClick={() => {
+            const urls = downloads.map((dl) => dl.url).join('\n');
+            navigator.clipboard.writeText(urls);
+            sayCopied('Copied download links to clipboard!');
+          }}
         >
           <span className="icon icon-common icon-copy" /> Copy download links
+        </button>
+        <button
+          type="button"
+          className="vf-button vf-button--secondary vf-button--sm"
+          onClick={() => {
+            navigator.clipboard.writeText(curlScript);
+            sayCopied('Copied curl script to clipboard!');
+          }}
+        >
+          <span className="icon icon-common icon-copy" /> Copy curl script
         </button>
         <button
           type="button"
@@ -190,23 +144,20 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
           <span className="icon icon-common icon-tool" />{' '}
           {showCurlScript ? 'Hide' : 'Show'} curl script
         </button>
-        <span className="downloads-copy-feedback" role="status" aria-live="polite">
-          {copyFeedback}
-        </span>
       </div>
       {showCurlScript && (
-        <div className="downloads-curl-script">
-          <div className="downloads-curl-script__header">
-            <span>Bulk download script</span>
-            <button
-              type="button"
-              className="vf-button vf-button--tertiary vf-button--sm"
-              onClick={handleCopyCurl}
-            >
-              Copy
-            </button>
-          </div>
-          <pre className="downloads-curl-script__code">{curlScript}</pre>
+        <div className="vf-code-example">
+          <pre className="vf-code-example__pre">{curlScript}</pre>
+          <button
+            type="button"
+            className="vf-button vf-button--tertiary vf-button--sm"
+            onClick={() => {
+              navigator.clipboard.writeText(curlScript);
+              sayCopied('Copied curl script to clipboard!');
+            }}
+          >
+            Copy
+          </button>
         </div>
       )}
       {grouped.map(({ category, subgroups }) => (
@@ -215,11 +166,11 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
           {subgroups.map(({ label, files }) => {
             const showSubheading = subgroups.length > 1;
             return (
-              <div key={label} className="downloads-subgroup">
+              <div key={label} className="vf-stack vf-stack--200">
                 {showSubheading && (
-                  <h5 className="downloads-subgroup__heading">{label}</h5>
+                  <h4 className="vf-u-margin__top--400">{label}</h4>
                 )}
-                <div className="downloads-card-grid">
+                <div className="vf-grid vf-grid__col-3">
                   {files.map((file) => {
                     const format = getFileFormat(file);
                     return (
@@ -227,25 +178,30 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
                         key={file.url}
                         href={file.url}
                         aria-label={`Download ${file.alias}`}
-                        className="vf-card vf-card--brand vf-card--bordered downloads-card"
+                        className="vf-card vf-card--brand vf-card--bordered"
+                        style={{ textDecoration: 'none', color: 'inherit' }}
                       >
-                        <div className="downloads-card__content">
-                          <div className="downloads-card__badge">
-                            <span className="vf-badge vf-badge--secondary vf-badge--pill">
-                              {format}
-                            </span>
+                        <div className="vf-card__content">
+                          <div className="vf-flag vf-flag--top vf-flag--200">
+                            <div className="vf-flag__body">
+                              <h5 className="vf-card__heading">
+                                {file.short_description}
+                              </h5>
+                            </div>
+                            <div className="vf-flag__media">
+                              <span className="vf-badge vf-badge--secondary vf-badge--pill">
+                                {format}
+                              </span>
+                            </div>
                           </div>
-                          <h5 className="downloads-card__heading">
-                            {file.short_description}
-                          </h5>
-                          <p className="downloads-card__description">
+                          <p className="vf-card__text">
                             {file.long_description}
                           </p>
                           <span
-                            className="downloads-card__filename"
+                            className="vf-card__text vf-text-body--5"
                             title={file.alias}
                           >
-                            {file.alias}
+                            <code>{file.alias}</code>
                           </span>
                         </div>
                       </a>
