@@ -50,7 +50,7 @@ function isAssembly(experimentType: string): boolean {
 
 const AnalysisOverview: React.FC = () => {
   const { overviewData: data } = useContext(AnalysisContext);
-  const { config } = useContext(UserContext);
+  const { config, isAuthenticated } = useContext(UserContext);
 
   const isHybrid = false;
   // data.experiment_type === 'hybrid_assembly' &&
@@ -106,13 +106,14 @@ const AnalysisOverview: React.FC = () => {
     {
       key: 'Results folder',
       value:
+        !isAuthenticated &&
         data?.results_dir &&
         (() => (
           <a href={data.results_dir} target="_blank" rel="noreferrer">
             {data.results_dir}
           </a>
         )),
-      rawValue: data?.results_dir || '',
+      rawValue: !isAuthenticated ? data?.results_dir || '' : '',
     },
   ];
 

@@ -64,6 +64,7 @@ const V2AnalysisPage: React.FC = () => {
       thisIsAssembly ? { label: 'Pathways/Systems', to: 'path-systems' } : null,
       thisIsAssembly ? { label: 'Contig Viewer', to: 'contigs-viewer' } : null,
       thisIsAmplicon ? { label: 'ASV', to: 'asv' } : null,
+      { label: 'Downloads', to: 'download' },
     ].filter(Boolean) as { label: string | React.ElementType; to: string }[];
   }, [thisIsAssembly, thisIsAmplicon, data?.accession]);
 
