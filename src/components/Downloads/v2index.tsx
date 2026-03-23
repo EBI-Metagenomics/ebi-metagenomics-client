@@ -86,7 +86,7 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
 
   const curlScript = useMemo(() => {
     if (!downloads?.length) return '';
-    const lines = downloads.map((dl) => `curl -O "${dl.url}"`);
+    const lines = downloads.map((dl) => `curl -LO "${dl.url}"`);
     return [
       '#!/bin/bash',
       `# Download all files for ${accession}`,
