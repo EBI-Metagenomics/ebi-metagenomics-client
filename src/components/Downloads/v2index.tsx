@@ -180,6 +180,7 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
                         aria-label={`Download ${file.alias}`}
                         className="vf-card vf-card--brand vf-card--bordered"
                         style={{ textDecoration: 'none', color: 'inherit' }}
+                        download
                       >
                         <div className="vf-card__content">
                           <div className="vf-flag vf-flag--top vf-flag--200">
