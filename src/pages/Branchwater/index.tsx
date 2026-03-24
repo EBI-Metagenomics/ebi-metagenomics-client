@@ -210,6 +210,8 @@ const Branchwater = () => {
     const changedFiles = (): void => {
       setSignatures({});
       setSignatureErrors({});
+      setSearchResults([]);
+      setSearchError(null);
     };
 
     if (sourmash.current) {
