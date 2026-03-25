@@ -59,8 +59,8 @@ L.Marker.prototype.options.icon = DefaultIcon;
 const Branchwater = () => {
   const sourmash = useRef<HTMLMgnifySourmashComponentElement>(null);
   const [signatures, setSignatures] = useState<Record<string, string>>({});
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [, setSignatureErrors] = useState<Record<string, string>>({});
-  // const [targetDatabase, setTargetDatabase] = useState<string>('MAGs');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
 
@@ -205,6 +205,9 @@ const Branchwater = () => {
       const event = evt as CustomEvent<SourmashEventDetail>;
       setSignatures(event.detail.signatures);
       setSignatureErrors(event.detail.errors);
+      if (Object.keys(event.detail.signatures).length > 0) {
+        setSelectedFileName(Object.keys(event.detail.signatures)[0]);
+      }
     };
 
     const changedFiles = (): void => {
@@ -212,6 +215,7 @@ const Branchwater = () => {
       setSignatureErrors({});
       setSearchResults([]);
       setSearchError(null);
+      setSelectedFileName(null);
     };
 
     if (sourmash.current) {
@@ -231,7 +235,7 @@ const Branchwater = () => {
     event: React.MouseEvent<HTMLButtonElement>
   ): void => {
     event.preventDefault();
-
+    sourmash.current?.clear();
     if (Object.keys(signatures).length > 0) {
       setIsLoading(true);
       const sigString = Object.values(signatures)[0];
@@ -310,6 +314,7 @@ const Branchwater = () => {
     setSignatures({});
     setSignatureErrors({});
     setSearchResults([]);
+    setSelectedFileName(null);
 
     setTextQuery('');
     setCaniRange('');
@@ -338,6 +343,7 @@ const Branchwater = () => {
     setSignatures({});
     setSignatureErrors({});
     setSearchResults([]);
+    setSelectedFileName(null);
 
     setIsLoading(true);
     const examples = [
@@ -448,6 +454,14 @@ const Branchwater = () => {
               ref={sourmash}
               ksize={21}
             />
+
+            {selectedFileName && (
+              <div className="vf-u-margin__top--200">
+                <span className="vf-text-body vf-text-body--4">
+                  Selected file: <strong>{selectedFileName}</strong>
+                </span>
+              </div>
+            )}
 
             <div style={{ display: 'flex', gap: '10px' }}>
               <button
