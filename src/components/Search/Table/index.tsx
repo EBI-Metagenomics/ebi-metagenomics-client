@@ -9,6 +9,7 @@ import Tooltip from 'components/UI/Tooltip';
 import SearchQueryContext from 'pages/TextSearch/SearchQueryContext';
 import { ENA_VIEW_URL } from 'utils/urls';
 import { uniq } from 'lodash-es';
+import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 import ColumnSelector from './ColumnSelector';
 
 const initialColumnsState = {
@@ -177,6 +178,8 @@ const DOWNLOAD_LIMIT = 100;
 const SearchTable: React.FC = () => {
   const { pathname } = useLocation();
   const { searchData } = useContext(SearchQueryContext);
+  const [page] = useQueryParamState('page', 1, Number);
+  const [pageSize] = useQueryParamState('page_size', PAGE_SIZE, Number);
   const { data, loading, error, isStale, getDownloadURL } =
     searchData?.[pathname] || {};
   const [selectedColumns, setSelectedColumns] = useState(initialColumnsState);
@@ -189,9 +192,9 @@ const SearchTable: React.FC = () => {
     links: {},
     meta: {
       pagination: {
-        pages: Math.ceil((data.hitCount as number) / PAGE_SIZE),
-        count: 25,
-        page: 1,
+        pages: Math.ceil((data.hitCount as number) / (pageSize as number)),
+        count: data.hitCount,
+        page: page as number,
       },
     },
   };
@@ -229,7 +232,8 @@ const SearchTable: React.FC = () => {
           )}
         </>
       }
-      initialPage={0}
+      initialPage={(page as number) - 1}
+      initialPageSize={pageSize as number}
       className="mg-search-result"
       loading={loading}
       isStale={isStale}
