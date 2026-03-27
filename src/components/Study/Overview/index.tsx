@@ -23,6 +23,7 @@ type StudyOverviewProps = {
 };
 
 const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
+  console.log('DATA ', data);
   const { config } = useContext(UserContext);
   const lineage = data.biome?.lineage || '';
   const {
@@ -42,7 +43,7 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
             <ul data-cy="study-external-links">
               <li>
                 <ExtLink href={ENA_VIEW_URL + data.ena_accessions[0]}>
-                  ENA website ({data.ena_accessions[0]})
+                  ENA website ({data.first_accession})
                 </ExtLink>
               </li>
             </ul>

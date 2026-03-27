@@ -8,6 +8,7 @@ export interface PaginatedList<T = unknown> {
 export interface EnaDerivedObject extends Record<string, unknown> {
   accession: string;
   ena_accessions: string[];
+  first_accession: string;
 }
 
 export interface Biome {
