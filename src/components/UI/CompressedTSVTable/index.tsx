@@ -93,7 +93,9 @@ const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
 
           setCols(
             rowToUseAsHeaders.map((header, colNum) => ({
-              Header: columnHeaders?.[colNum] ?? (header.includes('_') ? startCase(header) : header),
+              Header:
+                columnHeaders?.[colNum] ??
+                (header.includes('_') ? startCase(header) : header),
               accessor: (row) => row[colNum],
               id: `col_${colNum}`,
             }))
