@@ -51,7 +51,7 @@ function formatGroupLabel(group: string): string {
   const lastPart = group.includes('.') ? group.split('.').pop() : group;
   // Normalise to lowercase underscored keys so overrides match regardless of
   // whether the API sends hyphens (DADA2-PR2) or underscores (dada2_pr2).
-  const key = (lastPart || group).toLowerCase().replace(/-/g, '_');
+  const key = snakeCase(lastPart || group);
   if (nameOverrides[key]) return nameOverrides[key];
   return startCase(key);
 }
