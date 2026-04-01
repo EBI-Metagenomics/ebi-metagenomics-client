@@ -14,3 +14,7 @@
   color: var(--vf-color--grey--dark, #333);
   margin-bottom: 1rem;
 }
+
+.download-subgroup-heading {
+  font-size: 1.4rem;
+}

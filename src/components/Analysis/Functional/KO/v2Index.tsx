@@ -33,7 +33,10 @@ const KOTab: React.FC = () => {
             analysis.
           </p>
         </div>
-        <CompressedTSVTable download={dataFile} columnHeaders={['KO', 'Description']} />
+        <CompressedTSVTable
+          download={dataFile}
+          columnHeaders={['KO', 'Description']}
+        />
       </DetailedVisualisationCard>
 
       <div className="vf-grid mg-grid-30-70" />

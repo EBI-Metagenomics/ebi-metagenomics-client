@@ -37,11 +37,21 @@ const nameOverrides: Record<string, string> = {
   coding_sequences: 'Coding Sequences',
   taxonomy: 'Taxonomy',
   mobilome_annotation_pipeline: 'Mobilome Annotation Pipeline',
+  dada2: 'DADA2',
+  dada2_pr2: 'DADA2-PR2',
+  dada2_silva: 'DADA2-SILVA',
+  itsonedb: 'ITSoneDB',
+  pr2: 'PR2',
+  unite: 'UNITE',
+  silva_ssu: 'SILVA-SSU',
+  silva_lsu: 'SILVA-LSU',
 };
 
 function formatGroupLabel(group: string): string {
   const lastPart = group.includes('.') ? group.split('.').pop() : group;
-  const key = lastPart || group;
+  // Normalise to lowercase underscored keys so overrides match regardless of
+  // whether the API sends hyphens (DADA2-PR2) or underscores (dada2_pr2).
+  const key = snakeCase(lastPart || group);
   if (nameOverrides[key]) return nameOverrides[key];
   return startCase(key);
 }
@@ -94,6 +104,10 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
       ...lines,
     ].join('\n');
   }, [downloads, accession]);
+
+  const isAmplicon =
+    overviewData?.experiment_type?.toLowerCase() === 'amplicon';
+  const asvCategories = ['Statistics', 'Sequence data'];
 
   if (!downloads?.length) {
     return <p>No downloads available for this analysis.</p>;
@@ -160,60 +174,68 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
           </button>
         </div>
       )}
-      {grouped.map(({ category, subgroups }) => (
-        <section key={category}>
-          <h4>{category}</h4>
-          {subgroups.map(({ label, files }) => {
-            const showSubheading = subgroups.length > 1;
-            return (
-              <div key={label} className="vf-stack vf-stack--200">
-                {showSubheading && (
-                  <h4 className="vf-u-margin__top--400">{label}</h4>
-                )}
-                <div className="vf-grid vf-grid__col-3">
-                  {files.map((file) => {
-                    const format = getFileFormat(file);
-                    return (
-                      <a
-                        key={file.url}
-                        href={file.url}
-                        aria-label={`Download ${file.alias}`}
-                        className="vf-card vf-card--brand vf-card--bordered"
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                        download
-                      >
-                        <div className="vf-card__content">
-                          <div className="vf-flag vf-flag--top vf-flag--200">
-                            <div className="vf-flag__body">
-                              <h5 className="vf-card__heading">
-                                {file.short_description}
-                              </h5>
+      {grouped.map(({ category, subgroups }) => {
+        const displayCategory =
+          isAmplicon && asvCategories.includes(category)
+            ? `ASV ${category}`
+            : category;
+        return (
+          <section key={category}>
+            <h3>{displayCategory}</h3>
+            {subgroups.map(({ label, files }) => {
+              const showSubheading = subgroups.length > 1;
+              return (
+                <div key={label} className="vf-stack vf-stack--200">
+                  {showSubheading && (
+                    <h4 className="vf-u-margin__top--400 download-subgroup-heading">
+                      {label}
+                    </h4>
+                  )}
+                  <div className="vf-grid vf-grid__col-3">
+                    {files.map((file) => {
+                      const format = getFileFormat(file);
+                      return (
+                        <a
+                          key={file.url}
+                          href={file.url}
+                          aria-label={`Download ${file.alias}`}
+                          className="vf-card vf-card--brand vf-card--bordered"
+                          style={{ textDecoration: 'none', color: 'inherit' }}
+                          download
+                        >
+                          <div className="vf-card__content">
+                            <div className="vf-flag vf-flag--top vf-flag--200">
+                              <div className="vf-flag__body">
+                                <h5 className="vf-card__heading">
+                                  {file.short_description}
+                                </h5>
+                              </div>
+                              <div className="vf-flag__media">
+                                <span className="vf-badge vf-badge--secondary vf-badge--pill">
+                                  {format}
+                                </span>
+                              </div>
                             </div>
-                            <div className="vf-flag__media">
-                              <span className="vf-badge vf-badge--secondary vf-badge--pill">
-                                {format}
-                              </span>
-                            </div>
+                            <p className="vf-card__text">
+                              {file.long_description}
+                            </p>
+                            <span
+                              className="vf-card__text vf-text-body--5"
+                              title={file.alias}
+                            >
+                              <code>{file.alias}</code>
+                            </span>
                           </div>
-                          <p className="vf-card__text">
-                            {file.long_description}
-                          </p>
-                          <span
-                            className="vf-card__text vf-text-body--5"
-                            title={file.alias}
-                          >
-                            <code>{file.alias}</code>
-                          </span>
-                        </div>
-                      </a>
-                    );
-                  })}
+                        </a>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </section>
-      ))}
+              );
+            })}
+          </section>
+        );
+      })}
     </div>
   );
 };
