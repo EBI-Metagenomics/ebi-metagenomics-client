@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react';
-import { groupBy, last, map, startCase } from 'lodash-es';
+import { groupBy, last, map, startCase, snakeCase } from 'lodash-es';
 import { toast } from 'react-toastify';
 import { Download } from '@/interfaces';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
