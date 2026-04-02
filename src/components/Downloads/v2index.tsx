@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react';
-import { groupBy, last, map, startCase, snakeCase } from 'lodash-es';
+import { groupBy, last, map, startCase } from 'lodash-es';
 import { toast } from 'react-toastify';
 import { Download } from '@/interfaces';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
@@ -51,7 +51,7 @@ function formatGroupLabel(group: string): string {
   const lastPart = group.includes('.') ? group.split('.').pop() : group;
   // Normalise to lowercase underscored keys so overrides match regardless of
   // whether the API sends hyphens (DADA2-PR2) or underscores (dada2_pr2).
-  const key = snakeCase(lastPart || group);
+  const key = (lastPart || group).toLowerCase().replace(/-/g, '_');
   if (nameOverrides[key]) return nameOverrides[key];
   return startCase(key);
 }
