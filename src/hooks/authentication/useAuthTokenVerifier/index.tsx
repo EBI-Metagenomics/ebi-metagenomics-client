@@ -14,10 +14,10 @@ const useAuthTokenVerifier = () => {
     // If there is no token, nothing to verify.
     if (!authToken) return;
     try {
-      const response = await protectedAxios.post('/@/utils/token/verify', {
+      const response = await protectedAxios.post('/auth/sliding/refresh', {
         token: authToken,
       });
-      const accessToken = response?.data?.data?.token;
+      const accessToken = response?.data?.token;
       // Avoid unnecessary state updates that can trigger re-renders.
       if (accessToken && (accessToken !== authToken || !isAuthenticated)) {
         setAuthToken(accessToken);
