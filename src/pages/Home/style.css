@@ -110,11 +110,6 @@
     max-width: 800px;
 }
 
-.home-search-examples {
-    font-size: 0.85rem;
-    color: #555;
-}
-
 /* Ensure cards don’t get chopped */
 .home-search-cards {
     margin-top: 2rem;
@@ -173,8 +168,8 @@
 }
 
 
-.home-search-box {
-    margin: 2rem auto;
+.home-hero-content .home-search-box {
+    margin: 2rem auto 0 auto;
     max-width: 800px;
 }
 
@@ -182,6 +177,20 @@
     margin-top: 1rem;
     color: #666;
     font-size: 0.9rem;
+    text-align: center;
+}
+
+.home-search-examples a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.home-search-examples a:hover code {
+    background-color: #eee;
+}
+
+.home-search-examples a code {
+    cursor: pointer;
 }
 
 /* Search card spacing */

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Publications, { MainPublication } from 'components/Publications';
 import InnerCard from 'components/UI/InnerCard';
 import './style.css';
@@ -111,10 +111,7 @@ const HomePage: React.FC = () => {
           {/*  Explore datasets using text, protein, or nucleotide sequences. */}
           {/* </p> */}
           <div className="home-search-box">
-            <form
-              className="search-input-container"
-              onSubmit={onSearch}
-            >
+            <form className="search-input-container" onSubmit={onSearch}>
               <div className="search-input-with-button">
                 <input
                   type="text"
@@ -132,10 +129,20 @@ const HomePage: React.FC = () => {
               </div>
             </form>
           </div>
-          {/* <p className="vf-text-body--2 home-search-examples"> */}
-          {/*  Examples: <code>Tara Oceans</code>, <code>MGYS00000410</code>,{' '} */}
-          {/*  <code>Human Gut</code> */}
-          {/* </p> */}
+          <p className="vf-text-body--2 home-search-examples">
+            Example searches:{' '}
+            <Link to="/search?query=tara+oceans">
+              <code>Tara oceans</code>
+            </Link>
+            ,{' '}
+            <Link to="/search?query=MGYS00000410">
+              <code>MGYS00000410</code>
+            </Link>
+            ,{' '}
+            <Link to="/search?query=human+gut">
+              <code>Human Gut</code>
+            </Link>
+          </p>
         </div>
       </div>
 
