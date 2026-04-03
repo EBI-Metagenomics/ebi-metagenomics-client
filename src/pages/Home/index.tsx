@@ -159,15 +159,15 @@ const HomePage: React.FC = () => {
         <div className="vf-card home-search-card">
           <InnerCard
             title="Search by Protein"
-            label="Search for resources using  nucleotide or protein sequences"
-            to="/biomes"
+            label="Find resources using  nucleotide or protein sequences"
+            to="https://www.ebi.ac.uk/metagenomics/proteins/"
             icon={ProteinIcon}
           />
         </div>
         <div className="vf-card home-search-card">
           <InnerCard
             title="Search by Nucleotide"
-            label="Search metagenomes using nucleotide sequences"
+            label="Find metagenomes using nucleotide sequences"
             to="/search-tools"
             icon={DnaIcon}
           />
