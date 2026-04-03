@@ -10,9 +10,7 @@ const rowSelector = 'table tbody tr.vf-table__row';
 const PAGE_SIZE = 25;
 
 function goToSearchPage(subpage="") {
-  openPage(origPage);
-  cy.get(`#text-search-section`).trigger('click');
-  cy.get(`#text-search-content-section a[href="/metagenomics/search${subpage}"]`).click();
+  openPage(`search${subpage}`);
 }
 
 function interceptWithFilter(value, param, fixture, searchType = 'projects') {
@@ -27,10 +25,10 @@ function testCheckboxNumberIsReflectedInTable(labelFor) {
     cy.get(`label[for='${labelFor}'] .mg-number`)
         .invoke('text')
         .then((text) =>{
-            facetCount=text;
+            facetCount=text.trim();
             cy.get(`label[for='${labelFor}']`).click();
             waitForSearchResults(rowSelector, PAGE_SIZE);
-            cy.get('.vf-tabs__item .is-active .mg-number').contains(facetCount)
+            cy.get('.vf-tabs__link.is-active .mg-number').contains(facetCount)
         });
 }
 
@@ -66,25 +64,25 @@ function testSliderFilter(selector) {
 }
 
 function checkNumberOfResultsDecreaseAfterAction(action){
-    cy.get(`.vf-tabs__item .is-active .mg-number`)
+    cy.get(`.vf-tabs__link.is-active .mg-number`)
     .invoke('text')
     .then((text) =>{
-        const count=Number(text);
+        const count=Number(text.trim().replace(/,/g, ''));
         action();
         cy.wait(1000);
         cy.get('.mg-loading-overlay-container > .mg-loading-overlay')
             .should('not.exist');
         
-        cy.get('.vf-tabs__item .is-active .mg-number')
+        cy.get('.vf-tabs__link.is-active .mg-number')
             .invoke('text')
             .then((text2) =>{
-                const count2=Number(text2);
+                const count2=Number(text2.trim().replace(/,/g, ''));
                 assert.isTrue(count2<count, "The number of results should have decreased: ["+count2+"<"+count+"]")
             });
     });
 
 }
-describe.skip('Search page', function() {
+describe('Search page', function() {
     context('Search Study Functionality', function() {
         beforeEach(function() {
             setupDefaultSearchPageRouting();
@@ -147,9 +145,9 @@ describe.skip('Search page', function() {
         });
         it('Changing tabs should update result view', function() {
             cy.get(`.mg-search-tabs li`).contains('Sample analyses').click();
-            cy.get('.vf-tabs__item .is-active').should('contain', 'Sample analyses');
+            cy.get('.vf-tabs__link.is-active').should('contain', 'Sample analyses');
             cy.get(`.mg-search-tabs li`).contains('Studies').click();
-            cy.get('.vf-tabs__item .is-active').should('contain', 'Studies');
+            cy.get('.vf-tabs__link.is-active').should('contain', 'Studies');
         });
     });
 
