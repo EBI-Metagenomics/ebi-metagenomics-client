@@ -132,7 +132,7 @@ const MegaMenu: React.FC = () => {
                 onClick={() => setMenuVisible(false)}
                 rel="noreferrer"
               >
-                Sequence search &nbsp;
+                Protein sequence search &nbsp;
                 <span className="icon icon-common icon-external-link-alt" />
               </a>
             </li>

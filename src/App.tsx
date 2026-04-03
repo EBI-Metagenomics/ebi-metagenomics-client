@@ -24,7 +24,7 @@ import './styles/search.css';
 import { ToastContainer } from 'react-toastify';
 import Matomo from 'components/Analytics';
 import PersistLogin from 'components/PersistLogin';
-// import SearchPage from './pages/Search';
+const SearchPage = lazy(() => import('./pages/Search'));
 // import Branchwater from './pages/Branchwater';
 // import PersistLogin from 'components/PersistLogin';
 import V2AssemblyPage from 'pages/Assembly/v2index';
@@ -119,7 +119,7 @@ const App: React.FC = () => {
                 <Route path="/branchwater-search" element={<Branchwater />} />
                 <Route path="/mag-search" element={<MagSearch />} />
                 <Route path="/gene-search" element={<GeneSearch />} />
-                {/* <Route path="/search/*" element={<TextSearch />} /> */}
+                <Route path="/search/*" element={<SearchPage />} />
                 {/* <Route path="/sequence-search" element={<SequenceSearch />} /> */}
                 <Route path="/browse/*" element={<Browse />} />
                 <Route path="/studies/:accession/*" element={<Study />} />
