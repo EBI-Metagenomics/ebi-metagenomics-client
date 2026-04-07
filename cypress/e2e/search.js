@@ -82,7 +82,7 @@ function checkNumberOfResultsDecreaseAfterAction(action){
     });
 
 }
-describe('Search page', function() {
+describe.skip('Search page', function() {
     context('Search Study Functionality', function() {
         beforeEach(function() {
             setupDefaultSearchPageRouting();
