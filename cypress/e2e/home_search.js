@@ -93,10 +93,10 @@ describe('Home page', function() {
                 .and('include', '/search');
         });
 
-        it('"Search by Protein" card should link to /biomes', function() {
+        it('"Search by Protein" card should link to /proteins', function() {
             cy.contains('a.vf-card__link', 'Search by Protein')
                 .should('have.attr', 'href')
-                .and('include', '/biomes');
+                .and('include', '/proteins');
         });
 
         it('"Search by Nucleotide" card should link to /search-tools', function() {
