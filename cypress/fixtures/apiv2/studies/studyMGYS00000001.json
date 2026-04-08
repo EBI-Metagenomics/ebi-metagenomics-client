@@ -3,6 +3,7 @@
   "ena_accessions": [
     "PRJNA398089"
   ],
+  "first_accession": "PRJNA398089",
   "title": "Project 1",
   "biome": {
     "biome_name": "Plants",

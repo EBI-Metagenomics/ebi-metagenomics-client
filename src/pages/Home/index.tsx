@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import Publications, { MainPublication } from 'components/Publications';
 import InnerCard from 'components/UI/InnerCard';
 import './style.css';
-import SearchPage from 'pages/Search';
 import useReveal from 'hooks/useReveal';
 import TrainingResources from 'components/Home/TrainingResources';
 import LatestStudies from 'components/Home/Request/LatestStudies';
@@ -92,6 +92,12 @@ const HomePage: React.FC = () => {
   );
   const analysisRef = useReveal();
   const studiesRef = useReveal();
+  const navigate = useNavigate();
+  const [searchTerms, setSearchTerms] = useState('');
+  const onSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate(`/search?query=${encodeURIComponent(searchTerms)}`);
+  };
   return (
     <section className="vf-content vf-stack vf-stack--800">
       {/* Hero section with stylized layout */}
@@ -105,12 +111,38 @@ const HomePage: React.FC = () => {
           {/*  Explore datasets using text, protein, or nucleotide sequences. */}
           {/* </p> */}
           <div className="home-search-box">
-            <SearchPage />
+            <form className="search-input-container" onSubmit={onSearch}>
+              <div className="search-input-with-button">
+                <input
+                  type="text"
+                  className="vf-form__input search-text-input"
+                  placeholder="Enter keywords, sample names, or biome types..."
+                  value={searchTerms}
+                  onChange={(e) => setSearchTerms(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className="vf-button vf-button--primary vf-button--large"
+                >
+                  Search
+                </button>
+              </div>
+            </form>
           </div>
-          {/* <p className="vf-text-body--2 home-search-examples"> */}
-          {/*  Examples: <code>Tara Oceans</code>, <code>MGYS00000410</code>,{' '} */}
-          {/*  <code>Human Gut</code> */}
-          {/* </p> */}
+          <p className="vf-text-body--2 home-search-examples">
+            Example searches:{' '}
+            <Link to="/search?query=tara+oceans">
+              <code>Tara oceans</code>
+            </Link>
+            ,{' '}
+            <Link to="/search?query=MGYS00000410">
+              <code>MGYS00000410</code>
+            </Link>
+            ,{' '}
+            <Link to="/search?query=human+gut">
+              <code>Human Gut</code>
+            </Link>
+          </p>
         </div>
       </div>
 
@@ -127,15 +159,15 @@ const HomePage: React.FC = () => {
         <div className="vf-card home-search-card">
           <InnerCard
             title="Search by Protein"
-            label="Search for resources using  nucleotide or protein sequences"
-            to="/biomes"
+            label="Find resources using nucleotide or protein sequences"
+            to="https://www.ebi.ac.uk/metagenomics/proteins/"
             icon={ProteinIcon}
           />
         </div>
         <div className="vf-card home-search-card">
           <InnerCard
             title="Search by Nucleotide"
-            label="Search metagenomes using nucleotide sequences"
+            label="Find metagenomes using nucleotide sequences"
             to="/search-tools"
             icon={DnaIcon}
           />

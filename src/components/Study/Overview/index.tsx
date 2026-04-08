@@ -41,8 +41,8 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
           <Box label="External links">
             <ul data-cy="study-external-links">
               <li>
-                <ExtLink href={ENA_VIEW_URL + data.ena_accessions[0]}>
-                  ENA website ({data.ena_accessions[0]})
+                <ExtLink href={ENA_VIEW_URL + data.first_accession}>
+                  ENA website ({data.first_accession})
                 </ExtLink>
               </li>
             </ul>
