@@ -23,7 +23,6 @@ type StudyOverviewProps = {
 };
 
 const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
-  console.log('DATA ', data);
   const { config } = useContext(UserContext);
   const lineage = data.biome?.lineage || '';
   const {
