@@ -159,7 +159,7 @@ const HomePage: React.FC = () => {
         <div className="vf-card home-search-card">
           <InnerCard
             title="Search by Protein"
-            label="Find resources using  nucleotide or protein sequences"
+            label="Find resources using nucleotide or protein sequences"
             to="https://www.ebi.ac.uk/metagenomics/proteins/"
             icon={ProteinIcon}
           />
