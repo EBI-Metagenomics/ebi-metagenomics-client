@@ -3,12 +3,14 @@ import Publications, { MainPublication } from 'components/Publications';
 
 import './style.css';
 
-import emblImg from 'images/funding/embl_logo.png';
-import bbsrcImg from 'images/funding/BBSRC.png';
-import holofoodImg from 'images/funding/holofood.png';
-import atlantecoImg from 'images/funding/atlanteco.png';
-import findingPhenoImg from 'images/funding/finding-pheno.png';
-import oescLifeImg from 'images/funding/eosc-life.png';
+import emblImg from 'images/funding/embl_logo_colour.png';
+import bbsrcImg from 'images/funding/bbsrc-logo.png';
+import mrcImg from 'images/funding/mrc_logo.svg';
+import wellcomeImg from 'images/funding/wellcome_genome_logo.png';
+import leverhulmeImg from 'images/funding/leverhulme_logo.png';
+import microbeImg from 'images/funding/microbe_logo.webp';
+import b5dImg from 'images/funding/b5d_logo.webp';
+import blueRemediomicsImg from 'images/funding/Blueremediomics-_logo.png';
 
 const AboutPage: React.FC = () => {
   return (
@@ -64,13 +66,15 @@ const AboutPage: React.FC = () => {
           infrastructure for Life-Science data; EMBL – FNR (CORE International);
           and European Molecular Biology Laboratory (EMBL) core funds.
         </p>
-        <div className="vf-grid vf-grid__col-4 mg-about-logos">
+        <div className="mg-about-logos">
           <img src={emblImg} alt="embl logo" />
           <img src={bbsrcImg} alt="bbsrc logo" />
-          <img src={findingPhenoImg} alt="findingpheno logo" />
-          <img src={atlantecoImg} alt="atlanteco logo" />
-          <img src={holofoodImg} alt="holofood logo" />
-          <img src={oescLifeImg} alt="eosc-life logo" />
+          <img src={mrcImg} alt="mrc logo" />
+          <img src={wellcomeImg} alt="wellcome genome logo" />
+          <img src={leverhulmeImg} alt="leverhulme logo" />
+          <img src={microbeImg} alt="microbe logo" />
+          <img src={b5dImg} alt="b5d logo" className="b5d-logo" />
+          <img src={blueRemediomicsImg} alt="blueremediomics logo" />
         </div>
       </div>
     </section>
