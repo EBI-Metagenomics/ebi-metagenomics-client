@@ -1,9 +1,9 @@
 .mg-about-logos {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
+  align-items: center;
+  justify-items: center;
 }
 
 .mg-about-logos img {
