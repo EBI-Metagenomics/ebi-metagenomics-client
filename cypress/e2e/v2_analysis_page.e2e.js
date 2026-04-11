@@ -26,11 +26,9 @@ function stubAnalysisDetails(accession, experimentType, overrides = {}) {
 
 describe('V2 Analysis page', () => {
   it('renders correctly for Amplicon experiment type', () => {
-    // const acc = 'MGYA00000001';
     const acc = 'MGYA01000004';
     stubAnalysisDetails(acc, 'amplicon');
 
-    // openPage(`/v2-analyses/${acc}`);
     openPage(`v2-analyses/${acc}`);
 
     cy.wait('@analysis-details');
@@ -51,12 +49,46 @@ describe('V2 Analysis page', () => {
       cy.contains('Quality control');
       cy.contains('Taxonomy');
       cy.contains('ASV');
+      cy.contains('Downloads');
       cy.contains('Functional analysis').should('not.exist');
       cy.contains('Pathways/Systems').should('not.exist');
       cy.contains('Contig Viewer').should('not.exist');
     });
 
     // Default redirect to overview
+    cy.url().should('include', '/overview');
+  });
+
+  it('renders correctly for Metagenomic experiment type', () => {
+    const acc = 'MGYA00000005';
+    stubAnalysisDetails(acc, 'metagenomic');
+
+    openPage(`v2-analyses/${acc}`);
+
+    cy.wait('@analysis-details');
+
+    // Breadcrumbs
+    cy.get('.vf-breadcrumbs').should('exist');
+    cy.contains('.vf-breadcrumbs__item', 'Home');
+    cy.contains('.vf-breadcrumbs__item', 'Studies');
+    cy.contains('.vf-breadcrumbs__item', 'MGYS0000001');
+    cy.contains('.vf-breadcrumbs__item', acc);
+
+    // Heading
+    cy.contains('h2', `Analysis ${acc}`);
+
+    // Tabs for Metagenomic
+    cy.get('.vf-tabs').within(() => {
+      cy.contains('Overview');
+      cy.contains('Quality control');
+      cy.contains('Taxonomy');
+      cy.contains('Downloads');
+      cy.contains('Functional analysis').should('not.exist');
+      cy.contains('Pathways/Systems').should('not.exist');
+      cy.contains('Contig Viewer').should('not.exist');
+      cy.contains('ASV').should('not.exist');
+    });
+
     cy.url().should('include', '/overview');
   });
 
