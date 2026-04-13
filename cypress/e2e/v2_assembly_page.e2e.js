@@ -1,10 +1,3 @@
-// / <reference types="cypress" />
-
-// E2E tests for V2 Assembly page component (src/pages/Assembly/v2index.tsx)
-// Requirement: use .js (not .cy.ts)
-
-const API_V2 = Cypress.env('API_V2') || 'https://www.ebi.ac.uk/metagenomics/api/v2';
-
 function stubAssemblyDetails(accession, overrides = {}) {
   cy.intercept('GET', `**/assemblies/${accession}/genome-links`, {
     statusCode: 200,
