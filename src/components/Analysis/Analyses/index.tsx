@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import Loading from 'components/UI/Loading';
@@ -6,6 +6,8 @@ import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
 import useURLAccession from 'hooks/useURLAccession';
 import useStudyAnalysesList from 'hooks/data/useStudyAnalyses';
+import useRunAnalysesList from 'hooks/data/useRunAnalysesList';
+import useAssemblyAnalysesList from 'hooks/data/useAssemblyAnalysesList';
 import { Analysis, AnalysisList } from '@/interfaces';
 import { ErrorFromFetch } from 'hooks/data/useData';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
@@ -16,18 +18,25 @@ type AssociatedAnaysesProps = {
   rootEndpoint: string;
 };
 
-const AnalysesTable: React.FC<AssociatedAnaysesProps> = () => {
+const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   const accession = useURLAccession();
   const [analysesPage] = useQueryParamState<number>('analysesPage');
-  // NEEDS TO BE PROVIDED BY PARENT COMPONENT
 
-  const { data, error, loading, download } = useStudyAnalysesList(
-    accession || '',
-    {
-      page: analysesPage,
-      page_size: expectedPageSize,
+  const useAnalysesHook = useMemo(() => {
+    switch (rootEndpoint) {
+      case 'runs':
+        return useRunAnalysesList;
+      case 'assemblies':
+        return useAssemblyAnalysesList;
+      default:
+        return useStudyAnalysesList;
     }
-  );
+  }, [rootEndpoint]);
+
+  const { data, error, loading, download } = useAnalysesHook(accession || '', {
+    page: analysesPage,
+    page_size: expectedPageSize,
+  });
 
   if (loading) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error as ErrorFromFetch} />;

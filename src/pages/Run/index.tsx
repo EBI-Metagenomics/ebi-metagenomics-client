@@ -1,7 +1,6 @@
 import React from 'react';
 
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseObj } from '@/hooks/data/useData';
+import useRunDetail from '@/hooks/data/useRunDetail';
 import useURLAccession from '@/hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
@@ -21,28 +20,25 @@ const { withQueryParamProvider } =
 
 const RunPage: React.FC = () => {
   const accession = useURLAccession();
-  const { data, loading, error } = useMGnifyData(`runs/${accession}`);
+  const { data: runData, loading, error } = useRunDetail(accession);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
-  if (!data) return <Loading />;
-  const { data: runData } = data as MGnifyResponseObj;
+  if (!runData) return <Loading />;
 
   const details = [
     {
       key: 'Study',
       value: () => {
-        if (!runData.relationships.study?.data) {
+        if (!runData.study) {
           return (
-            <ExtLink
-              href={`${ENA_VIEW_URL}${runData.attributes['ena-study-accession']}`}
-            >
-              {runData.attributes['ena-study-accession']}
+            <ExtLink href={`${ENA_VIEW_URL}${runData.study_accession}`}>
+              {runData.study_accession}
             </ExtLink>
           );
         }
         return (
-          <Link to={`/studies/${runData.relationships.study.data.id}`}>
-            {runData.relationships.study.data.id}
+          <Link to={`/studies/${runData.study.accession}`}>
+            {runData.study.accession}
           </Link>
         );
       },
@@ -50,42 +46,44 @@ const RunPage: React.FC = () => {
     {
       key: 'Sample',
       value: () => (
-        <Link to={`/samples/${runData.relationships.sample?.data.id}`}>
-          {runData.relationships.sample?.data.id}
+        <Link to={`/samples/${runData.sample?.accession}`}>
+          {runData.sample?.accession}
         </Link>
       ),
     },
     {
       key: 'ENA accession',
       value: () => (
-        <ExtLink href={`${ENA_VIEW_URL}${runData.id}`}>{runData.id}</ExtLink>
+        <ExtLink href={`${ENA_VIEW_URL}${runData.accession}`}>
+          {runData.accession}
+        </ExtLink>
       ),
     },
     {
       key: 'Experiment type',
-      value: String(runData.attributes['experiment-type']),
+      value: String(runData.experiment_type),
     },
     {
       key: 'Instrument model',
-      value: String(runData.attributes['instrument-model']),
+      value: String(runData.instrument_model),
     },
     {
       key: '	Instrument platform type',
-      value: String(runData.attributes['instrument-platform']),
+      value: String(runData.instrument_platform),
     },
   ];
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     {
       label: 'Associated sample',
-      url: `/samples/${runData.relationships.sample?.data.id}`,
+      url: `/samples/${runData.sample?.accession}`,
     },
-    { label: runData.id },
+    { label: runData.accession },
   ];
   return (
     <section className="vf-content">
       <Breadcrumbs links={breadcrumbs} />
-      <h2>Run: {runData?.id || ''}</h2>
+      <h2>Run: {runData?.accession || ''}</h2>
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
           <Box label="Description">

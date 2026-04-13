@@ -54,6 +54,14 @@ export interface Run extends EnaDerivedObject {
   instrument_platform: string | null;
 }
 
+export interface RunDetail extends Run {
+  experiment_type: string;
+  sample_accession: string;
+  study_accession: string;
+  sample: Sample;
+  study: Study;
+}
+
 export interface Analysis {
   study_accession: string;
   accession: string;
