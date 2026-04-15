@@ -102,15 +102,15 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
         cell: { value: { assembly?: string; run?: string } };
       }) => (
         <>
-          {cell.value.assembly || cell.value.run}
-          {/* {cell.value.assembly && ( */}
-          {/*  <Link to={`/assemblies/${cell.value.assembly}`}> */}
-          {/*    {cell.value.assembly} */}
-          {/*  </Link> */}
-          {/* )} */}
-          {/* {cell.value.run && ( */}
-          {/*  <Link to={`/runs/${cell.value.run}`}>{cell.value.run}</Link> */}
-          {/* )} */}
+          {/*{cell.value.assembly || cell.value.run}*/}
+          {cell.value.assembly && (
+            <Link to={`/v2-assemblies/${cell.value.assembly}`}>
+              {cell.value.assembly}
+            </Link>
+          )}
+          {cell.value.run && (
+            <Link to={`/runs/${cell.value.run}`}>{cell.value.run}</Link>
+          )}
         </>
       ),
     },
