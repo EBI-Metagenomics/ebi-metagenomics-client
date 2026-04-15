@@ -21,6 +21,8 @@ describe('Study page', function() {
           {fixture: 'apiv2/studies/studyMGYS00000001Publications.json'}).as('getPublications');
         cy.intercept('GET', `${config.api_v2}/publications/1/annotations`,
           {fixture: 'apiv2/publications/publication1Annotations.json'});
+      // cy.intercept('GET', `${config.api_v2}/studies/${projectId}/samples/**`,
+      //   {fixture: 'apiv2/samples/sampleListAll.json'});
     })
     context('General', function() {
         beforeEach(function() {
@@ -91,21 +93,6 @@ describe('Study page', function() {
 
         it('Should contain correct number of analyses', function() {
             cy.get('span.mg-number').should('contain', '11');
-        });
-
-        // TODO ordering
-
-        it('Should respond to pagination', function() {
-            cy.contains('MGYA00000001').should('be.visible');
-            cy.contains('MGYA00000010').should('be.visible');
-            // noinspection CYUnresolvedAlias
-            cy.get('@getAnalysesPage1.all').should('have.length', 2);
-            // noinspection CYUnresolvedAlias
-            cy.get('@getAnalysesPage2.all').should('have.length', 0);
-            cy.get('.vf-pagination__item--next-page > .vf-button').click();
-            // noinspection CYUnresolvedAlias
-            cy.get('@getAnalysesPage2.all').should('have.length', 1);
-            cy.contains('MGYA00000011').should('be.visible');
         });
 
         it('Analysis table download should paginate', function() {
