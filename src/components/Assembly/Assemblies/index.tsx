@@ -32,7 +32,9 @@ const {
   initialPageSize
 );
 
-const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({}) => {
+const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
+  rootEndpoint: _rootEndpoint,
+}) => {
   const accession = useURLAccession();
   const [assemblyPage] = useAssembliesPage<number>();
   const [assemblyFilter] = useAssembliesSearch<string>();
