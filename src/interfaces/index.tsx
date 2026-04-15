@@ -101,7 +101,25 @@ export interface AnalysisDetailWithAnnotations extends AnalysisDetail {
   };
 }
 
-export type AnalysisList = PaginatedList<Analysis>;
+export interface AnalysisList extends PaginatedList<Analysis> {}
+export interface Assembly extends EnaDerivedObject {
+  updated_at: string;
+  run_accession: string;
+  sample_accession: string;
+  reads_study_accession: string;
+  assembly_study_accession: string;
+  assembler_name: string;
+  assembler_version: string;
+  metadata: {
+    coverage: number;
+    coverage_depth: number;
+  };
+  experiment_type: string;
+  wgs_accession: string;
+  legacy_accession: string;
+  pipelines: string[];
+}
+export type AssemblyList = PaginatedList<Assembly>;
 
 export interface Study extends EnaDerivedObject {
   title: string;

@@ -11,7 +11,6 @@ import { Link } from 'react-router-dom';
 import AssociatedAssemblies from 'components/Assembly/Assemblies';
 import AssociatedAnalyses from 'components/Analysis/Analyses';
 import { ENA_VIEW_URL } from '@/utils/urls';
-import ExtraAnnotations from 'components/ExtraAnnotations';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 
@@ -94,13 +93,6 @@ const RunPage: React.FC = () => {
           </Box>
           <Box label="Associated assemblies">
             <AssociatedAssemblies rootEndpoint="runs" />
-          </Box>
-          <Box label="Additional analyses">
-            <p>
-              Additional annotations produced by workflows run outside the scope
-              of MGnify’s versioned pipelines.
-            </p>
-            <ExtraAnnotations namespace="runs" />
           </Box>
         </div>
       </section>

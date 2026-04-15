@@ -10,7 +10,7 @@ import useRunAnalysesList from 'hooks/data/useRunAnalysesList';
 import useAssemblyAnalysesList from 'hooks/data/useAssemblyAnalysesList';
 import { Analysis, AnalysisList } from '@/interfaces';
 import { ErrorFromFetch } from 'hooks/data/useData';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import { truncate } from 'lodash-es';
 
 const expectedPageSize = 10;
@@ -18,9 +18,18 @@ type AssociatedAnaysesProps = {
   rootEndpoint: string;
 };
 
+const {
+  useAnalysesPage,
+  useAnalysesPageSize,
+  useAnalysesOrder,
+  withQueryParamProvider,
+} = createSharedQueryParamContextForTable('analyses', {}, expectedPageSize);
+
 const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   const accession = useURLAccession();
-  const [analysesPage] = useQueryParamState<number>('analysesPage');
+  const [analysesPage] = useAnalysesPage<number>();
+  const [analysesPageSize] = useAnalysesPageSize<number>();
+  const [analysesOrder] = useAnalysesOrder<string>();
 
   const useAnalysesHook = useMemo(() => {
     switch (rootEndpoint) {
@@ -35,7 +44,8 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
 
   const { data, error, loading, download } = useAnalysesHook(accession || '', {
     page: analysesPage,
-    page_size: expectedPageSize,
+    page_size: analysesPageSize,
+    ordering: analysesOrder,
   });
 
   if (loading) return <Loading size="small" />;
@@ -124,18 +134,18 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       Title={
         <div>
           Analyses
-          <span className="mg-number">{data.count || 1}</span>
+          <span className="mg-number">{data.count || 0}</span>
         </div>
       }
       initialPage={(analysesPage as number) - 1}
+      initialPageSize={expectedPageSize}
       className="mg-anlyses-table"
       loading={loading}
       namespace="analyses"
       showPagination={showPagination}
       onDownloadRequested={download}
-      expectedPageSize={expectedPageSize}
     />
   );
 };
 
-export default AnalysesTable;
+export default withQueryParamProvider(AnalysesTable);
