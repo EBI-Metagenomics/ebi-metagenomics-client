@@ -21,7 +21,7 @@ function stubAssemblyAnalyses(accession, fixture) {
       }
     ]
   };
-  cy.intercept('GET', `**/studies/${accession}/analyses/*`, {
+  cy.intercept('GET', `**/assemblies/${accession}/analyses*`, {
     statusCode: 200,
     body: response
   }).as('assembly-analyses');
