@@ -11,15 +11,15 @@ const useAuthTokenVerifier = () => {
   // retriggering effects and causing repeated API calls.
 
   return useCallback(async () => {
-    // If there is no token, nothing to verify.
-    if (!authToken) return;
+    // If there is no token or user has logged out, nothing to verify.
+    if (!authToken || !isAuthenticated) return;
     try {
       const response = await protectedAxios.post('/auth/sliding/refresh', {
         token: authToken,
       });
       const accessToken = response?.data?.token;
       // Avoid unnecessary state updates that can trigger re-renders.
-      if (accessToken && (accessToken !== authToken || !isAuthenticated)) {
+      if (accessToken && accessToken !== authToken) {
         setAuthToken(accessToken);
       }
     } catch (error) {
