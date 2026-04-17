@@ -1,6 +1,7 @@
 import React from 'react';
 import { Download } from 'interfaces/index';
 import { flatMap, groupBy } from 'lodash-es';
+import Link from 'components/UI/Link';
 
 type SummaryProps = {
   downloads: Download[];
@@ -24,6 +25,16 @@ const SummaryTab: React.FC<SummaryProps> = ({ downloads }) => {
               <h4>Pipeline version: {pipeline}</h4>
               <ul className="vf-list">
                 {downloadsForPipeline.map((download) => (
+                  // <>
+                  //   <Link to={download.url} key={download.alias}>
+                  //     <span className="icon icon-common icon-download" />
+                  //     &nbsp;
+                  //     {download.alias}:{' '}
+                  //   </Link>
+                  //   <span>{download.short_description}</span>
+                  //   <br />
+                  // </>
+
                   <li
                     key={download.alias}
                     className="vf-list__item mg-list__item"

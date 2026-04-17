@@ -9,7 +9,7 @@ import config from '@/utils/config';
 import { noop } from 'lodash-es';
 
 const MegaMenu: React.FC = () => {
-  const { isAuthenticated } = useContext(UserContext);
+  const { isAuthenticated, username } = useContext(UserContext);
   const [, setAuthToken] = useAuthToken();
   const [menuVisible, setMenuVisible] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -186,20 +186,22 @@ const MegaMenu: React.FC = () => {
             </li>
 
             {isAuthenticated ? (
-              <li className="vf-navigation__item">
-                <a
-                  className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
-                    activeSection === 'login-section' ? 'active' : ''
-                  }`}
-                  id="login-section"
-                  href="/metagenomics/mydata"
-                  onClick={(event) =>
-                    handleMenuItemClick(event, 'login-section')
-                  }
-                >
-                  My data
-                </a>
-              </li>
+              <>
+                <li className="vf-navigation__item">
+                  <a
+                    className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
+                      activeSection === 'login-section' ? 'active' : ''
+                    }`}
+                    id="login-section"
+                    href="/metagenomics/mydata"
+                    onClick={(event) =>
+                      handleMenuItemClick(event, 'login-section')
+                    }
+                  >
+                    My data ( {username})
+                  </a>
+                </li>
+              </>
             ) : (
               <li className="vf-navigation__item">
                 <a

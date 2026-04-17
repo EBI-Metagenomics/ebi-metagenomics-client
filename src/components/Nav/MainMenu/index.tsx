@@ -37,7 +37,7 @@ const START_MARGIN = -7;
 
 const Nav: React.FC = () => {
   const { pathname } = useLocation();
-  const { isAuthenticated } = useContext(UserContext);
+  const { isAuthenticated, username } = useContext(UserContext);
   const verifyAuthToken = useAuthTokenVerifier();
   useEffect(() => {
     verifyAuthToken();
@@ -46,7 +46,7 @@ const Nav: React.FC = () => {
     <nav className="vf-navigation vf-navigation--main | vf-cluster vf-u-fullbleed">
       <ul className="vf-navigation__list | vf-list | vf-cluster__inner">
         {(isAuthenticated
-          ? [...pages, { label: 'My Data', path: '/mydata' }]
+          ? [...pages, { label: `My data (${username}) `, path: '/mydata' }]
           : pages
         ).map(({ label, path, href }) => (
           <li className="vf-navigation__item" key={label}>

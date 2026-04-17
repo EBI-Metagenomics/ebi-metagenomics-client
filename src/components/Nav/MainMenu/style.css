@@ -43,3 +43,9 @@
   filter: invert(24%) sepia(14%) saturate(3697%) hue-rotate(111deg)
     brightness(86%) contrast(92%);
 }
+
+.mg-username-nav-label {
+  font-weight: 600;
+  cursor: default;
+  opacity: 0.85;
+}
