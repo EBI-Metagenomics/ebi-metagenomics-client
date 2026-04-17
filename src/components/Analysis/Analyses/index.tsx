@@ -144,6 +144,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       namespace="analyses"
       showPagination={showPagination}
       onDownloadRequested={download}
+      expectedPageSize={expectedPageSize}
     />
   );
 };
