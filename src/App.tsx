@@ -25,8 +25,6 @@ import { ToastContainer } from 'react-toastify';
 import Matomo from 'components/Analytics';
 import PersistLogin from 'components/PersistLogin';
 const SearchPage = lazy(() => import('./pages/Search'));
-// import Branchwater from './pages/Branchwater';
-// import PersistLogin from 'components/PersistLogin';
 import V2AssemblyPage from 'pages/Assembly/v2index';
 
 import LandingPage from 'pages/Branchwater/LandingPage';
@@ -40,8 +38,6 @@ import NotFoundError from 'components/UI/NotFoundError';
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Help = lazy(() => import('./pages/Help'));
-// const TextSearch = lazy(() => import('./pages/TextSearch'));
-// const SequenceSearch = lazy(() => import('./pages/SequenceSearch'));
 const Browse = lazy(() => import('./pages/Browse'));
 const Login = lazy(() => import('./pages/Login'));
 const Study = lazy(() => import('./pages/Study'));
@@ -119,7 +115,6 @@ const App: React.FC = () => {
                 <Route path="/mag-search" element={<MagSearch />} />
                 <Route path="/gene-search" element={<GeneSearch />} />
                 <Route path="/search/*" element={<SearchPage />} />
-                {/* <Route path="/sequence-search" element={<SequenceSearch />} /> */}
                 <Route path="/browse/*" element={<Browse />} />
                 <Route path="/studies/:accession/*" element={<Study />} />
                 <Route path="/super-studies/*" element={<SuperStudy />} />
@@ -143,9 +138,7 @@ const App: React.FC = () => {
                   <Route index element={<MyDataStudies />} />
                   <Route path="studies" element={<MyDataStudies />} />
                 </Route>
-                {/* <Route element={<PersistLogin />}> */}
                 <Route path="/login" element={<Login />} />
-                {/* </Route> */}
                 <Route path="*" element={<NotFoundError />} />
               </Routes>
             </Suspense>

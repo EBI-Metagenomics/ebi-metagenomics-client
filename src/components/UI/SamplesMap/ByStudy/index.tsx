@@ -27,7 +27,8 @@ const LoadMoreSamples: React.FC<LoadMoreSamplesProps> = ({
   handleRequest,
 }) =>
   total > limit ? (
-    <div>
+    <span>
+      <br />
       ⚠️ We are only loading the first {LIMIT} samples. Click{' '}
       <button
         type="button"
@@ -37,7 +38,7 @@ const LoadMoreSamples: React.FC<LoadMoreSamplesProps> = ({
         HERE
       </button>{' '}
       to load them all.
-    </div>
+    </span>
   ) : null;
 type SamplesMapProps = {
   study: StudyDetail;
@@ -97,9 +98,12 @@ const SamplesMapByStudy: React.FC<SamplesMapProps> = ({ study }) => {
   });
   if (samplesFiltered?.length === 0) {
     return (
-      <InfoBanner type="info" title="Notice">
-        None of the {(samples?.count ?? 0) > limit ? 'loaded' : ''} samples have
-        geolocation co-ordinates.
+      <InfoBanner type="info" title="Notice:">
+        &nbsp;
+        <p>
+          None of the {(samples?.count ?? 0) > limit ? 'loaded' : ''} samples
+          have geolocation co-ordinates.
+        </p>
         <LoadMoreSamples
           total={samples?.count ?? 0}
           limit={limit}

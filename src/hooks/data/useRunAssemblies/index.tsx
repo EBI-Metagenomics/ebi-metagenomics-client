@@ -1,14 +1,11 @@
 import UserContext from 'pages/Login/UserContext';
 import { useContext } from 'react';
 
-import { AnalysisList } from 'interfaces';
+import { AssemblyList } from '@/interfaces';
 import useApiData from 'hooks/data/useApiData';
 import { KeyValue } from 'hooks/data/useData';
 
-const useAssemblyAnalysesList = (
-  accession: string,
-  parameters: KeyValue = {}
-) => {
+const useRunAssemblies = (accession: string, parameters: KeyValue = {}) => {
   const { config } = useContext(UserContext);
 
   const queryString = Object.entries(parameters)
@@ -18,13 +15,13 @@ const useAssemblyAnalysesList = (
     )
     .join('&');
 
-  const url = `${config.api_v2}assemblies/${accession}/analyses${
+  const url = `${config.api_v2}runs/${accession}/assemblies/${
     queryString ? `?${queryString}` : ''
   }`;
 
-  return useApiData<AnalysisList>({
+  return useApiData<AssemblyList>({
     url,
   });
 };
 
-export default useAssemblyAnalysesList;
+export default useRunAssemblies;
