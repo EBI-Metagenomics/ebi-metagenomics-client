@@ -4,11 +4,13 @@ import Link from 'components/UI/Link';
 import { getDetailOrSearchURLForQuery } from '@/utils/accessions';
 import { useNavigate } from 'react-router-dom';
 import UserContext from 'pages/Login/UserContext';
+import useAuthToken from 'hooks/authentication/useAuthToken';
 import config from '@/utils/config';
 import { noop } from 'lodash-es';
 
 const MegaMenu: React.FC = () => {
   const { isAuthenticated } = useContext(UserContext);
+  const [, setAuthToken] = useAuthToken();
   const [menuVisible, setMenuVisible] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
@@ -26,6 +28,14 @@ const MegaMenu: React.FC = () => {
   const closeMegaMenu = () => {
     setMenuVisible(false);
     setActiveSection(null);
+  };
+
+  const logout = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    // @ts-ignore
+    setAuthToken(null);
+    closeMegaMenu();
+    navigate('/');
   };
 
   const searchBox = useRef<HTMLInputElement | null>(null);
@@ -720,6 +730,7 @@ const MegaMenu: React.FC = () => {
                           <a
                             href={`${config.basename}/login`}
                             className="vf-navigation__link rotating-link"
+                            onClick={logout}
                           >
                             Logout
                           </a>
