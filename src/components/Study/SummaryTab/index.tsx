@@ -1,7 +1,6 @@
 import React from 'react';
 import { Download } from 'interfaces/index';
 import { flatMap, groupBy } from 'lodash-es';
-import Link from 'components/UI/Link';
 
 type SummaryProps = {
   downloads: Download[];
