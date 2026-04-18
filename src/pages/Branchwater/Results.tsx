@@ -254,10 +254,10 @@ const Results: React.FC<ResultsProps> = ({
       <section className="vf-grid mg-grid-search vf-u-padding__top--400">
         <div className="vf-stack vf-stack--800">
           <ContainmentFilter
-            queryParamKey={`${queryParamPrefix}containment`.replace(/^-/, '')}
+            queryParamKey={`${queryParamPrefix}Containment`}
           />
           <CANIFilter
-            queryParamKey={`${queryParamPrefix}cani`.replace(/^-/, '')}
+            queryParamKey={`${queryParamPrefix}Cani`}
           />
 
           <LocalMultipleOptionFilter
