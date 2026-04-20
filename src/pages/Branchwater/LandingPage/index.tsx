@@ -38,7 +38,7 @@ const LandingPage: React.FC = () => {
       <section className="bw-landing__intro | vf-stack vf-stack--600">
         <h1 className="vf-text-heading--2">Nucleotide Sequence Search Tools</h1>
 
-        <p className="vf-intro">
+        <p className="vf-lead">
           Discover where your genome sequences or fragments are found within
           MGnify genome catalogues and INSDC metagenomes. Choose a search method
           below to get started.
@@ -48,7 +48,6 @@ const LandingPage: React.FC = () => {
       {/* Cards Grid */}
       <div className="vf-grid vf-grid__col-3 bw-landing__cards">
         <BranchwaterCard
-          bg="protein"
           to="/branchwater-search"
           title="Search genomes against INSDC metagenomes"
           subheading="Branchwater  search"
@@ -73,7 +72,6 @@ const LandingPage: React.FC = () => {
         />
 
         <BranchwaterCard
-          bg="hex"
           to="/mag-search"
           title="Search genomes against MGnify catalogues"
           subheading="sourmash signature compare"
@@ -98,7 +96,6 @@ const LandingPage: React.FC = () => {
         />
 
         <BranchwaterCard
-          bg="dna"
           to="/gene-search"
           title="Search short DNA sequences against MGnify catalogues"
           subheading="COBS search"

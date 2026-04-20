@@ -7,7 +7,6 @@ type Props = {
   title: string;
   subheading?: string;
   text: string | React.ReactNode;
-  bg: 'dna' | 'hex' | 'protein';
 };
 
 const BranchwaterCard: React.FC<Props> = ({
@@ -15,11 +14,10 @@ const BranchwaterCard: React.FC<Props> = ({
   title,
   subheading,
   text,
-  bg,
 }) => {
   return (
     <article
-      className={`vf-card vf-card--brand vf-card--bordered bw-card bg-${bg}`}
+      className={`vf-card vf-card--brand vf-card--bordered bw-card`}
     >
       <div className="vf-card__content | vf-stack vf-stack--400">
         {/* Heading */}
