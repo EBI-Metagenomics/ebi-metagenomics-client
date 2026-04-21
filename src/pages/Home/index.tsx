@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
 import Publications, { MainPublication } from 'components/Publications';
 import InnerCard from 'components/UI/InnerCard';
+import EMGModal from 'components/UI/EMGModal';
+import UserContext from 'pages/Login/UserContext';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import PrivateRequest from 'components/Home/Request/Private';
+import MailForm from 'components/Home/Request/MailForm';
 import './style.css';
 import useReveal from 'hooks/useReveal';
 import TrainingResources from 'components/Home/TrainingResources';
@@ -93,6 +97,17 @@ const HomePage: React.FC = () => {
   const analysisRef = useReveal();
   const studiesRef = useReveal();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const fromQueryParamValue = searchParams.get('from');
+  const { isAuthenticated } = useContext(UserContext);
+  const [modal, setModal] = useState({
+    show:
+      isAuthenticated &&
+      ['public-request', 'private-request'].includes(
+        fromQueryParamValue as string
+      ),
+    isPublic: fromQueryParamValue === 'public-request',
+  });
   const [searchTerms, setSearchTerms] = useState('');
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,6 +115,18 @@ const HomePage: React.FC = () => {
   };
   return (
     <section className="vf-content vf-stack vf-stack--800">
+      <EMGModal
+        isOpen={modal.show}
+        onRequestClose={() =>
+          setModal({
+            show: false,
+            isPublic: true,
+          })
+        }
+        contentLabel="Request Analysis"
+      >
+        {modal.isPublic ? <MailForm isPublic /> : <PrivateRequest />}
+      </EMGModal>
       {/* Hero section with stylized layout */}
       <div className="home-hero compact-hero">
         <div className="home-hero-bg-pattern" />
@@ -203,14 +230,22 @@ const HomePage: React.FC = () => {
             <InnerCard
               title="Submit and/or Request"
               label="Submit your data for analysis by the MGnify team"
-              to="/submit-request"
+              to={
+                isAuthenticated
+                  ? () => setModal({ show: true, isPublic: false })
+                  : '/login?from=private-request'
+              }
             />
           </div>
           <div className="vf-card home-search-card">
             <InnerCard
               title="Request Public Dataset"
               label="Request analysis of publicly available microbiome datasets"
-              to="/public-request"
+              to={
+                isAuthenticated
+                  ? () => setModal({ show: true, isPublic: true })
+                  : '/login?from=public-request'
+              }
             />
           </div>
         </div>
