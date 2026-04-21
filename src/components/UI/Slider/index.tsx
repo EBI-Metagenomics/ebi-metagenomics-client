@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { debounce, isNil, round } from 'lodash-es';
 import './style.css';
 
@@ -37,10 +37,7 @@ const Slider: React.FC<SliderProps> = ({
     min: selection && 'min' in selection ? selection.min : min,
     max: selection && 'max' in selection ? selection.max : max,
   });
-  const debounced = useCallback(
-    (s: SelectionType) => debounce(onChange, 300)(s),
-    [onChange]
-  );
+  const debounced = useMemo(() => debounce(onChange, 300), [onChange]);
   useEffect(() => {
     if (!isNil(selection) && !areEqual(currentSelection, selection)) {
       debounced(currentSelection);
