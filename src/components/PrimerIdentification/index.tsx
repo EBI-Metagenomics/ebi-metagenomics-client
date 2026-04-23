@@ -16,11 +16,19 @@ const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
     }
 
     fetch(downloadableFile.url)
-      .then((response) => {
+      .then(async (response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        return response.json();
+        const text = await response.text();
+        if (!text || text.trim().length === 0) {
+          throw new Error('The primer data file is empty or missing.');
+        }
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          throw new Error('Failed to parse primer data: Invalid JSON format');
+        }
       })
       .then((jsonData) => {
         const primerData = Array.isArray(jsonData) ? jsonData[0] : jsonData;
