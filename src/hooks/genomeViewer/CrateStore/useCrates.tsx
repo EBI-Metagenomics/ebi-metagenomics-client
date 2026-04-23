@@ -12,6 +12,7 @@ import JSZip from 'jszip';
 import { ROCrate } from 'ro-crate';
 import { Track } from 'utils/trackView';
 import { useEffectOnce } from 'react-use';
+import { fetchBlob } from 'utils/fetch';
 
 const extractSchema = async (crateZip: JSZip): Promise<object> => {
   const metadataJsonFile = crateZip.file('ro-crate-metadata.json');
@@ -94,8 +95,7 @@ const hydrateStorableCrate = async (
 };
 
 const fetchAndStoreCrate = async (crateURL: string): Promise<Crate> => {
-  const crate = await fetch(crateURL);
-  const zipBlob = await crate.blob();
+  const zipBlob = await fetchBlob(crateURL, {}, 'The crate file is empty.');
   const crateZip = await JSZip.loadAsync(zipBlob);
   const schema = await extractSchema(crateZip);
   let gff: Maybe<string>;

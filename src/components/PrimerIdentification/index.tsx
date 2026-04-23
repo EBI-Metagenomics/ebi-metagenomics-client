@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowRight, ArrowLeft, Dna, Info } from 'lucide-react';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import './style.css';
+import { fetchJson } from 'utils/fetch';
 
 const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
   const [data, setData] = useState<any>();
@@ -15,21 +16,12 @@ const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
       return;
     }
 
-    fetch(downloadableFile.url)
-      .then(async (response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const text = await response.text();
-        if (!text || text.trim().length === 0) {
-          throw new Error('The primer data file is empty or missing.');
-        }
-        try {
-          return JSON.parse(text);
-        } catch (e) {
-          throw new Error('Failed to parse primer data: Invalid JSON format');
-        }
-      })
+    fetchJson(
+      downloadableFile.url,
+      {},
+      'The primer data file is empty or missing.',
+      'Failed to parse primer data: Invalid JSON format'
+    )
       .then((jsonData) => {
         const primerData = Array.isArray(jsonData) ? jsonData[0] : jsonData;
         if (!primerData) {

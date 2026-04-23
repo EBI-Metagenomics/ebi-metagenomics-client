@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { fetchText } from 'utils/fetch';
 
 const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
   const [loading, setLoading] = useState(true);
@@ -47,13 +48,11 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(fileUrl);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const tsvContent = await response.text();
+        const tsvContent = await fetchText(
+          fileUrl,
+          {},
+          'The statistics data file is empty or missing.'
+        );
         const parsedStats = parseTsvFile(tsvContent);
 
         setDada2Stats(parsedStats);

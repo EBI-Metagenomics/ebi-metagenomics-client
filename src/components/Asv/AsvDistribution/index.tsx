@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { fetchText } from 'utils/fetch';
 import {
   ComposedChart,
   Line,
@@ -109,13 +110,11 @@ const AsvDistribution = ({ fileUrl }) => {
 
       try {
         setLoading(true);
-        const response = await fetch(fileUrl);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const tsvContent = await response.text();
+        const tsvContent = await fetchText(
+          fileUrl,
+          {},
+          'The ASV distribution file is empty or missing.'
+        );
         const parsedData = parseAsvTsvFile(tsvContent);
 
         if (parsedData.length === 0) {
