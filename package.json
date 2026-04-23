@@ -59,7 +59,7 @@
     "ro-crate": "^3.2.1",
     "textarea-sequence": "3.5.1",
     "universal-cookie": "4.0.4",
-    "uuid": "^8.3.2"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@cypress/code-coverage": "3.12.1",
