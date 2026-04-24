@@ -105,16 +105,16 @@ describe('Home page', function() {
                 .and('include', '/search-tools');
         });
 
-      it('"Submit and/or Request" card should link to the right submissions page', function() {
-        cy.contains('a.vf-card__link', 'Submit and/or Request')
-          .should('have.attr', 'href')
-          .and('include', 'login?from=private-request');
-      });
+        it('"Submit and/or Request" card should link to the right submissions page', function() {
+            cy.contains('a.vf-card__link', 'Submit and/or Request')
+                .should('have.attr', 'href')
+                .and('include', 'login?from=private-request');
+        });
 
-      it('"Request Public Dataset" card should link to the right submissions page', function() {
-        cy.contains('a.vf-card__link', 'Request Public Dataset')
-          .should('have.attr', 'href')
-          .and('include', 'login?from=public-request');
-      });
+        it('"Request Public Dataset" card should link to the right submissions page', function() {
+            cy.contains('a.vf-card__link', 'Request Public Dataset')
+                .should('have.attr', 'href')
+                .and('include', 'login?from=public-request');
+        });
     });
 });
