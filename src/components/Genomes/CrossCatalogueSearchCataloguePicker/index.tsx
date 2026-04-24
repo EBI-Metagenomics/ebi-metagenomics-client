@@ -22,7 +22,7 @@ const CataloguePicker: React.FC<CataloguePickerProps> = ({
     count: number;
     items: any[];
   }>({
-    url: `${config.api_v2}/genomes/catalogues/`,
+    url: `${config.api_v2}genomes/catalogues/`,
   });
 
   const catalogueOptions = useMemo(() => {

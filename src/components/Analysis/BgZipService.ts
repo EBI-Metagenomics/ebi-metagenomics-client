@@ -3,6 +3,7 @@
 import * as pako from 'pako';
 import { Download } from 'interfaces/index';
 import { find } from 'lodash-es';
+import { fetchWithCheck } from 'utils/fetch';
 
 const MAX_BLOCK_SIZE = 100000;
 
@@ -257,12 +258,7 @@ export class BGZipService {
   async readGzipFileAsText(): Promise<string> {
     console.groupCollapsed('Read full gzip file as text');
 
-    const response = await fetch(this.dataFileUrl);
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch gzip file: ${response.status} ${response.statusText}`
-      );
-    }
+    const response = await fetchWithCheck(this.dataFileUrl);
 
     const compressed = new Uint8Array(await response.arrayBuffer());
     console.debug(`Compressed gzip file size: ${compressed.length}`);
@@ -271,6 +267,9 @@ export class BGZipService {
     console.debug(`Decompressed gzip file size: ${decompressed.length}`);
 
     const text = new TextDecoder('utf-8').decode(decompressed);
+    if (!text || text.trim().length === 0) {
+      throw new Error('The decompressed file is empty.');
+    }
 
     console.groupEnd();
     return text;
