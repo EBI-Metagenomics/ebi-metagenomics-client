@@ -23,7 +23,8 @@ const SuperStudyPage: React.FC = () => {
     { label: 'Super Studies', url: '/browse/super-studies' },
     { label: slug ?? '' },
   ];
-  const logoAbs = config.api_v2 + data.logo_url;
+  const apiOrigin = new URL(config.api_v2).origin;
+  const logoAbs = apiOrigin + data.logo_url;
   return (
     <section className="vf-content">
       <Breadcrumbs links={breadcrumbs} />
