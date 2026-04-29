@@ -1,17 +1,8 @@
-import UserContext from 'pages/Login/UserContext';
-import { useContext } from 'react';
-
 import { SampleDetail } from '@/interfaces';
-import useApiData from 'hooks/data/useApiData';
+import useMgnifyResourceDetail from 'hooks/data/useMgnifyResourceDetail';
 
 const useSampleDetail = (accession: string) => {
-  const { config } = useContext(UserContext);
-
-  const url = `${config.api_v2}samples/${accession}`;
-
-  return useApiData<SampleDetail>({
-    url,
-  });
+  return useMgnifyResourceDetail<SampleDetail>('samples', accession);
 };
 
 export default useSampleDetail;

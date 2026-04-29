@@ -1,37 +1,12 @@
-import UserContext from 'pages/Login/UserContext';
-import { useContext } from 'react';
-
 import { AnalysisList } from 'interfaces/index';
-import useApiData from 'hooks/data/useApiData';
 import { KeyValue } from 'hooks/data/useData';
+import useMgnifyResourceList from 'hooks/data/useMgnifyResourceList';
 
 const useStudyAnalysesList = (accession: string, parameters: KeyValue = {}) => {
-  const { config } = useContext(UserContext);
-
-  const queryString = Object.entries(parameters)
-    .filter(
-      ([, value]) => value !== undefined && value !== null && value !== ''
-    )
-    .map(
-      ([key, value]) =>
-        `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`
-    )
-    .join('&');
-
-  // const queryString = Object.entries(parameters)
-  //   .map(
-  //     ([key, value]) =>
-  //       `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`
-  //   )
-  //   .join('&');
-
-  const url = `${config.api_v2}studies/${accession}/analyses/${
-    queryString ? `?${queryString}` : ''
-  }`;
-
-  return useApiData<AnalysisList>({
-    url,
-  });
+  return useMgnifyResourceList<AnalysisList>(
+    `studies/${accession}/analyses`,
+    parameters
+  );
 };
 
 export default useStudyAnalysesList;
