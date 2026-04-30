@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseList } from '@/hooks/data/useData';
 import { getBiomeIcon } from '@/utils/biomes';
 import Loading from 'components/UI/Loading';
 import Link from 'components/UI/Link';
 import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import useBiomesList from '@/hooks/data/useBiomes';
+import { Biome } from '@/interfaces';
 
 const {
   useBiomesPage,
@@ -28,9 +28,9 @@ const BrowseBiomes: React.FC = () => {
   const {
     data: biomesList,
     loading,
-    isStale,
-    downloadURL,
-  } = useMGnifyData('biomes', {
+    stale: isStale,
+    download: downloadURL,
+  } = useBiomesList({
     page,
     ordering: order,
     page_size: pageSize,
@@ -42,7 +42,7 @@ const BrowseBiomes: React.FC = () => {
       {
         id: 'biome',
         Header: '',
-        accessor: 'id',
+        accessor: 'lineage',
         Cell: ({ cell }) => (
           <span className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`} />
         ),
@@ -52,9 +52,9 @@ const BrowseBiomes: React.FC = () => {
       {
         id: 'biome_name',
         Header: 'Biome name and lineage',
-        accessor: (biome) => ({
-          lineage: biome.attributes.lineage,
-          name: biome.attributes['biome-name'],
+        accessor: (biome: Biome) => ({
+          lineage: biome.lineage,
+          name: biome.biome_name,
         }),
         Cell: ({ cell }) => (
           <>
@@ -69,9 +69,9 @@ const BrowseBiomes: React.FC = () => {
       {
         Header: 'Samples excluding sub-lineages',
         id: 'samples_count',
-        accessor: (biome) => ({
-          lineage: biome.attributes.lineage,
-          count: biome.attributes['samples-count'],
+        accessor: (biome: Biome) => ({
+          lineage: biome.lineage,
+          count: (biome as any).samples_count,
         }),
         Cell: ({ cell }) => (
           <Link to={`/browse/samples?biome=${cell.value.lineage}`}>
@@ -91,16 +91,16 @@ const BrowseBiomes: React.FC = () => {
   return (
     <section className="mg-browse-section">
       {hasData && (
-        <EMGTable
+        <EMGTable<Biome>
           cols={columns}
-          data={biomesList as MGnifyResponseList}
-          Title={`Biomes (${biomesList.meta.pagination.count})`}
+          data={biomesList?.items ?? []}
+          Title={`Biomes (${biomesList?.count})`}
           initialPage={(page as number) - 1}
           sortable
           loading={loading}
           isStale={isStale}
           showTextFilter
-          downloadURL={downloadURL}
+          onDownloadRequested={downloadURL}
         />
       )}
     </section>

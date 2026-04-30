@@ -1,17 +1,8 @@
-import UserContext from 'pages/Login/UserContext';
-import { useContext } from 'react';
-
 import { StudyDetail } from 'interfaces/index';
-import useApiData from 'hooks/data/useApiData';
+import useMgnifyResourceDetail from 'hooks/data/useMgnifyResourceDetail';
 
 const useStudyDetail = (accession: string) => {
-  const { config } = useContext(UserContext);
-
-  const url = `${config.api_v2}studies/${accession}`;
-
-  return useApiData<StudyDetail>({
-    url,
-  });
+  return useMgnifyResourceDetail<StudyDetail>('studies', accession);
 };
 
 export default useStudyDetail;

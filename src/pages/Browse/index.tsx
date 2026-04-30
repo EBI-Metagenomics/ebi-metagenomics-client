@@ -6,7 +6,7 @@ import BrowseSuperStudies from 'components/Browse/SuperStudies';
 import BrowseSamples from 'components/Browse/Samples';
 import BrowsePublications from 'components/Browse/Publications';
 // import BrowseGenomes from 'components/Browse/Genomes';
-// import BrowseBiomes from 'components/Browse/Biomes';
+import BrowseBiomes from 'components/Browse/Biomes';
 import Tabs from 'components/UI/Tabs';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import BrowseGenomes from 'components/Browse/Genomes';
@@ -17,7 +17,7 @@ const tabs = [
   { label: 'Samples', to: '/browse/samples' },
   { label: 'Publications', to: '/browse/publications' },
   { label: 'Genomes', to: '/browse/genomes' },
-  // { label: 'Biomes', to: '/browse/biomes' },
+  { label: 'Biomes', to: '/browse/biomes' },
 ];
 
 const Browse: React.FC = () => {
@@ -46,7 +46,7 @@ const Browse: React.FC = () => {
           <Route path="samples" element={<BrowseSamples />} />
           <Route path="publications" element={<BrowsePublications />} />
           <Route path="genomes" element={<BrowseGenomes />} />
-          {/* <Route path="biomes" element={<BrowseBiomes />} /> */}
+          <Route path="biomes" element={<BrowseBiomes />} />
           <Route index element={<Navigate to="studies" replace />} />
         </Routes>
       </div>

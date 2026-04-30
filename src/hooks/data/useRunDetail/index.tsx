@@ -1,17 +1,8 @@
-import UserContext from 'pages/Login/UserContext';
-import { useContext } from 'react';
-
 import { RunDetail } from '@/interfaces';
-import useApiData from 'hooks/data/useApiData';
+import useMgnifyResourceDetail from 'hooks/data/useMgnifyResourceDetail';
 
 const useRunDetail = (accession: string) => {
-  const { config } = useContext(UserContext);
-
-  const url = `${config.api_v2}runs/${accession}`;
-
-  return useApiData<RunDetail>({
-    url,
-  });
+  return useMgnifyResourceDetail<RunDetail>('runs', accession);
 };
 
 export default useRunDetail;
