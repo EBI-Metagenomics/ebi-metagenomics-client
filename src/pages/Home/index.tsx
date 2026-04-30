@@ -10,6 +10,7 @@ import './style.css';
 import useReveal from 'hooks/useReveal';
 import TrainingResources from 'components/Home/TrainingResources';
 import LatestStudies from 'components/Home/Request/LatestStudies';
+import BlogExcerpts from 'components/Home/BlogExcerpts';
 
 const HomePage: React.FC = () => {
   const SearchIcon = (
@@ -260,10 +261,10 @@ const HomePage: React.FC = () => {
       {/*  </div> */}
       {/* </section> */}
 
-      {/* <section className="vf-section"> */}
-      {/*  <h2 className="vf-section__title">Spotlight & Articles</h2> */}
-      {/*  <BlogExcerpts /> */}
-      {/* </section> */}
+      <section className="vf-section">
+        <h2 className="vf-section__title">Spotlight & Articles</h2>
+        <BlogExcerpts />
+      </section>
 
       <section className="vf-section">
         <h2 className="vf-section__title">Latest Publications</h2>

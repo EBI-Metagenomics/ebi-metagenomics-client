@@ -5,16 +5,19 @@ import EMGTable from 'components/UI/EMGTable';
 import useApiData from 'hooks/data/useApiData';
 import { GenomeList, PaginatedList } from '@/interfaces';
 import Loading from 'components/UI/Loading';
-import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
+import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 import { getBiomeIcon } from 'utils/biomes';
 import FetchError from 'components/UI/FetchError';
 import config from 'utils/config';
 
+const { usePage, usePageSize, useOrder, useSearch, withQueryParamProvider } =
+  createSharedQueryParamContextForTable('', {}, 25);
+
 const GenomesTextSearch: React.FC = () => {
-  const [page] = useQueryParamState('page', 1, Number);
-  const [order] = useQueryParamState('order', '');
-  const [pageSize] = useQueryParamState('page_size', 25, Number);
-  const [search] = useQueryParamState('search', '');
+  const [page] = usePage<number>();
+  const [order] = useOrder<string>();
+  const [pageSize] = usePageSize<number>();
+  const [search] = useSearch<string>();
   const buildURL = () => {
     const params = new URLSearchParams();
     if (page) params.set('page', String(page));
@@ -96,4 +99,4 @@ const GenomesTextSearch: React.FC = () => {
   );
 };
 
-export default GenomesTextSearch;
+export default withQueryParamProvider(GenomesTextSearch);
