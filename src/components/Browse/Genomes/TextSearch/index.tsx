@@ -22,7 +22,7 @@ const GenomesTextSearch: React.FC = () => {
     if (order) params.set('ordering', String(order));
     if (search) params.set('search', String(search));
     const qs = params.toString();
-    return `${config.api_v2}/genomes/${qs ? `?${qs}` : ''}`;
+    return `${config.api_v2}genomes/${qs ? `?${qs}` : ''}`;
   };
   const {
     data: genomesList,
