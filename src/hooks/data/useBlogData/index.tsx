@@ -19,7 +19,6 @@ const useBlogData: (resource: string) => BlogDataResponse = (resource) => {
 
   useEffect(() => {
     if (isNil(resource)) return;
-    const b = `${config.blog}${resource}`;
     axios
       .get(`${config.blog}${resource}`)
       .then((response) => {
