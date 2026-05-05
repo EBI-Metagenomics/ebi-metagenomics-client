@@ -134,10 +134,9 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
   const gaugePosition = Math.min(Math.max(chimericValue * 100, 0), 100);
 
   const getSrrId = (url) => {
-    const matches = url.match(/SRR\d+/);
-    return matches ? matches[0] : 'Sample';
+    const match = url.match(/(SRR\d+)_/);
+    return match ? match[1] : 'Sample';
   };
-
   const sampleId = getSrrId(fileUrl);
 
   return (

@@ -10,7 +10,8 @@ import BiomeSelector from 'components/UI/BiomeSelector';
 import { some } from 'lodash-es';
 import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 import config from 'utils/config';
-const { usePage, useBiome, withQueryParamProvider } =
+import { sortByOrder } from '@/utils/sorting';
+const { usePage, useBiome, useOrder, withQueryParamProvider } =
   createSharedQueryParamContextForTable('', {
     biome: SharedTextQueryParam(''),
   });
@@ -19,6 +20,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
   const [page] = usePage<number>();
   const [hasData, setHasData] = useState(false);
   const [biome] = useBiome<string>();
+  const [order] = useOrder<string>();
   const {
     data: apiData,
     loading,
@@ -35,11 +37,13 @@ const BrowseGenomesByCatalogue: React.FC = () => {
           item?.biome?.lineage?.startsWith?.(biome)
         )
       : apiData.items;
+    console.log('filteredItems ', filteredItems);
+    const sortedItems = sortByOrder(filteredItems, order);
     return {
-      count: filteredItems.length,
-      items: filteredItems,
+      count: sortedItems.length,
+      items: sortedItems,
     } as GenomeCatalogueList;
-  }, [apiData, biome]);
+  }, [apiData, biome, order]);
 
   const columns = React.useMemo(
     () => [
