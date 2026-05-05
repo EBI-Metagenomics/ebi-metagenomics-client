@@ -137,7 +137,6 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
     const match = url.match(/(SRR\d+)_/);
     return match ? match[1] : 'Sample';
   };
-  console.log('fileUrl ', fileUrl);
   const sampleId = getSrrId(fileUrl);
 
   return (
