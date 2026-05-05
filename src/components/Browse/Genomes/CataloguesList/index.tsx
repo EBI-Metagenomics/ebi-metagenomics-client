@@ -10,6 +10,7 @@ import BiomeSelector from 'components/UI/BiomeSelector';
 import { some } from 'lodash-es';
 import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 import config from 'utils/config';
+import { sortByOrder } from '@/utils/sorting';
 const { usePage, useBiome, useOrder, withQueryParamProvider } =
   createSharedQueryParamContextForTable('', {
     biome: SharedTextQueryParam(''),
@@ -36,20 +37,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
           item?.biome?.lineage?.startsWith?.(biome)
         )
       : apiData.items;
-    const sortedItems = order
-      ? [...filteredItems].sort((a, b) => {
-          const desc = order.startsWith('-');
-          const field = desc ? order.slice(1) : order;
-          const av = a[field];
-          const bv = b[field];
-          if (av == null && bv == null) return 0;
-          if (av == null) return desc ? -1 : 1;
-          if (bv == null) return desc ? 1 : -1;
-          return desc
-            ? String(bv).localeCompare(String(av))
-            : String(av).localeCompare(String(bv));
-        })
-      : filteredItems;
+    const sortedItems = sortByOrder(filteredItems, order);
     return {
       count: sortedItems.length,
       items: sortedItems,
