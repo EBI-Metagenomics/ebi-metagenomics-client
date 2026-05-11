@@ -21,6 +21,7 @@ import useSampleDetail from 'hooks/data/useSampleDetail';
 import { flatMap, size, startCase } from 'lodash-es';
 import InfoBanner from 'components/UI/InfoBanner';
 import AssociatedStudies from 'components/Study/Studies';
+import AssociatedRuns from 'components/Sample/Runs';
 
 const tabs = [
   { label: 'Sample metadata', to: '#' },
@@ -154,10 +155,9 @@ const SamplePage: React.FC = () => {
                   <AssociatedStudies associatedStudies={sampleData.studies} />
                 )}
               </RouteForHash>
-              {/*    <RouteForHash hash="#runs">*/}
-              {/*TODO*/}
-              {/*      <AssociatedRuns />*/}
-              {/*    </RouteForHash>*/}
+              <RouteForHash hash="#runs">
+                    <AssociatedRuns />
+                  </RouteForHash>
               {/*    <RouteForHash hash="#assemblies">*/}
               {/*TODO*/}
               {/*      <AssociatedAssemblies rootEndpoint="samples" />*/}

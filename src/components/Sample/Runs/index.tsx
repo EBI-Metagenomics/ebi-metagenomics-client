@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { MGnifyResponseList } from '@/hooks/data/useData';
 import useURLAccession from '@/hooks/useURLAccession';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+import useMgnifyResourceList from 'hooks/data/useMgnifyResourceList';
+import { RunList } from '@/interfaces';
 
 const initialPageSize = 10;
 
@@ -32,16 +32,15 @@ const AssociatedRuns: React.FC = () => {
   const [runsPageSize] = useRunsPageSize<number>();
   const [runsOrder] = useRunsOrder<string>();
   const [runsFilter] = useRunsSearch<string>();
-  const { data, loading, error, isStale, downloadURL } = useMGnifyData(
-    `samples/${accession}/runs`,
-    {
+  const { data, loading, error, stale, download } =
+    useMgnifyResourceList<RunList>(`samples/${accession}/runs`, {
       page: runsPage as number,
       ordering: runsOrder as string,
       page_size: runsPageSize as number,
       search: runsFilter as string,
-    }
-  );
-  if (loading && !isStale) return <Loading size="small" />;
+    });
+
+  if (loading && !stale) return <Loading size="small" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
 
@@ -49,47 +48,39 @@ const AssociatedRuns: React.FC = () => {
     {
       id: 'accession',
       Header: 'Run ID',
-      accessor: 'id',
+      accessor: 'accession',
       Cell: ({ cell }) => <Link to={`/runs/${cell.value}`}>{cell.value}</Link>,
     },
     {
       Header: 'Experiment type',
-      accessor: 'attributes.experiment-type',
+      accessor: 'experiment_type',
       disableSortBy: true,
     },
     {
       Header: 'Instrument model',
-      accessor: 'attributes.instrument-model',
+      accessor: 'instrument_model',
       disableSortBy: true,
     },
     {
       Header: 'Instrument platform',
-      accessor: 'attributes.instrument-platform',
+      accessor: 'instrument_platform',
       disableSortBy: true,
-    },
-    {
-      Header: 'Pipeline versions',
-      accessor: 'relationships.pipelines.data',
-      disableSortBy: true,
-      Cell: ({ cell }) => (
-        <>{(cell.value as { id: string }[]).map(({ id }) => id).join(', ')}</>
-      ),
     },
   ];
 
   return (
     <EMGTable
       cols={columns}
-      data={data as MGnifyResponseList}
+      data={data}
       initialPage={(runsPage as number) - 1}
       initialPageSize={initialPageSize}
       className="mg-runs-table"
       loading={loading}
-      isStale={isStale}
+      isStale={stale}
       sortable
       showTextFilter
       namespace="runs"
-      downloadURL={downloadURL}
+      onDownloadRequested={download}
     />
   );
 };
