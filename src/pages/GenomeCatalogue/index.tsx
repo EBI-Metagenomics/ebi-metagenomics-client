@@ -16,13 +16,14 @@ import UserContext from 'pages/Login/UserContext';
 import ExtLink from 'components/UI/ExtLink';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import { GenomeCatalogue } from '@/interfaces';
+import PhyloTree from 'components/Genomes/PhyloTree';
 
 const tabs = [
   { label: 'Genome list', to: '#' },
   // TODO: put back when phylo tree json downloads is made available
   // { label: 'Taxonomy tree', to: '#phylo-tab' },
   // TODO: put back when protein catalogue info is made available
-  // { label: 'Protein catalogue', to: '#protein-catalog-tab' },
+  { label: 'Protein catalogue', to: '#protein-catalog-tab' },
   { label: 'Search by Gene', to: '#genome-search-tab' },
   { label: 'Search by MAG', to: '#genome-search-mag-tab' },
 ];
@@ -131,10 +132,8 @@ const GenomePage: React.FC = () => {
           <RouteForHash hash="#protein-catalog-tab">
             <h3>{genomeCatalogueData.protein_catalogue_name as string}</h3>
             <ReactMarkdown>
-              {
-                (genomeCatalogueData.protein_catalogue_description ||
-                  '') as string
-              }
+              {(genomeCatalogueData.protein_catalogue_description as string) ||
+                'No protein catalogue description available for this catalogue.'}
             </ReactMarkdown>
           </RouteForHash>
         </div>
