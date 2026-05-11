@@ -30,8 +30,8 @@ export type ConfigType = {
   pipelines: {
     [version: string]: {
       [experimentType: string]: {
-        githubs: string[];
-        workflowHubs: string[];
+        githubs?: string[];
+        workflowHubs?: string[];
         docs: string[];
       };
     };

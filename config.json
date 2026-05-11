@@ -24,6 +24,23 @@
     "cadenceMs": 1000
   },
   "pipelines": {
+    "v5": {
+      "amplicon": {
+        "githubs": ["https://github.com/EBI-Metagenomics/pipeline-v5"],
+        "workflowHubs": ["https://workflowhub.eu/workflows/361?version=1"],
+        "docs": ["https://docs.mgnify.org/"]
+      },
+      "metagenomic": {
+        "githubs": ["https://github.com/EBI-Metagenomics/pipeline-v5"],
+        "workflowHubs": ["https://workflowhub.eu/workflows/362?version=1"],
+        "docs": ["https://docs.mgnify.org/"]
+      },
+      "assembly": {
+        "githubs": ["https://github.com/EBI-Metagenomics/pipeline-v5"],
+        "workflowHubs": ["https://workflowhub.eu/workflows/360?version=2"],
+        "docs": ["https://docs.mgnify.org/"]
+      }
+    },
     "v6": {
       "amplicon": {
         "githubs": ["https://github.com/EBI-Metagenomics/amplicon-pipeline"],
@@ -50,10 +67,15 @@
         "docs": ["https://docs.mgnify.org/"]
       }
     },
+    "v6.1": {
+      "amplicon": {
+        "githubs": ["https://github.com/EBI-Metagenomics/amplicon-analysis-pipeline/releases/tag/v6.0.8"],
+        "workflowHubs": ["https://workflowhub.eu/projects/9#workflows"],
+        "docs": ["https://docs.mgnify.org/"]
+      }
+    },
     "default": {
       "default": {
-        "githubs": ["https://github.com/EBI-Metagenomics"],
-        "workflowHubs": ["https://workflowhub.eu/projects/9#workflows"],
         "docs": ["https://docs.mgnify.org/"]
       }
     }
