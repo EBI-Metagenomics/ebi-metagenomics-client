@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 
-import useMGnifyData from '@/hooks/data/useMGnifyData';
 import Loading from 'components/UI/Loading';
-import { ResponseFormat } from '@/hooks/data/useData';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import protectedAxios from '@/utils/protectedAxios';
 import QualityControlChart from './QCChart';
 import ContigsHistogram from './ContigsHistogram';
 import NucleotidesHistogram from './NucleotidesHistogram';
@@ -15,22 +15,84 @@ import './style.css';
 
 const QualityControl: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
-  const accession = analysisData?.id;
-  const { data, loading, error } = useMGnifyData(
-    `analyses/${accession}/summary`,
-    {},
-    {},
-    ResponseFormat.TSV
-  );
+  const resultsDir = analysisData?.results_dir;
+  const pipelineVersion = analysisData?.pipeline_version;
+
+  const isVersion41 = pipelineVersion === 'V4.1';
+  const isVersion50 = pipelineVersion === 'V5';
+  const isSupportedVersion = isVersion41 || isVersion50;
+
+  const [summaryData, setSummaryData] = useState<{
+    [key: string]: string;
+  } | null>(null);
+  const [qcStepData, setQcStepData] = useState<{
+    [key: string]: string;
+  } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [, setError] = useState<any>(null);
+
+  const summaryPath = `${resultsDir}/qc-statistics/summary.out`;
+  const qcStepPath = isVersion41
+    ? `${resultsDir}/qc-statistics/summary.out`
+    : `${resultsDir}/qc_summary`;
+
+  useEffect(() => {
+    if (resultsDir && isSupportedVersion) {
+      setLoading(true);
+      const fetchSummary = protectedAxios.get(summaryPath);
+      const fetchQcStep = protectedAxios.get(qcStepPath).catch(() => ({
+        data: '',
+      }));
+
+      Promise.all([fetchSummary, fetchQcStep])
+        .then(([summaryResponse, qcStepResponse]) => {
+          const summaryText = summaryResponse.data;
+          const parsedSummary = summaryText
+            .split('\n')
+            .filter(Boolean)
+            .map((line) => line.split('\t'));
+          setSummaryData(Object.fromEntries(parsedSummary));
+
+          const qcStepText = qcStepResponse.data;
+          const parsedQcStep = qcStepText
+            .split('\n')
+            .filter(Boolean)
+            .map((line) => line.split('\t'));
+          setQcStepData(Object.fromEntries(parsedQcStep));
+
+          setLoading(false);
+        })
+        .catch((err) => {
+          if (axios.isAxiosError(err) && err.response?.status === 401) {
+            localStorage.setItem('mgnify.sessionExpired', 'true');
+            window.location.reload();
+          }
+          setError(err);
+          setLoading(false);
+        });
+    }
+  }, [summaryPath, qcStepPath, resultsDir, isSupportedVersion]);
+
   if (loading) return <Loading size="large" />;
-  const summaryData =
-    error || !data
-      ? null
-      : Object.fromEntries(data as unknown as Array<[k: string, v: string]>);
 
   if (!analysisData) return <Loading />;
 
-  const isAssembly = analysisData.attributes['experiment-type'] === 'assembly';
+  if (!isSupportedVersion) {
+    return (
+      <div className="vf-stack vf-stack--200">
+        <p>
+          QC files can be found from the{' '}
+          <a href={resultsDir} target="_blank" rel="noopener noreferrer">
+            results directory
+          </a>
+        </p>
+      </div>
+    );
+  }
+
+  const isAssembly = analysisData.experiment_type
+    .toLowerCase()
+    .endsWith('assembly');
   const unit = isAssembly ? 'contig' : 'read';
   const units = isAssembly ? 'contigs' : 'reads';
 
@@ -42,8 +104,8 @@ const QualityControl: React.FC = () => {
         merged, in which case the initial number of {units} may differ from the
         number given by ENA.
       </p>
-      <QualityControlChart summaryData={summaryData} />
-      {summaryData && Number(analysisData.attributes['pipeline-version']) > 2 && (
+      <QualityControlChart summaryData={summaryData} qcStepData={qcStepData} />
+      {summaryData && (
         <>
           <p>
             The histograms below show the distributions of sequence lengths

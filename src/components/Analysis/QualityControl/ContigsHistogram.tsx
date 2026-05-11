@@ -1,14 +1,13 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useEffect, useState } from 'react';
+import axios from 'axios';
 import * as Highcharts from 'highcharts';
 import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { ResponseFormat, TSVResponse } from '@/hooks/data/useData';
-import useURLAccession from '@/hooks/useURLAccession';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import protectedAxios from '@/utils/protectedAxios';
 
 addExportMenu(Highcharts);
 
@@ -20,26 +19,46 @@ type ContigsHistogramProps = {
 const ContigsHistogram: React.FC<ContigsHistogramProps> = ({ summaryData }) => {
   const { overviewData } = useContext(AnalysisContext);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const accession = useURLAccession();
-  const { data, loading, error } = useMGnifyData(
-    `analyses/${accession}/seq-length`,
-    {},
-    {},
-    ResponseFormat.TSV
-  );
+  const resultsDir = overviewData?.results_dir;
+
+  const [data, setData] = useState<Array<[string, string]> | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>(null);
+
+  useEffect(() => {
+    if (resultsDir) {
+      setLoading(true);
+      protectedAxios
+        .get(`${resultsDir}/qc-statistics/seq-length.out.full`)
+        .then((response) => {
+          const text = response.data;
+          const parsedData = text
+            .split('\n')
+            .filter(Boolean)
+            .map((line) => line.split('\t'));
+          setData(parsedData);
+          setLoading(false);
+        })
+        .catch((err) => {
+          if (axios.isAxiosError(err) && err.response?.status === 401) {
+            localStorage.setItem('mgnify.sessionExpired', 'true');
+            window.location.reload();
+          }
+          setError(err);
+          setLoading(false);
+        });
+    }
+  }, [resultsDir]);
 
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
-  const histData = (data as unknown as TSVResponse).map(([x, y]) => [
-    Number(x),
-    Number(y),
-  ]);
+  const histData = data.map(([x, y]) => [Number(x), Number(y)]);
   const lengthMax = Math.max(...histData.map(([x]) => x));
 
   const isAssembly =
-    overviewData?.attributes &&
-    overviewData.attributes['experiment-type'] === 'assembly';
+    overviewData?.experiment_type &&
+    overviewData.experiment_type.toLowerCase().endsWith('assembly');
   const unit = isAssembly ? 'contigs' : 'reads';
   const capUnit = isAssembly ? 'Contigs' : 'Reads';
 

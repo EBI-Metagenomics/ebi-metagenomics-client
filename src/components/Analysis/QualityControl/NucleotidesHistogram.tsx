@@ -1,25 +1,50 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 import * as Highcharts from 'highcharts';
 import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { ResponseFormat, TSVResponse } from '@/hooks/data/useData';
-import useURLAccession from '@/hooks/useURLAccession';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import protectedAxios from '@/utils/protectedAxios';
 
 addExportMenu(Highcharts);
 
 const NucleotidesHistogram: React.FC = () => {
+  const { overviewData } = useContext(AnalysisContext);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const accession = useURLAccession();
-  const { data, loading, error } = useMGnifyData(
-    `analyses/${accession}/nucleotide-distribution`,
-    {},
-    {},
-    ResponseFormat.TSV
-  );
+  const resultsDir = overviewData?.results_dir;
+  const nucleotidePath = `${resultsDir}/qc-statistics/nucleotide-distribution.out.full`;
+
+  const [data, setData] = useState<Array<[string, string]> | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>(null);
+
+  useEffect(() => {
+    if (resultsDir) {
+      setLoading(true);
+      protectedAxios
+        .get(nucleotidePath)
+        .then((response) => {
+          const text = response.data;
+          const parsedData = text
+            .split('\n')
+            .filter(Boolean)
+            .map((line) => line.split('\t'));
+          setData(parsedData);
+          setLoading(false);
+        })
+        .catch((err) => {
+          if (axios.isAxiosError(err) && err.response?.status === 401) {
+            localStorage.setItem('mgnify.sessionExpired', 'true');
+            window.location.reload();
+          }
+          setError(err);
+          setLoading(false);
+        });
+    }
+  }, [nucleotidePath, resultsDir]);
 
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
@@ -32,8 +57,8 @@ const NucleotidesHistogram: React.FC = () => {
     T: 'rgb(220, 57, 18)',
     N: 'rgb(138, 65, 23)',
   };
-  const headers = (data as unknown as TSVResponse)[0];
-  (data as unknown as TSVResponse).slice(1).forEach((line) => {
+  const headers = data[0];
+  data.slice(1).forEach((line) => {
     line.forEach((v, i) => {
       dataHist[headers[i]].push(Number(v));
     });

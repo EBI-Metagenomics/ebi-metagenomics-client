@@ -1,5 +1,4 @@
 import React from 'react';
-import { isEmpty } from 'lodash-es';
 
 export type KeyValueItemsList = {
   key: string;
@@ -11,6 +10,9 @@ type KeyValueProps = {
   dataCy?: string;
   renderIfEmpty?: boolean;
 };
+
+const hasRenderableValue = (value: React.ReactNode) =>
+  value !== null && value !== undefined && value !== '';
 
 const KeyValueList: React.FC<KeyValueProps> = ({
   list,
@@ -27,7 +29,7 @@ const KeyValueList: React.FC<KeyValueProps> = ({
   >
     {list.map(({ key, value: Value }) => (
       <React.Fragment key={key}>
-        {(renderIfEmpty || !isEmpty(Value)) && (
+        {(renderIfEmpty || hasRenderableValue(Value)) && (
           <React.Fragment>
             <div style={{ textAlign: 'right' }} data-cy="kvl-key">
               {key}:

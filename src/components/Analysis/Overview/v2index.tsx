@@ -143,7 +143,6 @@ const AnalysisOverview: React.FC = () => {
     (data && pipelineSetMeta[data.experiment_type.toLowerCase()]) ||
     pipelineSetMeta['default'] ||
     config.pipelines['default']['default'];
-
   const pipelineInformationItems = [
     {
       key: 'Repository',
@@ -298,11 +297,7 @@ const AnalysisOverview: React.FC = () => {
               <b>Pipeline information</b>
             </summary>
             <KeyValueList
-              list={
-                pipelineInformationItems.filter(
-                  ({ value }) => !!value
-                ) as KeyValueItemsList
-              }
+              list={pipelineInformationItems as KeyValueItemsList}
             />
           </details>
         </DetailedVisualisationCard>

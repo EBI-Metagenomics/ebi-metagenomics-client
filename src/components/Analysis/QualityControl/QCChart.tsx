@@ -3,7 +3,7 @@ import * as Highcharts from 'highcharts';
 import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
 
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 
 addExportMenu(Highcharts);
 
@@ -11,13 +11,19 @@ type QualityControlProps = {
   summaryData: {
     [key: string]: string;
   } | null;
+  qcStepData: {
+    [key: string]: string;
+  } | null;
 };
 const QualityControlChart: React.FC<QualityControlProps> = ({
   summaryData,
+  qcStepData,
 }) => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const isAssembly = analysisData?.attributes['experiment-type'] === 'assembly';
+  const isAssembly = analysisData?.experiment_type
+    .toLowerCase()
+    .endsWith('assembly');
 
   const unit = isAssembly ? 'contigs' : 'reads';
   const capUnit = isAssembly ? 'Contigs' : 'Reads';
@@ -26,30 +32,40 @@ const QualityControlChart: React.FC<QualityControlProps> = ({
   const filtered = [0, 0, 0, 0, 0];
   const subsampled = [0, 0, 0, 0, 0];
 
-  const analysisSummary = {};
-  (
-    (analysisData?.attributes?.['analysis-summary'] as {
-      key: string;
-      value: string;
-    }[]) || []
-  ).forEach(({ key, value }) => {
-    analysisSummary[key] = value;
-  });
-
-  if (summaryData) subsampled[4] = Number(summaryData.sequence_count);
-  remaining[0] = Number(analysisSummary['Submitted nucleotide sequences']);
+  const analysisSummary = qcStepData || {};
+  remaining[0] = Number(
+    analysisSummary['Submitted nucleotide sequences'] ||
+      summaryData?.sequence_count ||
+      0
+  );
   remaining[1] = Number(
-    analysisSummary['Nucleotide sequences after format-specific filtering']
+    analysisSummary['Nucleotide sequences after format-specific filtering'] ||
+      summaryData?.sequence_count ||
+      0
   );
   remaining[2] = Number(
-    analysisSummary['Nucleotide sequences after length filtering']
+    analysisSummary['Nucleotide sequences after length filtering'] ||
+      summaryData?.sequence_count ||
+      0
   );
   remaining[3] = Number(
-    analysisSummary['Nucleotide sequences after undetermined bases filtering']
+    analysisSummary[
+      'Nucleotide sequences after undetermined bases filtering'
+    ] ||
+      summaryData?.sequence_count ||
+      0
   );
+  remaining[4] = Number(
+    analysisSummary['Nucleotide sequences after sampling'] ||
+      summaryData?.sequence_count ||
+      0
+  );
+  subsampled[4] = remaining[4];
   filtered[2] = remaining[1] - remaining[2];
   filtered[1] = remaining[0] - remaining[1];
-  if (summaryData) filtered[4] = remaining[3] - remaining[4] - subsampled[4];
+  filtered[3] = remaining[2] - remaining[3];
+  filtered[4] = remaining[3] - remaining[4];
+  remaining[4] = 0;
 
   const options = {
     chart: {

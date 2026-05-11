@@ -6,6 +6,7 @@ import FetchError from 'components/UI/FetchError';
 import { RouteTabs } from 'components/UI/Tabs';
 import Overview from 'components/Analysis/Overview/v2index';
 import QualityControl from 'components/Analysis/QualityControl/v2index';
+import LegacyQualityControl from 'components/Analysis/QualityControl/index';
 import ContigViewer from 'components/Analysis/ContigViewer/v2index';
 import FunctionalSubpage from 'components/Analysis/Functional/v2index';
 import PathwaysSubpage from 'components/Analysis/Pathways/v2Index';
@@ -51,6 +52,11 @@ const V2AnalysisPage: React.FC = () => {
     [data?.experiment_type]
   );
 
+  const thisIsV6Family = useMemo(
+    () => data?.pipeline_version?.startsWith('V6'),
+    [data?.pipeline_version]
+  );
+
   const tabs = useMemo(() => {
     if (!data?.accession)
       return [] as { label: string | React.ElementType; to: string }[];
@@ -63,10 +69,10 @@ const V2AnalysisPage: React.FC = () => {
         : null,
       thisIsAssembly ? { label: 'Pathways/Systems', to: 'path-systems' } : null,
       thisIsAssembly ? { label: 'Contig Viewer', to: 'contigs-viewer' } : null,
-      thisIsAmplicon ? { label: 'ASV', to: 'asv' } : null,
+      thisIsAmplicon && thisIsV6Family ? { label: 'ASV', to: 'asv' } : null,
       { label: 'Downloads', to: 'download' },
     ].filter(Boolean) as { label: string | React.ElementType; to: string }[];
-  }, [thisIsAssembly, thisIsAmplicon, data?.accession]);
+  }, [data?.accession, thisIsAssembly, thisIsAmplicon, thisIsV6Family]);
 
   const breadcrumbs = useMemo(() => {
     if (!data?.accession) return [] as Array<{ label: string; url?: string }>;
@@ -93,7 +99,12 @@ const V2AnalysisPage: React.FC = () => {
             <Routes>
               <Route index element={<Navigate to="overview" replace />} />
               <Route path="overview" element={<Overview />} />
-              <Route path="qc" element={<QualityControl />} />
+              <Route
+                path="qc"
+                element={
+                  thisIsV6Family ? <QualityControl /> : <LegacyQualityControl />
+                }
+              />
               <Route path="asv" element={<Asv />} />
               <Route path="contigs-viewer/*" element={<ContigViewer />} />
               <Route
