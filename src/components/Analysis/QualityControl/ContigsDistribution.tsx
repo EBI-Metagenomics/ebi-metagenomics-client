@@ -7,6 +7,7 @@ import HighchartsReact from 'highcharts-react-official';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import useLegacyAnalysisKnownFiles from 'hooks/data/useLegacyAnalysisKnownFiles';
 import protectedAxios from '@/utils/protectedAxios';
 
 addExportMenu(Highcharts);
@@ -20,18 +21,18 @@ const ContigsDistribution: React.FC<ContigsHistogramProps> = ({
   summaryData,
 }) => {
   const { overviewData } = useContext(AnalysisContext);
+  const { resultsDir, gcDistributionPath } = useLegacyAnalysisKnownFiles();
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const resultsDir = overviewData?.results_dir;
 
   const [data, setData] = useState<Array<[string, string]> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
 
   useEffect(() => {
-    if (resultsDir) {
+    if (resultsDir && gcDistributionPath) {
       setLoading(true);
       protectedAxios
-        .get(`${resultsDir}/qc-statistics/GC-distribution.out.full`)
+        .get(gcDistributionPath)
         .then((response) => {
           const text = response.data;
           const parsedData = text
@@ -50,7 +51,7 @@ const ContigsDistribution: React.FC<ContigsHistogramProps> = ({
           setLoading(false);
         });
     }
-  }, [resultsDir]);
+  }, [resultsDir, gcDistributionPath]);
 
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;

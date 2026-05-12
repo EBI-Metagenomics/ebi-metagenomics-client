@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import Loading from 'components/UI/Loading';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import useLegacyAnalysisKnownFiles from 'hooks/data/useLegacyAnalysisKnownFiles';
 import protectedAxios from '@/utils/protectedAxios';
 import QualityControlChart from './QCChart';
 import ContigsHistogram from './ContigsHistogram';
@@ -15,12 +16,9 @@ import './style.css';
 
 const QualityControl: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
-  const resultsDir = analysisData?.results_dir;
-  const pipelineVersion = analysisData?.pipeline_version;
-
-  const isVersion41 = pipelineVersion === 'V4.1';
-  const isVersion50 = pipelineVersion === 'V5';
-  const isSupportedVersion = isVersion41 || isVersion50;
+  const knownFiles = useLegacyAnalysisKnownFiles();
+  const { isSupportedVersion, resultsDir, summaryPath, qcStepPath } =
+    knownFiles;
 
   const [summaryData, setSummaryData] = useState<{
     [key: string]: string;
@@ -31,13 +29,8 @@ const QualityControl: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [, setError] = useState<any>(null);
 
-  const summaryPath = `${resultsDir}/qc-statistics/summary.out`;
-  const qcStepPath = isVersion41
-    ? `${resultsDir}/qc-statistics/summary.out`
-    : `${resultsDir}/qc_summary`;
-
   useEffect(() => {
-    if (resultsDir && isSupportedVersion) {
+    if (resultsDir && isSupportedVersion && summaryPath && qcStepPath) {
       setLoading(true);
       const fetchSummary = protectedAxios.get(summaryPath);
       const fetchQcStep = protectedAxios.get(qcStepPath).catch(() => ({

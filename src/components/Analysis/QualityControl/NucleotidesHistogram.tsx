@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import * as Highcharts from 'highcharts';
 import addExportMenu from 'highcharts/modules/exporting';
@@ -6,26 +6,25 @@ import HighchartsReact from 'highcharts-react-official';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import useLegacyAnalysisKnownFiles from 'hooks/data/useLegacyAnalysisKnownFiles';
 import protectedAxios from '@/utils/protectedAxios';
 
 addExportMenu(Highcharts);
 
 const NucleotidesHistogram: React.FC = () => {
-  const { overviewData } = useContext(AnalysisContext);
+  const { resultsDir, nucleotideDistributionPath } =
+    useLegacyAnalysisKnownFiles();
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const resultsDir = overviewData?.results_dir;
-  const nucleotidePath = `${resultsDir}/qc-statistics/nucleotide-distribution.out.full`;
 
   const [data, setData] = useState<Array<[string, string]> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
 
   useEffect(() => {
-    if (resultsDir) {
+    if (resultsDir && nucleotideDistributionPath) {
       setLoading(true);
       protectedAxios
-        .get(nucleotidePath)
+        .get(nucleotideDistributionPath)
         .then((response) => {
           const text = response.data;
           const parsedData = text
@@ -44,7 +43,7 @@ const NucleotidesHistogram: React.FC = () => {
           setLoading(false);
         });
     }
-  }, [nucleotidePath, resultsDir]);
+  }, [nucleotideDistributionPath, resultsDir]);
 
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
