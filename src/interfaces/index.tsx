@@ -150,7 +150,7 @@ export interface GenomeCatalogue extends Record<string, unknown> {
   pipeline_version_tag: string;
   catalogue_biome_label: string;
   catalogue_type: 'prokaryotes' | 'eukaryotes' | 'viruses' | string;
-  other_stats: KeyValue | unknown;
+  other_stats: KeyValue;
   biome: Biome;
 }
 
