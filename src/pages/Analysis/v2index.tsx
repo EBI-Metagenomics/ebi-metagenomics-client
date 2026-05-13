@@ -20,6 +20,7 @@ import { AnalysisDetail } from '@/interfaces';
 import Asv from 'components/Asv';
 import WGSTaxonomy from 'components/Analysis/WGSTaxonomy';
 import AmpliconTaxonomy from 'components/Analysis/AmpliconTaxonomy/v2index';
+import LegacyTaxonomy from 'components/Analysis/Taxonomy/LegacyTaxonomy';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
@@ -110,10 +111,15 @@ const V2AnalysisPage: React.FC = () => {
               <Route
                 path="taxonomic"
                 element={
-                  isAmplicon(data.experiment_type) ? (
-                    <AmpliconTaxonomy />
+                  // eslint-disable-next-line no-nested-ternary
+                  thisIsV6Family ? (
+                    isAmplicon(data.experiment_type) ? (
+                      <AmpliconTaxonomy />
+                    ) : (
+                      <WGSTaxonomy />
+                    )
                   ) : (
-                    <WGSTaxonomy />
+                    <LegacyTaxonomy />
                   )
                 }
               />
