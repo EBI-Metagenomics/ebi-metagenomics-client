@@ -31,13 +31,16 @@ const FunctionalAnalysis: React.FC = () => {
   const { overviewData: data } = useContext(AnalysisContext);
 
   const [type] = useType<string>();
+  const activeType = type || PARAMETER_DEFAULT;
 
   if (!data) {
     return <div>Loading...</div>; // or whatever loading component you prefer
   }
   // const accession = data.id;
   // const version = Number(overviewData.attributes['pipeline-version']);
-  const version = Number(data.pipeline_version);
+  const versionStr = data.pipeline_version || '';
+  const version = parseFloat(versionStr.replace(/^V/i, ''));
+  const isLegacy = !Number.isNaN(version) && version < 6;
   const longReadExperiment = data.experiment_type === 'LRASS';
 
   return (
@@ -90,12 +93,74 @@ const FunctionalAnalysis: React.FC = () => {
         defaultValue={PARAMETER_DEFAULT}
       />
       <div className="vf-tabs-content">
-        {type === 'interpro' && <InterProTab />}
-        {type === 'go' && <GOTab />}
-        {/* <PfamTab /> */}
-        {type === 'ko' && <KOTab />}
-        {type === 'pfam' && <PfamTab />}
-        {/* {type === 'ko' && <KOTab />} */}
+        {activeType === 'interpro' && (
+          <InterProTab
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  f.download_type === 'Functional analysis' &&
+                  f.url.endsWith('.summary.ips')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  f.download_type === 'Functional analysis' &&
+                  f.alias.toLowerCase().includes('_summary.ips')
+              )
+            }
+          />
+        )}
+        {activeType === 'go' && (
+          <GOTab
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  f.download_type === 'Functional analysis' &&
+                  f.url.endsWith('.summary.go')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  f.download_type === 'Functional analysis' &&
+                  f.alias.toLowerCase().includes('_summary.go')
+              )
+            }
+          />
+        )}
+        {activeType === 'ko' && (
+          <KOTab
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  f.download_type === 'Functional analysis' &&
+                  f.url.endsWith('.summary.ko')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  f.download_type === 'Functional analysis' &&
+                  f.alias.toLowerCase().includes('_summary.ko')
+              )
+            }
+          />
+        )}
+        {activeType === 'pfam' && (
+          <PfamTab
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  f.download_type === 'Functional analysis' &&
+                  f.url.endsWith('.summary.pfam')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  f.download_type === 'Functional analysis' &&
+                  f.alias.toLowerCase().includes('_summary.pfam')
+              )
+            }
+          />
+        )}
       </div>
     </div>
   );

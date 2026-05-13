@@ -5,9 +5,15 @@ import AnalysisContext, {
 import { Download } from '@/interfaces';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import CompressedTSVTable from 'components/UI/CompressedTSVTable';
-import { first, last, sortBy } from 'lodash-es';
+import { last, sortBy } from 'lodash-es';
+import LegacyFunctionalTable from '../LegacyFunctionalTable';
 
-const InterPro: React.FC = () => {
+type InterProProps = {
+  isLegacy?: boolean;
+  legacyFile?: Download;
+};
+
+const InterPro: React.FC<InterProProps> = ({ isLegacy, legacyFile }) => {
   const { overviewData: analysisData } =
     useContext<AnalysisContextType>(AnalysisContext);
 
@@ -20,7 +26,36 @@ const InterPro: React.FC = () => {
     dataFiles = sortBy(dataFiles, (file) => file.index_files?.length).reverse();
   }
 
-  if (!dataFiles) {
+  if (isLegacy) {
+    if (!legacyFile) {
+      return (
+        <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
+          <p>No InterPro identifiers file available</p>
+        </div>
+      );
+    }
+    return (
+      <div className="vf-stack">
+        <p className="text-sm text-gray-600 mb-4">
+          InterPro is a database of protein families, domains, and functional
+          sites. It provides functional analysis of proteins by classifying them
+          into families and predicting the presence of domains and sites.
+        </p>
+        <DetailedVisualisationCard
+          ftpLink={legacyFile.url}
+          title={legacyFile.alias}
+        >
+          <LegacyFunctionalTable
+            url={legacyFile.url}
+            title={legacyFile.short_description}
+            type="interpro"
+          />
+        </DetailedVisualisationCard>
+      </div>
+    );
+  }
+
+  if (!dataFiles || !dataFiles.length) {
     return (
       <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
         <p>No InterPro identifiers file available</p>
@@ -55,7 +90,7 @@ const InterPro: React.FC = () => {
                   labelsCol: {
                     id: 'interpro_accession',
                     Header: 'Interpro identifier',
-                    accessor: first,
+                    accessor: (d) => `${d[0]}: ${d[1]}`,
                   },
                   countsCol: {
                     id: 'count',
