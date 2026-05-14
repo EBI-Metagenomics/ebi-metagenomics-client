@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
+import Tooltip from 'components/UI/Tooltip';
 import useApiData from '@/hooks/data/useApiData';
 import { PaginatedList } from '@/interfaces';
 import useURLAccession from '@/hooks/useURLAccession';
 import { getBiomeIcon } from '@/utils/biomes';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import UserContext from 'pages/Login/UserContext';
+import { cleanTaxLineage, getSimpleTaxLineage } from 'utils/taxon.ts';
 
 const {
   useGenomesPage,
@@ -89,6 +91,29 @@ const GenomesTable: React.FC = () => {
       Header: 'Type',
       accessor: 'type',
       disableSortBy: true,
+    },
+
+    {
+      Header: 'Taxonomy',
+      accessor: 'taxon_lineage',
+      Cell: ({ cell }) => (
+        <>
+          {getSimpleTaxLineage(cell.value, true)}{' '}
+          <Tooltip content={cleanTaxLineage(cell.value, ' > ')}>
+            <sup>
+              <span className="icon icon-common icon-info" />
+            </sup>
+          </Tooltip>
+        </>
+      ),
+      disableSortBy: true,
+    },
+
+    {
+      id: 'last_update',
+      Header: 'Last Updated',
+      accessor: 'updated_at',
+      Cell: ({ cell }) => new Date(cell.value).toLocaleDateString(),
     },
   ];
 
