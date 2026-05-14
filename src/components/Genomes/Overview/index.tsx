@@ -41,7 +41,7 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
                 key: 'GC content',
                 value:
                   data.gc_content != null
-                    ? `${(data.gc_content * 100).toFixed(2)}%`
+                    ? `${data.gc_content.toFixed(2)}%`
                     : undefined,
               },
               { key: 'N50', value: String(data.n_50) },
