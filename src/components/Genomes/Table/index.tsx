@@ -11,7 +11,7 @@ import useURLAccession from '@/hooks/useURLAccession';
 import { getBiomeIcon } from '@/utils/biomes';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import UserContext from 'pages/Login/UserContext';
-import { cleanTaxLineage, getSimpleTaxLineage } from 'utils/taxon.ts';
+import { cleanTaxLineage, getSimpleTaxLineage } from 'utils/taxon';
 
 const {
   useGenomesPage,
