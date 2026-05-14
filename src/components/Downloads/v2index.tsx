@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react';
-import { groupBy, last, map, startCase } from 'lodash-es';
+import { groupBy, last, map, sortBy, startCase } from 'lodash-es';
 import { toast } from 'react-toastify';
 import { Download } from '@/interfaces';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
@@ -78,14 +78,17 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
   const grouped = useMemo((): GroupedDownloads[] => {
     if (!downloads?.length) return [];
     const byCategory = groupBy(downloads, 'download_type');
-    return map(byCategory, (catFiles, category) => {
+    const sortedCategories = sortBy(Object.keys(byCategory));
+    return map(sortedCategories, (category) => {
+      const catFiles = byCategory[category];
       const bySubgroup = groupBy(catFiles, 'download_group');
+      const subgroups = map(bySubgroup, (files, sub) => ({
+        label: formatGroupLabel(sub),
+        files: sortBy(files, 'short_description'),
+      }));
       return {
         category,
-        subgroups: map(bySubgroup, (files, sub) => ({
-          label: formatGroupLabel(sub),
-          files,
-        })),
+        subgroups: sortBy(subgroups, 'label'),
       };
     });
   }, [downloads]);

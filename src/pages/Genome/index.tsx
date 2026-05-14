@@ -67,16 +67,11 @@ const GenomePage: React.FC = () => {
 
   const { data, loading, error } = useApiData<GenomeApiResponse>({
     url: accession ? `${config.api_v2}genomes/${accession}` : null,
-    // url: accession ? `${config.api_v2}/genomes/MGYG000000001` : null,
   });
 
   const genomeAnnotationsData = useApiData({
     url: accession ? `${config.api_v2}genomes/${accession}/annotations` : null,
   });
-
-  // console.log('genomeAnnotationsData ', genomeAnnotationsData);
-
-  // const { data, loading, error } = useMGnifyData(`genomes/${accession}`);
 
   const [searchResults, setSearchResults] = useState<BranchwaterResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -278,7 +273,6 @@ const GenomePage: React.FC = () => {
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
           <RouteForHash hash="#overview" isDefault>
-            {/*feeo*/}
             <Overview data={data} />
           </RouteForHash>
           <RouteForHash hash="#genome-browser">
