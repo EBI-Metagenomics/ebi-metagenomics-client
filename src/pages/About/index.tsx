@@ -35,8 +35,8 @@ const AboutPage: React.FC = () => {
       </p>
       <h2>Staying informed</h2>
       <p>
-        Follow us on Twitter using{' '}
-        <a href="https://twitter.com/MGnifyDB">@MGnifyDB</a>
+        Follow us on Linkedin using{' '}
+        <a href="https://www.linkedin.com/company/mgnifydb">MGnify</a>
       </p>
       <p>
         Check the service status and incidents:{' '}
