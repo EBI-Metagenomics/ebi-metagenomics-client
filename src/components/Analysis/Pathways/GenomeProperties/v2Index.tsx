@@ -49,7 +49,9 @@ const GenomePropertiesTab: React.FC<GenomePropertiesProps> = ({
         >
           <div className="p-4">
             <h5>{legacyFile.short_description}</h5>
-            <p className="vf-text text-body--1">{legacyFile.long_description}</p>
+            <p className="vf-text text-body--1">
+              {legacyFile.long_description}
+            </p>
           </div>
           <div className="p-4">
             <GenomePropertiesVisualiser download={legacyFile} />

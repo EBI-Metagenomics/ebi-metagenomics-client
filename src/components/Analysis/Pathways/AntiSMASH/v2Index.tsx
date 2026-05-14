@@ -36,9 +36,9 @@ const AntiSmashTab: React.FC<AntiSmashProps> = ({ isLegacy, legacyFile }) => {
     return (
       <div className="vf-stack">
         <p className="text-sm text-gray-600 mb-4">
-          antiSMASH (antibiotics & Secondary Metabolite Analysis Shell) identifies
-          biosynthetic gene clusters in bacterial and fungal genomes, providing
-          insights into secondary metabolite production.
+          antiSMASH (antibiotics & Secondary Metabolite Analysis Shell)
+          identifies biosynthetic gene clusters in bacterial and fungal genomes,
+          providing insights into secondary metabolite production.
         </p>
         <DetailedVisualisationCard
           ftpLink={legacyFile.url}
@@ -46,7 +46,9 @@ const AntiSmashTab: React.FC<AntiSmashProps> = ({ isLegacy, legacyFile }) => {
         >
           <div className="p-4">
             <h5>{legacyFile.short_description}</h5>
-            <p className="vf-text text-body--1">{legacyFile.long_description}</p>
+            <p className="vf-text text-body--1">
+              {legacyFile.long_description}
+            </p>
           </div>
           <LegacyFunctionalTable
             url={legacyFile.url}

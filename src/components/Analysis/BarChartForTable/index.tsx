@@ -46,11 +46,7 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
             ? labelAccessor(d, idx)
             : get(d, labelAccessor);
         const description = (d as any).description || label;
-        return [
-          label,
-          Number.isNaN(countValue) ? 0 : countValue,
-          description,
-        ];
+        return [label, Number.isNaN(countValue) ? 0 : countValue, description];
       })
       .slice(0, maxLabels === 0 ? undefined : maxLabels);
     return unzip(mapped);
@@ -67,7 +63,9 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
     title: { text: capitalize(title) },
     subtitle: {
       text: `Showing ${
-        maxLabels === 0 ? data.items.length : min([data.items.length, maxLabels])
+        maxLabels === 0
+          ? data.items.length
+          : min([data.items.length, maxLabels])
       } of ${total} annotations`,
     },
     yAxis: {

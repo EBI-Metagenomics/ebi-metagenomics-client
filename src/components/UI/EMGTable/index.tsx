@@ -205,7 +205,7 @@ const EMGTable = <T extends object>({
         setChangingPage(false);
       }
     }
-  }, [showPagination, page, pageIndex, gotoPage]);
+  }, [showPagination, page, pageIndex, gotoPage, isChangingPage]);
 
   useEffect(() => {
     // Handle table-initiated change of sorting column
@@ -216,7 +216,7 @@ const EMGTable = <T extends object>({
       setOrdering(orderParamRequestedByTable);
       setPage(1);
     }
-  }, [sortable, sortBy]);
+  }, [sortable, sortBy, ordering, setOrdering, setPage]);
 
   useEffect(() => {
     // Handle external (e.g. URL query param) load/change of sorting column
@@ -233,7 +233,7 @@ const EMGTable = <T extends object>({
       );
       setPage(1);
     }
-  }, [ordering, sortable, cols]);
+  }, [ordering, sortable, cols, sortBy, setSortBy, setPage]);
 
   const paginationRanges = useMemo(
     () => getPaginationRanges(pageIndex, pageCount),

@@ -71,7 +71,9 @@ const GenomePropertiesVisualiser: React.FC<GenomePropertiesVisualiserProps> = ({
             .filter(Boolean)
             .map((line: string) => {
               if (line.includes('\t')) return line.split('\t');
-              return line.split(',').map((p: string) => p.trim().replace(/^"|"$/g, ''));
+              return line
+                .split(',')
+                .map((p: string) => p.trim().replace(/^"|"$/g, ''));
             });
           const counts: Record<string, number> = {};
           rows.forEach((row: string[]) => {
@@ -90,7 +92,8 @@ const GenomePropertiesVisualiser: React.FC<GenomePropertiesVisualiserProps> = ({
         const ok = await reader.initialize();
         if (!ok) {
           throw new Error(
-            'The selected data file is not indexed and cannot be displayed in Hierarchy view. Please use a JSON hierarchy source or Table view instead.'
+            'The selected data file is not indexed and cannot be displayed in Hierarchy view. ' +
+              'Please use a JSON hierarchy source or Table view instead.'
           );
         }
 

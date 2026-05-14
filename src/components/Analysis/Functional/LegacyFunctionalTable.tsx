@@ -47,7 +47,9 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
         if (typeof text !== 'string') {
           text = JSON.stringify(text);
         }
-        const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+        const lines = text
+          .split(/\r?\n/)
+          .filter((line) => line.trim().length > 0);
         let items = lines
           .map((line: string) => {
             // Check for TSV first
@@ -229,9 +231,14 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
       .map((item: string[]) => {
         const label = item[labelsColIdx] || 'Unknown';
         const accession = accessionColIdx !== -1 ? item[accessionColIdx] : null;
-        const isKeggModule = type === 'ko' && (maxLabels > 10 || maxLabels === 0);
+        const isKeggModule =
+          type === 'ko' && (maxLabels > 10 || maxLabels === 0);
         return {
-          label: isKeggModule ? accession || label : accession ? `${accession}: ${label}` : label,
+          label: isKeggModule
+            ? accession || label
+            : accession
+            ? `${accession}: ${label}`
+            : label,
           description: accession ? `${accession}: ${label}` : label,
           count: parseFloat(item[countsColIdx]) || 0,
         };
@@ -284,6 +291,7 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
       >
         {viewMode === 'table'
           ? `${
+            // eslint-disable-next-line no-nested-ternary
               type === 'ko'
                 ? maxLabels > 10 || maxLabels === 0
                   ? 'KEGG Module'

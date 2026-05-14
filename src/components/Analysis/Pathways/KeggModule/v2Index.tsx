@@ -46,7 +46,9 @@ const KeggModuleTab: React.FC<KeggModuleProps> = ({ isLegacy, legacyFile }) => {
         >
           <div className="p-4">
             <h5>{legacyFile.short_description}</h5>
-            <p className="vf-text text-body--1">{legacyFile.long_description}</p>
+            <p className="vf-text text-body--1">
+              {legacyFile.long_description}
+            </p>
           </div>
           <LegacyFunctionalTable
             url={legacyFile.url}
