@@ -99,12 +99,14 @@ const FunctionalAnalysis: React.FC = () => {
             legacyFile={
               data.downloads.find(
                 (f) =>
-                  f.download_type === 'Functional analysis' &&
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
                   f.url.endsWith('.summary.ips')
               ) ||
               data.downloads.find(
                 (f) =>
-                  f.download_type === 'Functional analysis' &&
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
                   f.alias.toLowerCase().includes('_summary.ips')
               )
             }
@@ -116,12 +118,14 @@ const FunctionalAnalysis: React.FC = () => {
             legacyFile={
               data.downloads.find(
                 (f) =>
-                  f.download_type === 'Functional analysis' &&
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
                   f.url.endsWith('.summary.go')
               ) ||
               data.downloads.find(
                 (f) =>
-                  f.download_type === 'Functional analysis' &&
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
                   f.alias.toLowerCase().includes('_summary.go')
               )
             }
@@ -133,12 +137,14 @@ const FunctionalAnalysis: React.FC = () => {
             legacyFile={
               data.downloads.find(
                 (f) =>
-                  f.download_type === 'Functional analysis' &&
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
                   f.url.endsWith('.summary.ko')
               ) ||
               data.downloads.find(
                 (f) =>
-                  f.download_type === 'Functional analysis' &&
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
                   f.alias.toLowerCase().includes('_summary.ko')
               )
             }
@@ -150,12 +156,14 @@ const FunctionalAnalysis: React.FC = () => {
             legacyFile={
               data.downloads.find(
                 (f) =>
-                  f.download_type === 'Functional analysis' &&
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
                   f.url.endsWith('.summary.pfam')
               ) ||
               data.downloads.find(
                 (f) =>
-                  f.download_type === 'Functional analysis' &&
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
                   f.alias.toLowerCase().includes('_summary.pfam')
               )
             }

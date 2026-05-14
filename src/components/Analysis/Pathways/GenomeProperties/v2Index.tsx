@@ -5,7 +5,15 @@ import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/De
 import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 import GenomePropertiesVisualiser from './GenomePropertiesVisualiser';
 
-const GenomePropertiesTab: React.FC = () => {
+type GenomePropertiesProps = {
+  isLegacy?: boolean;
+  legacyFile?: Download;
+};
+
+const GenomePropertiesTab: React.FC<GenomePropertiesProps> = ({
+  isLegacy,
+  legacyFile,
+}) => {
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
 
   let dataFiles: Download[] | undefined =
@@ -18,6 +26,37 @@ const GenomePropertiesTab: React.FC = () => {
   if (dataFiles) {
     const jsonFiles = dataFiles.filter((f) => f.alias.includes('json'));
     if (jsonFiles.length) dataFiles = jsonFiles;
+  }
+
+  if (isLegacy) {
+    if (!legacyFile) {
+      return (
+        <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
+          <p>No Genome properties files available</p>
+        </div>
+      );
+    }
+    return (
+      <div>
+        <p className="text-sm text-gray-600 mb-4">
+          Genome Properties is a system for describing prokaryotic biochemical
+          pathways, genome architecture, and biological systems, providing
+          insights into the functional capabilities of organisms.
+        </p>
+        <DetailedVisualisationCard
+          ftpLink={legacyFile.url}
+          title={legacyFile.alias}
+        >
+          <div className="p-4">
+            <h5>{legacyFile.short_description}</h5>
+            <p className="vf-text text-body--1">{legacyFile.long_description}</p>
+          </div>
+          <div className="p-4">
+            <GenomePropertiesVisualiser download={legacyFile} />
+          </div>
+        </DetailedVisualisationCard>
+      </div>
+    );
   }
 
   if (!dataFiles?.length) {

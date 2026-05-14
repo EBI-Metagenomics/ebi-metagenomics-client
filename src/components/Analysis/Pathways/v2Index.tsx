@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import ExtLink from 'components/UI/ExtLink';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import { createSharedQueryParamContext } from 'hooks/queryParamState/useQueryParamState';
 import KeggModule from './KeggModule/v2Index';
 import AntiSMASH from './AntiSMASH/v2Index';
@@ -22,7 +23,18 @@ const { useType, withQueryParamProvider } = createSharedQueryParamContext({
 });
 
 const PathwaysSubPage: React.FC = () => {
-  const [type] = useType();
+  const { overviewData: data } = useContext(AnalysisContext);
+  const [type] = useType<string>();
+  const activeType = type || PARAMETER_DEFAULT;
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  const versionStr = data.pipeline_version || '';
+  const version = parseFloat(versionStr.replace(/^V/i, ''));
+  const isLegacy = !Number.isNaN(version) && version < 6;
+
   return (
     <div>
       <p>
@@ -48,9 +60,63 @@ const PathwaysSubPage: React.FC = () => {
         defaultValue={PARAMETER_DEFAULT}
       />
       <div className="vf-tabs-content">
-        {type === 'kegg-modules' && <KeggModule />}
-        {type === 'genome-properties' && <GenomeProperties />}
-        {type === 'antismash' && <AntiSMASH />}
+        {activeType === 'kegg-modules' && (
+          <KeggModule
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('pathways')) &&
+                  f.url.endsWith('.summary.kegg_pathways')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('pathways')) &&
+                  f.alias.toLowerCase().includes('_summary.kegg_pathways')
+              )
+            }
+          />
+        )}
+        {activeType === 'genome-properties' && (
+          <GenomeProperties
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('pathways')) &&
+                  f.url.endsWith('.summary.gprops')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('pathways')) &&
+                  f.alias.toLowerCase().includes('_summary.gprops')
+              )
+            }
+          />
+        )}
+        {activeType === 'antismash' && (
+          <AntiSMASH
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('pathways')) &&
+                  f.url.endsWith('.summary.antismash')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('pathways')) &&
+                  f.alias.toLowerCase().includes('_summary.antismash')
+              )
+            }
+          />
+        )}
       </div>
     </div>
   );

@@ -80,9 +80,9 @@ function getOrderingQueryParamFromSortedColumn(
     .replace(/-/g, '_')}`;
 }
 
-function getSortedColumnFromOrderingQueryParam(
+function getSortedColumnFromOrderingQueryParam<T extends object>(
   ordering: string,
-  cols: Column<any>[]
+  cols: Column<T>[]
 ): Array<{ id: string; desc: boolean }> {
   if (!ordering) return [];
   const desc = ordering.startsWith('-');
@@ -418,6 +418,7 @@ const EMGTable = <T extends object>({
             style={{
               backgroundColor: '#d1e3f6',
             }}
+            data-cy="no-matching-data"
           >
             <h3 className="vf-box__heading">
               <span className="icon icon-common icon-exclamation-triangle" /> No

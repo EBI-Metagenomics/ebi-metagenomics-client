@@ -4,8 +4,14 @@ import { Download } from '@/interfaces';
 import { sortBy } from 'lodash-es';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import CompressedTSVTable from 'components/UI/CompressedTSVTable';
+import LegacyFunctionalTable from 'components/Analysis/Functional/LegacyFunctionalTable';
 
-const AntiSmashTab: React.FC = () => {
+type AntiSmashProps = {
+  isLegacy?: boolean;
+  legacyFile?: Download;
+};
+
+const AntiSmashTab: React.FC<AntiSmashProps> = ({ isLegacy, legacyFile }) => {
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
 
   let dataFiles: Download[] | undefined =
@@ -17,6 +23,39 @@ const AntiSmashTab: React.FC = () => {
 
   if (dataFiles) {
     dataFiles = sortBy(dataFiles, (file) => file.index_files?.length).reverse();
+  }
+
+  if (isLegacy) {
+    if (!legacyFile) {
+      return (
+        <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
+          <p>No antiSMASH files available</p>
+        </div>
+      );
+    }
+    return (
+      <div className="vf-stack">
+        <p className="text-sm text-gray-600 mb-4">
+          antiSMASH (antibiotics & Secondary Metabolite Analysis Shell) identifies
+          biosynthetic gene clusters in bacterial and fungal genomes, providing
+          insights into secondary metabolite production.
+        </p>
+        <DetailedVisualisationCard
+          ftpLink={legacyFile.url}
+          title={legacyFile.alias}
+        >
+          <div className="p-4">
+            <h5>{legacyFile.short_description}</h5>
+            <p className="vf-text text-body--1">{legacyFile.long_description}</p>
+          </div>
+          <LegacyFunctionalTable
+            url={legacyFile.url}
+            title={legacyFile.short_description}
+            type="ko" // Use "ko" type as it's similar (Accession, Description, Count)
+          />
+        </DetailedVisualisationCard>
+      </div>
+    );
   }
 
   if (!dataFiles) {

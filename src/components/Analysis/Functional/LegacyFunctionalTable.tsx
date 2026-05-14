@@ -13,18 +13,20 @@ interface LegacyFunctionalTableProps {
   url: string;
   title: string;
   type: 'interpro' | 'go' | 'pfam' | 'ko';
+  maxLabels?: number;
 }
 
 const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
   url,
   title,
   type,
+  maxLabels = 10,
 }) => {
-  const [data, setData] = useState<PaginatedList>({
+  const [data, setData] = useState<PaginatedList<string[]>>({
     items: [],
     count: 0,
   });
-  const [cols, setCols] = useState<Column[]>([]);
+  const [cols, setCols] = useState<Column<string[]>[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
 
@@ -41,9 +43,12 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
         const response = await protectedAxios.get(url);
         if (cancelled) return;
 
-        const text = response.data;
-        const lines = text.split('\n').filter(Boolean);
-        const items = lines
+        let text = response.data;
+        if (typeof text !== 'string') {
+          text = JSON.stringify(text);
+        }
+        const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+        let items = lines
           .map((line: string) => {
             // Check for TSV first
             if (line.includes('\t')) {
@@ -73,46 +78,75 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
 
         if (items.length > 0) {
           let headers: string[] = [];
-          if (type === 'interpro') {
-            // Check if first column is indeed numeric (Count)
-            const firstRow = items[0];
-            const firstIsNumeric =
-              !Number.isNaN(parseFloat(firstRow[0])) &&
-              /^\d+$/.test(firstRow[0].trim());
-            if (firstIsNumeric) {
-              headers = ['Count', 'Accession', 'Description'];
-            } else {
-              // Sometimes they are: Accession, Description, Count
-              headers = ['Accession', 'Description', 'Count'];
+          let headerIdx = -1;
+          // Try to find table header even though some legacy files have extra
+          // header lines like comments, source info etc
+          // Only check first 10 lines for header to avoid false positives in data
+          // Look for some commonly known col headers
+          for (let i = 0; i < Math.min(items.length, 10); i++) {
+            const row = items[i];
+            const isHeader = row.some((cell) => {
+              const c = cell.toLowerCase().replace(/_/g, ' ');
+              return [
+                'accession',
+                'description',
+                'count',
+                'module accession',
+                'pathway name',
+                'completeness',
+                'cluster type',
+              ].some((keyword) => c.includes(keyword));
+            });
+            if (isHeader) {
+              headerIdx = i;
+              headers = row.map((h) => startCase(h));
+              break;
             }
-          } else if (type === 'go') {
-            headers = ['Accession', 'Description', 'Category', 'Count'];
-          } else if (type === 'pfam') {
+          }
+
+          if (headerIdx !== -1) {
+            items = items.slice(headerIdx + 1);
+          } else {
+            // No header found, guess based on type and content
+            const maxCols = Math.max(...items.map((row) => row.length));
+            headers = Array.from(
+              { length: maxCols },
+              (_, i) => `Column ${i + 1}`
+            );
             const firstRow = items[0];
             const firstIsNumeric =
               !Number.isNaN(parseFloat(firstRow[0])) &&
-              /^\d+$/.test(firstRow[0].trim());
-            if (firstIsNumeric) {
-              headers = ['Count', 'Accession', 'Description'];
+              /^\d+(\.\d+)?$/.test(firstRow[0].trim());
+
+            if (type === 'go') {
+              if (maxCols === 3) {
+                headers = ['Accession', 'Description', 'Count'];
+              } else if (maxCols >= 4) {
+                headers = ['Accession', 'Description', 'Category', 'Count'];
+              }
+            } else if (firstIsNumeric) {
+              headers[0] = 'Count';
+              if (maxCols >= 2) headers[1] = 'Accession';
+              if (maxCols >= 3) headers[2] = 'Description';
             } else {
-              headers = ['Accession', 'Description', 'Count'];
-            }
-          } else if (type === 'ko') {
-            const firstRow = items[0];
-            const firstIsNumeric =
-              !Number.isNaN(parseFloat(firstRow[0])) &&
-              /^\d+$/.test(firstRow[0].trim());
-            if (firstIsNumeric) {
-              headers = ['Count', 'Accession', 'Description'];
-            } else {
-              headers = ['Accession', 'Description', 'Count'];
+              headers[0] = 'Accession';
+              if (maxCols >= 2) headers[1] = 'Description';
+              if (maxCols >= 3) {
+                // Check if last column is numeric
+                const lastCell = firstRow[maxCols - 1];
+                if (!Number.isNaN(parseFloat(lastCell))) {
+                  headers[maxCols - 1] = 'Count';
+                } else {
+                  headers[2] = 'Count';
+                }
+              }
             }
           }
 
           setCols(
             headers.map((header, colNum) => ({
               Header: header,
-              accessor: (row: any) => row[colNum],
+              accessor: (row: string[]) => row[colNum],
               id: `col_${colNum}`,
             }))
           );
@@ -147,41 +181,80 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
   }, [type, url]);
 
   const barChartSpec = useMemo(() => {
-    if (data.items.length === 0) return null;
+    if (data.items.length === 0 || cols.length === 0) return null;
 
     let labelsColIdx = -1;
     let countsColIdx = -1;
     let accessionColIdx = -1;
 
-    cols.forEach((c, idx) => {
-      const header = (c.Header as string).toLowerCase();
-      if (header === 'description' || header === 'label') labelsColIdx = idx;
-      if (header === 'count') countsColIdx = idx;
-      if (header === 'accession') accessionColIdx = idx;
-    });
+    const headerLabels = cols.map((c) =>
+      (c.Header as string).toLowerCase().replace(/_/g, ' ')
+    );
 
-    if (labelsColIdx === -1 || countsColIdx === -1) return null;
+    accessionColIdx = headerLabels.findIndex(
+      (h) =>
+        h.includes('accession') || h.includes('id') || h.includes('identifier')
+    );
+    countsColIdx = headerLabels.findIndex(
+      (h) =>
+        h.includes('count') || h.includes('completeness') || h.includes('value')
+    );
+    labelsColIdx = headerLabels.findIndex(
+      (h) =>
+        h.includes('description') ||
+        h.includes('name') ||
+        h.includes('label') ||
+        h.includes('type') ||
+        h.includes('term')
+    );
+
+    // Fallbacks
+    if (countsColIdx === -1) {
+      // Try to find a numeric column in the first data row
+      countsColIdx = data.items[0].findIndex(
+        (cell: string) => !Number.isNaN(parseFloat(cell))
+      );
+    }
+    if (labelsColIdx === -1) {
+      // Pick a column that isn't the accession or count
+      labelsColIdx = cols.findIndex(
+        (_, i: number) => i !== accessionColIdx && i !== countsColIdx
+      );
+      if (labelsColIdx === -1) labelsColIdx = 0;
+    }
+
+    if (countsColIdx === -1) return null;
 
     const chartDataItems = data.items
-      .map((item: any) => {
+      .map((item: string[]) => {
         const label = item[labelsColIdx] || 'Unknown';
-        const accession = item[accessionColIdx];
+        const accession = accessionColIdx !== -1 ? item[accessionColIdx] : null;
+        const isKeggModule = type === 'ko' && (maxLabels > 10 || maxLabels === 0);
         return {
-          label: accession ? `${accession}: ${label}` : label,
+          label: isKeggModule ? accession || label : accession ? `${accession}: ${label}` : label,
+          description: accession ? `${accession}: ${label}` : label,
           count: parseFloat(item[countsColIdx]) || 0,
         };
       })
       .sort((a, b) => b.count - a.count);
 
+    let chartTitle = `${startCase(type)} (top ${maxLabels})`;
+    if (type === 'ko') {
+      chartTitle =
+        maxLabels > 10 || maxLabels === 0
+          ? 'KEGG Modules'
+          : `KEGG Orthologs (top ${maxLabels})`;
+    }
+
     return {
-      title: `${startCase(type)} (top 10)`,
+      title: chartTitle,
       labelsCol: {
-        accessor: (row: any) => row.label,
+        accessor: (row: { label: string; count: number }) => row.label,
         id: 'Label',
         Header: 'Label',
       },
       countsCol: {
-        accessor: (row: any) => row.count,
+        accessor: (row: { label: string; count: number }) => row.count,
         id: 'Count',
         Header: 'Count',
       },
@@ -190,7 +263,7 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
         count: chartDataItems.length,
       },
     };
-  }, [cols, data.items, type]);
+  }, [cols, data.items, type, maxLabels]);
 
   const viewModeSelector = (
     <div
@@ -210,7 +283,13 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
         style={{ fontWeight: 'bold' }}
       >
         {viewMode === 'table'
-          ? `${startCase(type)} Table`
+          ? `${
+              type === 'ko'
+                ? maxLabels > 10 || maxLabels === 0
+                  ? 'KEGG Module'
+                  : 'Annotation'
+                : startCase(type)
+            } Table`
           : barChartSpec?.title}
       </div>
       <button
@@ -242,7 +321,7 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
         labelsCol={barChartSpec.labelsCol}
         countsCol={barChartSpec.countsCol}
         title={barChartSpec.title}
-        maxLabels={10}
+        maxLabels={maxLabels}
       />
     );
 

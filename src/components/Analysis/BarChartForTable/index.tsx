@@ -33,24 +33,27 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
   const dataAccessor = countsCol.accessor as
     | string
     | ((row: any, index: number) => any);
-  const [labels, series] = useMemo(() => {
-    if (!data?.items) return [[], []];
-    return unzip(
-      data.items
-        .map((d, idx) => {
-          const countValue =
-            typeof dataAccessor === 'function'
-              ? dataAccessor(d, idx)
-              : get(d, dataAccessor);
-          return [
-            typeof labelAccessor === 'function'
-              ? labelAccessor(d, idx)
-              : get(d, labelAccessor),
-            Number.isNaN(countValue) ? 0 : countValue,
-          ];
-        })
-        .slice(0, maxLabels)
-    );
+  const [labels, series, descriptions] = useMemo(() => {
+    if (!data?.items) return [[], [], []];
+    const mapped = data.items
+      .map((d, idx) => {
+        const countValue =
+          typeof dataAccessor === 'function'
+            ? dataAccessor(d, idx)
+            : get(d, dataAccessor);
+        const label =
+          typeof labelAccessor === 'function'
+            ? labelAccessor(d, idx)
+            : get(d, labelAccessor);
+        const description = (d as any).description || label;
+        return [
+          label,
+          Number.isNaN(countValue) ? 0 : countValue,
+          description,
+        ];
+      })
+      .slice(0, maxLabels === 0 ? undefined : maxLabels);
+    return unzip(mapped);
   }, [data.items, dataAccessor, labelAccessor, maxLabels]);
 
   const total = data.count;
@@ -58,15 +61,14 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
   const options: Highcharts.Options = {
     chart: {
       type: 'bar',
-      height: 800,
+      height: Math.max(400, (series?.length || 0) * 20 + 100),
       zoomType: 'xy',
     },
     title: { text: capitalize(title) },
     subtitle: {
-      text: `Showing ${min([
-        data.items.length,
-        maxLabels,
-      ])} of ${total} annotations`,
+      text: `Showing ${
+        maxLabels === 0 ? data.items.length : min([data.items.length, maxLabels])
+      } of ${total} annotations`,
     },
     yAxis: {
       min: 0,
@@ -85,7 +87,13 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
     },
     credits: { enabled: false },
     legend: { enabled: false },
-    tooltip: { pointFormat: '<b>{point.y}</b> {series.name}' },
+    tooltip: {
+      formatter() {
+        const idx = this.point.index;
+        const desc = (descriptions as string[])[idx];
+        return `<b>${desc}</b><br/>${this.series.name}: <b>${this.y}</b>`;
+      },
+    },
     series: [
       {
         name: capitalize(title),

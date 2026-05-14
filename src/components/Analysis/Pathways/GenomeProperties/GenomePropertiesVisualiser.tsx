@@ -6,6 +6,7 @@ import Loading from 'components/UI/Loading';
 import ExtLink from 'components/UI/ExtLink';
 import gpHierarchyRaw from 'data/genome-properties-hierarchy.json';
 import { cloneDeep } from 'lodash-es';
+import protectedAxios from '@/utils/protectedAxios';
 
 interface GenomePropertiesVisualiserProps {
   download: Download;
@@ -60,6 +61,32 @@ const GenomePropertiesVisualiser: React.FC<GenomePropertiesVisualiserProps> = ({
           return;
         }
 
+        const isGpropsSummary = download.url.endsWith('.summary.gprops');
+        if (isGpropsSummary) {
+          const response = await protectedAxios.get(download.url);
+          if (cancelled) return;
+          const text = response.data;
+          const rows = text
+            .split('\n')
+            .filter(Boolean)
+            .map((line: string) => {
+              if (line.includes('\t')) return line.split('\t');
+              return line.split(',').map((p: string) => p.trim().replace(/^"|"$/g, ''));
+            });
+          const counts: Record<string, number> = {};
+          rows.forEach((row: string[]) => {
+            if (row.length >= 3) {
+              const id = row[0];
+              const presence = row[2]?.toUpperCase();
+              counts[id] = presence === 'YES' || presence === 'PARTIAL' ? 1 : 0;
+            }
+          });
+          if (!cancelled) {
+            setGenomePropertiesCount(counts);
+          }
+          return;
+        }
+
         const ok = await reader.initialize();
         if (!ok) {
           throw new Error(
@@ -81,8 +108,8 @@ const GenomePropertiesVisualiser: React.FC<GenomePropertiesVisualiserProps> = ({
           rows.forEach((row) => {
             if (row.length >= 3) {
               const id = row[0];
-              const presence = row[2];
-              counts[id] = presence === 'Yes' || presence === 'Partial' ? 1 : 0;
+              const presence = row[2]?.toUpperCase();
+              counts[id] = presence === 'YES' || presence === 'PARTIAL' ? 1 : 0;
             }
           });
         }
