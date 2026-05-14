@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import * as Highcharts from 'highcharts';
 import addExportMenu from 'highcharts/modules/exporting';
@@ -8,7 +8,7 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useLegacyAnalysisKnownFiles from 'hooks/data/useLegacyAnalysisKnownFiles';
-import protectedAxios from '@/utils/protectedAxios';
+import { fetchWithFallback } from '@/utils/protectedAxios';
 
 addExportMenu(Highcharts);
 
@@ -21,7 +21,8 @@ const ContigsDistribution: React.FC<ContigsHistogramProps> = ({
   summaryData,
 }) => {
   const { overviewData } = useContext(AnalysisContext);
-  const { resultsDir, gcDistributionPath } = useLegacyAnalysisKnownFiles();
+  const { resultsDir, gcDistributionPath, gcDistributionFallbacks } =
+    useLegacyAnalysisKnownFiles();
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
   const [data, setData] = useState<Array<[string, string]> | null>(null);
@@ -31,8 +32,8 @@ const ContigsDistribution: React.FC<ContigsHistogramProps> = ({
   useEffect(() => {
     if (resultsDir && gcDistributionPath) {
       setLoading(true);
-      protectedAxios
-        .get(gcDistributionPath)
+
+      fetchWithFallback(gcDistributionPath, gcDistributionFallbacks)
         .then((response) => {
           const text = response.data;
           const parsedData = text
@@ -51,7 +52,7 @@ const ContigsDistribution: React.FC<ContigsHistogramProps> = ({
           setLoading(false);
         });
     }
-  }, [resultsDir, gcDistributionPath]);
+  }, [resultsDir, gcDistributionPath, gcDistributionFallbacks]);
 
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;

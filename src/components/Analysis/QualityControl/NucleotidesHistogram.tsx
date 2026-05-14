@@ -7,13 +7,16 @@ import HighchartsReact from 'highcharts-react-official';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import useLegacyAnalysisKnownFiles from 'hooks/data/useLegacyAnalysisKnownFiles';
-import protectedAxios from '@/utils/protectedAxios';
+import { fetchWithFallback } from '@/utils/protectedAxios';
 
 addExportMenu(Highcharts);
 
 const NucleotidesHistogram: React.FC = () => {
-  const { resultsDir, nucleotideDistributionPath } =
-    useLegacyAnalysisKnownFiles();
+  const {
+    resultsDir,
+    nucleotideDistributionPath,
+    nucleotideDistributionFallbacks,
+  } = useLegacyAnalysisKnownFiles();
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
   const [data, setData] = useState<Array<[string, string]> | null>(null);
@@ -23,8 +26,11 @@ const NucleotidesHistogram: React.FC = () => {
   useEffect(() => {
     if (resultsDir && nucleotideDistributionPath) {
       setLoading(true);
-      protectedAxios
-        .get(nucleotideDistributionPath)
+
+      fetchWithFallback(
+        nucleotideDistributionPath,
+        nucleotideDistributionFallbacks
+      )
         .then((response) => {
           const text = response.data;
           const parsedData = text
@@ -43,7 +49,7 @@ const NucleotidesHistogram: React.FC = () => {
           setLoading(false);
         });
     }
-  }, [nucleotideDistributionPath, resultsDir]);
+  }, [nucleotideDistributionPath, nucleotideDistributionFallbacks, resultsDir]);
 
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;

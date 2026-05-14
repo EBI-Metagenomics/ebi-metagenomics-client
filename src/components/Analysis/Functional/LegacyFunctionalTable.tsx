@@ -234,6 +234,7 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
         const isKeggModule =
           type === 'ko' && (maxLabels > 10 || maxLabels === 0);
         return {
+          // eslint-disable-next-line no-nested-ternary
           label: isKeggModule
             ? accession || label
             : accession
@@ -291,7 +292,7 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
       >
         {viewMode === 'table'
           ? `${
-            // eslint-disable-next-line no-nested-ternary
+              // eslint-disable-next-line no-nested-ternary
               type === 'ko'
                 ? maxLabels > 10 || maxLabels === 0
                   ? 'KEGG Module'

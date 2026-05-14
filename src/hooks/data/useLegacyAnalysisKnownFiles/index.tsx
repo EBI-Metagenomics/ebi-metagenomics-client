@@ -29,9 +29,30 @@ const useLegacyAnalysisKnownFiles = () => {
       ? `${resultsDir}/qc-statistics/summary.out`
       : `${resultsDir}/qc_summary`;
 
-    const seqLengthPath = `${resultsDir}/qc-statistics/seq-length.out.full`;
-    const gcDistributionPath = `${resultsDir}/qc-statistics/GC-distribution.out.full`;
-    const nucleotideDistributionPath = `${resultsDir}/qc-statistics/nucleotide-distribution.out.full`;
+    const seqLengthPath = `${resultsDir}/qc-statistics/seq-length.out`;
+    const seqLengthFallbacks = [
+      `${resultsDir}/qc-statistics/seq-length.out.full`,
+      `${resultsDir}/qc-statistics/seq-length.out.sub-set`,
+      `${resultsDir}/seq-length.out`,
+      `${resultsDir}/seq-length.out.full`,
+      `${resultsDir}/seq-length.out.sub-set`,
+    ];
+    const gcDistributionPath = `${resultsDir}/qc-statistics/GC-distribution.out`;
+    const gcDistributionFallbacks = [
+      `${resultsDir}/qc-statistics/GC-distribution.out.full`,
+      `${resultsDir}/qc-statistics/GC-distribution.out.sub-set`,
+      `${resultsDir}/GC-distribution.out`,
+      `${resultsDir}/GC-distribution.out.full`,
+      `${resultsDir}/GC-distribution.out.sub-set`,
+    ];
+    const nucleotideDistributionPath = `${resultsDir}/qc-statistics/nucleotide-distribution.out`;
+    const nucleotideDistributionFallbacks = [
+      `${resultsDir}/qc-statistics/nucleotide-distribution.out.full`,
+      `${resultsDir}/qc-statistics/nucleotide-distribution.out.sub-set`,
+      `${resultsDir}/nucleotide-distribution.out`,
+      `${resultsDir}/nucleotide-distribution.out.full`,
+      `${resultsDir}/nucleotide-distribution.out.sub-set`,
+    ];
 
     const taxonomyPaths: Record<
       string,
@@ -102,8 +123,11 @@ const useLegacyAnalysisKnownFiles = () => {
       summaryPath,
       qcStepPath,
       seqLengthPath,
+      seqLengthFallbacks,
       gcDistributionPath,
+      gcDistributionFallbacks,
       nucleotideDistributionPath,
+      nucleotideDistributionFallbacks,
       taxonomyPaths,
     };
   }, [

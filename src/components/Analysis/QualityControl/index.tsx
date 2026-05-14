@@ -4,7 +4,7 @@ import axios from 'axios';
 import Loading from 'components/UI/Loading';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useLegacyAnalysisKnownFiles from 'hooks/data/useLegacyAnalysisKnownFiles';
-import protectedAxios from '@/utils/protectedAxios';
+import { fetchWithFallback } from '@/utils/protectedAxios';
 import QualityControlChart from './QCChart';
 import ContigsHistogram from './ContigsHistogram';
 import NucleotidesHistogram from './NucleotidesHistogram';
@@ -32,8 +32,9 @@ const QualityControl: React.FC = () => {
   useEffect(() => {
     if (resultsDir && isSupportedVersion && summaryPath && qcStepPath) {
       setLoading(true);
-      const fetchSummary = protectedAxios.get(summaryPath);
-      const fetchQcStep = protectedAxios.get(qcStepPath).catch(() => ({
+
+      const fetchSummary = fetchWithFallback(summaryPath);
+      const fetchQcStep = fetchWithFallback(qcStepPath).catch(() => ({
         data: '',
       }));
 
