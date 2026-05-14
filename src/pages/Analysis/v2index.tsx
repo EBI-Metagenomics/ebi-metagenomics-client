@@ -58,6 +58,11 @@ const V2AnalysisPage: React.FC = () => {
     [data?.pipeline_version]
   );
 
+  const pipelineVersion = useMemo(
+    () => (data?.pipeline_version ? parseFloat(data.pipeline_version) : 0),
+    [data?.pipeline_version]
+  );
+
   const tabs = useMemo(() => {
     if (!data?.accession)
       return [] as { label: string | React.ElementType; to: string }[];
@@ -68,12 +73,22 @@ const V2AnalysisPage: React.FC = () => {
       thisIsAssembly
         ? { label: 'Functional analysis', to: 'functional' }
         : null,
-      thisIsAssembly ? { label: 'Pathways/Systems', to: 'path-systems' } : null,
-      thisIsAssembly ? { label: 'Contig Viewer', to: 'contigs-viewer' } : null,
+      thisIsAssembly && pipelineVersion >= 5
+        ? { label: 'Pathways/Systems', to: 'path-systems' }
+        : null,
+      thisIsAssembly && pipelineVersion >= 5
+        ? { label: 'Contig Viewer', to: 'contigs-viewer' }
+        : null,
       thisIsAmplicon && thisIsV6Family ? { label: 'ASV', to: 'asv' } : null,
       { label: 'Downloads', to: 'download' },
     ].filter(Boolean) as { label: string | React.ElementType; to: string }[];
-  }, [data?.accession, thisIsAssembly, thisIsAmplicon, thisIsV6Family]);
+  }, [
+    data?.accession,
+    thisIsAssembly,
+    thisIsAmplicon,
+    thisIsV6Family,
+    pipelineVersion,
+  ]);
 
   const breadcrumbs = useMemo(() => {
     if (!data?.accession) return [] as Array<{ label: string; url?: string }>;

@@ -22,7 +22,7 @@ const analyses = [
   { accession: 'MGYA00013658', version: '2', type: 'amplicon' },
   { accession: 'MGYA00004369', version: '1', type: 'assembly' },
   { accession: 'MGYA00002634', version: '1', type: 'metagenomic' },
-  { accession: 'MGYA00002792', version: '1', type: 'amplicon' },
+  { accession: 'MGYA00006029', version: '1', type: 'amplicon' },
 ];
 
 for (const { accession, version, type } of analyses) {

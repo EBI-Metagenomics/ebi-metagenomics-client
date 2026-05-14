@@ -9,6 +9,7 @@ import { createSharedQueryParamContext } from '@/hooks/queryParamState/useQueryP
 import UserContext from 'pages/Login/UserContext';
 
 import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import KronaIframe from 'components/UI/KronaIframe';
 import PhylumCharts from './PhylumCharts';
 import './style.css';
 import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
@@ -154,11 +155,9 @@ const AmpliconTaxonomy: React.FC<TaxonomicAnalysesProps> = ({ accession }) => {
       />
       <div className="vf-tabs-content">
         {type === 'krona' ? (
-          <object
+          <KronaIframe
             className="krona_chart"
-            data-cy="krona-chart"
-            data={`${config.api}analyses/${accession}/krona${taxResults}?collapse=false`}
-            type="text/html"
+            url={`${config.api}analyses/${accession}/krona${taxResults}?collapse=false`}
             title="Interactive Krona chart"
           />
         ) : (

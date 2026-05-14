@@ -10,6 +10,7 @@ import { createSharedQueryParamContext } from 'hooks/queryParamState/useQueryPar
 // import PfamTab from 'components/Analysis/Functional/KO';
 import KOTab from 'components/Analysis/Functional/KO/v2Index';
 import PfamTab from 'components/Analysis/Functional/Pfam/v2Index';
+import useLegacyAnalysisKnownFiles from 'hooks/data/useLegacyAnalysisKnownFiles';
 import InterProTab from './InterPro/v2index';
 import GOTab from './GO/v2index';
 import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
@@ -29,6 +30,7 @@ const { useType, withQueryParamProvider } = createSharedQueryParamContext({
 
 const FunctionalAnalysis: React.FC = () => {
   const { overviewData: data } = useContext(AnalysisContext);
+  const { resultsDir } = useLegacyAnalysisKnownFiles();
 
   const [type] = useType<string>();
   const activeType = type || PARAMETER_DEFAULT;
@@ -42,6 +44,19 @@ const FunctionalAnalysis: React.FC = () => {
   const version = parseFloat(versionStr.replace(/^V/i, ''));
   const isLegacy = !Number.isNaN(version) && version < 6;
   const longReadExperiment = data.experiment_type === 'LRASS';
+
+  if (version < 4.1) {
+    return (
+      <div className="vf-stack vf-stack--200">
+        <p>
+          Functional analysis files can be found from the{' '}
+          <a href={resultsDir} target="_blank" rel="noopener noreferrer">
+            results directory
+          </a>
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="vf-stack">

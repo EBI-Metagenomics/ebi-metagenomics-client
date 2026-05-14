@@ -105,10 +105,6 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
     ].join('\n');
   }, [downloads, accession]);
 
-  const isAmplicon =
-    overviewData?.experiment_type?.toLowerCase() === 'amplicon';
-  const asvCategories = ['Statistics', 'Sequence data'];
-
   if (!downloads?.length) {
     return <p>No downloads available for this analysis.</p>;
   }
@@ -175,13 +171,9 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
         </div>
       )}
       {grouped.map(({ category, subgroups }) => {
-        const displayCategory =
-          isAmplicon && asvCategories.includes(category)
-            ? `ASV ${category}`
-            : category;
         return (
           <section key={category}>
-            <h3>{displayCategory}</h3>
+            <h3>{category}</h3>
             {subgroups.map(({ label, files }) => {
               const showSubheading = subgroups.length > 1;
               return (

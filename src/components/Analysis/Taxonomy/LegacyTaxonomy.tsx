@@ -4,6 +4,7 @@ import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import useLegacyAnalysisKnownFiles from 'hooks/data/useLegacyAnalysisKnownFiles';
 import Loading from 'components/UI/Loading';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import KronaIframe from 'components/UI/KronaIframe';
 import LegacyTaxonomyTable from './LegacyTaxonomyTable';
 import Tabs from 'components/UI/Tabs';
 
@@ -64,12 +65,9 @@ const LegacyTaxonomy: React.FC = () => {
                   title={`${marker.toUpperCase()} KRONA Plot`}
                   ftpLink={taxonomyPaths?.[marker].krona}
                 >
-                  <iframe
+                  <KronaIframe
                     title={`${marker} Krona Plot`}
-                    src={taxonomyPaths?.[marker].krona}
-                    width="100%"
-                    height="600px"
-                    style={{ border: 'none' }}
+                    url={taxonomyPaths?.[marker].krona}
                   />
                 </DetailedVisualisationCard>
               )}

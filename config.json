@@ -6,6 +6,7 @@
   "website": "http://localhost:9000/",
   "blog": "https://ebi-metagenomics.github.io/blog/",
   "basename": "/metagenomics",
+  "kronaJsPath": "https://ftp.ebi.ac.uk/pub/databases/metagenomics/js/krona-2.0-customized.js",
   "enaURL": "https://www.ebi.ac.uk/ena/browser/view/",
   "hmmer": "https://wwwdev.ebi.ac.uk/metagenomics/sequence-search/search/phmmer",
   "googleMapsKey": "xx",

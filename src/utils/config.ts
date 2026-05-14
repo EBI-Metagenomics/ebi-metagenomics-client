@@ -11,9 +11,10 @@ export type ConfigType = {
   website: string;
   blog: string;
   basename: string;
+  kronaJsPath: string;
   enaURL: string;
   googleMapsKey: string;
-  branchwaterDate: string;
+  branchwaterDbDate: string;
   featureFlags?: {
     [feature: string]: boolean;
   };
