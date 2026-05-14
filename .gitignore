@@ -32,3 +32,11 @@ config.private.json
 /npm-debug.log
 
 public/mgnify-sourmash-component
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+screenshots
