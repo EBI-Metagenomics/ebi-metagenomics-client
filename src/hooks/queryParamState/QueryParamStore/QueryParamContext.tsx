@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { forOwn, has, isEqual, isNil } from 'lodash-es';
 import { useEffectOnce, useFirstMountState } from 'react-use';
 
@@ -90,7 +90,9 @@ const SharedQueryParamsProvider: React.FC<{ params: SharedQueryParamSet }> = ({
 }) => {
   const [queryParams, setQueryParams] =
     React.useState<SharedQueryParamSet>(params);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const isFirstMount = useFirstMountState();
   useEffect(() => {
@@ -126,7 +128,12 @@ const SharedQueryParamsProvider: React.FC<{ params: SharedQueryParamSet }> = ({
 
     const nextStr = next.toString();
     if (nextStr !== prev.toString()) {
-      setSearchParams(next, { replace: true });
+      // Preserve hash — pages like Genome use the URL hash to drive tab routing
+      // (see RouteForHash). react-router's setSearchParams strips it.
+      navigate(
+        { search: nextStr, hash: location.hash },
+        { replace: true }
+      );
     }
   }, [queryParams]);
 

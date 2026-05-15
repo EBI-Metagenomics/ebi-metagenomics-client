@@ -13,7 +13,6 @@ export function cleanTaxLineage(
   if (cleaned.startsWith(replace)) {
     cleaned = cleaned.substring(replace.length).trimStart();
   }
-  console.log('cleaned ', cleaned);
   return cleaned;
 }
 

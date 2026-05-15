@@ -7,8 +7,22 @@ import EMGTable from 'components/UI/EMGTable';
 import { MGnifyDatum } from '@/hooks/data/useData';
 import useDefaultGenomeConfig from '@/hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from '@/utils/taxon';
+import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
+import { PaginatedList } from '@/interfaces';
 
 addExportMenu(Highcharts);
+
+const expectedPageSize = 10;
+const tableNamespace = 'genomeAnnotation';
+
+const { useGenomeAnnotationPage, withQueryParamProvider } =
+  createSharedQueryParamContextForTable(
+    tableNamespace,
+    {},
+    expectedPageSize
+  ) as ReturnType<typeof createSharedQueryParamContextForTable> & {
+    useGenomeAnnotationPage: <T = unknown>() => readonly [T, (next: T) => void];
+  };
 
 export type AnalysisItem = Record<string, unknown> & { count?: number };
 
@@ -37,6 +51,8 @@ const GenomeAnnotationAnalysis = <T extends AnalysisItem>({
 }: Props<T>): JSX.Element => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const { columns, options } = useDefaultGenomeConfig();
+  const [pageParam] = useGenomeAnnotationPage<number>();
+  const currentPage = Math.max(1, Number(pageParam) || 1);
   const filteredColumns = columns.filter(
     (column) => column.Header !== 'Pan-genome count'
   );
@@ -100,6 +116,13 @@ const GenomeAnnotationAnalysis = <T extends AnalysisItem>({
       } as unknown as MGnifyDatum)
   );
 
+  const pageStart = (currentPage - 1) * expectedPageSize;
+  const pagedItems = tableData.slice(pageStart, pageStart + expectedPageSize);
+  const pagedData: PaginatedList<MGnifyDatum> = {
+    items: pagedItems,
+    count: tableData.length,
+  };
+
   return (
     <div className="vf-stack vf-stack--200" data-cy={dataCy}>
       <HighchartsReact
@@ -109,13 +132,16 @@ const GenomeAnnotationAnalysis = <T extends AnalysisItem>({
       />
       <EMGTable
         cols={filteredColumns}
-        data={tableData}
+        data={pagedData}
         Title={`All ${tableData.length} ${tableTitlePrefix}`}
         loading={false}
-        showPagination={true}
+        showPagination={tableData.length > expectedPageSize}
+        namespace={tableNamespace}
+        expectedPageSize={expectedPageSize}
+        initialPage={currentPage - 1}
       />
     </div>
   );
 };
 
-export default GenomeAnnotationAnalysis;
+export default withQueryParamProvider(GenomeAnnotationAnalysis);
