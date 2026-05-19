@@ -124,6 +124,7 @@ type EMGTableProps<T extends object> = {
   onMouseEnterRow?: (row: Row<T>) => void;
   onMouseLeaveRow?: (row: Row<T>) => void;
   dataCy?: string;
+  clientSidePagination?: boolean;
 };
 
 const EMGTable = <T extends object>({
@@ -145,6 +146,7 @@ const EMGTable = <T extends object>({
   onMouseEnterRow = () => null,
   onMouseLeaveRow = () => null,
   dataCy,
+  clientSidePagination = false,
 }: EMGTableProps<T>) => {
   const [page, setPage] = useQueryParamState<number>(
     camelCase(`${namespace} page`)
@@ -172,6 +174,7 @@ const EMGTable = <T extends object>({
     getTableBodyProps,
     headerGroups,
     rows,
+    page: paginatedRows,
     prepareRow,
     canPreviousPage,
     canNextPage,
@@ -183,11 +186,13 @@ const EMGTable = <T extends object>({
       data: tableData,
       initialState: {
         pageIndex: initialPage,
+        pageSize: expectedPageSize,
         sortBy: getSortedColumnFromOrderingQueryParam(ordering, cols),
       },
       pageCount: pageCount || 1,
-      manualPagination: true,
-      manualSortBy: true,
+      manualPagination: !clientSidePagination,
+      manualSortBy: !clientSidePagination,
+      autoResetPage: !clientSidePagination,
     },
     useSortBy,
     usePagination
@@ -249,6 +254,8 @@ const EMGTable = <T extends object>({
   const fullWidthColSpan = useMemo(() => {
     return filter(cols, (col) => !col.isFullWidth).length;
   }, [cols]);
+
+  const rowsToRender = clientSidePagination ? paginatedRows : rows;
 
   if (loading && !isStale) return <Loading size="small" />;
   return (
@@ -345,7 +352,7 @@ const EMGTable = <T extends object>({
             ))}
           </thead>
           <tbody {...getTableBodyProps()} className="vf-table__body">
-            {rows.map((row) => {
+            {rowsToRender.map((row) => {
               prepareRow(row);
               return (
                 <React.Fragment key={row.id}>
@@ -412,7 +419,7 @@ const EMGTable = <T extends object>({
             })}
           </tbody>
         </table>
-        {!loading && !rows.length && (
+        {!loading && !rowsToRender.length && (
           <div
             className="vf-box vf-box-theme--primary vf-box--easy"
             style={{

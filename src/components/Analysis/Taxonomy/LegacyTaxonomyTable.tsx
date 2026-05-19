@@ -248,7 +248,9 @@ const LegacyTaxonomyTable: React.FC<LegacyTaxonomyTableProps> = ({
   let content: ReactElement | null = null;
   if (isLoading) content = <Loading />;
   else if (viewMode === 'table')
-    content = <EMGTable cols={cols} data={data} showPagination />;
+    content = (
+      <EMGTable cols={cols} data={data} showPagination clientSidePagination />
+    );
   else if (viewMode === 'chart' && barChartSpec)
     content = (
       <BarChartForTable
