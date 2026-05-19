@@ -10,10 +10,13 @@ const useLegacyAnalysisKnownFiles = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
   const resultsDir = analysisData?.results_dir;
   const pipelineVersion = analysisData?.pipeline_version;
+  const experimentType = analysisData?.experiment_type;
 
   const isVersion41 = pipelineVersion === 'V4.1';
   const isVersion50 = pipelineVersion === 'V5' || pipelineVersion === '5.0';
   const isSupportedVersion = isVersion41 || isVersion50;
+
+  const isAssembly = experimentType?.toLowerCase().endsWith('assembly');
 
   return useMemo(() => {
     if (!resultsDir || !isSupportedVersion) {
@@ -122,6 +125,21 @@ const useLegacyAnalysisKnownFiles = () => {
       });
     }
 
+    const functionalAccession = analysisData.assembly?.accession;
+    const functionalFilename =
+      isAssembly && functionalAccession
+        ? `${functionalAccession}_FASTA`
+        : functionalAccession;
+
+    const interproPath =
+      isVersion41 && functionalFilename
+        ? `${resultsDir}/${functionalFilename}_summary.ipr`
+        : '';
+    const goPath =
+      isVersion41 && functionalFilename
+        ? `${resultsDir}/${functionalFilename}_summary.go`
+        : '';
+
     return {
       isSupportedVersion,
       resultsDir,
@@ -135,13 +153,17 @@ const useLegacyAnalysisKnownFiles = () => {
       nucleotideDistributionPath,
       nucleotideDistributionFallbacks,
       taxonomyPaths,
+      interproPath,
+      goPath,
     };
   }, [
     resultsDir,
     isSupportedVersion,
     isVersion41,
     analysisData?.downloads,
+    analysisData?.assembly?.accession,
     analysisData?.accession,
+    isAssembly,
     pipelineVersion,
   ]);
 };

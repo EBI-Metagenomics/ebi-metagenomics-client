@@ -7,7 +7,7 @@ import LegacyFunctionalTable from '../LegacyFunctionalTable';
 
 type GOProps = {
   isLegacy?: boolean;
-  legacyFile?: Download;
+  legacyFile?: Download | string;
 };
 
 const GO: React.FC<GOProps> = ({ isLegacy, legacyFile }) => {
@@ -24,24 +24,23 @@ const GO: React.FC<GOProps> = ({ isLegacy, legacyFile }) => {
         </div>
       );
     }
+    const url = typeof legacyFile === 'string' ? legacyFile : legacyFile.url;
+    const title =
+      typeof legacyFile === 'string' ? 'GO summary' : legacyFile.alias;
+    const description =
+      typeof legacyFile === 'string' ? '' : legacyFile.short_description;
+
     return (
       <div className="vf-stack">
         <h5>Gene Ontology terms</h5>
-        <DetailedVisualisationCard
-          ftpLink={legacyFile.url}
-          title={legacyFile.alias}
-        >
+        <DetailedVisualisationCard ftpLink={url} title={title}>
           <div className="p-4">
             <p className="text-sm text-gray-600 mb-4">
               Gene Ontology (GO) terms describe gene product functions and
               relationships in any organism.
             </p>
           </div>
-          <LegacyFunctionalTable
-            url={legacyFile.url}
-            title={legacyFile.short_description}
-            type="go"
-          />
+          <LegacyFunctionalTable url={url} title={description} type="go" />
         </DetailedVisualisationCard>
       </div>
     );

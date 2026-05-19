@@ -30,7 +30,7 @@ const { useType, withQueryParamProvider } = createSharedQueryParamContext({
 
 const FunctionalAnalysis: React.FC = () => {
   const { overviewData: data } = useContext(AnalysisContext);
-  const { resultsDir } = useLegacyAnalysisKnownFiles();
+  const { resultsDir, interproPath, goPath } = useLegacyAnalysisKnownFiles();
 
   const [type] = useType<string>();
   const activeType = type || PARAMETER_DEFAULT;
@@ -123,7 +123,8 @@ const FunctionalAnalysis: React.FC = () => {
                   (f.download_type === 'Functional analysis' ||
                     f.download_group.includes('functional')) &&
                   f.alias.toLowerCase().includes('_summary.ips')
-              )
+              ) ||
+              interproPath
             }
           />
         )}
@@ -142,7 +143,8 @@ const FunctionalAnalysis: React.FC = () => {
                   (f.download_type === 'Functional analysis' ||
                     f.download_group.includes('functional')) &&
                   f.alias.toLowerCase().includes('_summary.go')
-              )
+              ) ||
+              goPath
             }
           />
         )}

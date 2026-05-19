@@ -10,7 +10,7 @@ import LegacyFunctionalTable from '../LegacyFunctionalTable';
 
 type InterProProps = {
   isLegacy?: boolean;
-  legacyFile?: Download;
+  legacyFile?: Download | string;
 };
 
 const InterPro: React.FC<InterProProps> = ({ isLegacy, legacyFile }) => {
@@ -34,6 +34,12 @@ const InterPro: React.FC<InterProProps> = ({ isLegacy, legacyFile }) => {
         </div>
       );
     }
+    const url = typeof legacyFile === 'string' ? legacyFile : legacyFile.url;
+    const title =
+      typeof legacyFile === 'string' ? 'InterPro summary' : legacyFile.alias;
+    const description =
+      typeof legacyFile === 'string' ? '' : legacyFile.short_description;
+
     return (
       <div className="vf-stack">
         <p className="text-sm text-gray-600 mb-4">
@@ -41,13 +47,10 @@ const InterPro: React.FC<InterProProps> = ({ isLegacy, legacyFile }) => {
           sites. It provides functional analysis of proteins by classifying them
           into families and predicting the presence of domains and sites.
         </p>
-        <DetailedVisualisationCard
-          ftpLink={legacyFile.url}
-          title={legacyFile.alias}
-        >
+        <DetailedVisualisationCard ftpLink={url} title={title}>
           <LegacyFunctionalTable
-            url={legacyFile.url}
-            title={legacyFile.short_description}
+            url={url}
+            title={description}
             type="interpro"
           />
         </DetailedVisualisationCard>
