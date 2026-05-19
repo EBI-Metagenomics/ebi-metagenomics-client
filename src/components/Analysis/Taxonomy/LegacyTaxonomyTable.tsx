@@ -33,7 +33,9 @@ const LegacyTaxonomyTable: React.FC<LegacyTaxonomyTableProps> = ({
 
     const load = async () => {
       const targetUrl = url || fallbackUrl;
-      if (!targetUrl) {
+      if (!targetUrl || targetUrl.endsWith('.gz')) {
+        // pre v6, gzipped files do not (at least reliably) have gzi indexes
+        // so look for uncompressed ones for display
         setIsLoading(false);
         return;
       }

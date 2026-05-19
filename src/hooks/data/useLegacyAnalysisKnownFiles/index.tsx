@@ -84,9 +84,15 @@ const useLegacyAnalysisKnownFiles = () => {
           }
           if (download.file_type === 'html' && alias.includes('krona')) {
             taxonomyPaths[marker].krona = download.url;
-          } else if (download.file_type === 'tsv') {
+          } else if (
+            download.file_type === 'tsv' &&
+            !download.url.endsWith('.gz')
+          ) {
             taxonomyPaths[marker].tsv = download.url;
-          } else if (download.file_type === 'txt') {
+          } else if (
+            download.file_type === 'txt' &&
+            !download.url.endsWith('.gz')
+          ) {
             taxonomyPaths[marker].txt = download.url;
           } else if (
             download.file_type === 'biom' &&
