@@ -14,7 +14,7 @@ jobs:
         run: |
           echo "{\"api\": \"https://www.ebi.ac.uk/metagenomics/api/v1/\", \"api_v2\": \"https://www.ebi.ac.uk/metagenomics/api/v2/\"}" > config.private.json
 
-      - name: 📜 - Set up JS Node 23
+      - name: 📜 - Set up JS Node 24
         uses: actions/setup-node@v6
         with:
           node-version: '24'
