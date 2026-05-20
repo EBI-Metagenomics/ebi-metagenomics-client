@@ -29,7 +29,7 @@ for (const { accession, version, type } of analyses) {
   test(`take screenshots for ${accession} (v${version} ${type})`, async ({
     page,
   }) => {
-    const relativeUrl = `v2-analyses/${accession}`;
+    const relativeUrl = `analyses/${accession}`;
 
     // Create screenshots directory if it doesn't exist
     const dirName = `v${version}_${type}_${accession}`;

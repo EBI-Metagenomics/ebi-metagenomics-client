@@ -33,7 +33,7 @@ describe('V2 Assembly page', () => {
 
     stubAssemblyDetails(acc);
 
-    cy.visit(`/metagenomics/v2-assemblies/${acc}#overview`);
+    cy.visit(`/metagenomics/assemblies/${acc}#overview`);
 
     cy.wait('@assembly-details');
 
@@ -48,7 +48,7 @@ describe('V2 Assembly page', () => {
     stubAssemblyDetails(acc);
     stubAssemblyAnalyses(acc);
 
-    cy.visit(`/metagenomics/v2-assemblies/${acc}#analyses`);
+    cy.visit(`/metagenomics/assemblies/${acc}#analyses`);
 
     cy.wait(['@assembly-details', '@assembly-analyses']);
 
@@ -87,7 +87,7 @@ describe('V2 Assembly page', () => {
       ]
     });
 
-    cy.visit(`/metagenomics/v2-assemblies/${acc}#overview`);
+    cy.visit(`/metagenomics/assemblies/${acc}#overview`);
 
     cy.wait('@assembly-details');
 

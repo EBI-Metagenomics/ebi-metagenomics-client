@@ -57,7 +57,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       Header: 'Analysis accession',
       accessor: (analysis: Analysis) => analysis.accession,
       Cell: ({ cell }: { cell: { value: string } }) => (
-        <Link to={`/v2-analyses/${cell.value}`}>{cell.value}</Link>
+        <Link to={`/analyses/${cell.value}`}>{cell.value}</Link>
       ),
     },
     // {
@@ -104,7 +104,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
         <>
           {/*{cell.value.assembly || cell.value.run}*/}
           {cell.value.assembly && (
-            <Link to={`/v2-assemblies/${cell.value.assembly}`}>
+            <Link to={`/assemblies/${cell.value.assembly}`}>
               {cell.value.assembly}
             </Link>
           )}

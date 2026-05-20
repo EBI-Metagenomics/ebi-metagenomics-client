@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import ExtLink from 'components/UI/ExtLink';
-import { createSharedQueryParamContext } from '@/hooks/queryParamState/useQueryParamState';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import { createSharedQueryParamContext } from 'hooks/queryParamState/useQueryParamState';
 import KeggModule from './KeggModule';
 import AntiSMASH from './AntiSMASH';
 import GenomeProperties from './GenomeProperties';
-import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const PARAMETER_NAME = 'type';
 const PARAMETER_DEFAULT = 'kegg-modules';
@@ -22,9 +23,20 @@ const { useType, withQueryParamProvider } = createSharedQueryParamContext({
 });
 
 const PathwaysSubPage: React.FC = () => {
+  const { overviewData: data } = useContext(AnalysisContext);
   const [type] = useType<string>();
+  const activeType = type || PARAMETER_DEFAULT;
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  const versionStr = data.pipeline_version || '';
+  const version = parseFloat(versionStr.replace(/^V/i, ''));
+  const isLegacy = !Number.isNaN(version) && version < 6;
+
   return (
-    <>
+    <div>
       <p>
         These are the results from the biochemical pathways and systems
         predictions steps of our pipeline. These summarise the{' '}
@@ -48,11 +60,65 @@ const PathwaysSubPage: React.FC = () => {
         defaultValue={PARAMETER_DEFAULT}
       />
       <div className="vf-tabs-content">
-        {type === 'kegg-modules' && <KeggModule />}
-        {type === 'genome-properties' && <GenomeProperties />}
-        {type === 'antismash' && <AntiSMASH />}
+        {activeType === 'kegg-modules' && (
+          <KeggModule
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('pathways')) &&
+                  f.url.endsWith('.summary.kegg_pathways')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('pathways')) &&
+                  f.alias.toLowerCase().includes('_summary.kegg_pathways')
+              )
+            }
+          />
+        )}
+        {activeType === 'genome-properties' && (
+          <GenomeProperties
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('pathways')) &&
+                  f.url.endsWith('.summary.gprops')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('pathways')) &&
+                  f.alias.toLowerCase().includes('_summary.gprops')
+              )
+            }
+          />
+        )}
+        {activeType === 'antismash' && (
+          <AntiSMASH
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('pathways')) &&
+                  f.url.endsWith('.summary.antismash')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('pathways')) &&
+                  f.alias.toLowerCase().includes('_summary.antismash')
+              )
+            }
+          />
+        )}
       </div>
-    </>
+    </div>
   );
 };
 

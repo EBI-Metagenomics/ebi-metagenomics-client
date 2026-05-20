@@ -16,7 +16,7 @@ describe('Contig viewer and indexer on bgzipped gffs', () => {
       {fixture: 'apiv2/analyses/analysisMGYA00000002.json'});
   })
   it('Should be able to index bgzipped gff', () => {
-    openPage('v2-analyses/MGYA00000002/contigs-viewer/search-contigs');
+    openPage('analyses/MGYA00000002/contigs-viewer/search-contigs');
     waitForPageLoad('Analysis MGYA00000002');
     cy.contains('Analysis MGYA00000002')
       .should('be.visible');

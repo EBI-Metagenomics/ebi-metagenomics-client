@@ -29,7 +29,7 @@ describe('V2 Analysis page', () => {
     const acc = 'MGYA01000004';
     stubAnalysisDetails(acc, 'amplicon');
 
-    openPage(`v2-analyses/${acc}`);
+    openPage(`analyses/${acc}`);
 
     cy.wait('@analysis-details');
 
@@ -63,7 +63,7 @@ describe('V2 Analysis page', () => {
     const acc = 'MGYA00000005';
     stubAnalysisDetails(acc, 'metagenomic');
 
-    openPage(`v2-analyses/${acc}`);
+    openPage(`analyses/${acc}`);
 
     cy.wait('@analysis-details');
 
@@ -96,7 +96,7 @@ describe('V2 Analysis page', () => {
     const acc = 'MGYA00000002';
     stubAnalysisDetails(acc, 'assembly');
 
-    openPage(`v2-analyses/${acc}`);
+    openPage(`analyses/${acc}`);
 
     cy.wait('@analysis-details');
 
@@ -116,7 +116,7 @@ describe('V2 Analysis page', () => {
     const acc = 'MGYA00000003';
     stubAnalysisDetails(acc, 'amplicon');
 
-    openPage(`v2-analyses/${acc}`);
+    openPage(`analyses/${acc}`);
     cy.wait('@analysis-details');
 
     cy.get('.vf-tabs').contains('Quality control').click();
@@ -138,7 +138,7 @@ describe('V2 Analysis page', () => {
       },
     }).as('analysis-error');
 
-    openPage(`v2-analyses/${acc}`);
+    openPage(`analyses/${acc}`);
     cy.wait('@analysis-error');
 
     cy.contains('Error Fetching Data').should('be.visible');
