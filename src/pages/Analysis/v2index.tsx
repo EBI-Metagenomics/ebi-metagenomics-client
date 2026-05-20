@@ -7,6 +7,7 @@ import { RouteTabs } from 'components/UI/Tabs';
 import Overview from 'components/Analysis/Overview/v2index';
 import QualityControl from 'components/Analysis/QualityControl/v2index';
 import LegacyQualityControl from 'components/Analysis/QualityControl/index';
+import LegacyContigViewer from 'components/Analysis/ContigViewer/index';
 import ContigViewer from 'components/Analysis/ContigViewer/v2index';
 import FunctionalSubpage from 'components/Analysis/Functional/v2index';
 import PathwaysSubpage from 'components/Analysis/Pathways/v2Index';
@@ -59,7 +60,10 @@ const V2AnalysisPage: React.FC = () => {
   );
 
   const pipelineVersion = useMemo(
-    () => (data?.pipeline_version ? parseFloat(data.pipeline_version) : 0),
+    () =>
+      data?.pipeline_version
+        ? parseFloat(data.pipeline_version.replace('V', ''))
+        : 0,
     [data?.pipeline_version]
   );
 
@@ -122,7 +126,12 @@ const V2AnalysisPage: React.FC = () => {
                 }
               />
               <Route path="asv" element={<Asv />} />
-              <Route path="contigs-viewer/*" element={<ContigViewer />} />
+              <Route
+                path="contigs-viewer/*"
+                element={
+                  thisIsV6Family ? <ContigViewer /> : <LegacyContigViewer />
+                }
+              />
               <Route
                 path="taxonomic"
                 element={

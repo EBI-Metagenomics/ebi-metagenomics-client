@@ -291,16 +291,16 @@ const useData: (
   fetchOptions?: RequestInit
 ) => DataResponse = (url, format = ResponseFormat.JSON, fetchOptions = {}) => {
   const [state, setFullState] = useState<DataResponse>(NewRequest);
-  // A flag to be able to clean up in case acomponent is unmount before the request is completed
-  let isActive = true;
-  const setPartialState = (updatedValues): void => {
-    if (isActive)
-      setFullState((prevState) => ({
-        ...prevState,
-        ...updatedValues,
-      }));
-  };
   useEffect(() => {
+    // A flag to be able to clean up in case acomponent is unmount before the request is completed
+    let isActive = true;
+    const setPartialState = (updatedValues): void => {
+      if (isActive)
+        setFullState((prevState) => ({
+          ...prevState,
+          ...updatedValues,
+        }));
+    };
     // If the URL is null don't do the fetch and return the empty response
     if (url) {
       setPartialState({
@@ -312,14 +312,9 @@ const useData: (
       setFullState(EmptyResponse);
     }
     return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       isActive = false;
     };
-  }, [
-    url,
-    format,
-    new URLSearchParams((fetchOptions?.body as string) || '').toString(),
-  ]);
+  }, [url, format, JSON.stringify(fetchOptions)]);
   return state;
 };
 

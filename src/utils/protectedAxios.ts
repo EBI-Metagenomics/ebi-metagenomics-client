@@ -13,6 +13,8 @@ protectedAxios.interceptors.request.use((conf) => {
   const token = localStorage.getItem('mgnify.v2.token');
   if (token && (conf.url?.startsWith(BASE_URL) || conf.url?.startsWith('/'))) {
     conf.headers.Authorization = `Bearer ${token}`;
+  } else {
+    conf.headers.Authorization = null;
   }
   return conf;
 });
