@@ -23,7 +23,7 @@
     "vite:preview": "vite preview",
     "eslint": "eslint src",
     "eslint:fix": "eslint src --fix",
-    "screenshots": "playwright test tests/analysis-screenshots.spec.ts",
+    "screenshots": "SCREENSHOTS=true playwright test tests/analysis-screenshots.spec.ts",
     "mcp-playwright": "playwright-mcp",
     "prettier": "prettier --write .",
     "prepare": "husky install",
