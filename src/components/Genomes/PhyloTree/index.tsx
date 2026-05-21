@@ -4,18 +4,14 @@ import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import HierarchyNode, { Node } from 'components/UI/Hierarchy';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import useURLAccession from '@/hooks/useURLAccession';
+import useData from '@/hooks/data/useData';
 
 interface PhyloTreeProps {
-  catalogueVersion?: string;
+  phylo_tree_url?: string;
 }
 
-const PhyloTree: React.FC<PhyloTreeProps> = ({ catalogueVersion }) => {
-  const accession = useURLAccession();
-  const { data, loading, error } = useMGnifyData(
-    `genome-catalogues/${accession}/${catalogueVersion}/downloads/phylo_tree.json`
-  );
+const PhyloTree: React.FC<PhyloTreeProps> = ({ phylo_tree_url }) => {
+  const { data, loading, error } = useData(phylo_tree_url || null);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;

@@ -152,6 +152,7 @@ export interface GenomeCatalogue extends Record<string, unknown> {
   catalogue_type: 'prokaryotes' | 'eukaryotes' | 'viruses' | string;
   other_stats: KeyValue;
   biome: Biome;
+  downloads: Download[];
 }
 
 export interface Genome {
