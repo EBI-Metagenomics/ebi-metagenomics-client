@@ -1,13 +1,15 @@
+// eslint-disable-next-line import/extensions
 import {openPage} from '../util/util';
+import config from 'utils/config';
 
 function stubAnalysisDetails(accession, experimentType, overrides = {}) {
-  cy.intercept('GET', `**/analyses/${accession}*`, {
+  cy.intercept('GET', `${config.api_v2}/analyses/${accession}*`, {
     statusCode: 200,
     body: {
       accession: accession,
       study_accession: 'MGYS0000001',
       experiment_type: experimentType,
-      pipeline_version: 'v6.0',
+      pipeline_version: 'V6',
       run: { accession: 'ERR000001' },
       sample: { accession: 'ERS000001' },
       read_run: {
@@ -15,7 +17,19 @@ function stubAnalysisDetails(accession, experimentType, overrides = {}) {
         instrument_platform: 'ILLUMINA',
       },
       assembly: null,
-      downloads: [],
+      downloads: [
+        {
+          "alias": "multiqc_report.html",
+          "download_type": "Quality control",
+          "file_type": "html",
+          "long_description": "MultiQC webpage showing quality control steps and metrics",
+          "short_description": "MultiQC quality control report",
+          "download_group": "quality_control",
+          "file_size_bytes": null,
+          "index_files": null,
+          "url": "http://localhost:8080/pub/databases/metagenomics/mgnify_results/PRJNA398/PRJNA398089/ERZ857/ERZ857107/V6/assembly/qc/multiqc_report.html"
+        },
+      ],
       quality_control_summary: {},
       metadata: {},
       results_dir: 'https://www.ebi.ac.uk/metagenomics/results/1',
@@ -29,7 +43,7 @@ describe('V2 Analysis page', () => {
     const acc = 'MGYA01000004';
     stubAnalysisDetails(acc, 'amplicon');
 
-    openPage(`analyses/${acc}`);
+    openPage(`analyses/${acc}/`);
 
     cy.wait('@analysis-details');
 
@@ -63,7 +77,7 @@ describe('V2 Analysis page', () => {
     const acc = 'MGYA00000005';
     stubAnalysisDetails(acc, 'metagenomic');
 
-    openPage(`analyses/${acc}`);
+    openPage(`analyses/${acc}/`);
 
     cy.wait('@analysis-details');
 
@@ -131,7 +145,7 @@ describe('V2 Analysis page', () => {
 
   it('shows error message on API failure', () => {
     const acc = 'MGYA00000004';
-    cy.intercept('GET', `**/analyses/${acc}*`, {
+    cy.intercept('GET', `${config.api_v2}/analyses/${acc}*`, {
       statusCode: 404,
       body: {
         errors: [{ detail: 'Not found' }],
