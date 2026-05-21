@@ -8,7 +8,7 @@ import RouteForHash from 'components/Nav/RouteForHash';
 import KeyValueList from 'components/UI/KeyValueList';
 import AnnotationMetadata from 'components/Sample/AnnotationMetadata';
 import axios from 'axios';
-import marineRegionsEezData from 'public/data/marine-regions-eez-data.json';
+import marineRegionsEezData from 'data/marine-regions-eez-data.json';
 import DisplayAbsInfo, {
   defaultEezMetadata,
   EezMetadata,
