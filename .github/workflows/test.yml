@@ -48,17 +48,15 @@ jobs:
           npm run eslint
 
       - name: 🧪 - Testing
-        uses: cypress-io/github-action@v6
-        with:
-          working-directory: client-repo
-          browser: chrome
-          start: concurrently -k "npm run serve:fixtures" "npm run start"
-          wait-on: http://localhost:9000/
-          wait-on-timeout: 60
+        working-directory: client-repo
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          FIXTURE_BASE: http://localhost:5055
 
       - name: 📉 - Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -83,8 +81,8 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: tests-snapshots
-          path: /home/runner/work/ebi-metagenomics-client/ebi-metagenomics-client/client-repo/cypress/screenshots/ # - name: 📊 - Coverage
+          name: playwright-report
+          path: client-repo/playwright-report/
 
       - name: 📮 - Slack Notification
         uses: rtCamp/action-slack-notify@v2
