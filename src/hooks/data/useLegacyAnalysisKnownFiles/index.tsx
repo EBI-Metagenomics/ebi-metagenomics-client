@@ -64,54 +64,49 @@ const useLegacyAnalysisKnownFiles = () => {
     const detectedMarkers = new Set<string>();
 
     (analysisData?.downloads || []).forEach((download) => {
-      if (
+      const isTaxonomic =
         download.download_group === 'taxonomic_analysis' ||
-        download.download_type === 'Taxonomic analysis'
-      ) {
-        // Example alias: "SSU rRNA KRONA plot" or "SSU rRNA taxonomic classification"
-        const alias = download.alias.toLowerCase();
-        let marker = '';
-        if (alias.includes('ssu')) marker = 'ssu';
-        else if (alias.includes('lsu')) marker = 'lsu';
-        else if (alias.includes('itsonedb')) marker = 'itsonedb';
-        else if (alias.includes('unite')) marker = 'unite';
+        download.download_type === 'Taxonomic analysis';
 
-        if (marker) {
-          detectedMarkers.add(marker);
-          if (!taxonomyPaths[marker]) {
-            taxonomyPaths[marker] = {
-              krona: `${resultsDir}/taxonomy-summary/${marker.toUpperCase()}/krona.html`,
-              tsv: '',
-              txt: '',
-            };
-          }
-          if (download.file_type === 'html' && alias.includes('krona')) {
-            taxonomyPaths[marker].krona = download.url;
-          } else if (
-            download.file_type === 'tsv' &&
-            !download.url.endsWith('.gz')
-          ) {
-            taxonomyPaths[marker].tsv = download.url;
-          } else if (
-            download.file_type === 'txt' &&
-            !download.url.endsWith('.gz')
-          ) {
-            taxonomyPaths[marker].txt = download.url;
-          } else if (
-            download.file_type === 'biom' &&
-            !taxonomyPaths[marker].tsv
-          ) {
-            // Some analyses might have .biom but we need the .tsv for the table.
-            // We can predict the .tsv path from the .biom path usually.
-            taxonomyPaths[marker].tsv = download.url.replace('.biom', '.tsv');
-          }
-        }
+      if (!isTaxonomic) return;
+
+      // Example alias: "SSU rRNA KRONA plot" or "SSU rRNA taxonomic classification"
+      const alias = download.alias.toLowerCase();
+      const marker = ['ssu', 'lsu', 'itsonedb', 'unite'].find((m) =>
+        alias.includes(m)
+      );
+
+      if (!marker) return;
+
+      detectedMarkers.add(marker);
+      if (!taxonomyPaths[marker]) {
+        taxonomyPaths[marker] = {
+          krona: `${resultsDir}/taxonomy-summary/${marker.toUpperCase()}/krona.html`,
+          tsv: '',
+          txt: '',
+        };
+      }
+
+      const isGzipped = download.url.endsWith('.gz');
+
+      if (download.file_type === 'html' && alias.includes('krona')) {
+        taxonomyPaths[marker].krona = download.url;
+      } else if (download.file_type === 'tsv' && !isGzipped) {
+        taxonomyPaths[marker].tsv = download.url;
+      } else if (download.file_type === 'txt' && !isGzipped) {
+        taxonomyPaths[marker].txt = download.url;
+      } else if (download.file_type === 'biom' && !taxonomyPaths[marker].tsv) {
+        // Some analyses might have .biom but we need the .tsv for the table.
+        // We can predict the .tsv path from the .biom path usually.
+        taxonomyPaths[marker].tsv = download.url.replace('.biom', '.tsv');
       }
     });
 
     // Fallback: If no markers were detected via downloads, but it's a supported version,
     // we assume SSU and LSU might exist in the standard locations.
-    if (detectedMarkers.size === 0 && isSupportedVersion) {
+    const mayHaveUnindexedSsuOrLsuFiles =
+      detectedMarkers.size === 0 && isSupportedVersion;
+    if (mayHaveUnindexedSsuOrLsuFiles) {
       ['ssu', 'lsu'].forEach((marker) => {
         taxonomyPaths[marker] = {
           krona: `${resultsDir}/taxonomy-summary/${marker.toUpperCase()}/krona.html`,
