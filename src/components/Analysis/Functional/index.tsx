@@ -5,13 +5,15 @@ import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import ExtLink from 'components/UI/ExtLink';
 import InfoBanner from 'components/UI/InfoBanner';
 
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import { createSharedQueryParamContext } from '@/hooks/queryParamState/useQueryParamState';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import { createSharedQueryParamContext } from 'hooks/queryParamState/useQueryParamState';
+// import PfamTab from 'components/Analysis/Functional/KO';
+import KOTab from 'components/Analysis/Functional/KO';
+import PfamTab from 'components/Analysis/Functional/Pfam';
+import useLegacyAnalysisKnownFiles from 'hooks/data/useLegacyAnalysisKnownFiles';
 import InterProTab from './InterPro';
 import GOTab from './GO';
-import PfamTab from './Pfam';
-import KOTab from './KO';
-import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const PARAMETER_NAME = 'type';
 const PARAMETER_DEFAULT = 'interpro';
@@ -27,13 +29,34 @@ const { useType, withQueryParamProvider } = createSharedQueryParamContext({
 });
 
 const FunctionalAnalysis: React.FC = () => {
-  const { overviewData } = useContext(AnalysisContext);
+  const { overviewData: data } = useContext(AnalysisContext);
+  const { resultsDir, interproPath, goPath } = useLegacyAnalysisKnownFiles();
 
   const [type] = useType<string>();
-  // const accession=overviewData.id;
-  const version = Number(overviewData?.attributes['pipeline-version']);
-  const longReadExperiment =
-    overviewData?.attributes['experiment-type'] === 'long_reads_assembly';
+  const activeType = type || PARAMETER_DEFAULT;
+
+  if (!data) {
+    return <div>Loading...</div>; // or whatever loading component you prefer
+  }
+  // const accession = data.id;
+  // const version = Number(overviewData.attributes['pipeline-version']);
+  const versionStr = data.pipeline_version || '';
+  const version = parseFloat(versionStr.replace(/^V/i, ''));
+  const isLegacy = !Number.isNaN(version) && version < 6;
+  const longReadExperiment = data.experiment_type === 'LRASS';
+
+  if (version < 4.1) {
+    return (
+      <div className="vf-stack vf-stack--200">
+        <p>
+          Functional analysis files can be found from the{' '}
+          <a href={resultsDir} target="_blank" rel="noopener noreferrer">
+            results directory
+          </a>
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="vf-stack">
@@ -80,15 +103,89 @@ const FunctionalAnalysis: React.FC = () => {
         </InfoBanner>
       )}
       <TabsForQueryParameter
-        tabs={version >= 5 ? tabs : tabs.slice(0, 2)}
+        tabs={version >= 5 ? tabs : tabs.slice(0, 4)}
         queryParameter={PARAMETER_NAME}
         defaultValue={PARAMETER_DEFAULT}
       />
       <div className="vf-tabs-content">
-        {type === 'interpro' && <InterProTab />}
-        {type === 'go' && <GOTab />}
-        {type === 'pfam' && <PfamTab />}
-        {type === 'ko' && <KOTab />}
+        {activeType === 'interpro' && (
+          <InterProTab
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
+                  f.url.endsWith('.summary.ips')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
+                  f.alias.toLowerCase().includes('_summary.ips')
+              ) ||
+              interproPath
+            }
+          />
+        )}
+        {activeType === 'go' && (
+          <GOTab
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
+                  f.url.endsWith('.summary.go')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
+                  f.alias.toLowerCase().includes('_summary.go')
+              ) ||
+              goPath
+            }
+          />
+        )}
+        {activeType === 'ko' && (
+          <KOTab
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
+                  f.url.endsWith('.summary.ko')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
+                  f.alias.toLowerCase().includes('_summary.ko')
+              )
+            }
+          />
+        )}
+        {activeType === 'pfam' && (
+          <PfamTab
+            isLegacy={isLegacy}
+            legacyFile={
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
+                  f.url.endsWith('.summary.pfam')
+              ) ||
+              data.downloads.find(
+                (f) =>
+                  (f.download_type === 'Functional analysis' ||
+                    f.download_group.includes('functional')) &&
+                  f.alias.toLowerCase().includes('_summary.pfam')
+              )
+            }
+          />
+        )}
       </div>
     </div>
   );

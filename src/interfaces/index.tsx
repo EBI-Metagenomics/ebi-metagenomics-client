@@ -62,6 +62,8 @@ export interface RunDetail extends Run {
   study: Study;
 }
 
+export type RunList = PaginatedList<Run>;
+
 export interface Analysis {
   study_accession: string;
   accession: string;

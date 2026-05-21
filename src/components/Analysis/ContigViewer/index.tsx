@@ -35,7 +35,7 @@ import {
   annotationTrackCustomisations,
   FORMAT,
 } from 'components/IGV/TrackColourPicker';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import {
   useCrates,
   useOfflineCrate,
@@ -61,7 +61,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
 
   const { data, loading, error } = useData(fastaURL, ResponseFormat.TXT);
 
-  const assemblyId = analysisOverviewData?.relationships.assembly.data.id;
+  const assemblyId = analysisOverviewData?.assembly?.accession;
 
   const { crates, loading: loadingCrates } = useCrates(
     `assemblies/${assemblyId}/extra-annotations`
@@ -252,9 +252,8 @@ const ContigsViewer: React.FC = () => {
   const [annotationTypeParam] = useAnnotationType<string[]>();
   const [contigsSearchParam] = useContigsSearch<string>();
 
-  const { data, loading, error } = useMGnifyData(
-    `analyses/${accession}/contigs`,
-    {
+  const contigsQueryParams = useMemo(
+    () => ({
       cursor: contigsPageCursorParam,
       search: contigsSearchParam,
       gt: lengthRange[0],
@@ -266,8 +265,26 @@ const ContigsViewer: React.FC = () => {
       interpro: interproSearchParam,
       antismash: antismashSearchParam,
       'facet[]': annotationTypeParam.join(','),
-    },
-    {}
+    }),
+    [
+      contigsPageCursorParam,
+      contigsSearchParam,
+      lengthRange,
+      cogCategorySearchParam,
+      keggOrthologSearchParam,
+      goTermSearchParam,
+      pfamSearchParam,
+      interproSearchParam,
+      antismashSearchParam,
+      annotationTypeParam,
+    ]
+  );
+  const fetchOptions = useMemo(() => ({}), []);
+
+  const { data, loading, error } = useMGnifyData(
+    `analyses/${accession}/contigs`,
+    contigsQueryParams,
+    fetchOptions
   );
 
   const context = useMemo(
@@ -300,7 +317,7 @@ const ContigsViewer: React.FC = () => {
     if (contig && contig.attributes['contig-id'] !== selectedContigParam) {
       setSelectedContigParam(contig.attributes['contig-id']);
     }
-  });
+  }, [contig, selectedContigParam, setSelectedContigParam]);
 
   useEffect(() => {
     // If the contig in URL isnt in the data-page, remove the bad ID from URL

@@ -80,9 +80,9 @@ function getOrderingQueryParamFromSortedColumn(
     .replace(/-/g, '_')}`;
 }
 
-function getSortedColumnFromOrderingQueryParam(
+function getSortedColumnFromOrderingQueryParam<T extends object>(
   ordering: string,
-  cols: Column<any>[]
+  cols: Column<T>[]
 ): Array<{ id: string; desc: boolean }> {
   if (!ordering) return [];
   const desc = ordering.startsWith('-');
@@ -124,6 +124,7 @@ type EMGTableProps<T extends object> = {
   onMouseEnterRow?: (row: Row<T>) => void;
   onMouseLeaveRow?: (row: Row<T>) => void;
   dataCy?: string;
+  clientSidePagination?: boolean;
 };
 
 const EMGTable = <T extends object>({
@@ -145,6 +146,7 @@ const EMGTable = <T extends object>({
   onMouseEnterRow = () => null,
   onMouseLeaveRow = () => null,
   dataCy,
+  clientSidePagination = false,
 }: EMGTableProps<T>) => {
   const [page, setPage] = useQueryParamState<number>(
     camelCase(`${namespace} page`)
@@ -172,6 +174,7 @@ const EMGTable = <T extends object>({
     getTableBodyProps,
     headerGroups,
     rows,
+    page: paginatedRows,
     prepareRow,
     canPreviousPage,
     canNextPage,
@@ -183,11 +186,13 @@ const EMGTable = <T extends object>({
       data: tableData,
       initialState: {
         pageIndex: initialPage,
+        pageSize: expectedPageSize,
         sortBy: getSortedColumnFromOrderingQueryParam(ordering, cols),
       },
       pageCount: pageCount || 1,
-      manualPagination: true,
-      manualSortBy: true,
+      manualPagination: !clientSidePagination,
+      manualSortBy: !clientSidePagination,
+      autoResetPage: !clientSidePagination,
     },
     useSortBy,
     usePagination
@@ -205,7 +210,7 @@ const EMGTable = <T extends object>({
         setChangingPage(false);
       }
     }
-  }, [showPagination, page, pageIndex, gotoPage]);
+  }, [showPagination, page, pageIndex, gotoPage, isChangingPage]);
 
   useEffect(() => {
     // Handle table-initiated change of sorting column
@@ -216,7 +221,7 @@ const EMGTable = <T extends object>({
       setOrdering(orderParamRequestedByTable);
       setPage(1);
     }
-  }, [sortable, sortBy]);
+  }, [sortable, sortBy, ordering, setOrdering, setPage]);
 
   useEffect(() => {
     // Handle external (e.g. URL query param) load/change of sorting column
@@ -233,7 +238,7 @@ const EMGTable = <T extends object>({
       );
       setPage(1);
     }
-  }, [ordering, sortable, cols]);
+  }, [ordering, sortable, cols, sortBy, setSortBy, setPage]);
 
   const paginationRanges = useMemo(
     () => getPaginationRanges(pageIndex, pageCount),
@@ -249,6 +254,8 @@ const EMGTable = <T extends object>({
   const fullWidthColSpan = useMemo(() => {
     return filter(cols, (col) => !col.isFullWidth).length;
   }, [cols]);
+
+  const rowsToRender = clientSidePagination ? paginatedRows : rows;
 
   if (loading && !isStale) return <Loading size="small" />;
   return (
@@ -345,7 +352,7 @@ const EMGTable = <T extends object>({
             ))}
           </thead>
           <tbody {...getTableBodyProps()} className="vf-table__body">
-            {rows.map((row) => {
+            {rowsToRender.map((row) => {
               prepareRow(row);
               return (
                 <React.Fragment key={row.id}>
@@ -412,12 +419,13 @@ const EMGTable = <T extends object>({
             })}
           </tbody>
         </table>
-        {!loading && !rows.length && (
+        {!loading && !rowsToRender.length && (
           <div
             className="vf-box vf-box-theme--primary vf-box--easy"
             style={{
               backgroundColor: '#d1e3f6',
             }}
+            data-cy="no-matching-data"
           >
             <h3 className="vf-box__heading">
               <span className="icon icon-common icon-exclamation-triangle" /> No

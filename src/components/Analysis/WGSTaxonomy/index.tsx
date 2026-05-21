@@ -4,6 +4,7 @@ import 'components/Analysis/AmpliconTaxonomy/style.css';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import { Download } from '@/interfaces';
 import InfoBanner from 'components/UI/InfoBanner';
+import KronaIframe from 'components/UI/KronaIframe';
 
 const WGSTaxonomy: React.FC = () => {
   const { overviewData: analysisData } = useContext(AnalysisContext);
@@ -29,10 +30,10 @@ const WGSTaxonomy: React.FC = () => {
               Interactive taxonomic hierarchy
             </p>
             <p className="vf-card__text">
-              <iframe
+              <KronaIframe
                 className="krona-iframe"
-                src={kronaFile.url}
-                style={{ width: '100%', height: '700px', border: 'none' }}
+                url={kronaFile.url}
+                height="700px"
                 title="Krona Taxonomy Visualization"
               />
             </p>

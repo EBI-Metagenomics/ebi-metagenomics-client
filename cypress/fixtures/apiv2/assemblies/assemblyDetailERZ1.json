@@ -1,0 +1,12 @@
+{
+  "accession": "ERZ1",
+  "updated_at": "2026-04-28T09:46:06.551Z",
+  "run_accession": "ERR1",
+  "sample_accession": "SAMEA1",
+  "reads_study_accession": null,
+  "assembly_study_accession": "MGYS1",
+  "assembler_name": null,
+  "assembler_version": null,
+  "metadata": {
+  }
+}
