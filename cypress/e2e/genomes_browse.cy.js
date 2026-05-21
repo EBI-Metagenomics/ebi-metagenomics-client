@@ -25,6 +25,19 @@ describe('Browse Genomes', () => {
     cy.get('[data-cy="emg-table-download-button"]').should('exist');
   });
 
+  it('allows sorting catalogues by biome', () => {
+    openPage('browse/genomes?browseBy=biome');
+    waitForPageLoad('Browse MGnify');
+    cy.contains('th', 'Biome').click();
+    cy.url().should('include', 'order=catalogue_biome_label');
+    cy.get('table.vf-table--striped tbody tr')
+      .first()
+      .should('contain', 'Marine');
+    cy.contains('th', 'Biome').click();
+    cy.url().should('include', 'order=-catalogue_biome_label');
+    cy.get('table.vf-table--striped tbody tr').first().should('contain', 'Soil');
+  });
+
   it('Shows All genomes search table and supports download', () => {
     openPage('browse/genomes?browseBy=search-all');
     waitForPageLoad('Browse MGnify');

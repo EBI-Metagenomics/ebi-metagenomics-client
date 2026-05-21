@@ -37,7 +37,6 @@ const BrowseGenomesByCatalogue: React.FC = () => {
           item?.biome?.lineage?.startsWith?.(biome)
         )
       : apiData.items;
-    console.log('filteredItems ', filteredItems);
     const sortedItems = sortByOrder(filteredItems, order);
     return {
       count: sortedItems.length,
@@ -52,7 +51,6 @@ const BrowseGenomesByCatalogue: React.FC = () => {
         Header: 'Biome',
         accessor: (catalogue: any) => catalogue?.catalogue_biome_label,
         Cell: ({ cell }) => cell?.value || '',
-        disableSortBy: true,
         className: 'mg-biome',
       },
       {
