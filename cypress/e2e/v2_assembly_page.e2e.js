@@ -1,3 +1,5 @@
+import config from 'utils/config';
+
 function stubAssemblyDetails(accession, overrides = {}) {
   cy.intercept('GET', `**/assemblies/${accession}/genome-links`, {
     statusCode: 200,
@@ -28,12 +30,32 @@ function stubAssemblyAnalyses(accession, fixture) {
 }
 
 describe('V2 Assembly page', () => {
-  it('renders Overview with ENA, Sample, Runs and empty Derived genomes', () => {
-    const acc = 'GCA_TEST_V2_1';
+  beforeEach(function() {
+    cy.intercept('GET', `${config.api_v2}/assemblies/ERZ1`,
+      { fixture: 'apiv2/assemblies/assemblyDetailERZ1.json' });
+  });
+
+  it('shows basic assembly details', () => {
+    const acc = 'ERZ1';
 
     stubAssemblyDetails(acc);
 
-    cy.visit(`/metagenomics/assemblies/${acc}#overview`);
+    cy.visit(`/metagenomics/assemblies/${acc}`);
+
+    cy.wait('@assembly-details');
+
+    cy.contains(`Assembly: ${acc}`);
+    cy.contains(`ENA accession`);
+    cy.contains(`Study (of assembly)`);
+    cy.contains(`MGYS1`);
+  });
+
+  it('renders Genomes with ENA, Sample, Runs and empty Derived genomes', () => {
+    const acc = 'ERZ1';
+
+    stubAssemblyDetails(acc);
+
+    cy.visit(`/metagenomics/assemblies/${acc}#genomes`);
 
     cy.wait('@assembly-details');
 
@@ -43,7 +65,7 @@ describe('V2 Assembly page', () => {
   });
 
   it('renders Analyses tab and loads analyses via assemblies endpoint', () => {
-    const acc = 'GCA_TEST_V2_2';
+    const acc = 'ERZ1';
 
     stubAssemblyDetails(acc);
     stubAssemblyAnalyses(acc);
@@ -67,8 +89,8 @@ describe('V2 Assembly page', () => {
     cy.contains('5.0');
   });
 
-  it('renders Derived genomes in Overview', () => {
-    const acc = 'GCA_TEST_V2_3';
+  it('renders Derived genomes in Genomes', () => {
+    const acc = 'ERZ1';
     const genomeAcc = 'MGYG000000001';
 
     stubAssemblyDetails(acc, {
@@ -87,7 +109,7 @@ describe('V2 Assembly page', () => {
       ]
     });
 
-    cy.visit(`/metagenomics/assemblies/${acc}#overview`);
+    cy.visit(`/metagenomics/assemblies/${acc}#genomes`);
 
     cy.wait('@assembly-details');
 

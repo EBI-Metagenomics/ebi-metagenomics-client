@@ -15,6 +15,12 @@ import DerivedGenomes from 'components/Assembly/DerivedGenomes';
 import AdditionalContainedGenomes from 'components/Assembly/AdditionalContainedGenomes';
 import V2AssemblyContext from './context';
 import { ErrorFromFetch, ErrorTypes } from 'hooks/data/useData';
+import { Assembly } from '@/interfaces';
+import useMgnifyResourceDetail from 'hooks/data/useMgnifyResourceDetail';
+import KeyValueList from 'components/UI/KeyValueList';
+import ExtLink from 'components/UI/ExtLink';
+import { ENA_VIEW_URL } from 'utils/urls';
+import { Link } from 'react-router-dom';
 
 // ---------- Types ----------
 
@@ -100,10 +106,14 @@ const AdditionalAnalyses: React.FC = () => {
 
 const AssemblyPage: React.FC = () => {
   const accession = useURLAccession();
-
-  const [data, setData] = useState<AssemblyLinksData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<{
+  const {
+    data: assemblyData,
+    error: assemblyError,
+    loading: loadingAssembly,
+  } = useMgnifyResourceDetail<Assembly>('assemblies', accession || '');
+  const [linksData, setLinksData] = useState<AssemblyLinksData | null>(null);
+  const [loadingLinks, setLoadingLinks] = useState<boolean>(true);
+  const [linksError, setLinksError] = useState<{
     error: unknown;
     type: ErrorTypes;
   } | null>(null);
@@ -113,8 +123,8 @@ const AssemblyPage: React.FC = () => {
   >(null);
 
   const fetchData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    setLoadingLinks(true);
+    setLinksError(null);
     if (!accession) return;
 
     try {
@@ -135,14 +145,14 @@ const AssemblyPage: React.FC = () => {
         sample_accession: '',
       };
 
-      setData(normalised);
+      setLinksData(normalised);
     } catch (err) {
-      setError({
+      setLinksError({
         error: err,
         type: ErrorTypes.FetchError,
       });
     } finally {
-      setLoading(false);
+      setLoadingLinks(false);
     }
   }, [accession]);
 
@@ -150,29 +160,38 @@ const AssemblyPage: React.FC = () => {
     fetchData();
   }, [fetchData]);
 
-  const assemblyData = data;
-
   const ctxValue = useMemo(
     () => ({
-      assemblyData: assemblyData
-        ? {
-            accession: assemblyData.accession,
-            run_accession: assemblyData.run_accession,
-            genome_links: assemblyData.genome_links,
-            sample_accession: assemblyData.sample_accession ?? '',
-          }
-        : null,
-      loading,
-      error,
+      assemblyData:
+        assemblyData && linksData
+          ? {
+              accession: assemblyData.accession,
+              run_accession: assemblyData.run_accession,
+              genome_links: linksData.genome_links,
+              sample_accession: assemblyData.sample_accession ?? '',
+            }
+          : null,
+      loading: loadingAssembly || loadingLinks,
+      error: (assemblyError || linksError) as ErrorFromFetch,
       refetch: fetchData,
       genomeLinksLastUpdated,
     }),
-    [assemblyData, loading, error, fetchData, genomeLinksLastUpdated]
+    [
+      assemblyData,
+      linksData,
+      loadingAssembly,
+      loadingLinks,
+      assemblyError,
+      linksError,
+      fetchData,
+      genomeLinksLastUpdated,
+    ]
   );
 
-  if (loading) return <Loading size="large" />;
-  if (error) return <FetchError error={error as ErrorFromFetch} />;
-  if (!data) return <Loading />;
+  if (loadingLinks || loadingAssembly) return <Loading size="large" />;
+  if (linksError) return <FetchError error={linksError as ErrorFromFetch} />;
+  if (assemblyError) return <FetchError error={assemblyError} />;
+  if (!assemblyData) return <Loading />;
 
   const tabs = [
     { label: 'Analyses', to: '#analyses' },
@@ -181,9 +200,81 @@ const AssemblyPage: React.FC = () => {
     // { label: 'Additional Analyses', to: '#additional-analyses' },
   ];
 
+  const details = [
+    {
+      key: 'ENA accession',
+      value: () => (
+        <ExtLink href={`${ENA_VIEW_URL}${assemblyData?.accession}`}>
+          {assemblyData?.accession}
+        </ExtLink>
+      ),
+    },
+    {
+      key: 'Run',
+      // TODO: coassembly
+      value: assemblyData?.run_accession
+        ? () => (
+            <Link
+              to={`/runs/${assemblyData.run_accession}`}
+              key={assemblyData.run_accession}
+            >
+              {assemblyData.run_accession}
+            </Link>
+          )
+        : null,
+    },
+    {
+      key: 'Sample',
+      // TODO: coassembly
+      value: assemblyData?.sample_accession
+        ? () => (
+            <Link
+              to={`/samples/${assemblyData.sample_accession}`}
+              key={assemblyData.sample_accession}
+            >
+              {assemblyData.sample_accession}
+            </Link>
+          )
+        : null,
+    },
+    {
+      key: 'Study (of assembled reads)',
+      value: assemblyData?.reads_study_accession
+        ? () => (
+            <Link
+              to={`/studies/${assemblyData.reads_study_accession}`}
+              key={assemblyData.reads_study_accession}
+            >
+              {assemblyData.reads_study_accession}
+            </Link>
+          )
+        : null,
+    },
+    {
+      key: 'Study (of assembly)',
+      value: assemblyData?.assembly_study_accession
+        ? () => (
+            <Link
+              to={`/studies/${assemblyData.assembly_study_accession}`}
+              key={assemblyData.assembly_study_accession}
+            >
+              {assemblyData.assembly_study_accession}
+            </Link>
+          )
+        : null,
+    },
+  ].filter(({ value }) => value) as {
+    key: string;
+    value: React.FunctionComponent;
+  }[];
+
   return (
     <section className="vf-content">
       <h2>Assembly: {assemblyData?.accession || ''}</h2>
+      <Box label="Description">
+        <KeyValueList list={details} />
+      </Box>
+
       <Tabs tabs={tabs} />
 
       <section className="vf-grid">
