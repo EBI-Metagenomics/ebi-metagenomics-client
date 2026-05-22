@@ -4,6 +4,7 @@ import './style.css';
 import SourmashLogo from 'images/sourmash_logo.png';
 import BranchwaterLogo from 'images/branchwater_logo.png';
 import CobsLogo from 'images/cobs_logo.png';
+import { Link } from 'react-router-dom';
 
 const LandingPage: React.FC = () => {
   return (
@@ -25,12 +26,9 @@ const LandingPage: React.FC = () => {
         <span className="vf-breadcrumbs__heading">Related:</span>
         <ul className="vf-breadcrumbs__list vf-breadcrumbs__list--related | vf-list vf-list--inline">
           <li className="vf-breadcrumbs__item">
-            <a
-              href="https://www.ebi.ac.uk/metagenomics/proteins/"
-              className="vf-breadcrumbs__link"
-            >
-              MGnify Proteins
-            </a>
+            <Link to={`/browse/genomes/`} className="vf-breadcrumbs__link">
+              MGnify Genomes
+            </Link>
           </li>
         </ul>
       </nav>
@@ -49,7 +47,7 @@ const LandingPage: React.FC = () => {
       <div className="vf-grid vf-grid__col-3 bw-landing__cards">
         <BranchwaterCard
           to="/branchwater-search"
-          title="Search genomes against INSDC metagenomes"
+          title="Search genomes against metagenomes"
           subheading="Branchwater  search"
           text={
             <>
