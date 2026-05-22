@@ -3,8 +3,8 @@
   "version": "1",
   "name": "Marine MAGs",
   "description": "Marine genomes catalogue description",
-  "protein_catalogue_name": null,
-  "protein_catalogue_description": null,
+  "protein_catalogue_name": "UHGP",
+  "protein_catalogue_description": "Protein coding sequences from the human gut.",
   "updated_at": "2024-10-01T00:00:00Z",
   "result_directory": null,
   "genome_count": 5,
@@ -13,6 +13,17 @@
   "pipeline_version_tag": "v1.0.0",
   "catalogue_biome_label": "Marine",
   "catalogue_type": "mag",
-  "other_stats": {},
-  "biome": {"biome_name": "Marine", "lineage": "root:Environmental:Marine"}
+  "other_stats": {
+    "Total proteins": "1000",
+    "Clusters with pan-genomes": "10",
+    "Clusters with isolate genomes": "5"
+  },
+  "biome": {"biome_name": "Marine", "lineage": "root:Environmental:Marine"},
+  "downloads": [
+    {
+      "url": "https://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/mar1/v1/phylo_tree.json",
+      "file_type": "json",
+      "download_group": "catalogue"
+    }
+  ]
 }
