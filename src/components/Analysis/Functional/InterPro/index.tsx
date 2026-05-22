@@ -1,156 +1,117 @@
-import React, { useContext, useState } from 'react';
-import { Row } from 'react-table';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import EMGTable from 'components/UI/EMGTable';
-import { TAXONOMY_COLOURS } from '@/utils/taxon';
+import React, { useContext } from 'react';
+import AnalysisContext, {
+  AnalysisContextType,
+} from 'pages/Analysis/V2AnalysisContext';
+import { Download } from '@/interfaces';
+import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import CompressedTSVTable from 'components/UI/CompressedTSVTable';
+import { last, sortBy } from 'lodash-es';
+import LegacyFunctionalTable from '../LegacyFunctionalTable';
 
-import Loading from 'components/UI/Loading';
-import FetchError from 'components/UI/FetchError';
-import ExtLink from 'components/UI/ExtLink';
-import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
-import InterProMatchesChart from './InterProMatchesChart';
-import InterProQCChart from './QCChart';
+type InterProProps = {
+  isLegacy?: boolean;
+  legacyFile?: Download | string;
+};
 
-const PAGE_SIZE = 25;
+const InterPro: React.FC<InterProProps> = ({ isLegacy, legacyFile }) => {
+  const { overviewData: analysisData } =
+    useContext<AnalysisContextType>(AnalysisContext);
 
-const {
-  useInterproPage,
-  useInterproPageSize,
-  useInterpoOrder,
-  withQueryParamProvider,
-} = createSharedQueryParamContextForTable('interpro', {}, PAGE_SIZE);
-
-const InterPro: React.FC = () => {
-  const { overviewData } = useContext(AnalysisContext);
-  const [total, setTotal] = useState(-1);
-  const [colorMap, setColorMap] = useState(new Map());
-  const [selectedName, setSelectedName] = useState<string>();
-  const [page] = useInterproPage<number>();
-  const [pageSize] = useInterproPageSize<number>();
-  const [order] = useInterpoOrder<string>();
-  const { data, loading, error, isStale } = useMGnifyData(
-    overviewData
-      ? `analyses/${overviewData.id}/interpro-identifiers`
-      : undefined,
-    {
-      page: page as number,
-      ordering: order as string,
-      page_size: pageSize as number,
-    }
+  let dataFiles: Download[] | undefined = analysisData?.downloads.filter(
+    (file) =>
+      file.download_group === 'functional_annotation.interpro' &&
+      file.alias.includes('_summary')
   );
-  const columns = [
-    {
-      id: 'color',
-      Header: '',
-      accessor: 'attributes.accession',
-      disableSortBy: true,
-      Cell: ({ cell }) => (
-        <div
-          style={{
-            width: '1rem',
-            height: '1rem',
-            display: 'inline-block',
-            backgroundColor:
-              colorMap.get(cell.value) || TAXONOMY_COLOURS.slice(-1)[0],
-            verticalAlign: 'sub',
-            border: '1px solid white',
-          }}
-        >
-          &nbsp;
+  if (dataFiles) {
+    dataFiles = sortBy(dataFiles, (file) => file.index_files?.length).reverse();
+  }
+
+  if (isLegacy) {
+    if (!legacyFile) {
+      return (
+        <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
+          <p>No InterPro identifiers file available</p>
         </div>
-      ),
-    },
-    {
-      id: 'name',
-      Header: 'Entry name',
-      accessor: 'attributes.description',
-    },
-    {
-      id: 'accession',
-      Header: 'ID',
-      accessor: 'attributes.accession',
-      Cell: ({ cell }) => (
-        <ExtLink
-          href={`http://www.ebi.ac.uk/interpro/entry/interpro/${cell.value}`}
-        >
-          {cell.value}
-        </ExtLink>
-      ),
-    },
-    {
-      Header: 'pCDS matched',
-      accessor: 'attributes.count',
-    },
-    {
-      id: 'percentage',
-      Header: '%',
-      accessor: 'attributes.count',
-      Cell: ({ cell }) =>
-        total === -1 ? (
-          <Loading size="small" />
-        ) : (
-          <>{((100 * cell.value) / total).toFixed(2)}</>
-        ),
-    },
-  ];
-  const handleMouseEnterRow = (row: Row): void =>
-    setSelectedName(row.values.name);
-  const handleMouseLeaveRow = (): void => setSelectedName(undefined);
+      );
+    }
+    const url = typeof legacyFile === 'string' ? legacyFile : legacyFile.url;
+    const title =
+      typeof legacyFile === 'string' ? 'InterPro summary' : legacyFile.alias;
+    const description =
+      typeof legacyFile === 'string' ? '' : legacyFile.short_description;
+
+    return (
+      <div className="vf-stack">
+        <p className="text-sm text-gray-600 mb-4">
+          InterPro is a database of protein families, domains, and functional
+          sites. It provides functional analysis of proteins by classifying them
+          into families and predicting the presence of domains and sites.
+        </p>
+        <DetailedVisualisationCard ftpLink={url} title={title}>
+          <LegacyFunctionalTable
+            url={url}
+            title={description}
+            type="interpro"
+          />
+        </DetailedVisualisationCard>
+      </div>
+    );
+  }
+
+  if (!dataFiles || !dataFiles.length) {
+    return (
+      <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
+        <p>No InterPro identifiers file available</p>
+      </div>
+    );
+  }
+
   return (
     <div className="vf-stack">
-      <div>
-        <InterProQCChart />
-      </div>
-      <h5>InterPro match summary</h5>
-      <div className="vf-grid mg-grid-30-70">
-        <div>
-          <InterProMatchesChart
-            selectedName={selectedName}
-            onTotalChange={(newTotal) => setTotal(newTotal)}
-            onMatchesChange={(matches) => {
-              setColorMap(
-                new Map(
-                  matches.map(({ accession }, i) => [
-                    accession,
-                    TAXONOMY_COLOURS[i],
-                  ])
-                )
-              );
-            }}
-          />
-        </div>
-        {loading && !isStale && <Loading />}
-        {!loading && error && <FetchError error={error} />}
-        {data && !error && (
-          <EMGTable
-            cols={columns}
-            data={data}
-            Title={
-              <div>
-                <h6>
-                  InterPro entries
-                  <span className="mg-number">
-                    {data.meta?.pagination?.count || 1}
-                  </span>
-                </h6>
-              </div>
-            }
-            initialPageSize={PAGE_SIZE}
-            initialPage={(page as number) - 1}
-            className="mg-anlyses-table"
-            loading={loading}
-            isStale={isStale}
-            onMouseEnterRow={handleMouseEnterRow}
-            onMouseLeaveRow={handleMouseLeaveRow}
-            showPagination
-            dataCy="interpro-table"
-            namespace="interpro"
-          />
-        )}
-      </div>
+      <p className="text-sm text-gray-600 mb-4">
+        InterPro is a database of protein families, domains, and functional
+        sites. It provides functional analysis of proteins by classifying them
+        into families and predicting the presence of domains and sites.
+      </p>
+
+      {dataFiles.map((dataFile) => (
+        <DetailedVisualisationCard
+          ftpLink={dataFile.url}
+          title={dataFile.alias}
+          key={dataFile.alias}
+        >
+          <div className="p-4">
+            <h5>{dataFile.short_description}</h5>
+            <p className="vf-text text-body--1">{dataFile.long_description}</p>
+          </div>
+          {!!dataFile.index_files?.length && (
+            <>
+              <CompressedTSVTable
+                download={dataFile}
+                barChartSpec={{
+                  title: 'interpro',
+                  labelsCol: {
+                    id: 'interpro_accession',
+                    Header: 'Interpro identifier',
+                    accessor: (d) => `${d[0]}: ${d[1]}`,
+                  },
+                  countsCol: {
+                    id: 'count',
+                    Header: 'Count',
+                    accessor: (d) => Number(last(d)),
+                  },
+                }}
+              />
+              <p className="text-sm">
+                Download this file to view the complete InterPro annotations for
+                this analysis.
+              </p>
+            </>
+          )}
+        </DetailedVisualisationCard>
+      ))}
     </div>
   );
 };
 
-export default withQueryParamProvider(InterPro);
+export default InterPro;

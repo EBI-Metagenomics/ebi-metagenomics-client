@@ -1,7 +1,7 @@
 import {
     openPage,
     setupDefaultSearchPageRouting,
-} from '../util/util';
+} from '../util/util.js';
 
 describe('Home page', function() {
     beforeEach(function() {
@@ -66,6 +66,11 @@ describe('Home page', function() {
         it('Should navigate to search page even with empty query', function() {
             cy.get('.home-search-box button[type="submit"]').click();
             cy.url().should('include', '/search');
+        });
+
+        it('Should show jump to if accession used', function() {
+          cy.get('.search-text-input').type('MGYS00000410   {enter}');
+          cy.url().should('match', /studies\/MGYS00000410/);
         });
     });
 

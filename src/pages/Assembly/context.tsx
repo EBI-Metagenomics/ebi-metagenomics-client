@@ -1,4 +1,5 @@
 import React, { createContext } from 'react';
+import { ErrorFromFetch } from 'hooks/data/useData';
 export const V2AssemblyContext = createContext({
   assemblyData: null as {
     accession: string;
@@ -7,7 +8,7 @@ export const V2AssemblyContext = createContext({
     sample_accession: string;
   } | null,
   loading: false as boolean,
-  error: null as { error: unknown; type: any } | null,
+  error: null as ErrorFromFetch | null,
   refetch: async () => {},
   genomeLinksLastUpdated: null as string | null,
 });

@@ -1,119 +1,129 @@
-import React, { useContext, useEffect, useState } from 'react';
-import HierarchyNode, { Node } from 'components/UI/Hierarchy';
+import React, { useContext } from 'react';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import { Download } from '@/interfaces';
+import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import CompressedTSVTable from 'components/UI/CompressedTSVTable';
+import GenomePropertiesVisualiser from './GenomePropertiesVisualiser';
 
-import gpHierarchy from 'data/genome-properties-hierarchy.json';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import Loading from 'components/UI/Loading';
-import FetchError from 'components/UI/FetchError';
-import { MGnifyDatum } from '@/hooks/data/useData';
-import ExtLink from 'components/UI/ExtLink';
+type GenomePropertiesProps = {
+  isLegacy?: boolean;
+  legacyFile?: Download;
+};
 
-/**
- * Annotate the nodes with the counts.
- * @param {Object} node a gp node
- * @return {int} the aggregated count for a sub-tree
- */
-const annotate = (
-  node: Node,
-  genomePropertiesCount: Record<string, number>
-) => {
-  if (node.countgen) return node.countgen;
-  node.count = genomePropertiesCount[node.id as string] || 0;
-  node.countgen = (node.countgen || 0) + (node.count as number);
-  if (node.children && node.children.length) {
-    node.countgen += node.children.reduce((mem, child) => {
-      return mem + annotate(child, genomePropertiesCount);
-    }, 0);
+const GenomePropertiesTab: React.FC<GenomePropertiesProps> = ({
+  isLegacy,
+  legacyFile,
+}) => {
+  const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
 
-    // @ts-ignore
-    node.children = node.children.filter(({ countgen }) => countgen > 0);
+  let dataFiles: Download[] | undefined =
+    analysisOverviewData?.downloads.filter(
+      (file: Download) =>
+        file.download_group === 'pathways_and_systems.genome_properties' &&
+        (file.alias.includes('tsv') || file.alias.includes('json'))
+    );
+
+  if (dataFiles) {
+    const jsonFiles = dataFiles.filter((f) => f.alias.includes('json'));
+    if (jsonFiles.length) dataFiles = jsonFiles;
   }
 
-  return node.countgen;
-};
-
-const DELAY = 100;
-const SHOULD_NOT = {
-  collapse: false,
-  expand: false,
-};
-
-const GenomeProperties: React.FC = () => {
-  const { overviewData } = useContext(AnalysisContext);
-  const { data, loading, error } = useMGnifyData(
-    `analyses/${overviewData?.id}/genome-properties`
-  );
-  const [should, setShould] = useState(SHOULD_NOT);
-  useEffect(() => {
-    if (should.expand || should.collapse) {
-      setTimeout(() => setShould(SHOULD_NOT), DELAY);
+  if (isLegacy) {
+    if (!legacyFile) {
+      return (
+        <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
+          <p>No Genome properties files available</p>
+        </div>
+      );
     }
-  }, [should]);
-  if (loading) return <Loading size="large" />;
-  if (error) return <FetchError error={error} />;
-  // const genomePropertiesCount = {};
-
-  interface GenomePropertiesCount {
-    [key: string]: number;
+    return (
+      <div>
+        <p className="text-sm text-gray-600 mb-4">
+          Genome Properties is a system for describing prokaryotic biochemical
+          pathways, genome architecture, and biological systems, providing
+          insights into the functional capabilities of organisms.
+        </p>
+        <DetailedVisualisationCard
+          ftpLink={legacyFile.url}
+          title={legacyFile.alias}
+        >
+          <div className="p-4">
+            <h5>{legacyFile.short_description}</h5>
+            <p className="vf-text text-body--1">
+              {legacyFile.long_description}
+            </p>
+          </div>
+          <div className="p-4">
+            <GenomePropertiesVisualiser download={legacyFile} />
+          </div>
+        </DetailedVisualisationCard>
+      </div>
+    );
   }
 
-  const genomePropertiesCount: GenomePropertiesCount = {};
-
-  (data.data as MGnifyDatum[]).forEach((d) => {
-    const id = d.attributes.accession as string;
-    const { presence } = d.attributes;
-    genomePropertiesCount[id] =
-      presence === 'Yes' || presence === 'Partial' ? 1 : 0;
-  });
-  annotate(gpHierarchy, genomePropertiesCount);
-  return (
-    <div className="vf-stack">
-      <div>
-        <button
-          type="button"
-          className="vf-button vf-button--sm"
-          onClick={() =>
-            setShould({
-              collapse: false,
-              expand: true,
-            })
-          }
-        >
-          Expand All
-        </button>
-        <button
-          type="button"
-          className="vf-button vf-button--sm"
-          onClick={() =>
-            setShould({
-              collapse: true,
-              expand: false,
-            })
-          }
-        >
-          Collapse All
-        </button>
+  if (!dataFiles?.length) {
+    return (
+      <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
+        <p>No Genome properties files available</p>
       </div>
-      <HierarchyNode
-        tree={gpHierarchy as unknown as Node}
-        triggerExpandAll={should.expand}
-        triggerCollapseAll={should.collapse}
-        getLabel={(node: Node): string | React.ReactElement => {
-          return (
-            <>
-              <ExtLink
-                href={`https://www.ebi.ac.uk/interpro/genomeproperties/genome-property/${node.id}`}
-              >
-                {node.id as string}
-              </ExtLink>
-              : {node.name}
-            </>
-          );
-        }}
-      />
+    );
+  }
+
+  return (
+    <div>
+      <p className="text-sm text-gray-600 mb-4">
+        Genome Properties is a system for describing prokaryotic biochemical
+        pathways, genome architecture, and biological systems, providing
+        insights into the functional capabilities of organisms.
+      </p>
+
+      {dataFiles.map((dataFile, index) => {
+        const viewModeKey = dataFile.alias || `genome-properties-${index}`;
+        return (
+          <DetailedVisualisationCard
+            ftpLink={dataFile.url}
+            title={dataFile.alias}
+            key={viewModeKey}
+          >
+            <div className="p-4">
+              <h5>{dataFile.short_description}</h5>
+              <p className="vf-text text-body--1">
+                {dataFile.long_description}
+              </p>
+            </div>
+
+            <div className="p-4">
+              {dataFile.alias.includes('json.gz') ? (
+                <GenomePropertiesVisualiser download={dataFile} />
+              ) : (
+                <CompressedTSVTable
+                  download={dataFile}
+                  barChartSpec={{
+                    title: 'Genome Properties',
+                    labelsCol: {
+                      id: 'property_name',
+                      Header: 'Property name',
+                      accessor: (d) => d[1],
+                    },
+                    countsCol: {
+                      id: 'result',
+                      Header: 'Result',
+                      accessor: (d) => d[2],
+                    },
+                  }}
+                />
+              )}
+
+              <p className="text-sm mt-4">
+                Download this file to view the complete Genome Properties
+                annotations for this analysis.
+              </p>
+            </div>
+          </DetailedVisualisationCard>
+        );
+      })}
     </div>
   );
 };
 
-export default GenomeProperties;
+export default GenomePropertiesTab;

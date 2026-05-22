@@ -61,7 +61,7 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
       id: 'accession',
       accessor: 'accession',
       Cell: ({ cell }) => (
-        <Link to={`/v2-assemblies/${cell.value}`}>{cell.value}</Link>
+        <Link to={`/assemblies/${cell.value}`}>{cell.value}</Link>
       ),
     },
     {
@@ -119,7 +119,7 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
       showTextFilter
       namespace="assembly-"
       showPagination={showPagination}
-      downloadURL={download}
+      onDownloadRequested={download}
     />
   );
 };

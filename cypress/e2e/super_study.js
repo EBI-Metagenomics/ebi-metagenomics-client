@@ -1,4 +1,4 @@
-import {openPage, waitForPageLoad} from '../util/util';
+import {openPage, waitForPageLoad} from '../util/util.js';
 import config from 'utils/config';
 
 describe('Super Study page', function() {
@@ -8,8 +8,8 @@ describe('Super Study page', function() {
         cy.intercept('GET', `**/fieldfiles/**logo.png`,
           {fixture: 'apiv2/super-studies/logo.png'});
     })
-    const superStudyId = 'excellent';
-    const origPage = 'super-studies/' + superStudyId;
+    let superStudyId = 'excellent';
+    let origPage = 'super-studies/' + superStudyId;
     const pageTitle = 'Super Study';
     context('Landing', function() {
         beforeEach(function() {
@@ -34,7 +34,7 @@ describe('Super Study page', function() {
 
         it('Should have correct data', function() {
             cy.contains('Flagship Projects').should('be.visible');
-            cy.contains('Flagship Projects').click();
+            // should be open already because it has flagships
             cy.get('[data-cy="superStudyFlagshipTable"]').should('contain.text', 'MGYS00000001');
             cy.get('[data-cy="superStudyFlagshipTable"] .vf-table__body > .vf-table__row').should('have.length', 1);
         });
@@ -69,8 +69,8 @@ describe('Super Study page', function() {
 
     context('Error handling', function() {
         it('Should display error message if invalid super study Id passed in URL', function() {
-            const superStudyId = '99';
-            const origPage = 'super-studies/' + superStudyId;
+            superStudyId = '99';
+            origPage = 'super-studies/' + superStudyId;
             openPage(origPage);
             cy.contains('Error Fetching Data');
         });

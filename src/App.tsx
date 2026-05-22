@@ -25,12 +25,10 @@ import { ToastContainer } from 'react-toastify';
 import Matomo from 'components/Analytics';
 import PersistLogin from 'components/PersistLogin';
 const SearchPage = lazy(() => import('./pages/Search'));
-import V2AssemblyPage from 'pages/Assembly/v2index';
 
 import LandingPage from 'pages/Branchwater/LandingPage';
 import MagSearch from 'pages/Branchwater/MagSearch';
 import GeneSearch from 'pages/Branchwater/GeneSearch';
-import V2AnalysisPage from 'pages/Analysis/v2index';
 import SessionExpiryBanner from 'components/UI/SessionExpiryBanner';
 import MyDataStudies from './pages/MyData/MyDataStudies';
 import NotFoundError from 'components/UI/NotFoundError';
@@ -47,7 +45,7 @@ const Publication = lazy(() => import('./pages/Publication'));
 const GenomeCatalogue = lazy(() => import('./pages/GenomeCatalogue'));
 const Genome = lazy(() => import('./pages/Genome'));
 const Run = lazy(() => import('./pages/Run'));
-const Assembly = lazy(() => import('./pages/Assembly'));
+const Assembly = lazy(() => import('pages/Assembly'));
 const Pipelines = lazy(() => import('./pages/Pipelines'));
 const Analysis = lazy(() => import('./pages/Analysis'));
 const Branchwater = lazy(() => import('pages/Branchwater'));
@@ -127,13 +125,8 @@ const App: React.FC = () => {
                 <Route path="/genomes/*" element={<Genome />} />
                 <Route path="/runs/*" element={<Run />} />
                 <Route path="/assemblies/*" element={<Assembly />} />
-                <Route path="/v2-assemblies/*" element={<V2AssemblyPage />} />
                 <Route path="/pipelines/*" element={<Pipelines />} />
-                <Route path="/analyses/*" element={<Analysis />} />
-                <Route
-                  path="/v2-analyses/:accession/*"
-                  element={<V2AnalysisPage />}
-                />
+                <Route path="/analyses/:accession/*" element={<Analysis />} />
                 <Route path="/mydata/*" element={<MyData />}>
                   <Route index element={<MyDataStudies />} />
                   <Route path="studies" element={<MyDataStudies />} />

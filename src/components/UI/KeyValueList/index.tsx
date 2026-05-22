@@ -8,9 +8,17 @@ export type KeyValueItemsList = {
 type KeyValueProps = {
   list: KeyValueItemsList;
   dataCy?: string;
+  renderIfEmpty?: boolean;
 };
 
-const KeyValueList: React.FC<KeyValueProps> = ({ list, dataCy }) => (
+const hasRenderableValue = (value: React.ReactNode) =>
+  value !== null && value !== undefined && value !== '';
+
+const KeyValueList: React.FC<KeyValueProps> = ({
+  list,
+  dataCy,
+  renderIfEmpty = false,
+}) => (
   <div
     className="vf-grid vf-grid__col-2"
     style={{
@@ -21,12 +29,16 @@ const KeyValueList: React.FC<KeyValueProps> = ({ list, dataCy }) => (
   >
     {list.map(({ key, value: Value }) => (
       <React.Fragment key={key}>
-        <div style={{ textAlign: 'right' }} data-cy="kvl-key">
-          {key}:
-        </div>
-        <div data-cy="kvl-value">
-          {typeof Value === 'string' ? Value : Value && <Value />}
-        </div>
+        {(renderIfEmpty || hasRenderableValue(Value)) && (
+          <React.Fragment>
+            <div style={{ textAlign: 'right' }} data-cy="kvl-key">
+              {key}:
+            </div>
+            <div data-cy="kvl-value">
+              {typeof Value === 'string' ? Value : Value && <Value />}
+            </div>
+          </React.Fragment>
+        )}
       </React.Fragment>
     ))}
   </div>

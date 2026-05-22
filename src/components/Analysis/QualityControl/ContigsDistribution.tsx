@@ -1,14 +1,14 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 import * as Highcharts from 'highcharts';
 import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import { ResponseFormat, TSVResponse } from '@/hooks/data/useData';
-import useURLAccession from '@/hooks/useURLAccession';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import useLegacyAnalysisKnownFiles from 'hooks/data/useLegacyAnalysisKnownFiles';
+import { fetchWithFallback } from '@/utils/protectedAxios';
 
 addExportMenu(Highcharts);
 
@@ -21,29 +21,50 @@ const ContigsDistribution: React.FC<ContigsHistogramProps> = ({
   summaryData,
 }) => {
   const { overviewData } = useContext(AnalysisContext);
+  const { resultsDir, gcDistributionPath, gcDistributionFallbacks } =
+    useLegacyAnalysisKnownFiles();
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const accession = useURLAccession();
-  const { data, loading, error } = useMGnifyData(
-    `analyses/${accession}/gc-distribution`,
-    {},
-    {},
-    ResponseFormat.TSV
-  );
+
+  const [data, setData] = useState<Array<[string, string]> | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>(null);
+
+  useEffect(() => {
+    if (resultsDir && gcDistributionPath) {
+      setLoading(true);
+
+      fetchWithFallback(gcDistributionPath, gcDistributionFallbacks)
+        .then((response) => {
+          const text = response.data;
+          const parsedData = text
+            .split('\n')
+            .filter(Boolean)
+            .map((line) => line.split('\t'));
+          setData(parsedData);
+          setLoading(false);
+        })
+        .catch((err) => {
+          if (axios.isAxiosError(err) && err.response?.status === 401) {
+            localStorage.setItem('mgnify.sessionExpired', 'true');
+            window.location.reload();
+          }
+          setError(err);
+          setLoading(false);
+        });
+    }
+  }, [resultsDir, gcDistributionPath, gcDistributionFallbacks]);
 
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
-  const distData = (data as unknown as TSVResponse).map(([x, y]) => [
-    Number(x),
-    Number(y),
-  ]);
+  const distData = data.map(([x, y]) => [Number(x), Number(y)]);
 
   const isAssembly =
-    overviewData?.attributes &&
-    overviewData.attributes['experiment-type'] === 'assembly';
+    overviewData?.experiment_type &&
+    overviewData.experiment_type.toLowerCase().endsWith('assembly');
   const unit = isAssembly ? 'contigs' : 'reads';
   const capUnit = isAssembly ? 'Contigs' : 'Reads';
-
+  console.log(summaryData);
   const options = {
     chart: {
       style: {

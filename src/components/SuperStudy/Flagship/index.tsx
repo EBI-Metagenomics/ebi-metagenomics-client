@@ -55,11 +55,11 @@ const FlagshipTable: React.FC = () => {
   ];
 
   return (
-    <details>
+    <details open={data.flagship_studies.length > 0}>
       <summary>
         <b>Flagship Projects</b>
       </summary>
-      <FixedHeightScrollable heightPx={640}>
+      <FixedHeightScrollable heightPx={480}>
         <EMGTable
           cols={columns}
           showPagination={false}

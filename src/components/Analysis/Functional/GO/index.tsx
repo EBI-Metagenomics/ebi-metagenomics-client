@@ -1,141 +1,93 @@
-import React, { useContext, useEffect, useState } from 'react';
-import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
-import useMGnifyData from '@/hooks/data/useMGnifyData';
-import Loading from 'components/UI/Loading';
-import FetchError from 'components/UI/FetchError';
-import { MGnifyDatum } from '@/hooks/data/useData';
-import { TAXONOMY_COLOURS } from '@/utils/taxon';
-import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
-import GOBarChart from './BarChart';
-import GOPieChart from './PieChart';
+import React, { useContext } from 'react';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
+import { Download } from '@/interfaces';
+import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
+import CompressedTSVTable from 'components/UI/CompressedTSVTable';
+import LegacyFunctionalTable from '../LegacyFunctionalTable';
 
-const tabs = [
-  { label: 'Bar', to: 'bar' },
-  { label: 'Pie', to: 'pie' },
-];
+type GOProps = {
+  isLegacy?: boolean;
+  legacyFile?: Download | string;
+};
 
-const GO: React.FC = () => {
-  const { overviewData } = useContext(AnalysisContext);
-  const [chart] = useQueryParamState('chart');
-  const { data, loading, error } = useMGnifyData(
-    overviewData ? `analyses/${overviewData.id}/go-slim` : undefined
+const GO: React.FC<GOProps> = ({ isLegacy, legacyFile }) => {
+  const { overviewData: analysisData } = useContext(AnalysisContext);
+  const dataFile: Download | undefined = analysisData?.downloads.find(
+    (file) => file.download_group === 'functional_annotation.go_slims'
   );
-  const [dataBundles, setDataBundles] = useState<Record<string, any>>();
-  useEffect(() => {
-    if ((data?.data as MGnifyDatum[])?.length) {
-      const newBundle = {
-        biological_process: {
-          series: [],
-          categories: [],
-          total: 0,
-        },
-        molecular_function: {
-          series: [],
-          categories: [],
-          total: 0,
-        },
-        cellular_component: {
-          series: [],
-          categories: [],
-          total: 0,
-        },
-      };
-      (data.data as MGnifyDatum[]).forEach((term) => {
-        const lineage = term?.attributes?.lineage as string;
-        if (
-          [
-            'biological_process',
-            'molecular_function',
-            'cellular_component',
-          ].includes(lineage)
-        ) {
-          newBundle[lineage].categories.push(term.attributes.description);
-          newBundle[lineage].series.push(term.attributes.count);
-          newBundle[lineage].total += term.attributes.count;
-        }
-      });
-      setDataBundles(newBundle);
+
+  if (isLegacy) {
+    if (!legacyFile) {
+      return (
+        <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
+          <p>No GO identifiers file available</p>
+        </div>
+      );
     }
-  }, [data]);
+    const url = typeof legacyFile === 'string' ? legacyFile : legacyFile.url;
+    const title =
+      typeof legacyFile === 'string' ? 'GO summary' : legacyFile.alias;
+    const description =
+      typeof legacyFile === 'string' ? '' : legacyFile.short_description;
+
+    return (
+      <div className="vf-stack">
+        <h5>Gene Ontology terms</h5>
+        <DetailedVisualisationCard ftpLink={url} title={title}>
+          <div className="p-4">
+            <p className="text-sm text-gray-600 mb-4">
+              Gene Ontology (GO) terms describe gene product functions and
+              relationships in any organism.
+            </p>
+          </div>
+          <LegacyFunctionalTable url={url} title={description} type="go" />
+        </DetailedVisualisationCard>
+      </div>
+    );
+  }
+
+  if (!dataFile) {
+    return (
+      <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
+        <p>No GO identifiers file available</p>
+      </div>
+    );
+  }
+
   return (
     <div className="vf-stack">
-      <h4>GO terms annotation</h4>
-      <p>
-        A summary of Gene Ontology (GO) terms derived from InterPro matches to
-        your sample is provided in the charts below.
-      </p>
-      {loading && <Loading />}
-      {error && <FetchError error={error} />}
-      {data && (
-        <>
-          <h5>Switch view:</h5>
-          <TabsForQueryParameter
-            tabs={tabs}
-            queryParameter="chart"
-            defaultValue="bar"
-          />
-          <div className="vf-tabs-content">
-            {chart === 'bar' && dataBundles && (
-              <div id="go-slim-bar-charts">
-                <div className="vf-grid vf-grid__col-3">
-                  <GOBarChart
-                    title="Biological process"
-                    series={dataBundles.biological_process.series}
-                    categories={dataBundles.biological_process.categories}
-                    total={dataBundles.biological_process.total}
-                    color={TAXONOMY_COLOURS[0]}
-                    containerId="biological-process-bar-chart"
-                  />
-                  <GOBarChart
-                    title="Molecular Function"
-                    series={dataBundles.molecular_function.series}
-                    categories={dataBundles.molecular_function.categories}
-                    total={dataBundles.molecular_function.total}
-                    color={TAXONOMY_COLOURS[3]}
-                    containerId="molecular-function-bar-chart"
-                  />
-                  <GOBarChart
-                    title="Cellular Component"
-                    series={dataBundles.cellular_component.series}
-                    categories={dataBundles.cellular_component.categories}
-                    total={dataBundles.cellular_component.total}
-                    color={TAXONOMY_COLOURS[4]}
-                    containerId="cellular-component-bar-chart"
-                  />
-                </div>
-              </div>
-            )}
-            {chart === 'pie' && dataBundles && (
-              <div id="go-slim-pie-charts">
-                <div className="vf-grid vf-grid__col-3">
-                  <GOPieChart
-                    title="Biological process"
-                    series={dataBundles.biological_process.series}
-                    categories={dataBundles.biological_process.categories}
-                    total={dataBundles.biological_process.total}
-                    containerId="biological-process-pie-chart"
-                  />
-                  <GOPieChart
-                    title="Molecular Function"
-                    series={dataBundles.molecular_function.series}
-                    categories={dataBundles.molecular_function.categories}
-                    total={dataBundles.molecular_function.total}
-                    containerId="molecular-function-pie-chart"
-                  />
-                  <GOPieChart
-                    title="Cellular Component"
-                    series={dataBundles.cellular_component.series}
-                    categories={dataBundles.cellular_component.categories}
-                    total={dataBundles.cellular_component.total}
-                    containerId="cellular-component-pie-chart"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        </>
-      )}
+      <h5>Gene Ontology terms</h5>
+      <DetailedVisualisationCard ftpLink={dataFile.url} title={dataFile.alias}>
+        <div className="p-4">
+          <p className="text-sm text-gray-600 mb-4">
+            Gene Ontology (GO) terms describe gene product functions and
+            relationships in any organism.
+          </p>
+          <p className="text-sm">
+            Download this file to view the complete GO term annotations for this
+            analysis.
+          </p>
+        </div>
+        <CompressedTSVTable
+          download={dataFile}
+          columnHeaders={['GO', 'Term']}
+          barChartSpec={{
+            title: 'GO Terms',
+            labelsCol: {
+              id: 'go_term',
+              Header: 'Term',
+              accessor: (d) => `${d[0]}: ${d[1]}`,
+            },
+            countsCol: {
+              id: 'count',
+              Header: 'Count',
+              accessor: (d) => Number(d[2]),
+            },
+          }}
+        />
+      </DetailedVisualisationCard>
+
+      <div className="vf-grid mg-grid-30-70" />
     </div>
   );
 };
