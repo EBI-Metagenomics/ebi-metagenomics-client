@@ -56,7 +56,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
       {
         id: 'biome',
         Header: '',
-        accessor: (catalogue: any) => catalogue?.catalogue_biome_label,
+        accessor: (catalogue: any) => catalogue?.biome?.lineage,
         Cell: ({ cell }) => (
           <>
             <span
