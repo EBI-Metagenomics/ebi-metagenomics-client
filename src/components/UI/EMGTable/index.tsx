@@ -188,6 +188,8 @@ const EMGTable = <T extends object>({
       pageCount: pageCount || 1,
       manualPagination: true,
       manualSortBy: true,
+      autoResetSortBy: false,
+      autoResetPage: false,
     },
     useSortBy,
     usePagination
