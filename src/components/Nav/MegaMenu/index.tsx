@@ -104,35 +104,35 @@ const MegaMenu: React.FC = () => {
                 Overview
               </a>
             </li>
-            {/* <li className="vf-navigation__item"> */}
-            {/*  <a */}
-            {/*    id="submit-data-section" */}
-            {/*    className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${ */}
-            {/*      activeSection === 'submit-data-section' ? 'active' : '' */}
-            {/*    }`} */}
-            {/*    href="https://www.ebi.ac.uk/ena/submit/webin/accountInfo" */}
-            {/*    onClick={(event) => */}
-            {/*      handleMenuItemClick(event, 'submit-data-section') */}
-            {/*    } */}
-            {/*    rel="noreferrer" */}
-            {/*  > */}
-            {/*    Submit data */}
-            {/*  </a> */}
-            {/* </li> */}
-            {/* <li className="vf-navigation__item"> */}
-            {/*  <a */}
-            {/*    id="text-search-section" */}
-            {/*    className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${ */}
-            {/*      activeSection === 'text-search-section' ? 'active' : '' */}
-            {/*    }`} */}
-            {/*    href="/metagenomics/search" */}
-            {/*    onClick={(event) => */}
-            {/*      handleMenuItemClick(event, 'text-search-section') */}
-            {/*    } */}
-            {/*  > */}
-            {/*    Text search */}
-            {/*  </a> */}
-            {/* </li> */}
+            <li className="vf-navigation__item">
+              <a
+                id="submit-data-section"
+                className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
+                  activeSection === 'submit-data-section' ? 'active' : ''
+                }`}
+                href="https://www.ebi.ac.uk/ena/submit/webin/accountInfo"
+                onClick={(event) =>
+                  handleMenuItemClick(event, 'submit-data-section')
+                }
+                rel="noreferrer"
+              >
+                Submit data
+              </a>
+            </li>
+            <li className="vf-navigation__item">
+              <a
+                id="text-search-section"
+                className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
+                  activeSection === 'text-search-section' ? 'active' : ''
+                }`}
+                href="/metagenomics/search"
+                onClick={(event) =>
+                  handleMenuItemClick(event, 'text-search-section')
+                }
+              >
+                Text search
+              </a>
+            </li>
             <li className="vf-navigation__item">
               <a
                 id="sequence-search-link"
@@ -368,7 +368,7 @@ const MegaMenu: React.FC = () => {
                 <div className="vf-section-header">
                   <h2 className="vf-section-header__heading">Search MGnify</h2>
                   <p className="vf-section-header__text">
-                    Search for studies, samples and publications
+                    Search for studies and samples
                   </p>
                 </div>
                 <div className="vf-section-content">
@@ -443,24 +443,21 @@ const MegaMenu: React.FC = () => {
                       <p className="vf-text-body--5">
                         Example searches:{' '}
                         <Link
-                          to="/search/studies"
-                          state={{ query: 'tara oceans' }}
+                          to="/search/studies?query=tara+oceans"
                           className="vf-link"
                         >
                           Tara oceans
                         </Link>
                         ,{' '}
                         <Link
-                          to="/search/studies"
-                          state={{ query: 'MGYS00000410' }}
+                          to="/search/studies?query=MGYS00000410"
                           className="vf-link"
                         >
                           MGYS00000410
                         </Link>
                         ,{' '}
                         <Link
-                          to="/search/studies"
-                          state={{ query: 'human gut' }}
+                          to="/search/studies?query=human+gut"
                           className="vf-link"
                         >
                           Human Gut
