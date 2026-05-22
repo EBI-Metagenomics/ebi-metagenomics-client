@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Publications, { MainPublication } from 'components/Publications';
 import InnerCard from 'components/UI/InnerCard';
 import EMGModal from 'components/UI/EMGModal';
 import UserContext from 'pages/Login/UserContext';
-import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import PrivateRequest from 'components/Home/Request/Private';
 import MailForm from 'components/Home/Request/MailForm';
 import './style.css';
@@ -11,6 +11,10 @@ import useReveal from 'hooks/useReveal';
 import TrainingResources from 'components/Home/TrainingResources';
 import LatestStudies from 'components/Home/Request/LatestStudies';
 import BlogExcerpts from 'components/Home/BlogExcerpts';
+import {
+  DetailOrSearchURLType,
+  getDetailOrSearchURLForQuery,
+} from 'utils/accessions';
 
 const HomePage: React.FC = () => {
   const SearchIcon = (
@@ -86,6 +90,8 @@ const HomePage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const fromQueryParamValue = searchParams.get('from');
   const { isAuthenticated } = useContext(UserContext);
+  const [isAccessionLike, setIsAccessionLike] =
+    useState<DetailOrSearchURLType>();
   const [modal, setModal] = useState({
     show:
       isAuthenticated &&
@@ -95,9 +101,21 @@ const HomePage: React.FC = () => {
     isPublic: fromQueryParamValue === 'public-request',
   });
   const [searchTerms, setSearchTerms] = useState('');
+
+  useEffect(() => {
+    const accessionMatcherResults = getDetailOrSearchURLForQuery(
+      searchTerms.trim()
+    );
+    setIsAccessionLike(accessionMatcherResults);
+  }, [searchTerms]);
+
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate(`/search?query=${encodeURIComponent(searchTerms)}`);
+    const accessionMatcherResults = getDetailOrSearchURLForQuery(
+      searchTerms.trim()
+    );
+    setIsAccessionLike(accessionMatcherResults);
+    navigate(accessionMatcherResults.nextURL);
   };
   return (
     <section className="vf-content vf-stack vf-stack--800">
@@ -134,10 +152,20 @@ const HomePage: React.FC = () => {
                   onChange={(e) => setSearchTerms(e.target.value)}
                 />
                 <button
-                  type="submit"
-                  className="vf-button vf-button--primary vf-button--large"
+                  type={'submit'}
+                  onClick={onSearch}
+                  className={`vf-search__button | vf-button vf-button--primary`}
                 >
-                  Search
+                  <span
+                    className={`icon icon-common ${
+                      isAccessionLike?.isAccessionLike
+                        ? 'icon-arrow-circle-right'
+                        : 'icon-search'
+                    }`}
+                  />{' '}
+                  {isAccessionLike?.isAccessionLike
+                    ? isAccessionLike.resourceOfType
+                    : 'Search'}
                 </button>
               </div>
             </form>
