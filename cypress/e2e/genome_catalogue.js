@@ -29,6 +29,15 @@ describe('Genome catalogue page', () => {
       cy.get('.vf-body > .vf-content .vf-card__content .vf-card__heading').should('contain.text', '5')
       cy.get('.vf-body > .vf-content .vf-card__content .vf-card__subheading').should('contain.text', 'Species-level clusters')
 
+      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__heading').should('contain.text', '1,000')
+      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__subheading').should('contain.text', 'Total proteins')
+
+      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__heading').should('contain.text', '10')
+      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__subheading').should('contain.text', 'Clusters with pan-genomes')
+
+      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__heading').should('contain.text', '5')
+      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__subheading').should('contain.text', 'Clusters with isolate genomes')
+
       cy.get('.vf-body > .vf-content .vf-card__content .vf-card__heading').should('contain.text', 'FTP Site')
       cy.get('.vf-body > .vf-content .vf-card__content .vf-card__subheading').should('contain.text', 'Download full catalogue')
 
@@ -74,7 +83,7 @@ describe('Genome catalogue page', () => {
 
   context('Taxonomy tree', () => {
     it.skip('Should show tree', () => {
-      openAndWait('genome-catalogues/' + catalogueIdValid + '#phylo-tab', catalogueNameValid);
+      openAndWait('genome-catalogues/' + catalogueIdValid + '#phylo-tab', 'Marine MAGs');
       cy.get('.mg-hierarchy-label').should('contain.text', 'Bacteria');
       cy.get(':nth-child(3) > .mg-hierarchy-selector > .mg-expander').click();
       cy.get(':nth-child(7) > .mg-hierarchy-selector > .mg-expander').click();
@@ -82,8 +91,8 @@ describe('Genome catalogue page', () => {
     });
 
     context('Protein catalogue', () => {
-      it.skip('Should show catalogue description', () => {
-        openAndWait('genome-catalogues/' + catalogueIdValid + '#protein-catalog-tab', catalogueNameValid);
+      it('Should show catalogue description', () => {
+        openAndWait('genome-catalogues/' + catalogueIdValid + '#protein-catalog-tab', 'Marine MAGs');
         cy.get('#tab-protein-catalog-tab').should('contain.text', 'UHGP');
         cy.get('#tab-protein-catalog-tab').should('contain.text', 'Protein coding sequences');
       });

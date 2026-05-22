@@ -53,7 +53,7 @@ const GenomePage: React.FC = () => {
     { label: 'Genomes', url: '/browse/genomes' },
     { label: name as string },
   ];
-  const phylo_tree_url = downloads.find(
+  const phylo_tree_url = downloads?.find(
     (file: Download) =>
       file.download_group === 'catalogue' && file.file_type === 'json'
   )?.url;
@@ -81,9 +81,11 @@ const GenomePage: React.FC = () => {
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
               <h3 className="vf-card__heading">
-                {parseInt(
-                  other_stats['Total proteins'] as string
-                ).toLocaleString()}
+                {other_stats?.['Total proteins']
+                  ? parseInt(
+                      other_stats['Total proteins'] as string
+                    ).toLocaleString()
+                  : 0}
               </h3>
               <p className="vf-card__subheading">Total proteins</p>
             </div>
@@ -92,9 +94,11 @@ const GenomePage: React.FC = () => {
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
               <h3 className="vf-card__heading">
-                {parseInt(
-                  other_stats['Clusters with pan-genomes'] as string
-                ).toLocaleString()}
+                {other_stats?.['Clusters with pan-genomes']
+                  ? parseInt(
+                      other_stats['Clusters with pan-genomes'] as string
+                    ).toLocaleString()
+                  : 0}
               </h3>
               <p className="vf-card__subheading">Clusters with pan-genomes </p>
             </div>
@@ -103,9 +107,11 @@ const GenomePage: React.FC = () => {
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
               <h3 className="vf-card__heading">
-                {parseInt(
-                  other_stats['Clusters with isolate genomes'] as string
-                ).toLocaleString()}
+                {other_stats?.['Clusters with isolate genomes']
+                  ? parseInt(
+                      other_stats['Clusters with isolate genomes'] as string
+                    ).toLocaleString()
+                  : 0}
               </h3>
               <p className="vf-card__subheading">
                 Clusters with isolate genomes{' '}

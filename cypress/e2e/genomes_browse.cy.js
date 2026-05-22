@@ -17,8 +17,6 @@ describe('Browse Genomes', () => {
   it('Shows catalogues list with table and download button', () => {
     openPage('browse/genomes?browseBy=biome');
     waitForPageLoad('Browse MGnify');
-    // Table caption should include count number from fixture
-    // cy.get('.mg-table-caption').should('contain.text', 'Genomes');
     // Expect some rows
     cy.get('table.vf-table--striped tbody tr').should('have.length.at.least', 1);
     // Download button available via EMGTable custom download
