@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
+import axios from 'axios';
 import { countBy, filter, find, flatMap, groupBy, map, split } from 'lodash-es';
 import Select from 'react-select';
 import { getBiomeIcon } from '@/utils/biomes';
@@ -9,7 +10,10 @@ import {
 } from 'styles/react-select-styles';
 import useSharedQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import useBiomes from 'hooks/data/useBiomes';
-import { Biome } from '@/interfaces';
+import { Biome, BiomeList } from '@/interfaces';
+import UserContext from 'pages/Login/UserContext';
+
+const BIOMES_PAGE_SIZE = 100;
 
 type BiomeSelectorProps = {
   onSelect: (lineage: string) => void;
@@ -39,7 +43,53 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
   onSelect,
   lineageFilter = () => true,
 }) => {
-  const { data: biomes, loading } = useBiomes({ page_size: 200 });
+  const { config } = useContext(UserContext);
+  const { data: firstPage, loading: firstPageLoading } = useBiomes({
+    page_size: BIOMES_PAGE_SIZE,
+  });
+  const [allBiomes, setAllBiomes] = useState<Biome[] | null>(null);
+  const [paginatingRemaining, setPaginatingRemaining] = useState(false);
+
+  useEffect(() => {
+    if (!firstPage) return;
+    const totalPages = Math.ceil(
+      (firstPage.count || 0) / BIOMES_PAGE_SIZE
+    );
+    if (totalPages <= 1) {
+      setAllBiomes(firstPage.items);
+      return;
+    }
+    let cancelled = false;
+    setPaginatingRemaining(true);
+    const remainingRequests = [];
+    for (let p = 2; p <= totalPages; p += 1) {
+      remainingRequests.push(
+        axios.get<BiomeList>(
+          `${config.api_v2}biomes/?page=${p}&page_size=${BIOMES_PAGE_SIZE}`
+        )
+      );
+    }
+    Promise.all(remainingRequests)
+      .then((responses) => {
+        if (cancelled) return;
+        const rest = responses.flatMap((r) => r.data.items);
+        setAllBiomes([...firstPage.items, ...rest]);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setAllBiomes(firstPage.items);
+      })
+      .finally(() => {
+        if (cancelled) return;
+        setPaginatingRemaining(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [firstPage, config.api_v2]);
+
+  const loading = firstPageLoading || paginatingRemaining;
+  const biomes = allBiomes ? { items: allBiomes } : null;
   const [biomeQP, setBiomeQP] = useSharedQueryParamState<string>('biome');
   const [value, setValue] = useState<OptionProps | null>();
   const options = React.useMemo(() => {

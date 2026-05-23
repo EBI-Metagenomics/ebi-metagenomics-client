@@ -14,7 +14,7 @@ import ArrowForLink from 'components/UI/ArrowForLink';
 import UserContext from 'pages/Login/UserContext';
 import ExtLink from 'components/UI/ExtLink';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
-import { GenomeCatalogue } from '@/interfaces';
+import { Download, GenomeCatalogue } from '@/interfaces';
 import PhyloTree from 'components/Genomes/PhyloTree';
 
 const tabs = [
@@ -46,12 +46,17 @@ const GenomePage: React.FC = () => {
     protein_catalogue_name,
     unclustered_genome_count,
     version,
+    downloads,
   } = data as GenomeCatalogue;
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     { label: 'Genomes', url: '/browse/genomes' },
     { label: name as string },
   ];
+  const phylo_tree_url = downloads?.find(
+    (file: Download) =>
+      file.download_group === 'catalogue' && file.file_type === 'json'
+  )?.url;
   return (
     <section className="vf-content">
       <Breadcrumbs links={breadcrumbs} />
@@ -76,9 +81,11 @@ const GenomePage: React.FC = () => {
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
               <h3 className="vf-card__heading">
-                {parseInt(
-                  other_stats['Total proteins'] as string
-                ).toLocaleString()}
+                {other_stats?.['Total proteins']
+                  ? parseInt(
+                      other_stats['Total proteins'] as string
+                    ).toLocaleString()
+                  : 0}
               </h3>
               <p className="vf-card__subheading">Total proteins</p>
             </div>
@@ -87,9 +94,11 @@ const GenomePage: React.FC = () => {
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
               <h3 className="vf-card__heading">
-                {parseInt(
-                  other_stats['Clusters with pan-genomes'] as string
-                ).toLocaleString()}
+                {other_stats?.['Clusters with pan-genomes']
+                  ? parseInt(
+                      other_stats['Clusters with pan-genomes'] as string
+                    ).toLocaleString()
+                  : 0}
               </h3>
               <p className="vf-card__subheading">Clusters with pan-genomes </p>
             </div>
@@ -98,9 +107,11 @@ const GenomePage: React.FC = () => {
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
               <h3 className="vf-card__heading">
-                {parseInt(
-                  other_stats['Clusters with isolate genomes'] as string
-                ).toLocaleString()}
+                {other_stats?.['Clusters with isolate genomes']
+                  ? parseInt(
+                      other_stats['Clusters with isolate genomes'] as string
+                    ).toLocaleString()
+                  : 0}
               </h3>
               <p className="vf-card__subheading">
                 Clusters with isolate genomes{' '}
@@ -146,7 +157,7 @@ const GenomePage: React.FC = () => {
             <GenomesTable />
           </RouteForHash>
           <RouteForHash hash="#phylo-tab">
-            <PhyloTree catalogueVersion={version} />
+            <PhyloTree phylo_tree_url={phylo_tree_url} />
           </RouteForHash>
           <RouteForHash hash="#genome-search-tab">
             <CobsSearch

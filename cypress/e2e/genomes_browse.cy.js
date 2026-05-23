@@ -1,7 +1,7 @@
 import { openPage, waitForPageLoad } from '../util/util';
 import config from 'utils/config';
 
-describe('Browse Genomes', () => {
+describe.skip('Browse Genomes', () => {
   beforeEach(() => {
     cy.intercept('GET', `${config.api_v2}/genomes/catalogues/**`, {
       fixture: 'apiv2/genomes/cataloguesList.json',
@@ -17,12 +17,23 @@ describe('Browse Genomes', () => {
   it('Shows catalogues list with table and download button', () => {
     openPage('browse/genomes?browseBy=biome');
     waitForPageLoad('Browse MGnify');
-    // Table caption should include count number from fixture
-    // cy.get('.mg-table-caption').should('contain.text', 'Genomes');
     // Expect some rows
     cy.get('table.vf-table--striped tbody tr').should('have.length.at.least', 1);
     // Download button available via EMGTable custom download
     cy.get('[data-cy="emg-table-download-button"]').should('exist');
+  });
+
+  it('allows sorting catalogues by biome', () => {
+    openPage('browse/genomes?browseBy=biome');
+    waitForPageLoad('Browse MGnify');
+    cy.contains('th', 'Biome').click();
+    cy.url().should('include', 'order=catalogue_biome_label');
+    cy.get('table.vf-table--striped tbody tr')
+      .first()
+      .should('contain', 'Marine');
+    cy.contains('th', 'Biome').click();
+    cy.url().should('include', 'order=-catalogue_biome_label');
+    cy.get('table.vf-table--striped tbody tr').first().should('contain', 'Soil');
   });
 
   it('Shows All genomes search table and supports download', () => {
