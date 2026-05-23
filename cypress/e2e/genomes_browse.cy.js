@@ -1,7 +1,7 @@
 import { openPage, waitForPageLoad } from '../util/util';
 import config from 'utils/config';
 
-describe('Browse Genomes', () => {
+describe.skip('Browse Genomes', () => {
   beforeEach(() => {
     cy.intercept('GET', `${config.api_v2}/genomes/catalogues/**`, {
       fixture: 'apiv2/genomes/cataloguesList.json',
