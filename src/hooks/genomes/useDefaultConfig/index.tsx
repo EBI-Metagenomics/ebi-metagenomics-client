@@ -18,10 +18,10 @@ const useGenomeDefaultConfig = (): DefaultConfigType => {
         Header: 'COG ID',
         accessor: 'attributes.name',
       },
-      {
-        Header: 'Description',
-        accessor: 'attributes.description',
-      },
+      // {
+      //   Header: 'Description',
+      //   accessor: 'attributes.description',
+      // },
       {
         Header: 'Genome Count',
         accessor: 'attributes.genome-count',
