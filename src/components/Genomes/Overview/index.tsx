@@ -7,7 +7,7 @@ import {
   NCBI_ASSEMBLY_URL,
   PATRIC_URL,
 } from '@/utils/urls';
-import { cleanTaxLineage } from 'utils/taxon.ts';
+import { cleanTaxLineage } from 'utils/taxon';
 
 type GenomeOverviewProps = {
   data: any;
@@ -24,7 +24,6 @@ function notEmpty(listValue: unknown): boolean {
 }
 
 const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
-  console.log('DATA OUT HERE ', data);
   return (
     <section id="overview">
       <div className="vf-stack">
