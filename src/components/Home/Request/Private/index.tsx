@@ -24,7 +24,7 @@ const PrivateRequest: React.FC = () => {
           <label>
             <input
               type="radio"
-              name="analysis-type"
+              name="dataSubmitted"
               value="No"
               checked={confirmSubmitted === 'No'}
               onChange={() => setConfirmSubmitted('No')}

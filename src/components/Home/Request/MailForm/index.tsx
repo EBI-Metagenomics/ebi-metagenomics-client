@@ -14,20 +14,20 @@ const accessionRegex = /((?:PRJEB|PRJNA|PRJDB|PRJDA|MGYS|ERP|SRP|DRP)\d{5,})/;
 
 const getRequestEmail = (
   isPublic: boolean,
-  analysisType: string,
+  analysisOption: string,
   comments: string,
   studyAcc: string,
   username: string,
   details: UserDetail
 ) => {
   const subject = `${
-    (isPublic ? 'Public ' : 'Private ') + analysisType
+    (isPublic ? 'Public ' : 'Private ') + analysisOption
   } request: ${studyAcc}`;
   const body =
     `Study accession: ${studyAcc};${
       isPublic ? 'Public ' : 'Private '
     } analysis.;` +
-    `Analysis type: ${analysisType} ;` +
+    `Analysis option: ${analysisOption} ;` +
     `Requester name: ${details.attributes['first-name']} ${details.attributes.surname}.;` +
     `Email: ${details.attributes['email-address']}.;` +
     `Webin: ${username}.;` +
@@ -55,9 +55,33 @@ const EMPTY_EMAIL: EmailRequest = {
   body: undefined,
   consent: undefined,
 };
+
+const ANALYSIS_OPTIONS = [
+  {
+    dataType: 'Amplicon/metabarcoding raw-reads',
+    option: 'Analysis (provides taxonomic profile)',
+  },
+  {
+    dataType: 'Metagenomic/metatranscriptomic raw-reads',
+    option: 'Analysis only (provides taxonomic profile)',
+  },
+  {
+    dataType: 'Metagenomic/metatranscriptomic raw-reads',
+    option:
+      'Assembly and analysis (generates and submits contig sequences, provides taxonomic and functional profile)',
+  },
+  {
+    dataType: 'Metagenomic/metatranscriptomic contig assemblies',
+    option: 'Analysis (provides taxonomic and functional profile)',
+  },
+  {
+    dataType: 'Mixed (please provide details in the comments box)',
+    option: '',
+  },
+];
+
 const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
-  const [analysisType, setAnalysisType] = useState('Analysis');
-  const [rawReadsType, setRawType] = useState('');
+  const [selectedAnalysis, setSelectedAnalysis] = useState('');
   const [accession, setAccession] = useState('');
   const [comments, setComments] = useState('');
   const [result, setResult] = useState('');
@@ -107,9 +131,13 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
       toast.error('You must be logged in to submit a request');
       throw new Error('You must be logged in to submit a request');
     }
+    if (!selectedAnalysis) {
+      toast.error('Please select an analysis option');
+      return;
+    }
     const { body, subject } = getRequestEmail(
       isPublic,
-      analysisType,
+      selectedAnalysis,
       comments,
       accession,
       username,
@@ -123,8 +151,7 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
     });
   };
   const handleClear = () => {
-    setAnalysisType('Analysis');
-    setRawType('');
+    setSelectedAnalysis('');
     setAccession('');
     setComments('');
     setResult('');
@@ -160,116 +187,52 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
             />
           </label>
         </div>
-        <div className="vf-grid">
-          <div className="vf-stack">
-            <label className="vf-text-heading--4">
-              Analysis type{' '}
-              <Tooltip
-                content={`You can request either analysis of raw reads or assembly of the data 
-                  (where suitable) prior to analysis. Note, assembly may not be feasible for 
-                  all datasets and may take additional time, particularly for larger studies.`}
-              >
-                <sup>
-                  <span
-                    className="icon icon-common icon-info"
-                    data-cy="public-help-tooltip"
-                  />
-                </sup>
-              </Tooltip>
-            </label>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  name="analysis-type"
-                  value="Analysis"
-                  checked={analysisType === 'Analysis'}
-                  onChange={() => setAnalysisType('Analysis')}
-                />
-                Analysis only
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  name="analysis-type"
-                  value="Assembly+Analysis"
-                  checked={analysisType === 'Assembly+Analysis'}
-                  onChange={() => setAnalysisType('Assembly+Analysis')}
-                />
-                Assembly and analysis
-              </label>
-            </div>
-          </div>
-          <div className="vf-stack">
-            <div>
-              <label className="vf-text-heading--4">Are your raw reads</label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  name="raw-reads-type"
-                  value="ShortReads"
-                  checked={rawReadsType === 'ShortReads'}
-                  onChange={() => setRawType('ShortReads')}
-                />
-                short-reads (e.g. Illumina)
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  name="raw-reads-type"
-                  value="LongReads"
-                  checked={rawReadsType === 'LongReads'}
-                  onChange={() => setRawType('LongReads')}
-                />
-                long-reads (e.g. Oxford Nanopore, PacBio SMRT)
-              </label>
-            </div>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  name="raw-reads-type"
-                  value="ShortAndLongReads"
-                  checked={rawReadsType === 'ShortAndLongReads'}
-                  onChange={() => setRawType('ShortAndLongReads')}
-                />
-                a combination of both short-reads and long-reads for the same
-                sample
-              </label>
-            </div>
-          </div>
+        <div className="vf-stack">
+          <label className="vf-text-heading--4">
+            Select the analysis required based on the type of data in your
+            study:
+          </label>
+          <table className="vf-table">
+            <thead className="vf-table__header">
+              <tr className="vf-table__row">
+                <th className="vf-table__heading" scope="col">
+                  Data type
+                </th>
+                <th className="vf-table__heading" scope="col">
+                  Analysis options
+                </th>
+                <th className="vf-table__heading" scope="col" />
+              </tr>
+            </thead>
+            <tbody className="vf-table__body">
+              {ANALYSIS_OPTIONS.map((option, index) => (
+                <tr
+                  className="vf-table__row"
+                  key={`${option.dataType}-${index}`}
+                >
+                  <td className="vf-table__cell">{option.dataType}</td>
+                  <td className="vf-table__cell">{option.option}</td>
+                  <td className="vf-table__cell">
+                    <input
+                      type="radio"
+                      name="analysis-option"
+                      value={option.option || option.dataType}
+                      checked={
+                        selectedAnalysis === (option.option || option.dataType)
+                      }
+                      onChange={() =>
+                        setSelectedAnalysis(option.option || option.dataType)
+                      }
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <div className="vf-grid">
           <label className="vf-text-heading--4">
             Comments / additional information
-            {rawReadsType === 'LongReads' ? (
-              <p className="vf-text-body--3">
-                Please provide details of:
-                <ul>
-                  <li>the sequencing instrument</li>
-                  <li>the base-caller version</li>
-                </ul>
-              </p>
-            ) : null}
-            {rawReadsType === 'ShortAndLongReads' ? (
-              <p className="vf-text-body--3">
-                Please provide details of:
-                <ul>
-                  <li>the sequencing instrument for long-reads</li>
-                  <li>the base-caller version for long-reads</li>
-                  <li>
-                    the additional study/project IDs if the short- and
-                    long-reads were submitted separately
-                  </li>
-                </ul>
-              </p>
-            ) : null}
             <textarea
               className="vf-form__textarea"
               name="reason"
@@ -283,7 +246,12 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
             className="vf-button vf-button--primary mg-button vf-button--sm "
             type="button"
             onClick={handleSubmit}
-            disabled={accession.length === 0 || !isAccessionOK || completed}
+            disabled={
+              accession.length === 0 ||
+              !isAccessionOK ||
+              completed ||
+              !selectedAnalysis
+            }
           >
             Submit request
           </button>
