@@ -12,6 +12,7 @@ import InfoBanner from 'components/UI/InfoBanner';
 import { formatValue } from '@/utils/table';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
+import useSampleAssemblies from 'hooks/data/useSampleAssemblies';
 
 const initialPageSize = 10;
 
@@ -23,7 +24,6 @@ const {
   useAssembliesPage,
   useAssembliesPageSize,
   useAssembliesOrder,
-  useAssembliesSearch,
   withQueryParamProvider,
 } = createSharedQueryParamContextForTable(
   'assemblies',
@@ -38,22 +38,23 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
 }) => {
   const accession = useURLAccession();
   const [assemblyPage] = useAssembliesPage<number>();
-  const [assemblyFilter] = useAssembliesSearch<string>();
   const [assemblyPageSize] = useAssembliesPageSize<number>();
   const [assemblyOrder] = useAssembliesOrder<string>();
 
-  const { data, loading, error, stale, download } = useRunAssemblies(
+  const dataHook =
+    _rootEndpoint === 'runs' ? useRunAssemblies : useSampleAssemblies;
+
+  const { data, loading, error, stale, download } = dataHook(
     accession as string,
     {
       page: assemblyPage as number,
       ordering: assemblyOrder as string,
       page_size: assemblyPageSize as number,
-      search: assemblyFilter as string,
     }
   );
   if (loading && stale) return <Loading size="small" />;
   if (error || !data) return <FetchError error={error as ErrorFromFetch} />;
-  if (!(data.items as Assembly[]).length && !assemblyFilter)
+  if (!(data.items as Assembly[]).length)
     return <InfoBanner type="info" title="No associated assemblies found." />;
 
   const columns = [
