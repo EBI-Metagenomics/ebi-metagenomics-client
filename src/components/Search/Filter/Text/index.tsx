@@ -6,7 +6,7 @@ interface TextSearchProps {
 }
 
 const TextSearch: React.FC<TextSearchProps> = ({ queryParamKey = 'query' }) => {
-  const [query, setQuery] = useQueryParamState(queryParamKey, '');
+  const [query, setQuery] = useQueryParamState<string>(queryParamKey);
 
   const [searchTerms, setSearchTerms] = useState(query as string);
   useEffect(() => {
