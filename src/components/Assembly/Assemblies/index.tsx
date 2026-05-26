@@ -9,6 +9,7 @@ import { ErrorFromFetch, MGnifyResponseList } from '@/hooks/data/useData';
 import { Assembly } from '@/interfaces';
 import useURLAccession from '@/hooks/useURLAccession';
 import InfoBanner from 'components/UI/InfoBanner';
+import { formatValue } from '@/utils/table';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 
@@ -80,17 +81,19 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
       Header: 'Assembler',
       id: 'assembler',
       accessor: (row: Assembly) =>
-        `${row.assembler_name} (${row.assembler_version})`,
+        `${formatValue(row.assembler_name, {
+          placeholder: 'Unknown',
+        })} (${formatValue(row.assembler_version)})`,
     },
     {
       Header: 'Coverage',
       accessor: 'metadata.coverage',
-      Cell: ({ cell }) => <>{(cell.value as number).toFixed(2)}</>,
+      Cell: ({ cell }) => <>{formatValue(cell.value, { precision: 2 })}</>,
     },
     {
       Header: 'Coverage Depth',
       accessor: 'metadata.coverage_depth',
-      Cell: ({ cell }) => <>{(cell.value as number).toFixed(2)}</>,
+      Cell: ({ cell }) => <>{formatValue(cell.value, { precision: 2 })}</>,
     },
     {
       Header: 'Updated at',

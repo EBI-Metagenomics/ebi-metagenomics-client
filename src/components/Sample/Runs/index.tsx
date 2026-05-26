@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
+import { formatValue } from '@/utils/table';
 import useURLAccession from '@/hooks/useURLAccession';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
@@ -54,16 +55,19 @@ const AssociatedRuns: React.FC = () => {
     {
       Header: 'Experiment type',
       accessor: 'experiment_type',
+      Cell: ({ cell }) => <>{formatValue(cell.value)}</>,
       disableSortBy: true,
     },
     {
       Header: 'Instrument model',
       accessor: 'instrument_model',
+      Cell: ({ cell }) => <>{formatValue(cell.value)}</>,
       disableSortBy: true,
     },
     {
       Header: 'Instrument platform',
       accessor: 'instrument_platform',
+      Cell: ({ cell }) => <>{formatValue(cell.value)}</>,
       disableSortBy: true,
     },
   ];

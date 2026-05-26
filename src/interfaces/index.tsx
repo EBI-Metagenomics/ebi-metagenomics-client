@@ -112,9 +112,9 @@ export interface Assembly extends EnaDerivedObject {
   assembly_study_accession: string;
   assembler_name: string;
   assembler_version: string;
-  metadata: {
-    coverage: number;
-    coverage_depth: number;
+  metadata?: {
+    coverage?: number;
+    coverage_depth?: number;
   };
   experiment_type: string;
   wgs_accession: string;
