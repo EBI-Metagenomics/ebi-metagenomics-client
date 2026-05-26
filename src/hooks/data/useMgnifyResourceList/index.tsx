@@ -18,7 +18,7 @@ const useMgnifyResourceList = <T,>(
     )
     .join('&');
 
-  const url = `${config.api_v2}${resource}/${
+  const url = `${config.api_v2}${resource}${
     queryString ? `?${queryString}` : ''
   }`;
 

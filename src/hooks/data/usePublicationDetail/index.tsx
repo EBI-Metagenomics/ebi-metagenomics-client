@@ -2,9 +2,8 @@ import {
   PublicationDetail,
   PublicationEuropePmcCore,
   PublicationEuropePmcAnnotations,
-} from 'interfaces/index';
+} from '@/interfaces';
 import useMgnifyResourceDetail from 'hooks/data/useMgnifyResourceDetail';
-import useMgnifyResourceList from 'hooks/data/useMgnifyResourceList';
 import axios from 'axios';
 
 const usePublicationDetail = (pubmedId: number) => {
@@ -22,7 +21,8 @@ const usePublicationDetail = (pubmedId: number) => {
 export default usePublicationDetail;
 
 export const usePublicationAnnotations = (pubmedId: number) => {
-  return useMgnifyResourceList<PublicationEuropePmcAnnotations>(
-    `publications/${pubmedId}/annotations`
+  return useMgnifyResourceDetail<PublicationEuropePmcAnnotations>(
+    'publications',
+    `${pubmedId}/annotations`
   );
 };
