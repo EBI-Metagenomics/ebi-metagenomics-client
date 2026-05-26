@@ -13,13 +13,14 @@ import AssociatedAnalyses from 'components/Analysis/Analyses';
 import { ENA_VIEW_URL } from '@/utils/urls';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
+import formatValue from 'utils/table';
 
 const { withQueryParamProvider } =
   createSharedQueryParamContextForTable('analyses');
 
 const RunPage: React.FC = () => {
   const accession = useURLAccession();
-  const { data: runData, loading, error } = useRunDetail(accession);
+  const { data: runData, loading, error } = useRunDetail(accession as string);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!runData) return <Loading />;
@@ -64,11 +65,15 @@ const RunPage: React.FC = () => {
     },
     {
       key: 'Instrument model',
-      value: String(runData.instrument_model),
+      value: String(
+        formatValue(runData.instrument_model, { placeholder: 'Unknown' })
+      ),
     },
     {
       key: '	Instrument platform type',
-      value: String(runData.instrument_platform),
+      value: String(
+        formatValue(runData.instrument_platform, { placeholder: 'Unknown' })
+      ),
     },
   ];
   const breadcrumbs = [
