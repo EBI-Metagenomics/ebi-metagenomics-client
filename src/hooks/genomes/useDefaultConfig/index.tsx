@@ -19,10 +19,6 @@ const useGenomeDefaultConfig = (): DefaultConfigType => {
         accessor: 'attributes.name',
       },
       {
-        Header: 'Description',
-        accessor: 'attributes.description',
-      },
-      {
         Header: 'Genome Count',
         accessor: 'attributes.genome-count',
       },

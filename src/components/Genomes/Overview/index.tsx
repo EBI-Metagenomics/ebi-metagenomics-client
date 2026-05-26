@@ -7,6 +7,7 @@ import {
   NCBI_ASSEMBLY_URL,
   PATRIC_URL,
 } from '@/utils/urls';
+import { cleanTaxLineage } from 'utils/taxon';
 
 type GenomeOverviewProps = {
   data: any;
@@ -16,6 +17,7 @@ function notEmpty(listValue: unknown): boolean {
   return (
     !!listValue &&
     listValue !== 'null' &&
+    listValue !== 'null%' &&
     listValue !== 'undefined' &&
     listValue !== 'undefined%'
   );
@@ -38,16 +40,88 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
               { key: 'Completeness', value: `${data.completeness}%` },
               { key: 'Num. of contigs', value: String(data.num_contigs) },
               {
+                key: 'Total number of genomes in species',
+                value: String(data.num_genomes_total),
+              },
+              {
+                key: 'Number of proteins',
+                value: String(data.num_proteins),
+              },
+              {
                 key: 'GC content',
                 value:
                   data.gc_content != null
                     ? `${data.gc_content.toFixed(2)}%`
                     : undefined,
               },
+              {
+                key: 'Taxonomic lineage',
+                value: cleanTaxLineage(data.taxon_lineage as string, ' > '),
+              },
               { key: 'N50', value: String(data.n_50) },
             ].filter(({ value }) => notEmpty(value))}
           />
         </details>
+        <details open>
+          <summary>
+            <b>Genome annotations</b>
+          </summary>
+          <KeyValueList
+            list={[
+              {
+                key: 'InterPro coverage',
+                value: `${data.ipr_coverage}%`,
+              },
+              {
+                key: 'EggNog coverage',
+                value: `${data.eggnog_coverage}%`,
+              },
+            ].filter(({ value }) => notEmpty(value))}
+          />
+        </details>
+
+        <details open>
+          <summary>
+            <b>Genome RNA coverage</b>
+          </summary>
+          <KeyValueList
+            list={[
+              {
+                key: 'rRNA 5S total gene length coverage',
+                value: `${data.rna_5s}%`,
+              },
+              {
+                key: 'rRNA 5.8S total gene length coverage',
+                value: `${data.rna_5_8s}%`,
+              },
+              {
+                key: 'rRNA 16S total gene length coverage',
+                value: `${data.rna_16s}%`,
+              },
+              {
+                key: 'rRNA 18S total gene length coverage',
+                value: `${data.rna_18s}%`,
+              },
+              {
+                key: 'rRNA 23S total gene length coverage',
+                value: `${data.rna_23s}%`,
+              },
+              {
+                key: 'rRNA 28S total gene length coverage',
+                value: `${data.rna_28s}%`,
+              },
+              {
+                key: 'tRNAs',
+                value: `${data.trnas}`,
+              },
+              {
+                key: 'ncRNA',
+                value: `${data.nc_rnas}`,
+              },
+            ].filter(({ value }) => notEmpty(value))}
+          />
+        </details>
+
         {/* Legacy annotation, pan-genome, and RNA sections removed: new API does not provide these fields */}
         <details open>
           <summary>
