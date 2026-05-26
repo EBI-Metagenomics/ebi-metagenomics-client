@@ -13,7 +13,7 @@ import AssociatedAnalyses from 'components/Analysis/Analyses';
 import { ENA_VIEW_URL } from '@/utils/urls';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
-import formatValue from 'utils/table';
+import formatValue from '@/utils/table';
 
 const { withQueryParamProvider } =
   createSharedQueryParamContextForTable('analyses');

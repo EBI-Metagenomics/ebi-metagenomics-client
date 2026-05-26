@@ -13,11 +13,7 @@ import prettier from 'eslint-plugin-prettier';
 export default [
   js.configs.recommended,
   {
-    ignores: [
-      "node_modules/**",
-      "dist/**",
-      "build/**",
-    ]
+    ignores: ['node_modules/**', 'dist/**', 'build/**'],
   },
   {
     languageOptions: {
@@ -40,7 +36,10 @@ export default [
     settings: {
       react: { version: 'detect' },
       'import/resolver': {
-        typescript: {},
+        typescript: {
+          alwaysTryTypes: true,
+          project: './tsconfig.json',
+        },
       },
     },
     rules: {

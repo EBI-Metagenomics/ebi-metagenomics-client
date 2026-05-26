@@ -18,7 +18,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           path: client-repo
 
@@ -29,10 +29,10 @@ jobs:
         run: |
           echo "{\"googleMapsKey\": \"$MAPS_KEY\", \"api\": \"$API_URL\", \"api_v2\": \"$API_V2_URL\", \"dev_api_v2\": \"$API_V2_URL\"}" > "$(pwd)/config.private.json"
 
-      - name: 📜 - Set up JS Node 23
-        uses: actions/setup-node@v4
+      - name: 📜 - Set up JS Node
+        uses: actions/setup-node@v6
         with:
-          node-version: '23'
+          node-version: '24'
           cache: 'npm'
           cache-dependency-path: client-repo/package-lock.json
 
@@ -80,7 +80,7 @@ jobs:
 #          version: ${{ github.sha }}
 
       - name: 📸 - Failed tests snapshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: tests-snapshots
