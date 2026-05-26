@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Tooltip from 'components/UI/Tooltip';
 import InfoBanner from 'components/UI/InfoBanner';
 import UserContext, {
   UserDetail,
