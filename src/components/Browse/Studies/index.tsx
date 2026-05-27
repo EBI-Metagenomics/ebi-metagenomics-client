@@ -33,7 +33,6 @@ const BrowseStudies: React.FC = () => {
     page,
     order,
     biome_lineage: biome,
-    has_analyses_from_pipeline: 'V6',
     search,
   });
 
