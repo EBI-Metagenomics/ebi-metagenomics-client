@@ -175,6 +175,9 @@ export interface Genome {
   geographic_origin: string | null;
   geographic_range: string[] | null;
   biome: Biome | null;
+  num_genomes_total?: number;
+  taxon_lineage?: string;
+  updated_at?: string;
 }
 
 export interface GenomeApiResponse extends Genome {
