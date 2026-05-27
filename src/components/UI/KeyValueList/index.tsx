@@ -2,7 +2,7 @@ import React from 'react';
 
 export type KeyValueItemsList = {
   key: string;
-  value: string | React.ElementType;
+  value: string | React.ElementType | undefined;
 }[];
 
 type KeyValueProps = {

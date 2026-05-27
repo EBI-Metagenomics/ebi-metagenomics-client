@@ -5,6 +5,7 @@ import {
   ENA_VIEW_URL,
   IMG_URL,
   NCBI_ASSEMBLY_URL,
+  NCBI_PROJECT_URL,
   PATRIC_URL,
 } from '@/utils/urls';
 import { cleanTaxLineage } from 'utils/taxon';
@@ -59,7 +60,7 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
                 value: cleanTaxLineage(data.taxon_lineage as string, ' > '),
               },
               { key: 'N50', value: String(data.n_50) },
-            ].filter(({ value }) => notEmpty(value))}
+            ]}
           />
         </details>
         <details open>
@@ -139,7 +140,7 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
                   ? (data.geographic_range as string[]).join(', ')
                   : undefined,
               },
-            ].filter(({ value }) => notEmpty(value))}
+            ]}
           />
         </details>
         <details open>
@@ -203,6 +204,28 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
                           href={PATRIC_URL + data.patric_genome_accession}
                         >
                           {data.patric_genome_accession}
+                        </ExtLink>
+                      )
+                    : null,
+                },
+                {
+                  key: 'ENA study accession',
+                  value: data.ena_study_accession
+                    ? () => (
+                        <ExtLink href={ENA_VIEW_URL + data.ena_study_accession}>
+                          {data.ena_study_accession}
+                        </ExtLink>
+                      )
+                    : null,
+                },
+                {
+                  key: 'NCBI study accession',
+                  value: data.ncbi_study_accession
+                    ? () => (
+                        <ExtLink
+                          href={NCBI_PROJECT_URL + data.ncbi_study_accession}
+                        >
+                          {data.ncbi_study_accession}
                         </ExtLink>
                       )
                     : null,
