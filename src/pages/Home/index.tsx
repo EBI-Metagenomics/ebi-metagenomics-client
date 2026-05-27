@@ -224,9 +224,7 @@ const HomePage: React.FC = () => {
         <div className="request-analysis-bg-pattern" />
         <h2 className="vf-section__title">Latest Studies</h2>
         <div className="home-search-cards vf-grid vf-grid__col-1">
-          <div className="vf-card home-search-card">
-            <LatestStudies />
-          </div>
+          <LatestStudies />
         </div>
       </section>
 

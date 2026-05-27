@@ -11,6 +11,12 @@
   border: 1px solid #f3f3f3;
 }
 
+.latest-studies-section-container {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
 .latest-studies-section::-webkit-scrollbar {
   width: 8px;
 }

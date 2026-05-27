@@ -28,7 +28,7 @@ const LatestStudy: React.FC<LatestStudyProps> = ({
       <span className={`biome_icon icon_xs ${icon}`} />
       <h3 className="vf-summary__title">
         <Link to={`/studies/${id}`} className="vf-summary__link">
-          <TruncatedText text={name} maxLength={100} />
+          <TruncatedText text={name} maxLength={240} />
         </Link>
       </h3>
       <p className="vf-summary__text vf-u-type__text-body--5">
@@ -62,6 +62,7 @@ const LatestStudies: React.FC = () => {
     <section className="vf-stack vf-stack--200" style={{ width: '100%' }}>
       <FixedHeightScrollable
         className="vf-grid vf-grid__col-1 latest-studies-section"
+        wrapperClassName="latest-studies-section-container"
         heightPx={400}
       >
         {}
