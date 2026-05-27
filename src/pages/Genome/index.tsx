@@ -303,6 +303,7 @@ const GenomePage: React.FC = () => {
                 tooltipEntityLabel="KEGG Class"
                 tableType="kegg-class"
                 tableTitlePrefix="KEGG classes"
+                firstColumnHeaderOverride="Class ID"
                 labelAccessor={(d: any) =>
                   String((d as any).class_id ?? (d as any).name)
                 }
