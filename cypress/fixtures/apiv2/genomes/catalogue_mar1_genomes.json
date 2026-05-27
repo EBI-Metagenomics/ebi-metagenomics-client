@@ -4,7 +4,8 @@
     {
       "accession": "MGYG000000001",
       "length": 123456,
-      "num_contigs": 10,
+      "num_contigs": 1223344,
+      "num_genomes_total": 10,
       "completeness": 95,
       "contamination": 2,
       "type": "MAG",
@@ -13,7 +14,8 @@
     {
       "accession": "MGYG000000003",
       "length": 222222,
-      "num_contigs": 20,
+      "num_contigs": 2222333,
+      "num_genomes_total": 20,
       "completeness": 90,
       "contamination": 3,
       "type": "MAG",
