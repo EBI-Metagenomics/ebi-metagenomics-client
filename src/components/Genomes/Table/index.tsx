@@ -63,7 +63,7 @@ const GenomesTable: React.FC = () => {
         className: 'mg-biome',
       } as Column<Genome>,
       {
-        id: 'genome',
+        id: 'accession',
         Header: 'Accession',
         accessor: 'accession' as const,
         Cell: ({ cell }: { cell: { value: string } }) => (

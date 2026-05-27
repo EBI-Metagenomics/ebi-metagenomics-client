@@ -22,7 +22,7 @@ const GenomesTextSearch: React.FC = () => {
     const params = new URLSearchParams();
     if (page) params.set('page', String(page));
     if (pageSize) params.set('page_size', String(pageSize));
-    if (order) params.set('ordering', String(order));
+    if (order) params.set('order', String(order));
     if (search) params.set('search', String(search));
     const qs = params.toString();
     return `${config.api_v2}genomes/${qs ? `?${qs}` : ''}`;
