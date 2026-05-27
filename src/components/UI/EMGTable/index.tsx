@@ -168,6 +168,30 @@ const EMGTable = <T extends object>({
       data) as T[];
   }, [data]);
 
+  const initialTableState = useMemo(
+    () => ({
+      pageIndex: initialPage,
+      pageSize: expectedPageSize,
+      sortBy: getSortedColumnFromOrderingQueryParam(ordering, cols),
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [] // Only on mount
+  );
+
+  const tableOptions = useMemo(
+    () => ({
+      columns: cols as Column<T>[],
+      data: tableData,
+      initialState: initialTableState,
+      pageCount: pageCount || 1,
+      manualPagination: !clientSidePagination,
+      manualSortBy: !clientSidePagination,
+      autoResetPage: false,
+    }),
+    [cols, tableData, initialTableState, pageCount, clientSidePagination]
+  );
+
+  const table = useTable<T>(tableOptions, useSortBy, usePagination);
   const {
     setSortBy,
     getTableProps,
@@ -180,25 +204,10 @@ const EMGTable = <T extends object>({
     canNextPage,
     gotoPage,
     state: { pageIndex, sortBy },
-  } = useTable<T>(
-    {
-      columns: cols as Column<T>[],
-      data: tableData,
-      initialState: {
-        pageIndex: initialPage,
-        pageSize: expectedPageSize,
-        sortBy: getSortedColumnFromOrderingQueryParam(ordering, cols),
-      },
-      pageCount: pageCount || 1,
-      manualPagination: !clientSidePagination,
-      manualSortBy: !clientSidePagination,
-      autoResetPage: !clientSidePagination,
-    },
-    useSortBy,
-    usePagination
-  );
+  } = table;
   const tableRef = useRef(null);
   const [isChangingPage, setChangingPage] = useState(false);
+  const lastSyncedOrder = useRef(ordering);
 
   useEffect(() => {
     if (!showPagination) return;
@@ -213,32 +222,29 @@ const EMGTable = <T extends object>({
   }, [showPagination, page, pageIndex, gotoPage, isChangingPage]);
 
   useEffect(() => {
-    // Handle table-initiated change of sorting column
     if (!sortable) return;
-    const orderParamRequestedByTable =
-      getOrderingQueryParamFromSortedColumn(sortBy);
-    if (ordering !== orderParamRequestedByTable) {
-      setOrdering(orderParamRequestedByTable);
-      setPage(1);
-    }
-  }, [sortable, sortBy, ordering, setOrdering, setPage]);
-
-  useEffect(() => {
-    // Handle external (e.g. URL query param) load/change of sorting column
-    if (!sortable) return;
-    const orderParamSpecifiedExternally = ordering;
     const orderParamCurrentlyInTable =
       getOrderingQueryParamFromSortedColumn(sortBy);
-    if (orderParamSpecifiedExternally !== orderParamCurrentlyInTable) {
-      setSortBy(
-        getSortedColumnFromOrderingQueryParam(
-          orderParamSpecifiedExternally,
-          cols
-        )
-      );
-      setPage(1);
+    const orderParamSpecifiedInUrl = ordering;
+
+    if (orderParamCurrentlyInTable !== orderParamSpecifiedInUrl) {
+      if (orderParamSpecifiedInUrl !== lastSyncedOrder.current) {
+        // URL changed (externally) - update table
+        lastSyncedOrder.current = orderParamSpecifiedInUrl;
+        setSortBy(
+          getSortedColumnFromOrderingQueryParam(orderParamSpecifiedInUrl, cols)
+        );
+      } else if (orderParamCurrentlyInTable !== lastSyncedOrder.current) {
+        // Table changed - update URL
+        lastSyncedOrder.current = orderParamCurrentlyInTable;
+        setOrdering(orderParamCurrentlyInTable);
+        // Only reset page if the change is meaningful (not initial mount/sync)
+        if (orderParamCurrentlyInTable !== '') {
+          setPage(1);
+        }
+      }
     }
-  }, [ordering, sortable, cols, sortBy, setSortBy, setPage]);
+  }, [sortable, sortBy, ordering, setOrdering, setPage, setSortBy, cols]);
 
   const paginationRanges = useMemo(
     () => getPaginationRanges(pageIndex, pageCount),
