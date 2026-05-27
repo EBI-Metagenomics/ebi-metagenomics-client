@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import EMGTable from 'components/UI/EMGTable';
+import { Column } from 'react-table';
 import { getBiomeIcon } from '@/utils/biomes';
 import Loading from 'components/UI/Loading';
 import Link from 'components/UI/Link';
@@ -12,7 +13,6 @@ import { Biome } from '@/interfaces';
 const {
   useBiomesPage,
   useBiomesPageSize,
-  useBiomesOrder,
   useBiomesSearch,
   withQueryParamProvider,
 } = createSharedQueryParamContextForTable('biomes', {
@@ -21,9 +21,8 @@ const {
 
 const BrowseBiomes: React.FC = () => {
   const [page] = useBiomesPage<number>();
-  const [order] = useBiomesOrder<string>();
   const [pageSize] = useBiomesPageSize<number>();
-  const [search] = useBiomesSearch<string>();
+  const [search, setSearch] = useBiomesSearch<string>();
   const [hasData, setHasData] = useState(false);
   const {
     data: biomesList,
@@ -32,12 +31,11 @@ const BrowseBiomes: React.FC = () => {
     download: downloadURL,
   } = useBiomesList({
     page,
-    ordering: order,
     page_size: pageSize,
-    search: (search as string) || '',
+    biome_lineage: (search as string) || '',
   });
 
-  const columns = React.useMemo(
+  const columns: Column<Biome>[] = React.useMemo(
     () => [
       {
         id: 'biome',
@@ -52,35 +50,38 @@ const BrowseBiomes: React.FC = () => {
       {
         id: 'biome_name',
         Header: 'Biome name and lineage',
-        accessor: (biome: Biome) => ({
-          lineage: biome.lineage,
-          name: biome.biome_name,
-        }),
+        accessor: (row: Biome) => row,
         Cell: ({ cell }) => (
           <>
-            <Link to="/browse/studies" state={{ biome: cell.value.lineage }}>
-              {cell.value.name}
+            <Link
+              to={`/browse/studies?biome=${encodeURIComponent(
+                cell.value.lineage
+              )}`}
+            >
+              {cell.value.biome_name}
             </Link>
             <br />
             {cell.value.lineage}
           </>
         ),
+        disableSortBy: true,
       },
       {
-        Header: 'Samples excluding sub-lineages',
-        id: 'samples_count',
-        accessor: (biome: Biome) => ({
-          lineage: biome.lineage,
-          count: (biome as any).samples_count,
-        }),
+        Header: 'Show sub-lineages',
+        id: 'sublineages',
+        accessor: 'lineage',
         Cell: ({ cell }) => (
-          <Link to={`/browse/samples?biome=${cell.value.lineage}`}>
-            {cell.value.count}
-          </Link>
+          <button
+            type="button"
+            className="vf-button vf-button--sm vf-button--link mg-button"
+            onClick={() => setSearch(cell.value)}
+          >
+            Show sub-lineages
+          </button>
         ),
       },
     ],
-    []
+    [setSearch]
   );
 
   useEffect(() => {
@@ -90,6 +91,28 @@ const BrowseBiomes: React.FC = () => {
 
   return (
     <section className="mg-browse-section">
+      {search && (
+        <div className="vf-banner vf-banner--alert">
+          <div className="vf-sidebar vf-sidebar--end">
+            <div className="vf-sidebar__inner">
+              <div>
+                <p style={{ textAlign: 'right' }}>
+                  Showing sub-lineages of <strong>{search}</strong>
+                </p>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  className="vf-button vf-button--sm vf-button--tertiary mg-button"
+                  onClick={() => setSearch('')}
+                >
+                  Show all
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {hasData && (
         <EMGTable<Biome>
           cols={columns}
@@ -99,7 +122,6 @@ const BrowseBiomes: React.FC = () => {
           sortable
           loading={loading}
           isStale={isStale}
-          showTextFilter
           onDownloadRequested={downloadURL}
         />
       )}

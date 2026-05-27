@@ -103,7 +103,8 @@ function getSortedColumnFromOrderingQueryParam<T extends object>(
 type EMGTableProps<T extends object> = {
   cols: Column<T>[];
   data:
-    | PaginatedList
+    | PaginatedList<T | any>
+    | T[]
     | Record<string, unknown>[]
     | MGnifyResponse
     | Array<MGnifyDatum>;
@@ -157,14 +158,16 @@ const EMGTable = <T extends object>({
 
   const pageCount = useMemo(() => {
     if (data && 'count' in data) {
-      return Math.ceil(data.count / expectedPageSize) || 1;
+      return (
+        Math.ceil((data as PaginatedList<T>).count / expectedPageSize) || 1
+      );
     }
     return (data as MGnifyResponse)?.meta?.pagination?.pages || 1;
   }, [data, expectedPageSize]);
 
   const tableData = useMemo(() => {
     return ((data as MGnifyResponse)?.data ||
-      (data as PaginatedList)?.items ||
+      (data as PaginatedList<T>)?.items ||
       data) as T[];
   }, [data]);
 
