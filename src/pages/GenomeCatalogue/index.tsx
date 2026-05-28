@@ -78,46 +78,26 @@ const GenomePage: React.FC = () => {
             </div>
           </article>
 
-          <article className="vf-card vf-card--brand vf-card--bordered">
-            <div className="vf-card__content | vf-stack vf-stack--200">
-              <h3 className="vf-card__heading">
-                {other_stats?.['Total proteins']
-                  ? parseInt(
-                      other_stats['Total proteins'] as string
-                    ).toLocaleString()
-                  : 0}
-              </h3>
-              <p className="vf-card__subheading">Total proteins</p>
-            </div>
-          </article>
-
-          <article className="vf-card vf-card--brand vf-card--bordered">
-            <div className="vf-card__content | vf-stack vf-stack--200">
-              <h3 className="vf-card__heading">
-                {other_stats?.['Clusters with pan-genomes']
-                  ? parseInt(
-                      other_stats['Clusters with pan-genomes'] as string
-                    ).toLocaleString()
-                  : 0}
-              </h3>
-              <p className="vf-card__subheading">Clusters with pan-genomes </p>
-            </div>
-          </article>
-
-          <article className="vf-card vf-card--brand vf-card--bordered">
-            <div className="vf-card__content | vf-stack vf-stack--200">
-              <h3 className="vf-card__heading">
-                {other_stats?.['Clusters with isolate genomes']
-                  ? parseInt(
-                      other_stats['Clusters with isolate genomes'] as string
-                    ).toLocaleString()
-                  : 0}
-              </h3>
-              <p className="vf-card__subheading">
-                Clusters with isolate genomes{' '}
-              </p>
-            </div>
-          </article>
+          {[
+            'Total proteins',
+            'Clusters with pan-genomes',
+            'Clusters with isolate genomes',
+          ].map((stat) => {
+            if (other_stats?.[stat] == null) return null;
+            return (
+              <article
+                className="vf-card vf-card--brand vf-card--bordered"
+                key={stat}
+              >
+                <div className="vf-card__content | vf-stack vf-stack--200">
+                  <h3 className="vf-card__heading">
+                    {parseInt(other_stats[stat] as string).toLocaleString()}
+                  </h3>
+                  <p className="vf-card__subheading">{stat}</p>
+                </div>
+              </article>
+            );
+          })}
 
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
