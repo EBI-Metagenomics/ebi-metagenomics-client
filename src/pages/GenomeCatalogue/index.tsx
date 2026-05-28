@@ -45,7 +45,6 @@ const GenomePage: React.FC = () => {
     protein_catalogue_description,
     protein_catalogue_name,
     unclustered_genome_count,
-    version,
     downloads,
   } = data as GenomeCatalogue;
   const breadcrumbs = [
@@ -102,7 +101,7 @@ const GenomePage: React.FC = () => {
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
               <h3 className="vf-card__heading">
-                <a href={(ftp_url + catalogue_id + '/v' + version) as string}>
+                <a href={ftp_url}>
                   FTP Site
                   <ArrowForLink />
                 </a>
