@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import InfoBanner from 'components/UI/InfoBanner';
+import ExtLink from 'components/UI/ExtLink';
 import UserContext, {
   UserDetail,
   getDetailsByWebin,
@@ -167,7 +168,11 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
             Using this form, you can request analysis of a suitable publicly
             available dataset, held within an INSDC database. Enter the study
             accession below and we will prioritise it for analysis with our
-            pipeline.
+            pipeline. For more information, please refer to our{' '}
+            <ExtLink href="https://docs.mgnify.org/src/docs/request-analysis.html">
+              documentation
+            </ExtLink>
+            .
           </p>
         )}
         <div>

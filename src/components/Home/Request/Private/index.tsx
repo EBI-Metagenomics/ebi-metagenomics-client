@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import MailForm from '../MailForm';
+import ExtLink from 'components/UI/ExtLink';
 
 const PrivateRequest: React.FC = () => {
   const [confirmSubmitted, setConfirmSubmitted] = useState('');
@@ -39,7 +40,12 @@ const PrivateRequest: React.FC = () => {
           <MailForm isPublic={false} />
           <p>
             The analysis of your data will be held confidentially on our site
-            until the hold date expires.
+            until the hold date expires. For more information, please refer to
+            our{' '}
+            <ExtLink href="https://docs.mgnify.org/src/docs">
+              documentation
+            </ExtLink>
+            .
           </p>
         </>
       )}
