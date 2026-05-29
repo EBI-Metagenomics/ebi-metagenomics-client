@@ -46,8 +46,7 @@ describe('Submit page - Request Analysis', function() {
 
     const accession = 'ERP123456';
     cy.get('#study-accession').type(accession);
-    cy.get('input[name="analysis-type"][value="Assembly+Analysis"]').check();
-    cy.get('input[name="raw-reads-type"][value="ShortReads"]').check();
+    cy.get('input[name="analysis-option"]').first().check();
     cy.get('textarea[name="reason"]').type('This is a test comment');
 
     cy.contains('button', 'Submit request').click();
@@ -56,7 +55,7 @@ describe('Submit page - Request Analysis', function() {
       expect(interception.request.body).to.deep.equal({
         study_accession: accession,
         comments: 'This is a test comment',
-        analysis_type: 'Assembly+Analysis',
+        analysis_type: 'Analysis (provides taxonomic profile) of Amplicon/metabarcoding raw-reads data.',
         request_type: 'Public',
       });
     });
@@ -80,8 +79,7 @@ describe('Submit page - Request Analysis', function() {
 
     const accession = 'ERP123456';
     cy.get('#study-accession').type(accession);
-    cy.get('input[name="analysis-type"][value="Assembly+Analysis"]').check();
-    cy.get('input[name="raw-reads-type"][value="ShortReads"]').check();
+    cy.get('input[name="analysis-option"]').eq(2).check();
     cy.get('textarea[name="reason"]').type('This is a test comment for private data');
 
     cy.contains('button', 'Submit request').click();
@@ -90,7 +88,7 @@ describe('Submit page - Request Analysis', function() {
       expect(interception.request.body).to.deep.equal({
         study_accession: accession,
         comments: 'This is a test comment for private data',
-        analysis_type: 'Assembly+Analysis',
+        analysis_type: 'Assembly and analysis (generates and submits contig sequences, provides taxonomic and functional profile) of Metagenomic/metatranscriptomic raw-reads data.',
         request_type: 'Private',
       });
     });

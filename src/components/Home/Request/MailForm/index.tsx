@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import InfoBanner from 'components/UI/InfoBanner';
 import ExtLink from 'components/UI/ExtLink';
 import UserContext from 'pages/Login/UserContext';
@@ -12,7 +12,12 @@ type MailFormProps = {
   isPublic: boolean;
 };
 
-const ANALYSIS_OPTIONS = [
+type AnalysisOption = {
+  dataType: string;
+  option: string;
+};
+
+const ANALYSIS_OPTIONS: AnalysisOption[] = [
   {
     dataType: 'Amplicon/metabarcoding raw-reads',
     option: 'Analysis (provides taxonomic profile)',
@@ -37,12 +42,13 @@ const ANALYSIS_OPTIONS = [
 ];
 
 const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
-  const [selectedAnalysis, setSelectedAnalysis] = useState('');
+  const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisOption>();
   const [accession, setAccession] = useState('');
   const [comments, setComments] = useState('');
   const [result, setResult] = useState('');
   const [isAccessionOK, setAccessionOK] = useState(true);
   const [completed, setCompleted] = useState(false);
+  const resultRef = useRef<HTMLDivElement>(null);
   const { username } = useContext(UserContext);
   const {
     submit: submitEmail,
@@ -63,6 +69,11 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
       }
     }
   }, [data, loading, errorEmail, accession, completed]);
+  useEffect(() => {
+    if (result && resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [result]);
   useEffect(() => {
     if (accession.length > 0 && !isAccessionOK)
       setResult(
@@ -89,13 +100,13 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
     submitEmail({
       study_accession: accession,
       comments,
-      analysis_type: selectedAnalysis,
+      analysis_type: `${selectedAnalysis.option} of ${selectedAnalysis.dataType} data.`,
       request_type: isPublic ? 'Public' : 'Private',
     });
     setCompleted(true);
   };
   const handleClear = () => {
-    setSelectedAnalysis('');
+    setSelectedAnalysis(undefined);
     setAccession('');
     setComments('');
     setResult('');
@@ -164,12 +175,8 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
                       type="radio"
                       name="analysis-option"
                       value={option.option || option.dataType}
-                      checked={
-                        selectedAnalysis === (option.option || option.dataType)
-                      }
-                      onChange={() =>
-                        setSelectedAnalysis(option.option || option.dataType)
-                      }
+                      checked={selectedAnalysis?.option === option.option}
+                      onChange={() => setSelectedAnalysis(option)}
                     />
                   </td>
                 </tr>
@@ -212,7 +219,11 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
           </button>
         </div>
       </div>
-      {result.length > 0 && <InfoBanner>{result}</InfoBanner>}
+      {result.length > 0 && (
+        <div ref={resultRef}>
+          <InfoBanner>{result}</InfoBanner>
+        </div>
+      )}
     </section>
   );
 };
