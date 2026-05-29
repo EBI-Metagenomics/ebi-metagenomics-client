@@ -1,62 +1,23 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import InfoBanner from 'components/UI/InfoBanner';
 import ExtLink from 'components/UI/ExtLink';
-import UserContext, {
-  UserDetail,
-  getDetailsByWebin,
-  getEmailsFromDetails,
-} from 'pages/Login/UserContext';
+import UserContext from 'pages/Login/UserContext';
 import useMgnifyEmail from '@/hooks/data/useMgnifyEmail';
 import { ErrorTypes } from '@/hooks/data/useData';
 import { toast } from 'react-toastify';
 
 const accessionRegex = /((?:PRJEB|PRJNA|PRJDB|PRJDA|MGYS|ERP|SRP|DRP)\d{5,})/;
 
-const getRequestEmail = (
-  isPublic: boolean,
-  analysisOption: string,
-  comments: string,
-  studyAcc: string,
-  username: string,
-  details: UserDetail
-) => {
-  const subject = `${
-    (isPublic ? 'Public ' : 'Private ') + analysisOption
-  } request: ${studyAcc}`;
-  const body =
-    `Study accession: ${studyAcc};${
-      isPublic ? 'Public ' : 'Private '
-    } analysis.;` +
-    `Analysis option: ${analysisOption} ;` +
-    `Requester name: ${details.attributes['first-name']} ${details.attributes.surname}.;` +
-    `Email: ${details.attributes['email-address']}.;` +
-    `Webin: ${username}.;` +
-    `Additional notes: ${comments}.;`;
-  return {
-    body,
-    subject,
-  };
-};
-
 type MailFormProps = {
   isPublic: boolean;
 };
 
-type EmailRequest = {
-  fromEmail?: string;
-  subject?: string;
-  body?: string;
-  consent?: boolean;
+type AnalysisOption = {
+  dataType: string;
+  option: string;
 };
 
-const EMPTY_EMAIL: EmailRequest = {
-  fromEmail: undefined,
-  subject: undefined,
-  body: undefined,
-  consent: undefined,
-};
-
-const ANALYSIS_OPTIONS = [
+const ANALYSIS_OPTIONS: AnalysisOption[] = [
   {
     dataType: 'Amplicon/metabarcoding raw-reads',
     option: 'Analysis (provides taxonomic profile)',
@@ -81,37 +42,38 @@ const ANALYSIS_OPTIONS = [
 ];
 
 const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
-  const [selectedAnalysis, setSelectedAnalysis] = useState('');
+  const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisOption>();
   const [accession, setAccession] = useState('');
   const [comments, setComments] = useState('');
   const [result, setResult] = useState('');
   const [isAccessionOK, setAccessionOK] = useState(true);
   const [completed, setCompleted] = useState(false);
+  const resultRef = useRef<HTMLDivElement>(null);
+  const { username } = useContext(UserContext);
   const {
-    username,
-    details,
-    // setUser, setDetails, isAuthenticated, config
-  } = useContext(UserContext);
-  const [email, setEmail] = useState<EmailRequest>(EMPTY_EMAIL);
-  const {
+    submit: submitEmail,
     data,
     loading,
     error: errorEmail,
-  } = useMgnifyEmail(email.fromEmail, email.subject, email.body, email.consent);
+  } = useMgnifyEmail();
   useEffect(() => {
-    if (email.fromEmail) {
+    if (completed) {
       if (!loading && data && !errorEmail) {
         setResult(
           `Analysis request for [${accession}] was succesfully submitted.`
         );
-      } else if (errorEmail?.type !== ErrorTypes.NullURL) {
+      } else if (errorEmail && errorEmail.type !== ErrorTypes.NullURL) {
         setResult(
           'Failed to send analysis request, please try again or contact our helpdesk.'
         );
       }
-      setCompleted(true);
     }
-  }, [data, loading, errorEmail, email.fromEmail, accession]);
+  }, [data, loading, errorEmail, accession, completed]);
+  useEffect(() => {
+    if (result && resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [result]);
   useEffect(() => {
     if (accession.length > 0 && !isAccessionOK)
       setResult(
@@ -135,29 +97,21 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
       toast.error('Please select an analysis option');
       return;
     }
-    const { body, subject } = getRequestEmail(
-      isPublic,
-      selectedAnalysis,
+    submitEmail({
+      study_accession: accession,
       comments,
-      accession,
-      username,
-      getDetailsByWebin(details as UserDetail[], username)
-    );
-    setEmail({
-      fromEmail: getEmailsFromDetails(details as UserDetail[]).join(','),
-      body,
-      subject,
-      consent: false,
+      analysis_type: `${selectedAnalysis.option} of ${selectedAnalysis.dataType} data.`,
+      request_type: isPublic ? 'Public' : 'Private',
     });
+    setCompleted(true);
   };
   const handleClear = () => {
-    setSelectedAnalysis('');
+    setSelectedAnalysis(undefined);
     setAccession('');
     setComments('');
     setResult('');
     setAccessionOK(true);
     setCompleted(false);
-    setEmail(EMPTY_EMAIL);
   };
   return (
     <section>
@@ -221,12 +175,8 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
                       type="radio"
                       name="analysis-option"
                       value={option.option || option.dataType}
-                      checked={
-                        selectedAnalysis === (option.option || option.dataType)
-                      }
-                      onChange={() =>
-                        setSelectedAnalysis(option.option || option.dataType)
-                      }
+                      checked={selectedAnalysis?.option === option.option}
+                      onChange={() => setSelectedAnalysis(option)}
                     />
                   </td>
                 </tr>
@@ -269,7 +219,11 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
           </button>
         </div>
       </div>
-      {result.length > 0 && <InfoBanner>{result}</InfoBanner>}
+      {result.length > 0 && (
+        <div ref={resultRef}>
+          <InfoBanner>{result}</InfoBanner>
+        </div>
+      )}
     </section>
   );
 };
