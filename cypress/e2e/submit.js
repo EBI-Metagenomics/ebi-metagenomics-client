@@ -1,88 +1,100 @@
-import { openPage, loginModal, fillLoginModalForm } from '../util/util';
+import {openPage} from '../util/util';
 
-const origPage = 'submit';
-describe.skip('Submit page', function() {
-  context('User not logged in', function() {
-    before(function() {
-      openPage(origPage);
-    });
-    it('Elements should be visible', function() {
-      cy.contains('Submit data').should('be.visible');
-      cy.contains('Login with Webin').should('be.visible');
-    });
+const allowedUsername = 'Webin-000';
+const allowedPassword = 'secret';
+
+describe('Submit page - Request Analysis', function() {
+  beforeEach(() => {
+    cy.intercept('POST', '**/auth/sliding', (req) => {
+      req.reply({
+        statusCode: 200,
+        body: {
+          token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoic2xpZGluZyIsImV4cCI6MTc1Mzk3MzA2NCwiaWF0IjoxNzUzODg2NjY0LCJqdGkiOiI5Y2Q1YWYzYzMxMDA0YzI1OWI0Mzc4MzIzODQxMzhhZSIsInJlZnJlc2hfZXhwIjoxNzUzOTczMDY0LCJ1c2VybmFtZSI6IldlYmluLTAwMCJ9.7R-kn0ruc2yHx6Sydl2KnbvZFBKDAW-jtpLqo88IwXw',
+          // this JWT is for Webin-000. Signed with a placeholder secret. Expiry and signature are not checked by this web client.
+          token_type: 'sliding',
+        },
+      });
+    }).as('authRequest');
+    cy.intercept('POST', '**/utils/token/verify', (req) => {
+      req.reply({
+        statusCode: 200,
+        body: {
+          data: {
+            token: req.body.token,
+          }
+        },
+      });
+    }).as('authVerifyRequest');
+    cy.intercept('POST', '**/my-data/request', {
+      statusCode: 200,
+      body: {
+        message: 'Analysis request for [ERP123456] was succesfully submitted.',
+      },
+    }).as('requestAnalysis');
   });
-  context('User is logged in, consent not already given', function() {
-    beforeEach(function() {
-      openPage(origPage);
-      cy.contains('Login with Webin').click();
-      cy.get(loginModal).should('be.visible');
-      fillLoginModalForm();
+
+  it('should allow a logged in user to request analysis of a public dataset', () => {
+    openPage('login?from=public-request');
+
+    cy.get('#id_username').type(allowedUsername);
+    cy.get('#id_password').type(allowedPassword);
+    cy.get('#submit-id-submit').click();
+
+    // After login, it should redirect to home with the modal open
+    cy.get('.ReactModal__Content--after-open').should('be.visible');
+    cy.contains('Request an analysis of a public dataset').should('be.visible');
+
+    const accession = 'ERP123456';
+    cy.get('#study-accession').type(accession);
+    cy.get('input[name="analysis-type"][value="Assembly+Analysis"]').check();
+    cy.get('input[name="raw-reads-type"][value="ShortReads"]').check();
+    cy.get('textarea[name="reason"]').type('This is a test comment');
+
+    cy.contains('button', 'Submit request').click();
+
+    cy.wait('@requestAnalysis').then((interception) => {
+      expect(interception.request.body).to.deep.equal({
+        study_accession: accession,
+        comments: 'This is a test comment',
+        analysis_type: 'Assembly+Analysis',
+        request_type: 'Public',
+      });
     });
-    it('Should display consent button if logged in but consent not given', function() {
-      cy.contains('Give consent').should('be.visible');
-    });
-    it('Should prevent clicking give consent without checking box', function() {
-      const errorText = 'Please check the box above.';
-      cy.contains(errorText).should('be.hidden');
-      cy.contains('Give consent.').click();
-      cy.contains(errorText).should('be.visible');
-    });
-    it('Should display error message if consent request failed', function() {
-      const errorText = 'Please check the box above.';
-      cy.contains(errorText).should('be.hidden');
-      cy.contains('Give consent.').should('be.visible');
-      cy.get('#consent-given').check();
-      cy.contains(errorText).should('be.hidden');
-      cy.contains('Give consent.').click();
-      cy.get('#consent-request-error').should('be.visible');
-      cy.get('#consent-request-success').should('be.hidden');
-    });
+
+    cy.contains(`Analysis request for [${accession}] was succesfully submitted.`).should('be.visible');
   });
-  // TODO re-enable once source of flake is discovered
-  // see https://github.com/cypress-io/cypress/issues/2416#issuecomment-417375615
-  // context('User is logged in, successful workflow', function() {
-  //     it('Should send request and display success', function() {
-  //         cy.server();
-  //         cy.route({
-  //             method: 'POST',
-  //             url: '**/@/utils/notify',
-  //             status: 201,
-  //             response: []
-  //         }).as('sendMail');
-  //
-  //         openPage(origPage);
-  //         cy.contains('Please click here to login').click();
-  //         cy.get(loginModal).should('be.visible');
-  //         fillLoginModalForm();
-  //         cy.contains('Your Webin account is currently not registered with MGnify')
-  //             .should('be.visible');
-  //         const errorText = 'Please check the box above.';
-  //         cy.contains(errorText).should('be.hidden');
-  //         cy.contains('Give consent.').should('be.visible');
-  //         cy.get('#consent-given').check();
-  //         cy.wait(2000);
-  //         cy.contains('Give consent.').click();
-  //         cy.contains('Give consent.').click({force: true});
-  //         cy.contains(errorText).should('be.hidden');
-  //         cy.wait('@sendMail');
-  //         cy.get('#consent-request-error').should('be.hidden');
-  //         cy.get('#consent-request-success').should('be.visible');
-  //
-  //         // Check error link validity
-  //         cy.get('#consent-request-success a').then(($el) => {
-  //             isValidLink($el);
-  //         });
-  //     });
-  // });
-  context('User is logged in, consent already given', function() {
-    beforeEach(function() {
-      cy.intercept('GET', '**/myaccounts', 'fixture:user_account_with_consent');
-      openPage(origPage);
-      cy.contains('Submit data').should('be.visible');
+
+  it('should allow a logged in user to request analysis of a private dataset', () => {
+    openPage('login?from=private-request');
+
+    cy.get('#id_username').type(allowedUsername);
+    cy.get('#id_password').type(allowedPassword);
+    cy.get('#submit-id-submit').click();
+
+    // After login, it should redirect to home with the modal open
+    cy.get('.ReactModal__Content--after-open').should('be.visible');
+    cy.contains('Request an analysis of your data').should('be.visible');
+
+    // Select "Yes" for "Has your data already been submitted?"
+    cy.get('input[name="dataSubmitted"][value="Yes"]').check();
+
+    const accession = 'ERP123456';
+    cy.get('#study-accession').type(accession);
+    cy.get('input[name="analysis-type"][value="Assembly+Analysis"]').check();
+    cy.get('input[name="raw-reads-type"][value="ShortReads"]').check();
+    cy.get('textarea[name="reason"]').type('This is a test comment for private data');
+
+    cy.contains('button', 'Submit request').click();
+
+    cy.wait('@requestAnalysis').then((interception) => {
+      expect(interception.request.body).to.deep.equal({
+        study_accession: accession,
+        comments: 'This is a test comment for private data',
+        analysis_type: 'Assembly+Analysis',
+        request_type: 'Private',
+      });
     });
-    it('Should display submit data button', function() {
-      cy.contains('Give consent.').should('not.exist');
-      cy.contains('Click here to submit data').should('be.visible');
-    });
+
+    cy.contains(`Analysis request for [${accession}] was succesfully submitted.`).should('be.visible');
   });
 });

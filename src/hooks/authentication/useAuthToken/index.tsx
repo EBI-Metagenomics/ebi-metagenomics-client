@@ -14,7 +14,7 @@ const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
   const [authToken, setAuthTokenInternally] = useState<string | null>(() => {
     return localStorage.getItem('mgnify.v2.token');
   });
-  const { setUser, setDetails } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   const setAuthToken = useCallback(
     (newToken: AuthToken) => {
@@ -26,7 +26,6 @@ const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
           token: '',
           isAuthenticated: false,
         });
-        setDetails(null);
         return;
       }
       localStorage.setItem('mgnify.v2.token', newToken as string);
@@ -41,7 +40,7 @@ const useAuthToken = (): [AuthToken, (newToken: AuthToken) => void] => {
         isAuthenticated: true,
       });
     },
-    [setUser, setDetails]
+    [setUser]
   );
 
   return [authToken, setAuthToken];

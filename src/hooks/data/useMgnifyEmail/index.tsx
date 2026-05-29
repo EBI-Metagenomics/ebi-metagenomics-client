@@ -1,47 +1,45 @@
-import Cookies from 'universal-cookie';
-import { useContext } from 'react';
+import useData, { DataResponse, ResponseFormat } from '@/hooks/data/useData';
+import { useCallback, useState } from 'react';
 
-import useData, {
-  HTMLDataResponse,
-  ResponseFormat,
-} from '@/hooks/data/useData';
-import UserContext from 'pages/Login/UserContext';
+export type AnalysisRequest = {
+  study_accession: string;
+  request_type: string;
+  analysis_type: string;
+  comments?: string;
+};
 
-const useMgnifyEmail: (
-  fromEmail?: string,
-  subject?: string,
-  body?: string,
-  consent?: boolean,
-  cc?: string
-) => HTMLDataResponse = (fromEmail, subject, body, consent, cc = '') => {
-  const { config } = useContext(UserContext);
-  const cookies = new Cookies();
+export interface AnalysisResponse extends DataResponse {
+  data: {
+    message: string;
+  };
+}
 
-  const data = useData(
-    fromEmail ? `${config.api}@/utils/notify` : null,
-    ResponseFormat.HTML,
+const useMgnifyEmail = (): {
+  submit: (request: AnalysisRequest) => void;
+  data: AnalysisResponse['data'] | null;
+  loading: boolean;
+  error: AnalysisResponse['error'];
+} => {
+  const [request, setRequest] = useState<AnalysisRequest | null>(null);
+  const { data, loading, error } = useData(
+    request ? '/my-data/request' : null,
+    ResponseFormat.JSON,
     {
       method: 'POST',
-      headers: {
-        'X-CSRFToken': cookies.get('csrftoken'),
-        'Content-Type': 'application/vnd.api+json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        data: {
-          type: 'notifies',
-          attributes: {
-            from_email: fromEmail,
-            cc,
-            subject,
-            message: body,
-            is_consent: consent || false,
-          },
-        },
-      }),
+      body: JSON.stringify(request),
     }
   );
-  return data as HTMLDataResponse;
+
+  const submit = useCallback((req: AnalysisRequest) => {
+    setRequest(req);
+  }, []);
+
+  return {
+    submit,
+    data: data as AnalysisResponse['data'] | null,
+    loading,
+    error,
+  };
 };
 
 export default useMgnifyEmail;

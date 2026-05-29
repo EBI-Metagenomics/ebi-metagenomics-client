@@ -149,9 +149,6 @@ export interface DataResponse {
   rawResponse?: Response;
 }
 
-export interface HTMLDataResponse extends DataResponse {
-  data: HTMLHtmlElement;
-}
 export interface MGnifyResponseGenericObj extends DataResponse {
   data: KeyValue;
 }
