@@ -631,21 +631,21 @@ const MegaMenu: React.FC = () => {
                             target="_blank"
                             rel="noreferrer"
                           >
-                            A webinar explaining about Mgnify and the analysis
-                            you can perform &nbsp;
+                            A webinar explaining MGnify and the analysis you can
+                            perform &nbsp;
                             <span className="icon icon-common icon-external-link-alt" />
                           </a>
                         </li>
 
                         <li className="vf-navigation__item">
                           <a
-                            href="https://www.ebi.ac.uk/training/online/course/metagenomics-bioinformatics"
+                            href="https://www.ebi.ac.uk/training/materials/metagenomics-bioinformatics-at-mgnify-materials/"
                             className="vf-navigation__link"
                             target="_blank"
                             rel="noreferrer"
                           >
                             Recorded materials from the Metagenomics
-                            Bioinformatics course run at EMBL-EBI in 2018 &nbsp;
+                            Bioinformatics course run at EMBL-EBI in 2025 &nbsp;
                             <span className="icon icon-common icon-external-link-alt" />
                           </a>
                         </li>

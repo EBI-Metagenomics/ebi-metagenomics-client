@@ -202,11 +202,11 @@ const HelpPage: React.FC = () => {
                 </li>
                 <li>
                   <ExtLink
-                    title="Metagenomics Bioinformatics course run at EMBL-EBI in 2018"
-                    href="https://www.ebi.ac.uk/training/online/course/metagenomics-bioinformatics"
+                    title="Metagenomics Bioinformatics course run at EMBL-EBI in 2025"
+                    href="https://www.ebi.ac.uk/training/materials/metagenomics-bioinformatics-at-mgnify-materials/"
                   >
                     Recorded materials from the Metagenomics Bioinformatics
-                    course run at EMBL-EBI in 2018
+                    course run at EMBL-EBI in 2025
                   </ExtLink>
                 </li>
               </ul>
