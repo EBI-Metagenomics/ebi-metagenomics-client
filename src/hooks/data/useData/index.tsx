@@ -225,12 +225,19 @@ async function fetchData(
 
   try {
     if (fetchOptions.method === 'POST') {
+      const isFormData =
+        typeof FormData !== 'undefined' &&
+        fetchOptions.body instanceof FormData;
+      const headers = isFormData
+        ? {
+            ...(fetchOptions.headers || {}),
+            // Null out the protectedAxios instance default so axios can
+            // auto-set multipart/form-data with the correct boundary.
+            'Content-Type': null,
+          }
+        : fetchOptions.headers || { 'Content-Type': 'application/json' };
       response = await protectedAxios.post(url, fetchOptions.body, {
-        headers:
-          fetchOptions.headers ||
-          ({
-            'Content-Type': 'application/json',
-          } as object),
+        headers: headers as object,
       });
     } else {
       response = await protectedAxios.get(url);
