@@ -50,7 +50,7 @@ const BlogExcerpts: React.FC = () => {
   if (error) return <FetchError error={error} />;
   const blogClass =
     'vf-grid vf-grid__col-3 | vf-card-container | ' +
-    'vf-u-fullbleed vf-u-background-color-ui--grey--light';
+    'vf-u-background-color-ui--grey--light';
   return (
     <div className="blog-excerpts-section">
       <div className={blogClass}>

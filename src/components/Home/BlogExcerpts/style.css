@@ -25,16 +25,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Badge styling */
-.blog-excerpts-section .vf-badge {
-  background-color: #e1ebfa;
-  color: #3b6fb6;
-  font-weight: 500;
-  font-size: 0.8rem;
-  margin-bottom: 0.5rem;
-  display: inline-block;
-}
-
 /* Card heading styling */
 .blog-excerpts-section .vf-card__heading {
   font-size: 1.1rem;
