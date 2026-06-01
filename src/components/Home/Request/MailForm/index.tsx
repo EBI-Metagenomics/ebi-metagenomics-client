@@ -60,7 +60,7 @@ const MailForm: React.FC<MailFormProps> = ({ isPublic }) => {
     if (completed) {
       if (!loading && data && !errorEmail) {
         setResult(
-          `Analysis request for [${accession}] was succesfully submitted.`
+          `Analysis request for [${accession}] was successfully submitted.`
         );
       } else if (errorEmail && errorEmail.type !== ErrorTypes.NullURL) {
         setResult(

@@ -28,7 +28,7 @@ describe('Submit page - Request Analysis', function() {
     cy.intercept('POST', '**/my-data/request', {
       statusCode: 200,
       body: {
-        message: 'Analysis request for [ERP123456] was succesfully submitted.',
+        message: 'Analysis request for [ERP123456] was successfully submitted.',
       },
     }).as('requestAnalysis');
   });
@@ -60,7 +60,7 @@ describe('Submit page - Request Analysis', function() {
       });
     });
 
-    cy.contains(`Analysis request for [${accession}] was succesfully submitted.`).should('be.visible');
+    cy.contains(`Analysis request for [${accession}] was successfully submitted.`).should('be.visible');
   });
 
   it('should allow a logged in user to request analysis of a private dataset', () => {
@@ -93,6 +93,6 @@ describe('Submit page - Request Analysis', function() {
       });
     });
 
-    cy.contains(`Analysis request for [${accession}] was succesfully submitted.`).should('be.visible');
+    cy.contains(`Analysis request for [${accession}] was successfully submitted.`).should('be.visible');
   });
 });
