@@ -5,8 +5,13 @@ import path from 'path';
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
 
+  let base = env.VITE_BASE_URL ?? '/metagenomics';
+  if (!base.startsWith('/')) base = `/${base}`;
+  base = base.replace(/\/+/g, '/'); // Remove any double slashes
+  if (!base.endsWith('/')) base = `${base}/`;
+
   return {
-    base: env.VITE_BASE_URL ?? '/metagenomics',
+    base,
     plugins: [react()],
     resolve: {
       alias: {

@@ -61,12 +61,14 @@ export default function MGnifySourmashComponent({
   const elRef = useRef<HTMLElement | null>(null);
 
   // ✅ MUST be the main component JS, NOT worker JS
-  // If the files are in /public/mgnify-component/, then at runtime you load:
-  //   /mgnify-component/mgnify-sourmash-component.js
-  const scriptSrc = useMemo(
-    () => `public/mgnify-component/mgnify-sourmash-component.js`,
-    []
-  );
+  // If the files are in /public/mgnify-sourmash-component/, then at runtime you load:
+  //   /mgnify-sourmash-component/mgnify-sourmash-component.js
+  const scriptSrc = useMemo(() => {
+    // We use a relative path here because index.html has a <base href="%BASE_URL%"> tag.
+    // This prevents Vite's dev server from double-prefixing the base path
+    // (e.g. /metagenomics/metagenomics/...) which can happen with absolute paths.
+    return `mgnify-sourmash-component/mgnify-sourmash-component.js`;
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
