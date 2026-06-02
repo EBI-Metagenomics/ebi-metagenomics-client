@@ -63,6 +63,29 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
             ]}
           />
         </details>
+
+        {data.pangenome_size && (
+          <details open>
+            <summary>
+              <b>Pan-genome statistics</b>
+            </summary>
+
+            <KeyValueList
+              list={[
+                { key: 'Pan-genome size', value: String(data.pangenome_size) },
+                {
+                  key: 'Pan-genome core size',
+                  value: String(data.pangenome_core_size),
+                },
+                {
+                  key: 'Pan-genome accessory size',
+                  value: String(data.pangenome_accessory_size),
+                },
+              ]}
+            />
+          </details>
+        )}
+
         <details open>
           <summary>
             <b>Genome annotations</b>
@@ -123,7 +146,6 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
           />
         </details>
 
-        {/* Legacy annotation, pan-genome, and RNA sections removed: new API does not provide these fields */}
         <details open>
           <summary>
             <b>Geographic metadata</b>
