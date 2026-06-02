@@ -25,6 +25,24 @@ function notEmpty(listValue: unknown): boolean {
 }
 
 const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
+  const ALLOWED_ENA_GENOME_FORMATS = [
+    // GCA_ assembly accessions: GCA_123456789.1
+    /^GCA_\d{9}(\.\d+)?$/,
+
+    // Letter prefix + digits, with optional .version suffix
+    // Covers: A12345.1 / AB123456.1 / AB12345678 / ABCD01123456 / ABCDEF011234567 / CAKOFP01
+    /^[A-Z]{1,6}\d{2,9}(\.\d+)?$/,
+  ];
+
+  const isValidEnaGenomeAccession = (accession: string) => {
+    return ALLOWED_ENA_GENOME_FORMATS.some((format) => {
+      if (typeof format === 'string') {
+        return accession === format;
+      }
+      return format.test(accession);
+    });
+  };
+
   return (
     <section id="overview">
       <div className="vf-stack">
@@ -174,15 +192,17 @@ const GenomeOverview: React.FC<GenomeOverviewProps> = ({ data }) => {
               [
                 {
                   key: 'ENA genome accession',
-                  value: data.ena_genome_accession
-                    ? () => (
-                        <ExtLink
-                          href={ENA_VIEW_URL + data.ena_genome_accession}
-                        >
-                          {data.ena_genome_accession}
-                        </ExtLink>
-                      )
-                    : null,
+                  value:
+                    data.ena_genome_accession &&
+                    isValidEnaGenomeAccession(data.ena_genome_accession)
+                      ? () => (
+                          <ExtLink
+                            href={ENA_VIEW_URL + data.ena_genome_accession}
+                          >
+                            {data.ena_genome_accession}
+                          </ExtLink>
+                        )
+                      : null,
                 },
                 {
                   key: 'ENA sample accession',
