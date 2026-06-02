@@ -37,7 +37,9 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
             ) : (
               <a
                 className="vf-breadcrumbs__item"
-                href={`${config.basename}${link.url}`}
+                href={`${config.basename}${
+                  link.url?.startsWith('/') ? link.url.slice(1) : link.url
+                }`}
               >
                 {link.label}
               </a>

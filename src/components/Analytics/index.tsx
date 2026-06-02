@@ -8,7 +8,10 @@ const Matomo: React.FC = () => {
   const { pathname, search, hash } = useLocation();
 
   const trackableLocation = useMemo(
-    () => `${config.basename}${pathname}?${search}${hash}`,
+    () =>
+      `${config.basename}${
+        pathname.startsWith('/') ? pathname.slice(1) : pathname
+      }?${search}${hash}`,
     [pathname, search, hash]
   );
 
