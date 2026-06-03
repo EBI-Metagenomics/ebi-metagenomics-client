@@ -13,38 +13,51 @@ import useStudiesList from 'hooks/data/useStudies';
 type LatestStudyProps = {
   id: string;
   name: string;
-  abstract: string;
+  updatedAt: string;
   lineage?: string;
 };
 const LatestStudy: React.FC<LatestStudyProps> = ({
   id,
   name,
-  abstract,
+  updatedAt,
   lineage,
 }) => {
   const icon = getBiomeIcon(lineage ?? '');
   return (
     <article className="vf-summary vf-summary--has-image study">
-      <span className={`biome_icon icon_xs ${icon}`} />
+      <div className="study-header">
+        <span className={`biome_icon icon_xs ${icon}`} title={lineage} />
+        <span className="study-accession">{id}</span>
+      </div>
       <h3 className="vf-summary__title">
         <Link to={`/studies/${id}`} className="vf-summary__link">
           <TruncatedText text={name} maxLength={240} />
         </Link>
       </h3>
-      <p className="vf-summary__text vf-u-type__text-body--5">
-        <TruncatedText text={abstract} />
-      </p>
-      {/* <div className="vf-summary__text vf-grid">
-        <Link to={`/studies/${id}`} className="vf-button vf-button--sm">
-          View more
+      <div className="study-metadata">
+        <p className="vf-summary__text vf-u-type__text-body--5">
+          <span className="metadata-label">Last updated:</span>{' '}
+          {new Date(updatedAt).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })}
+        </p>
+      </div>
+      <div className="vf-summary__text study-actions">
+        <Link
+          to={`/studies/${id}`}
+          className="vf-button vf-button--primary vf-button--sm"
+        >
+          View study
         </Link>
         <Link
           to={`/studies/${id}#samples-section`}
-          className="vf-button vf-button--sm"
+          className="vf-button vf-button--secondary vf-button--sm"
         >
           Samples
         </Link>
-      </div> */}
+      </div>
     </article>
   );
 };
@@ -65,7 +78,6 @@ const LatestStudies: React.FC = () => {
         wrapperClassName="latest-studies-section-container"
         heightPx={400}
       >
-        {}
         {data.items.map(
           ({
             accession,
@@ -83,13 +95,16 @@ const LatestStudies: React.FC = () => {
               id={accession as string}
               name={title}
               lineage={biome.lineage}
-              abstract={`Last updated on ${new Date(
-                updated_at
-              ).toLocaleDateString()} `}
+              updatedAt={updated_at}
             />
           )
         )}
       </FixedHeightScrollable>
+      <div className="latest-studies-footer">
+        <Link to="/browse/studies" className="vf-link">
+          View all studies &rarr;
+        </Link>
+      </div>
     </section>
   );
 };
