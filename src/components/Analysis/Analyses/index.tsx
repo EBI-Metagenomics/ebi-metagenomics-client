@@ -129,6 +129,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   const showPagination = (data.count || 1) > expectedPageSize;
   return (
     <EMGTable
+      sortable={true}
       cols={columns}
       data={data as AnalysisList}
       Title={
