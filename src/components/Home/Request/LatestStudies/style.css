@@ -4,7 +4,7 @@
   max-height: 400px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #d8d8d8 #f3f3f3;
+  scrollbar-color: #3b6fb6 #f3f3f3;
   border-radius: 8px;
   background-color: white;
   padding: 0.75rem;
@@ -15,6 +15,39 @@
   position: relative;
   border-radius: 8px;
   overflow: hidden;
+  border-bottom: 2px solid #f3f3f3;
+}
+
+.latest-studies-section-container::after {
+  content: '↓ Scroll for more';
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(59, 111, 182, 0.9);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 15;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.latest-studies-section-container:has(.fixed-height-scrollable__shadow--bottom)::after {
+  opacity: 1;
+}
+
+.latest-studies-section-container:has(.fixed-height-scrollable__shadow--bottom):hover::after {
+  opacity: 0;
+}
+
+/* Hide the custom gradient if FixedHeightScrollable shadows are present or if we want a more subtle look */
+.latest-studies-section-container:has(.fixed-height-scrollable__shadow--bottom) .latest-studies-section {
+    padding-bottom: 3rem;
 }
 
 .latest-studies-section::-webkit-scrollbar {
@@ -27,7 +60,7 @@
 }
 
 .latest-studies-section::-webkit-scrollbar-thumb {
-  background-color: #d8d8d8;
+  background-color: #3b6fb6;
   border-radius: 8px;
   border: 2px solid #f3f3f3;
 }

@@ -101,7 +101,7 @@ const LatestStudies: React.FC = () => {
         )}
       </FixedHeightScrollable>
       <div className="latest-studies-footer">
-        <Link to="/studies" className="vf-link">
+        <Link to="/browse/studies" className="vf-link">
           View all studies &rarr;
         </Link>
       </div>
