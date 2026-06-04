@@ -9,10 +9,17 @@ import ChimericProportions from 'components/Asv/ChimericProportions';
 import AsvDistribution from 'components/Asv/AsvDistribution';
 import PrimerIdentification from 'components/PrimerIdentification';
 
+const tabs = [
+  { id: 'qc-statistics', label: 'Quality Control Statistics' },
+  { id: 'asv-distribution', label: 'ASV Distribution' },
+  { id: 'primer-identification', label: 'Primer Identification' },
+];
+
 const Asv: React.FC = () => {
   const [activeTab, setActiveTab] = useState(() => {
     const { hash } = window.location;
-    return hash === '#asv-distribution' ? 'asv-distribution' : 'qc-statistics';
+    const tabId = hash.replace('#', '');
+    return tabs.some((t) => t.id === tabId) ? tabId : tabs[0].id;
   });
   const accession = useURLAccession();
   const { data, loading, error } = useAnalysisDetail(accession);
@@ -28,11 +35,6 @@ const Asv: React.FC = () => {
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
 
-  const tabs = [
-    { id: 'qc-statistics', label: 'Quality Control Statistics' },
-    { id: 'asv-distribution', label: 'ASV Distribution' },
-    { id: 'primer-identification', label: 'Primer Identification' },
-  ];
 
   const handleTabClick = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -40,7 +42,9 @@ const Asv: React.FC = () => {
   ) => {
     event.preventDefault();
     setActiveTab(tabId);
-    window.history.pushState(null, '', `#${tabId}`);
+    const { pathname, search } = window.location;
+    const cleanPathname = pathname.endsWith('/') ? pathname : `${pathname}/`;
+    window.history.pushState(null, '', `${cleanPathname}${search}#${tabId}`);
   };
 
   const getSepcificFile = (group: string, type: string) => {
@@ -133,7 +137,7 @@ const Asv: React.FC = () => {
           <PrimerIdentification
             infoText="Primers are short sequences of nucleic acid that provide a starting point for DNA synthesis.
             In 16S rRNA analysis, they target specific variable regions of the gene."
-            downloadableFile={getSepcificFile('primer_identification', 'json')}
+            downloadableFile={getSepcificFile('primer_identification', 'tsv')}
           />
         </section>
       </div>

@@ -71,7 +71,9 @@ const TrainingCourses = () => {
   ) => {
     event.preventDefault();
     setActiveTab(tabId);
-    window.history.pushState(null, '', `#${tabId}`);
+    const { pathname, search } = window.location;
+    const cleanPathname = pathname.endsWith('/') ? pathname : `${pathname}/`;
+    window.history.pushState(null, '', `${cleanPathname}${search}#${tabId}`);
   };
 
   useEffect(() => {

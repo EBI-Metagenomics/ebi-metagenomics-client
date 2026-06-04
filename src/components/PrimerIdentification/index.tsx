@@ -3,6 +3,7 @@ import { ArrowRight, ArrowLeft, Dna, Info } from 'lucide-react';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import './style.css';
 import { fetchText } from 'utils/fetch';
+import { Download } from '@/interfaces';
 
 interface PrimerRow {
   Run: string;
@@ -29,10 +30,7 @@ interface PrimerData {
 }
 
 interface PrimerValidationDisplayProps {
-  downloadableFile: {
-    url: string;
-    alias?: string;
-  };
+  downloadableFile?: Download;
   infoText?: string;
 }
 
@@ -149,7 +147,7 @@ const PrimerValidationDisplay: React.FC<PrimerValidationDisplayProps> = ({
 
   return (
     <DetailedVisualisationCard
-      ftpLink={downloadableFile.url}
+      ftpLink={downloadableFile?.url}
       showZoomButton={false}
       title={downloadableFile?.alias || 'Primer Validation Summary'}
       subheading={data.id}
