@@ -220,6 +220,7 @@ const Branchwater = () => {
 
     if (sourmash.current) {
       sourmashElement = sourmash.current;
+      sourmashElement.ksize = 21;
       sourmashElement.addEventListener('sketchedall', sketchedAll);
       sourmashElement.addEventListener('change', changedFiles);
     }

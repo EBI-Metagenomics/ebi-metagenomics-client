@@ -63,6 +63,7 @@ declare global {
     > {
     id: string;
     show_directory_checkbox?: boolean;
+    show_signatures?: boolean;
     ksize: number;
   }
 

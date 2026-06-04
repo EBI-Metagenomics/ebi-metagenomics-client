@@ -53,6 +53,7 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
     };
     if (sourmash.current) {
       sourmashElement = sourmash.current;
+      sourmashElement.ksize = 31;
       sourmashElement.addEventListener('sketchedall', sketchedAll);
       sourmashElement.addEventListener('change', changedFiles);
     }
@@ -100,6 +101,7 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
           ref={sourmash}
           show_directory_checkbox
           ksize={31}
+          show_signatures
         />
       </div>
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
