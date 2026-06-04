@@ -1,11 +1,46 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, ArrowLeft, Dna, Info } from 'lucide-react';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 import './style.css';
-import { fetchJson } from 'utils/fetch';
+import { fetchText } from 'utils/fetch';
 
-const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
-  const [data, setData] = useState<any>();
+interface PrimerRow {
+  Run: string;
+  AssertionEvidence: string;
+  AssertionMethod: string;
+  Gene: string;
+  VariableRegion: string;
+  PrimerName: string;
+  PrimerStrand: string;
+  PrimerSeq: string;
+}
+
+interface Primer {
+  name: string;
+  identification_strategy: 'auto' | 'std';
+  region: string;
+  sequence: string;
+  strand: string;
+}
+
+interface PrimerData {
+  id: string;
+  primers: Primer[];
+}
+
+interface PrimerValidationDisplayProps {
+  downloadableFile: {
+    url: string;
+    alias?: string;
+  };
+  infoText?: string;
+}
+
+const PrimerValidationDisplay: React.FC<PrimerValidationDisplayProps> = ({
+  downloadableFile,
+  infoText,
+}) => {
+  const [data, setData] = useState<PrimerData>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error>();
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
@@ -16,18 +51,38 @@ const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
       return;
     }
 
-    fetchJson(
+    fetchText(
       downloadableFile.url,
       {},
-      'The primer data file is empty or missing.',
-      'Failed to parse primer data: Invalid JSON format'
+      'The primer data file is empty or missing.'
     )
-      .then((jsonData) => {
-        const primerData = Array.isArray(jsonData) ? jsonData[0] : jsonData;
-        if (!primerData) {
+      .then((tsvText) => {
+        const lines = tsvText.trim().split('\n');
+        if (lines.length < 2) {
           throw new Error('No primer data available');
         }
-        setData(primerData);
+        const headers = lines[0].split('\t');
+        const rows = lines.slice(1).map((line) => {
+          const values = line.split('\t');
+          return headers.reduce((obj, header, index) => {
+            obj[header.trim()] = values[index]?.trim();
+            return obj;
+          }, {} as any) as PrimerRow;
+        });
+
+        const primers: Primer[] = rows.map((row) => ({
+          name: row.PrimerName,
+          identification_strategy:
+            row.AssertionMethod === 'automatic assertion' ? 'auto' : 'std',
+          region: row.VariableRegion,
+          sequence: row.PrimerSeq,
+          strand: row.PrimerStrand,
+        }));
+
+        setData({
+          id: rows[0].Run,
+          primers,
+        });
       })
       .catch((err) => {
         setError(err);
@@ -37,7 +92,7 @@ const PrimerValidationDisplay = ({ downloadableFile, infoText }) => {
       });
   }, [downloadableFile]);
 
-  const colorizeSequence = (sequence) => {
+  const colorizeSequence = (sequence: string) => {
     return sequence.split('').map((nucleotide, index) => {
       let color;
       switch (nucleotide) {
