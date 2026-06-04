@@ -99,6 +99,7 @@ const SourmashForm: React.FC<SourmashFormProps> = ({ catalogueID }) => {
           id="sourmash"
           ref={sourmash}
           show_directory_checkbox
+          ksize={31}
         />
       </div>
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
