@@ -1,11 +1,11 @@
 import React, {
-  Suspense,
   lazy,
-  useState,
-  useMemo,
+  Suspense,
   useCallback,
-  useEffect,
   useContext,
+  useEffect,
+  useMemo,
+  useState,
 } from 'react';
 import axios from 'axios';
 
@@ -19,7 +19,7 @@ import useApiData from '@/hooks/data/useApiData';
 import useURLAccession from '@/hooks/useURLAccession';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import UserContext from 'pages/Login/UserContext';
-import { GenomeApiResponse } from '@/interfaces';
+import { GenomeApiResponse, GenomeDetailWithAnnotations } from '@/interfaces';
 
 import useBranchwaterResults, {
   type BranchwaterFilters,
@@ -29,13 +29,13 @@ import useQueryParamState, {
 } from '@/hooks/queryParamState/useQueryParamState';
 import Results from 'pages/Branchwater/Results';
 import {
-  getContainmentHistogram,
+  type BranchwaterResult,
+  downloadBranchwaterCSV,
   getCaniHistogram,
+  getContainmentHistogram,
+  getCountryColor,
   getScatterData,
   getTotalCountryCount,
-  getCountryColor,
-  downloadBranchwaterCSV,
-  type BranchwaterResult,
 } from 'utils/branchwater';
 import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
 
@@ -69,7 +69,7 @@ const GenomePage: React.FC = () => {
     url: accession ? `${config.api_v2}genomes/${accession}` : null,
   });
 
-  const genomeAnnotationsData = useApiData({
+  const genomeAnnotationsData = useApiData<GenomeDetailWithAnnotations>({
     url: accession ? `${config.api_v2}genomes/${accession}/annotations` : null,
   });
 
@@ -88,29 +88,27 @@ const GenomePage: React.FC = () => {
     cani: '',
   });
 
-  const [textQuery] = useQueryParamState('genomeBranchwaterDetailedQuery', '');
-  const [caniRange] = useQueryParamState('genomeBranchwaterDetailedCani', '');
-  const [containmentRange] = useQueryParamState(
-    'genomeBranchwaterDetailedContainment',
-    ''
+  const [textQuery] = useQueryParamState<string>(
+    'genomeBranchwaterDetailedQuery'
   );
-  const [locationParam] = useQueryParamState(
-    'genomeBranchwaterDetailedGeoLocNameCountryCalc',
-    ''
+  const [caniRange] = useQueryParamState<string>(
+    'genomeBranchwaterDetailedCani'
   );
-  const [organismParam] = useQueryParamState(
-    'genomeBranchwaterDetailedOrganism',
-    ''
+  const [containmentRange] = useQueryParamState<string>(
+    'genomeBranchwaterDetailedContainment'
   );
-  const [assayTypeParam] = useQueryParamState(
-    'genomeBranchwaterDetailedAssayType',
-    ''
+  const [locationParam] = useQueryParamState<string>(
+    'genomeBranchwaterDetailedGeoLocNameCountryCalc'
+  );
+  const [organismParam] = useQueryParamState<string>(
+    'genomeBranchwaterDetailedOrganism'
+  );
+  const [assayTypeParam] = useQueryParamState<string>(
+    'genomeBranchwaterDetailedAssayType'
   );
 
-  const [, setPageQP] = useQueryParamState(
-    'genomeBranchwaterDetailedPage',
-    1,
-    Number
+  const [, setPageQP] = useQueryParamState<number>(
+    'genomeBranchwaterDetailedPage'
   );
 
   useEffect(() => {

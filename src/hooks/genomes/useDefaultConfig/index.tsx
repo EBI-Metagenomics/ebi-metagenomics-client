@@ -16,15 +16,15 @@ const useGenomeDefaultConfig = (): DefaultConfigType => {
     () => [
       {
         Header: 'COG ID',
-        accessor: 'attributes.name',
+        accessor: 'name',
       },
       {
         Header: 'Genome Count',
-        accessor: 'attributes.genome-count',
+        accessor: 'count',
       },
       {
-        Header: 'Pan-genome count',
-        accessor: 'attributes.pangenome-count',
+        Header: 'Description',
+        accessor: 'description',
       },
     ],
     []
@@ -46,9 +46,6 @@ const useGenomeDefaultConfig = (): DefaultConfigType => {
         text: 'Number of matches',
       },
     },
-    // xAxis: {
-    //   categories,
-    // },
     plotOptions: {
       series: {
         stacking: 'normal',
@@ -65,25 +62,6 @@ const useGenomeDefaultConfig = (): DefaultConfigType => {
     legend: {
       enabled: true,
     },
-    // tooltip: {
-    //   formatter() {
-    //     const description = categoriesDescriptions[this.key];
-    //     let tooltip = this.series.name + '<br/>Count: ' + this.y;
-    //     if (description) {
-    //       tooltip += '<br />COG: ' + description;
-    //     }
-    //     return tooltip;
-    //   },
-    // },
-    // series: [
-    //   {
-    //     name: 'Genome',
-    //     type: 'column',
-    //     data: genomeSeries.slice(0, 10),
-    //     colors: TAXONOMY_COLOURS,
-    //     stack: 'genome',
-    //   },
-    // ],
   };
   return { columns, options };
 };

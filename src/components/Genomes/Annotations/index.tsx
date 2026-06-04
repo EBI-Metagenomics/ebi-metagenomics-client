@@ -1,14 +1,13 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import * as Highcharts from 'highcharts';
 import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
 
 import EMGTable from 'components/UI/EMGTable';
-import { MGnifyDatum } from '@/hooks/data/useData';
 import useDefaultGenomeConfig from '@/hooks/genomes/useDefaultConfig';
 import { TAXONOMY_COLOURS } from '@/utils/taxon';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
-import { PaginatedList } from '@/interfaces';
+import { GenomeAnnotation, PaginatedList } from '@/interfaces';
 
 addExportMenu(Highcharts);
 
@@ -24,9 +23,7 @@ const { useGenomeAnnotationPage, withQueryParamProvider } =
     useGenomeAnnotationPage: <T = unknown>() => readonly [T, (next: T) => void];
   };
 
-export type AnalysisItem = Record<string, unknown> & { count?: number };
-
-type Props<T extends AnalysisItem> = {
+type Props<T extends GenomeAnnotation> = {
   items?: T[];
   chartTitle: string;
   subtitleSuffix: string; // e.g. "Genome COG matches", "KEGG matches"
@@ -38,12 +35,11 @@ type Props<T extends AnalysisItem> = {
   dataCy?: string;
 };
 
-const GenomeAnnotationAnalysis = <T extends AnalysisItem>({
+const GenomeAnnotationAnalysis = <T extends GenomeAnnotation>({
   items,
   chartTitle,
   subtitleSuffix,
   tooltipEntityLabel,
-  tableType,
   tableTitlePrefix,
   labelAccessor,
   firstColumnHeaderOverride,
@@ -53,9 +49,6 @@ const GenomeAnnotationAnalysis = <T extends AnalysisItem>({
   const { columns, options } = useDefaultGenomeConfig();
   const [pageParam] = useGenomeAnnotationPage<number>();
   const currentPage = Math.max(1, Number(pageParam) || 1);
-  const filteredColumns = columns.filter(
-    (column) => column.Header !== 'Pan-genome count'
-  );
 
   if (firstColumnHeaderOverride) {
     // Mutate a copy-safe: columns comes from hook; but downstream only reads afterwards
@@ -84,7 +77,7 @@ const GenomeAnnotationAnalysis = <T extends AnalysisItem>({
   };
   options.tooltip = {
     formatter() {
-      const description = categoriesDescriptions[this.key as string];
+      const description = categoriesDescriptions[this.key];
       let tooltip = `${this.series.name}<br/>Count: ${this.y}`;
       if (description) {
         tooltip += `<br />${tooltipEntityLabel}: ${description}`;
@@ -102,25 +95,11 @@ const GenomeAnnotationAnalysis = <T extends AnalysisItem>({
     },
   ];
 
-  const tableData: MGnifyDatum[] = input.map(
-    (d) =>
-      ({
-        id: String(labelAccessor(d)),
-        type: tableType,
-        attributes: {
-          name: String(labelAccessor(d)),
-          description: '',
-          'genome-count': Number(d.count || 0),
-          'pangenome-count': 0,
-        },
-      } as unknown as MGnifyDatum)
-  );
-
   const pageStart = (currentPage - 1) * expectedPageSize;
-  const pagedItems = tableData.slice(pageStart, pageStart + expectedPageSize);
-  const pagedData: PaginatedList<MGnifyDatum> = {
+  const pagedItems = input.slice(pageStart, pageStart + expectedPageSize);
+  const pagedData: PaginatedList<T> = {
     items: pagedItems,
-    count: tableData.length,
+    count: input.length,
   };
 
   return (
@@ -131,11 +110,11 @@ const GenomeAnnotationAnalysis = <T extends AnalysisItem>({
         ref={chartComponentRef}
       />
       <EMGTable
-        cols={filteredColumns}
+        cols={columns}
         data={pagedData}
-        Title={`All ${tableData.length} ${tableTitlePrefix}`}
+        Title={`All ${input.length} ${tableTitlePrefix}`}
         loading={false}
-        showPagination={tableData.length > expectedPageSize}
+        showPagination={input.length > expectedPageSize}
         namespace={tableNamespace}
         expectedPageSize={expectedPageSize}
         initialPage={currentPage - 1}

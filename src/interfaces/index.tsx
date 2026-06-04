@@ -196,9 +196,20 @@ export interface GenomeDetail extends Genome {
   catalogue: GenomeCatalogue;
 }
 
+export type GenomeAnnotation = {
+  count: number;
+  description: string | null;
+  name?: string;
+  class_id?: string;
+};
+
 export interface GenomeDetailWithAnnotations {
   accession: string;
-  annotations: KeyValue;
+  annotations: {
+    cog_categories: GenomeAnnotation[];
+    kegg_classes: GenomeAnnotation[];
+    kegg_modules: GenomeAnnotation[];
+  };
 }
 
 export interface SuperStudy {
