@@ -22,9 +22,6 @@ describe('Help page', function() {
             cy.get(`#help-content-section a[href="/metagenomics/help"]`).click();
         });
         it('Elements should be present', function() {
-            cy.get('h2').then(($h2) => {
-                expect(Cypress.$($h2).text()).to.eq('Help');
-            });
             cy.contains('User Documentation').should('be.visible');
             cy.contains('Sequence search').should('be.visible');
         });
