@@ -70,6 +70,7 @@ const BrowseBiomes: React.FC = () => {
         Header: 'Show sub-lineages',
         id: 'sublineages',
         accessor: 'lineage',
+        disableSortBy: true,
         Cell: ({ cell }) => (
           <button
             type="button"
@@ -116,9 +117,11 @@ const BrowseBiomes: React.FC = () => {
       {hasData && (
         <EMGTable<Biome>
           cols={columns}
-          data={biomesList?.items ?? []}
+          namespace={'biomes'}
+          data={biomesList ?? []}
           Title={`Biomes (${biomesList?.count})`}
           initialPage={(page as number) - 1}
+          expectedPageSize={pageSize}
           sortable
           loading={loading}
           isStale={isStale}
