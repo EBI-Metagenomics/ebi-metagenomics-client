@@ -66,12 +66,6 @@
   background-color: #193f90;
 }
 
-/* Twitter card specific styling */
-.blog-excerpts-section .twitter-card {
-  background-color: #f8faff;
-  border-color: #e1ebfa;
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .blog-excerpts-section .vf-card-container {

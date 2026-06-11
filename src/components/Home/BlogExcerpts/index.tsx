@@ -3,10 +3,10 @@ import React, { useContext } from 'react';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import InnerCard from 'components/UI/InnerCard';
+import BlueskyPosts from 'components/BlueskyPosts';
 import useBlogData from '@/hooks/data/useBlogData';
 
 import UserContext from 'pages/Login/UserContext';
-import ArrowForLink from 'components/UI/ArrowForLink';
 import './style.css';
 
 const removeHTMLTags = (text: string): string => {
@@ -72,23 +72,7 @@ const BlogExcerpts: React.FC = () => {
             url={data.tools.url}
           />
         )}
-        <article className="vf-card vf-card vf-card--bordered twitter-card">
-          <div className="vf-card__content | vf-stack vf-stack--400">
-            <h3 className="vf-card__heading">
-              <a
-                href="https://www.twitter.com/MGnifyDB"
-                className="vf-card__link"
-                style={{ whiteSpace: 'nowrap' }}
-              >
-                @MGnifyDB on Twitter <ArrowForLink />
-              </a>
-            </h3>
-            <p className="vf-card__text">
-              Follow for the latest updates including service news, training,
-              and events.
-            </p>
-          </div>
-        </article>
+        <BlueskyPosts userHandle="mgnify.bsky.social" />
         <div
           className="vf-grid__col--span-2 mg-right"
           style={{ marginTop: '0.2em' }}
