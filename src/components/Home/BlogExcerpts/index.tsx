@@ -3,11 +3,11 @@ import React, { useContext } from 'react';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import InnerCard from 'components/UI/InnerCard';
-import BlueskyPosts from 'components/BlueskyPosts';
 import useBlogData from '@/hooks/data/useBlogData';
 
 import UserContext from 'pages/Login/UserContext';
 import './style.css';
+import LinkedInLogo from 'images/linkedin_logo.svg';
 
 const removeHTMLTags = (text: string): string => {
   return text.replace(/&lt;.+?&gt;/g, '').trim();
@@ -72,7 +72,16 @@ const BlogExcerpts: React.FC = () => {
             url={data.tools.url}
           />
         )}
-        <BlueskyPosts userHandle="mgnify.bsky.social" />
+        <InnerCard
+          image={LinkedInLogo}
+          imageAltText="LinkedIn logo"
+          title="Follow MGnify on LinkedIn"
+          label="Follow MGnify on LinkedIn for service updates, training, publications, and events."
+          to="https://www.linkedin.com/company/mgnifydb"
+          externalLink
+          className="vf-card--striped vf-u-grid__col--span-3--xs vf-u-grid__col--span-1--md blog-excerpt-card--linkedin"
+          badge="LinkedIn"
+        />
         <div
           className="vf-grid__col--span-2 mg-right"
           style={{ marginTop: '0.2em' }}
