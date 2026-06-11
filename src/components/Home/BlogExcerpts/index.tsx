@@ -6,8 +6,8 @@ import InnerCard from 'components/UI/InnerCard';
 import useBlogData from '@/hooks/data/useBlogData';
 
 import UserContext from 'pages/Login/UserContext';
-import ArrowForLink from 'components/UI/ArrowForLink';
 import './style.css';
+import LinkedInLogo from 'images/linkedin_logo.svg';
 
 const removeHTMLTags = (text: string): string => {
   return text.replace(/&lt;.+?&gt;/g, '').trim();
@@ -72,23 +72,16 @@ const BlogExcerpts: React.FC = () => {
             url={data.tools.url}
           />
         )}
-        <article className="vf-card vf-card vf-card--bordered twitter-card">
-          <div className="vf-card__content | vf-stack vf-stack--400">
-            <h3 className="vf-card__heading">
-              <a
-                href="https://www.twitter.com/MGnifyDB"
-                className="vf-card__link"
-                style={{ whiteSpace: 'nowrap' }}
-              >
-                @MGnifyDB on Twitter <ArrowForLink />
-              </a>
-            </h3>
-            <p className="vf-card__text">
-              Follow for the latest updates including service news, training,
-              and events.
-            </p>
-          </div>
-        </article>
+        <InnerCard
+          image={LinkedInLogo}
+          imageAltText="LinkedIn logo"
+          title="Follow MGnify on LinkedIn"
+          label="Follow MGnify on LinkedIn for service updates, training, publications, and events."
+          to="https://www.linkedin.com/company/mgnifydb"
+          externalLink
+          className="vf-card--striped vf-u-grid__col--span-3--xs vf-u-grid__col--span-1--md blog-excerpt-card--linkedin"
+          badge="LinkedIn"
+        />
         <div
           className="vf-grid__col--span-2 mg-right"
           style={{ marginTop: '0.2em' }}

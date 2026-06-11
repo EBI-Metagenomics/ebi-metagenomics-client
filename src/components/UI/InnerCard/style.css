@@ -27,6 +27,11 @@
     height: 1.25rem;
 }
 
+.inner-card__icon svg {
+    width: 100%;
+    height: 100%;
+}
+
 .inner-card .vf-card__link {
     color: #3b6fb6;
     text-decoration: none;

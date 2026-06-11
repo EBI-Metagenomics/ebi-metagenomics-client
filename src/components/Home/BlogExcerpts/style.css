@@ -55,6 +55,15 @@
   border-bottom: 1px solid #f3f3f3;
 }
 
+.blog-excerpts-section .blog-excerpt-card--linkedin .vf-card__image {
+  width: 100%;
+  height: 10rem;
+  box-sizing: border-box;
+  object-fit: contain;
+  padding: 1.25rem;
+  background-color: #f7f9fc;
+}
+
 /* View all button styling */
 .blog-excerpts-section .vf-button--primary {
   background-color: #3b6fb6;
@@ -64,12 +73,6 @@
 
 .blog-excerpts-section .vf-button--primary:hover {
   background-color: #193f90;
-}
-
-/* Twitter card specific styling */
-.blog-excerpts-section .twitter-card {
-  background-color: #f8faff;
-  border-color: #e1ebfa;
 }
 
 /* Responsive adjustments */
