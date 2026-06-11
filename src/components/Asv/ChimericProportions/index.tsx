@@ -20,6 +20,17 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
       final_number_of_reads: 0,
     };
 
+    const keyMapping: { [key: string]: string } = {
+      initial_number_of_reads: 'initial_number_of_reads',
+      initial_read_count: 'initial_number_of_reads',
+      proportion_matched: 'proportion_matched',
+      proportion_reads_matched: 'proportion_matched',
+      proportion_chimeric: 'proportion_chimeric',
+      proportion_reads_chimeric: 'proportion_chimeric',
+      final_number_of_reads: 'final_number_of_reads',
+      final_nonchimeric_read_count: 'final_number_of_reads',
+    };
+
     // TODO: DO away with nested loop and or if-elses
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
@@ -28,14 +39,14 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
         const [key, value] = line.split('\t');
         const trimmedKey: string = key.trim();
         const numValue = parseFloat(value.trim());
-        if (trimmedKey in stats && !Number.isNaN(numValue)) {
-          stats[trimmedKey] = numValue;
+        if (trimmedKey in keyMapping && !Number.isNaN(numValue)) {
+          stats[keyMapping[trimmedKey]] = numValue;
         }
       } else if (i + 1 < lines.length) {
         const key = line;
         const value = parseFloat(lines[i + 1].trim());
-        if (key in stats && !Number.isNaN(value)) {
-          stats[key] = value;
+        if (key in keyMapping && !Number.isNaN(value)) {
+          stats[keyMapping[key]] = value;
           i++;
         }
       }
@@ -143,7 +154,7 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
     <div className="space-y-6">
       <div className="vf-card__content | vf-stack vf-stack--400">
         <h3 className="vf-card__heading text-lg font-bold mb-2">
-          Amplicon Sequencing Results - {sampleId}
+          Amplicon Sequencing Reffffsults - {sampleId}
         </h3>
 
         <div className="vf-stack vf-stack--400">
