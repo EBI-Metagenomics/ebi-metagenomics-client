@@ -266,7 +266,7 @@ export function downloadBranchwaterCSV(results: BranchwaterResult[]) {
   );
 
   const remainingKeys = Array.from(allAvailableKeys).filter(
-    (key) => !preferredColumnOrder.includes(key)
+    (key) => !preferredColumnOrder.includes(key) && key !== 'is_private'
   );
   const finalColumns = [...preferredColumnOrder, ...remainingKeys];
 
