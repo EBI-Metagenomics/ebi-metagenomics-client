@@ -57,7 +57,7 @@ const tabs = [
   { label: 'COG analysis', to: '#cog-analysis' },
   { label: 'KEGG class analysis', to: '#kegg-class-analysis' },
   { label: 'KEGG module analysis', to: '#kegg-module-analysis' },
-  { label: 'Presence in Metagenomes', to: '#metagenome-search' },
+  { label: 'Presence in metagenomes', to: '#metagenome-search' },
   { label: 'Downloads', to: '#downloads' },
 ];
 
