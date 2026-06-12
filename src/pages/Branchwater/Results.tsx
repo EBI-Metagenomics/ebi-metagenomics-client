@@ -253,12 +253,8 @@ const Results: React.FC<ResultsProps> = ({
 
       <section className="vf-grid mg-grid-search vf-u-padding__top--400">
         <div className="vf-stack vf-stack--800">
-          <ContainmentFilter
-            queryParamKey={`${queryParamPrefix}Containment`}
-          />
-          <CANIFilter
-            queryParamKey={`${queryParamPrefix}Cani`}
-          />
+          <ContainmentFilter queryParamKey={`${queryParamPrefix}Containment`} />
+          <CANIFilter queryParamKey={`${queryParamPrefix}Cani`} />
 
           <LocalMultipleOptionFilter
             facetName="geo_loc_name_country_calc"
@@ -509,19 +505,6 @@ const Results: React.FC<ResultsProps> = ({
               style={{ width: '100%', height: '450px' }}
             />
           </div>
-
-          {visualizationData.barPlotData.length > 0 && (
-            <div className="vf-u-padding__top--400">
-              <h3>Categorical Metadata</h3>
-              <Plot
-                data={visualizationData.barPlotData}
-                layout={{
-                  title: 'Category Counts',
-                }}
-                style={{ width: '100%', height: '400px' }}
-              />
-            </div>
-          )}
         </>
       )}
     </>
