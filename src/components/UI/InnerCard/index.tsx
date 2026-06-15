@@ -27,6 +27,9 @@ const InnerCard: React.FC<InnerCardProps> = ({
   badge,
   icon,
 }) => {
+  const isExternalUrl =
+    typeof to === 'string' && /^(https?:)?\/\//.test(to);
+
   return (
     <article
       className={`vf-card vf-card--brand vf-card--raised ${className} inner-card`}
@@ -56,17 +59,17 @@ const InnerCard: React.FC<InnerCardProps> = ({
               {icon}
             </span>
           )}
-          {externalLink && typeof to === 'string' && (
+          {(externalLink || isExternalUrl) && typeof to === 'string' && (
             <a
               className="vf-card__link"
               href={to}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={externalLink ? '_blank' : undefined}
+              rel={externalLink ? 'noopener noreferrer' : undefined}
             >
               {title} <ArrowForLink />
             </a>
           )}
-          {!externalLink && typeof to === 'string' && (
+          {!externalLink && !isExternalUrl && typeof to === 'string' && (
             <Link className="vf-card__link" to={to}>
               {title} <ArrowForLink />
             </Link>
