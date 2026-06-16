@@ -60,8 +60,8 @@ const InnerCard: React.FC<InnerCardProps> = ({
             <a
               className="vf-card__link"
               href={to}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={'_blank'}
+              rel={'noopener noreferrer'}
             >
               {title} <ArrowForLink />
             </a>

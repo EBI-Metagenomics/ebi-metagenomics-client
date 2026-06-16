@@ -203,6 +203,7 @@ const HomePage: React.FC = () => {
             label="Find resources using nucleotide or protein sequences"
             to="https://www.ebi.ac.uk/metagenomics/proteins/"
             icon={ProteinIcon}
+            externalLink
           />
         </div>
         <div className="vf-card home-search-card">
