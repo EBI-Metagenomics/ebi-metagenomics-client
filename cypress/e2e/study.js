@@ -54,6 +54,27 @@ describe('Study page', function() {
         });
     });
 
+    context('Canonical accession redirects', function() {
+        it('Redirects an INSDC accession to the canonical MGYS study accession', function() {
+            const insdcId = 'PRJNA398089';
+
+            cy.intercept('GET', `**/studies/${insdcId}`, {
+                statusCode: 404,
+                body: {detail: 'Not found'},
+            });
+            cy.intercept('GET', `**/studies/insdc/${insdcId}`, {
+                body: {accession: projectId},
+            }).as('getCanonicalStudyAccession');
+
+            openPage(`studies/${insdcId}/analysis`);
+
+            cy.wait('@getCanonicalStudyAccession');
+            cy.location('pathname').should('contain', `/studies/${projectId}`);
+            cy.location('pathname').should('not.contain', '/analysis');
+            waitForPageLoad(pageTitle);
+        });
+    });
+
     context.skip('Related studies', function() {
         const relatedStudiesList = '[data-cy=\'relatedStudies\']';
         it('Should display related study section', function() {
