@@ -9,7 +9,6 @@ import SummaryTab from 'components/Study/SummaryTab';
 import useCanonicalAccessionRedirect from '@/hooks/useCanonicalAccessionRedirect';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import useStudyDetail from 'hooks/data/useStudyDetail';
-import { EnaDerivedObject } from '@/interfaces';
 import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
@@ -26,8 +25,8 @@ const StudyPage: React.FC = () => {
 
   const { data, loading, error } = useStudyDetail(accession || '');
 
-  useCanonicalAccessionRedirect(data as EnaDerivedObject);
-  if (loading) return <Loading size="large" />;
+  const checkingCanonicalAccession = useCanonicalAccessionRedirect();
+  if (loading || checkingCanonicalAccession) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
 

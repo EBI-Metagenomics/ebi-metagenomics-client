@@ -1,27 +1,62 @@
 import useURLAccession from '@/hooks/useURLAccession';
-import { MGnifyResponseObj } from '@/hooks/data/useData';
+import UserContext from '@/pages/Login/UserContext';
+import axios from 'axios';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { EnaDerivedObject } from 'interfaces/index';
 
-const useCanonicalAccessionRedirect = (
-  data: MGnifyResponseObj | EnaDerivedObject
-) => {
+type CanonicalAccessionResponse = {
+  accession?: string;
+};
+
+const isMgnifyStudyAccession = (accession?: string): boolean =>
+  Boolean(accession?.startsWith('MGYS'));
+
+const useCanonicalAccessionRedirect = () => {
   const urlAccession = useURLAccession();
   const navigate = useNavigate();
+  const { config } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
 
-  if (!data) return;
-  if (!urlAccession) return;
+  useEffect(() => {
+    if (!urlAccession || isMgnifyStudyAccession(urlAccession)) {
+      setLoading(false);
+      return undefined;
+    }
 
-  const dataAccession =
-    (data as unknown as MGnifyResponseObj)?.data?.id ||
-    (data as EnaDerivedObject).accession;
+    const abortController = new AbortController();
+    const canonicalAccessionUrl = `${
+      config.api_v2
+    }studies/insdc/${encodeURIComponent(urlAccession)}`;
 
-  if (
-    dataAccession &&
-    dataAccession.toUpperCase() !== urlAccession.toUpperCase()
-  ) {
-    navigate(window.location.pathname.replace(urlAccession, dataAccession));
-  }
+    setLoading(true);
+
+    const lookupCanonicalAccession = async () => {
+      try {
+        const response = await axios.get<CanonicalAccessionResponse>(
+          canonicalAccessionUrl,
+          { signal: abortController.signal }
+        );
+        const accession = response.data.accession;
+
+        if (isMgnifyStudyAccession(accession)) {
+          navigate(`/studies/${accession}`, { replace: true });
+          return;
+        }
+      } catch {
+        if (abortController.signal.aborted) return;
+      }
+
+      setLoading(false);
+    };
+
+    lookupCanonicalAccession();
+
+    return () => {
+      abortController.abort();
+    };
+  }, [config.api_v2, navigate, urlAccession]);
+
+  return loading;
 };
 
 export default useCanonicalAccessionRedirect;
