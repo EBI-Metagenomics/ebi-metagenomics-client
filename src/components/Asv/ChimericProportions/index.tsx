@@ -154,7 +154,7 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
     <div className="space-y-6">
       <div className="vf-card__content | vf-stack vf-stack--400">
         <h3 className="vf-card__heading text-lg font-bold mb-2">
-          Amplicon Sequencing Reffffsults - {sampleId}
+          Amplicon Sequencing Results - {sampleId}
         </h3>
 
         <div className="vf-stack vf-stack--400">
