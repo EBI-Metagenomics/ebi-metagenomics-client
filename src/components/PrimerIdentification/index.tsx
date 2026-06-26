@@ -47,7 +47,7 @@ const PrimerValidationDisplay: React.FC<PrimerValidationDisplayProps> = ({
 }) => {
   const [data, setData] = useState<PrimerData>();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error>();
+  const [, setError] = useState<Error>();
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
   const [isLegendOpen, setIsLegendOpen] = useState(false);
 
@@ -129,14 +129,6 @@ const PrimerValidationDisplay: React.FC<PrimerValidationDisplayProps> = ({
   if (loading) {
     return (
       <div className="loading-message">Loading primer validation data...</div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="error-message">
-        Error loading primer data: {error.message}
-      </div>
     );
   }
 
