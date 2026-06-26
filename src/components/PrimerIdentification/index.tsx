@@ -132,14 +132,6 @@ const PrimerValidationDisplay: React.FC<PrimerValidationDisplayProps> = ({
     );
   }
 
-  if (error) {
-    return (
-      <div className="error-message">
-        Error loading primer data: {error.message}
-      </div>
-    );
-  }
-
   if (!data) {
     return (
       <div className="empty-message">No primer validation data available.</div>
