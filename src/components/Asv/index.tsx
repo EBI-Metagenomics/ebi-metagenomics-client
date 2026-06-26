@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import useURLAccession from 'hooks/useURLAccession';
 import Loading from 'components/UI/Loading';
@@ -8,29 +8,19 @@ import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/De
 import ChimericProportions from 'components/Asv/ChimericProportions';
 import AsvDistribution from 'components/Asv/AsvDistribution';
 import PrimerIdentification from 'components/PrimerIdentification';
-import { fetchText } from 'utils/fetch';
 
-const BASE_TABS = [
+const tabs = [
   { id: 'qc-statistics', label: 'Quality Control Statistics' },
   { id: 'asv-distribution', label: 'ASV Distribution' },
-] as const;
-
-const PRIMER_IDENTIFICATION_TAB = {
-  id: 'primer-identification',
-  label: 'Primer Identification',
-} as const;
+  { id: 'primer-identification', label: 'Primer Identification' },
+];
 
 const Asv: React.FC = () => {
   const [activeTab, setActiveTab] = useState(() => {
     const { hash } = window.location;
     const tabId = hash.replace('#', '');
-    return (
-      [...BASE_TABS, PRIMER_IDENTIFICATION_TAB].find((t) => t.id === tabId)
-        ?.id || BASE_TABS[0].id
-    );
+    return tabs.some((t) => t.id === tabId) ? tabId : tabs[0].id;
   });
-  const [primerIdentificationTabStatus, setPrimerIdentificationTabStatus] =
-    useState<'checking' | 'available' | 'unavailable'>('checking');
   const accession = useURLAccession();
   const { data, loading, error } = useAnalysisDetail(accession);
   const dada2StatsFile = data?.downloads.find(
@@ -40,76 +30,11 @@ const Asv: React.FC = () => {
     (file) =>
       file.download_group === 'asv.distribution' && file.file_type === 'tsv'
   );
-  const primerIdentificationFile = data?.downloads.find(
-    (file) =>
-      file.download_group === 'primer_identification' &&
-      file.file_type === 'tsv'
-  );
-  const shouldShowPrimerTab =
-    primerIdentificationTabStatus === 'available' ||
-    (primerIdentificationTabStatus === 'checking' &&
-      activeTab === PRIMER_IDENTIFICATION_TAB.id &&
-      Boolean(primerIdentificationFile?.url));
-  const tabs = shouldShowPrimerTab
-    ? [...BASE_TABS, PRIMER_IDENTIFICATION_TAB]
-    : [...BASE_TABS];
-  const activeTabIsAvailable = tabs.some((tab) => tab.id === activeTab);
-
-  useEffect(() => {
-    let isCancelled = false;
-
-    if (!primerIdentificationFile?.url) {
-      setPrimerIdentificationTabStatus('unavailable');
-      return () => {
-        isCancelled = true;
-      };
-    }
-
-    setPrimerIdentificationTabStatus('checking');
-
-    fetchText(
-      primerIdentificationFile.url,
-      {},
-      'The primer data file is empty or missing.'
-    )
-      .then((tsvText) => {
-        const lines = tsvText.trim().split('\n');
-        const hasPrimerRows = lines.length >= 2;
-
-        if (!isCancelled) {
-          setPrimerIdentificationTabStatus(
-            hasPrimerRows ? 'available' : 'unavailable'
-          );
-        }
-      })
-      .catch(() => {
-        if (!isCancelled) {
-          setPrimerIdentificationTabStatus('unavailable');
-        }
-      });
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [primerIdentificationFile]);
-
-  useEffect(() => {
-    if (!activeTabIsAvailable) {
-      const fallbackTab = BASE_TABS[0].id;
-      setActiveTab(fallbackTab);
-      const { pathname, search } = window.location;
-      const cleanPathname = pathname.endsWith('/') ? pathname : `${pathname}/`;
-      window.history.replaceState(
-        null,
-        '',
-        `${cleanPathname}${search}#${fallbackTab}`
-      );
-    }
-  }, [activeTab, activeTabIsAvailable]);
 
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
   if (!data) return <Loading />;
+
 
   const handleTabClick = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -122,7 +47,7 @@ const Asv: React.FC = () => {
     window.history.pushState(null, '', `${cleanPathname}${search}#${tabId}`);
   };
 
-  const getSpecificDownloadsFile = (group: string, type: string) => {
+  const getSepcificFile = (group: string, type: string) => {
     return data?.downloads.find(
       (file) => file.download_group === group && file.file_type === type
     );
@@ -200,26 +125,21 @@ const Asv: React.FC = () => {
           )}
         </section>
 
-        {primerIdentificationTabStatus === 'available' && (
-          <section
-            className="vf-tabs__section"
-            id="primer-identification"
-            role="tabpanel"
-            aria-labelledby="primer-identification"
-            style={{
-              display: activeTab === 'primer-identification' ? 'block' : 'none',
-            }}
-          >
-            <PrimerIdentification
-              infoText="Primers are short sequences of nucleic acid that provide a starting point for DNA synthesis.
+        <section
+          className="vf-tabs__section"
+          id="primer-identification"
+          role="tabpanel"
+          aria-labelledby="primer-identification"
+          style={{
+            display: activeTab === 'primer-identification' ? 'block' : 'none',
+          }}
+        >
+          <PrimerIdentification
+            infoText="Primers are short sequences of nucleic acid that provide a starting point for DNA synthesis.
             In 16S rRNA analysis, they target specific variable regions of the gene."
-              downloadableFile={getSpecificDownloadsFile(
-                'primer_identification',
-                'tsv'
-              )}
-            />
-          </section>
-        )}
+            downloadableFile={getSepcificFile('primer_identification', 'tsv')}
+          />
+        </section>
       </div>
     </section>
   );
