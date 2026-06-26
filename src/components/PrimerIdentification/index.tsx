@@ -47,7 +47,7 @@ const PrimerValidationDisplay: React.FC<PrimerValidationDisplayProps> = ({
 }) => {
   const [data, setData] = useState<PrimerData>();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error>();
+  const [, setError] = useState<Error>();
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
   const [isLegendOpen, setIsLegendOpen] = useState(false);
 
