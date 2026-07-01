@@ -22,12 +22,24 @@ import {
 } from '@/utils/igvBrowserHelper';
 import GenomeBrowserPopup from './Popup';
 
-const GenomeBrowser: React.FC = () => {
+const DEFAULT_ANNOTATION_TRACK_HEIGHT = 120;
+const EUKARYOTIC_ANNOTATION_TRACK_HEIGHT = 320;
+
+type GenomeBrowserProps = {
+  catalogueId?: string;
+  catalogueType?: string;
+};
+
+const GenomeBrowser: React.FC<GenomeBrowserProps> = ({ catalogueType }) => {
   const [loading, setLoading] = useState(true);
   const accession = useURLAccession();
   const { config } = useContext(UserContext);
   const [igvBrowser, setIgvBrowser] = useState<Browser>(null);
   const [trackColorBys, setTrackColorBys] = useState({});
+  const isEukaryoticCatalogue = catalogueType?.toLowerCase() === 'eukaryotes';
+  const annotationTrackHeight = isEukaryoticCatalogue
+    ? EUKARYOTIC_ANNOTATION_TRACK_HEIGHT
+    : DEFAULT_ANNOTATION_TRACK_HEIGHT;
 
   const virifyGffUrl = `${config.api}genomes/${accession}/downloads/${accession}_virify.gff`;
 
@@ -41,10 +53,10 @@ const GenomeBrowser: React.FC = () => {
     trackId: string
   ) => {
     if (action.action === 'select-option') {
-      setTrackColorBys({
-        ...trackColorBys,
+      setTrackColorBys((currentTrackColorBys) => ({
+        ...currentTrackColorBys,
         [trackId]: option,
-      });
+      }));
     }
     if (trackId === 'Functional annotation') {
       updateQueryParams('functional-annotation', option.value);
@@ -67,9 +79,10 @@ const GenomeBrowser: React.FC = () => {
             name: 'Functional annotation',
             type: 'annotation',
             format: 'gff3',
-            height: 120,
+            height: annotationTrackHeight,
             url: `${config.api}genomes/${accession}/downloads/${accession}.gff`,
             displayMode: 'EXPANDED',
+            assembleGFF: false,
             label: 'Functional annotation',
             searchable: true,
           },
@@ -84,7 +97,7 @@ const GenomeBrowser: React.FC = () => {
             name: 'Viral annotation',
             type: 'annotation',
             format: 'gff3',
-            height: 120,
+            height: DEFAULT_ANNOTATION_TRACK_HEIGHT,
             url: virifyGffUrl,
             displayMode: 'EXPANDED',
             label: 'Viral annotation',
@@ -106,16 +119,16 @@ const GenomeBrowser: React.FC = () => {
           browser,
           setIgvBrowser,
           (trackColorBy) => {
-            setTrackColorBys({
-              ...trackColorBys,
+            setTrackColorBys((currentTrackColorBys) => ({
+              ...currentTrackColorBys,
               [options.tracks[0].name]: trackColorBy,
-            });
+            }));
           },
           setLoading
         );
       });
     },
-    [config.api, accession, hasVirify, virifyGffUrl]
+    [config.api, accession, annotationTrackHeight, hasVirify, virifyGffUrl]
   );
 
   useEffect(() => {

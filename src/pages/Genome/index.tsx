@@ -227,7 +227,7 @@ const GenomePage: React.FC = () => {
         setIsSearching(false);
       })
       .catch(() => setIsSearching(false));
-  }, [data, accession]);
+  }, [data, config.api_branchwater, accession]);
 
   const onPageChange = (p: number) => {
     setPageQP(p);
@@ -237,6 +237,7 @@ const GenomePage: React.FC = () => {
   if (!data) return <Loading />;
 
   const catalogueId = data.catalogue?.catalogue_id || data.catalogue_id;
+  const catalogueType = data.catalogue?.catalogue_type;
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     {
@@ -275,7 +276,9 @@ const GenomePage: React.FC = () => {
           </RouteForHash>
           <RouteForHash hash="#genome-browser">
             <Suspense fallback={<Loading size="large" />}>
-              <GenomeBrowser />
+              <GenomeBrowser
+                catalogueType={catalogueType}
+              />
             </Suspense>
           </RouteForHash>
           <RouteForHash hash="#cog-analysis">
