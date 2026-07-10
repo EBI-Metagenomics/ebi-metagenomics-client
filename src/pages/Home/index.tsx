@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Publications, { MainPublication } from 'components/Publications';
+import Publications, {
+  MainPublicationForResource,
+} from 'components/Publications';
 import InnerCard from 'components/UI/InnerCard';
 import EMGModal from 'components/UI/EMGModal';
 import UserContext from 'pages/Login/UserContext';
@@ -285,7 +287,8 @@ const HomePage: React.FC = () => {
 
       <section className="vf-section">
         <h2 className="vf-section__title">How to Cite MGnify</h2>
-        <MainPublication />
+        <MainPublicationForResource />
+        <MainPublicationForResource resource="genomes" />
       </section>
 
       <section className="vf-section">

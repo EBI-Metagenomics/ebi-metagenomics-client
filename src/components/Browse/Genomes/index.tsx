@@ -38,10 +38,7 @@ const BrowseGenomes: React.FC = () => {
           </a>
           .
         </p>
-        <MainPublicationForResource
-          resource="genomes"
-          citationPretext="If you use the MGnify Genomes resource, please cite:"
-        />
+        <MainPublicationForResource resource="genomes" />
         <div />
       </div>
       <TabsForQueryParameter

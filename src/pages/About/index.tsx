@@ -1,5 +1,7 @@
 import React from 'react';
-import Publications, { MainPublication } from 'components/Publications';
+import Publications, {
+  MainPublicationForResource,
+} from 'components/Publications';
 
 import './style.css';
 
@@ -43,7 +45,7 @@ const AboutPage: React.FC = () => {
         <a href="https://status.mgnify.org">status.mgnify.org</a>
       </p>
       <h2>Cite us</h2>
-      <MainPublication />
+      <MainPublicationForResource />
       <h2>Latest publications</h2>
       <Publications />
       <h2>MGnify logos</h2>

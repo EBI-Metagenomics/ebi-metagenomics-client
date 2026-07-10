@@ -1,7 +1,8 @@
 import React, { ReactChild, ReactChildren, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import CoverImage from 'images/cover_main_publication.png';
+import GenomesCoverImage from 'images/cover_genomes_publication.png';
+import MainCoverImage from 'images/cover_main_publication.png';
 import publications from './publications.json';
 
 import './style.css';
@@ -59,18 +60,45 @@ export const Publication: React.FC<{
     </section>
   );
 };
+const coverImagesByResource: Record<string, string> = {
+  genomes: GenomesCoverImage,
+  mgnify: MainCoverImage,
+};
+
+const citationPretextsByResource: Record<string, string> = {
+  genomes: 'If you use the MGnify Genomes resource, please cite:',
+  mgnify: 'To cite MGnify, please refer to the following publication:',
+};
+
 export const MainPublicationForResource: React.FC<{
-  resource: string;
-  citationPretext: string;
-}> = ({ resource, citationPretext }) => {
+  resource?: string;
+  citationPretext?: string;
+}> = ({ resource = 'mgnify', citationPretext }) => {
   const publication = publications.filter(
     (pub) => pub.isMainCitationFor && pub.isMainCitationFor.includes(resource)
   )?.[0];
+  const coverImage = coverImagesByResource[resource] || MainCoverImage;
+  const pretext =
+    citationPretext ||
+    citationPretextsByResource[resource] ||
+    citationPretextsByResource.mgnify;
+
+  if (!publication) {
+    return null;
+  }
+
   return (
-    <div className="mg-main-pub-resource">
-      {publication && (
-        <>
-          <p className="vf-text-body vf-text-body--3">{citationPretext}</p>
+    <div className="embl-grid | vf-content">
+      <div className="vf-section-header mg-pub-section-header">
+        <img
+          alt="Cover of the journal"
+          src={coverImage}
+          className="mg-pub-cover"
+        />
+      </div>
+      <div>
+        <div className="mg-main-pub-resource">
+          <p className="vf-text-body vf-text-body--3">{pretext}</p>
           <Publication
             id={undefined}
             title={publication.title}
@@ -80,30 +108,12 @@ export const MainPublicationForResource: React.FC<{
             doi={publication.doi}
             authors={publication.authors}
           />
-        </>
-      )}
-    </div>
-  );
-};
-export const MainPublication: React.FC = () => {
-  return (
-    <div className="embl-grid | vf-content">
-      <div className="vf-section-header mg-pub-section-header">
-        <img
-          alt="Cover of the journal"
-          src={CoverImage}
-          className="mg-pub-cover"
-        />
-      </div>
-      <div>
-        <MainPublicationForResource
-          resource="mgnify"
-          citationPretext="To cite MGnify, please refer to the following publication:"
-        />
+        </div>
       </div>
     </div>
   );
 };
+
 const Publications: React.FC = () => {
   const [showMore, setShowMore] = useState(false);
   return (
