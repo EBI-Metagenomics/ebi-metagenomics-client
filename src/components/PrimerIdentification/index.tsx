@@ -39,11 +39,13 @@ interface PrimerData {
 interface PrimerValidationDisplayProps {
   downloadableFile?: Download;
   infoText?: string;
+  onEmpty?: () => void;
 }
 
 const PrimerValidationDisplay: React.FC<PrimerValidationDisplayProps> = ({
   downloadableFile,
   infoText,
+  onEmpty,
 }) => {
   const [data, setData] = useState<PrimerData>();
   const [loading, setLoading] = useState(true);
@@ -54,6 +56,7 @@ const PrimerValidationDisplay: React.FC<PrimerValidationDisplayProps> = ({
   useEffect(() => {
     if (!downloadableFile?.url) {
       setLoading(false);
+      if (onEmpty) onEmpty();
       return;
     }
 
@@ -65,6 +68,7 @@ const PrimerValidationDisplay: React.FC<PrimerValidationDisplayProps> = ({
       .then((tsvText) => {
         const lines = tsvText.trim().split('\n');
         if (lines.length < 2) {
+          if (onEmpty) onEmpty();
           throw new Error('No primer data available');
         }
         const headers = lines[0].split('\t');
@@ -78,8 +82,9 @@ const PrimerValidationDisplay: React.FC<PrimerValidationDisplayProps> = ({
 
         const primers: Primer[] = rows.map((row) => ({
           name: row.PrimerName,
-          identification_strategy:
-            row.AssertionMethod === 'automatic assertion' ? 'auto' : 'std',
+          identification_strategy: row.PrimerName.endsWith('_auto')
+            ? 'auto'
+            : 'std',
           region: row.VariableRegion,
           sequence: row.PrimerSeq,
           strand: row.PrimerStrand,
