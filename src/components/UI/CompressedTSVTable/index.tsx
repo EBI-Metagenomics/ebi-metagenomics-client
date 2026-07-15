@@ -1,182 +1,30 @@
-import React, { ReactElement, useEffect, useMemo, useState } from 'react';
-import { Download, PaginatedList } from '@/interfaces';
-import './style.css';
+import React from 'react';
+
 import { BGZipService } from 'components/Analysis/BgZipService';
-import Loading from 'components/UI/Loading';
-import EMGTable from 'components/UI/EMGTable';
-import { Column } from 'react-table';
 import { createSharedQueryParamContextForTable } from 'hooks/queryParamState/useQueryParamState';
-import { startCase } from 'lodash-es';
-import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
-import BarChartForTable, {
-  BarChartForTableProps,
-} from 'components/Analysis/BarChartForTable';
-
-type BarChartSpec = Pick<
-  BarChartForTableProps,
-  'title' | 'labelsCol' | 'countsCol' | 'maxLabels'
->;
-
-interface CompressedTSVTableProps {
-  columns?: Column[];
-  columnHeaders?: string[];
-  download: Download;
-  barChartSpec?: BarChartSpec;
-}
+import IndexedBGZipTSVTable from './IndexedBGZipTSVTable';
+import PlainTSVTable from './PlainTSVTable';
+import type { TSVTableProps } from './types';
+import './style.css';
 
 const { usePage, withQueryParamProvider } =
   createSharedQueryParamContextForTable();
 
 /**
- * A component for displaying and interacting with compressed TSV files
+ * Displays an ordinary TSV file or an indexed BGZF-compressed TSV file.
+ * Can also take a plain TSV file as input, for cases where the BGZF-compression is not done.
  */
-const CompressedTSVTable: React.FC<CompressedTSVTableProps> = ({
-  columns = [],
-  columnHeaders,
-  download,
-  barChartSpec,
-}) => {
-  const bgzipReader = useMemo(() => new BGZipService(download), [download]);
+const CompressedTSVTable: React.FC<TSVTableProps> = (props) => {
+  const { download } = props;
   const [pageNum, setPageNum] = usePage<number>();
-  const [pageData, setPageData] = useState<PaginatedList>({
-    items: [],
-    count: 0,
-  });
-  const [estimatedPageSize, setEstimatedPageSize] = useState<number>(0);
-  const [cols, setCols] = useState<Column[]>(columns);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const columnsAreFirstRowOfFirstPage = !columns.length;
-  const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
+  const indexUrl = BGZipService.getIndexFileUrl(download);
+  const sourceKey = JSON.stringify([download.url, indexUrl]);
+  const loaderProps = { ...props, pageNum, setPageNum };
 
-  useEffect(() => {
-    let cancelled = false;
-
-    const load = async () => {
-      setIsLoading(true);
-      try {
-        // Ensure the service is initialized before any page read
-        const ok = await bgzipReader.initialize();
-        if (!ok || cancelled) return;
-
-        // Clamp the current page to the available range (default 1)
-        const totalPages = Math.max(1, bgzipReader.getPageCount?.() || 1);
-        const requestedPage = Math.max(1, Number(pageNum) || 1);
-        const currentPage = Math.min(requestedPage, totalPages);
-        if (currentPage !== pageNum && typeof setPageNum === 'function') {
-          setPageNum(currentPage);
-        }
-
-        const response = await bgzipReader.readPageAsTSV(currentPage);
-        if (cancelled) return;
-
-        if (response.length > estimatedPageSize) {
-          setEstimatedPageSize(response.length);
-        }
-
-        const pageCount = Math.max(1, bgzipReader.getPageCount?.() || 1);
-        let count =
-          pageCount *
-          Math.max(
-            estimatedPageSize || response.length || 1,
-            response.length || 1
-          );
-        const items = [...response];
-
-        if (
-          columnsAreFirstRowOfFirstPage &&
-          currentPage === 1 &&
-          items.length
-        ) {
-          const rowToUseAsHeaders = items[0] as string[];
-          count = Math.max(0, count - 1);
-          items.shift();
-
-          setCols(
-            rowToUseAsHeaders.map((header, colNum) => ({
-              Header:
-                columnHeaders?.[colNum] ??
-                (header.includes('_') ? startCase(header) : header),
-              accessor: (row) => row[colNum],
-              id: `col_${colNum}`,
-            }))
-          );
-        }
-
-        setPageData({ items, count } as PaginatedList);
-      } catch {
-        if (!cancelled) {
-          // Don’t mask with empty data; surface as an empty dataset but stop the spinner
-          setPageData({ items: [], count: 0 });
-        }
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
-    };
-
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [pageNum, bgzipReader, estimatedPageSize, columnsAreFirstRowOfFirstPage]);
-
-  const viewModeSelector = barChartSpec ? (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        position: 'sticky',
-        top: 0,
-        zIndex: 1,
-        backgroundColor: 'white',
-        padding: '0.5rem 0',
-      }}
-    >
-      <button
-        type="button"
-        className={`vf-search__button | vf-button vf-button--primary mg-text-search-button vf-button--sm`}
-        onClick={() => setViewMode(viewMode === 'table' ? 'chart' : 'table')}
-      >
-        <span
-          className={`icon icon-common icon-${
-            viewMode === 'table' ? 'chart-bar' : 'table'
-          }`}
-          style={{ color: '#dcfce7' }}
-        />
-        <span className="vf-button__text">
-          Switch to {viewMode === 'table' ? 'chart' : 'table'} view
-        </span>
-      </button>
-    </div>
-  ) : null;
-
-  let content: ReactElement | null = null;
-  if (isLoading) content = <Loading />;
-  else if (viewMode === 'table')
-    content = (
-      <EMGTable
-        cols={cols}
-        data={pageData}
-        showPagination
-        expectedPageSize={estimatedPageSize || pageData.items?.length || 100}
-      />
-    );
-  else if (viewMode === 'chart' && barChartSpec)
-    content = (
-      <BarChartForTable
-        data={pageData}
-        labelsCol={barChartSpec?.labelsCol}
-        countsCol={barChartSpec?.countsCol}
-        title={barChartSpec?.title}
-      />
-    );
-
-  return (
-    <div className="compressed-tsv-table">
-      <FixedHeightScrollable heightPx={600}>
-        {viewModeSelector}
-        {content}
-      </FixedHeightScrollable>
-    </div>
+  return indexUrl ? (
+    <IndexedBGZipTSVTable key={sourceKey} {...loaderProps} />
+  ) : (
+    <PlainTSVTable key={sourceKey} {...loaderProps} />
   );
 };
 

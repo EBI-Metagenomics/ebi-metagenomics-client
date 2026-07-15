@@ -8,6 +8,7 @@ export const KEYWORD_ANY = 'ANY' as const;
 
 type TextInputTypeaheadProps = {
   namespace: string;
+  searchParamName?: string;
   placeholder?: string;
   title?: string;
   getSuggestions?: (query: string) => Promise<string[]>;
@@ -15,12 +16,13 @@ type TextInputTypeaheadProps = {
 
 const TextInputTypeahead: React.FC<TextInputTypeaheadProps> = ({
   namespace,
+  searchParamName,
   placeholder = 'Enter your search terms',
   title = 'Filter',
   getSuggestions,
 }) => {
   const [searchParam, setSearchParam] = useQueryParamState<string>(
-    camelCase(`${namespace} search`)
+    searchParamName ?? camelCase(`${namespace} search`)
   );
   const [value, setValue] = useState<string>(searchParam || '');
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -46,7 +48,10 @@ const TextInputTypeahead: React.FC<TextInputTypeaheadProps> = ({
   }, [debouncedValue]);
 
   useEffect(() => {
-    if (getSuggestions && value.trim() && value.length >= 2) {
+    if (
+      getSuggestions &&
+      (value.trim().length >= 1 || document.activeElement === inputRef.current)
+    ) {
       getSuggestions(value.trim())
         .then((results) => {
           setSuggestions(results);
@@ -66,6 +71,20 @@ const TextInputTypeahead: React.FC<TextInputTypeaheadProps> = ({
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const v = event.target.value;
     setValue(v);
+  };
+
+  const handleFocus = (): void => {
+    if (!getSuggestions || value.trim()) return;
+    getSuggestions('')
+      .then((results) => {
+        setSuggestions(results);
+        setShowSuggestions(results.length > 0);
+        setActiveSuggestionIndex(-1);
+      })
+      .catch(() => {
+        setSuggestions([]);
+        setShowSuggestions(false);
+      });
   };
 
   const handleSuggestionClick = (suggestion: string): void => {
@@ -130,20 +149,16 @@ const TextInputTypeahead: React.FC<TextInputTypeaheadProps> = ({
 
   return (
     <div className="vf-form__item mg-textsearch mg-typeahead">
-      <label
-        className="vf-form__label vf-search__label"
-        htmlFor={`searchitem-${namespace}`}
-      >
-        {title}
-      </label>
       <div className="mg-typeahead-container">
         <input
           ref={inputRef}
           type="search"
+          aria-label={title}
           placeholder={placeholder}
           id={`searchitem-${namespace}`}
           className="vf-form__input"
           onChange={handleOnChange}
+          onFocus={handleFocus}
           onKeyDown={handleKeyDown}
           onBlur={handleBlur}
           value={value}
