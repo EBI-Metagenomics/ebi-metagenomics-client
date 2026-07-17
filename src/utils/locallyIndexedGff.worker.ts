@@ -1,4 +1,4 @@
-// Worker (so background thread) to stream BGZF GFF in browser
+// Worker (so background thread) to stream GFF in browser
 import { expose } from 'comlink';
 import { BgzfFilehandle } from '@gmod/bgzf-filehandle';
 
@@ -109,6 +109,39 @@ function makeLineProcessor(onLine: (line: string) => void) {
   };
 }
 
+function makePlainGffLineProcessor(onLine: (line: string) => void) {
+  let carry = '';
+  let seenFasta = false;
+  return (u8: Uint8Array, finalize = false): boolean => {
+    if (seenFasta) return true;
+    const text = textDecoder.decode(u8, { stream: !finalize });
+    let start = 0;
+    for (let i = 0; i < text.length; i++) {
+      if (text.charCodeAt(i) === 10) {
+        const line = carry + text.slice(start, i).replace(/\r$/, '');
+        carry = '';
+        start = i + 1;
+        if (line === '##FASTA') {
+          seenFasta = true;
+          return true;
+        }
+        if (line && line[0] !== '#') onLine(line);
+      }
+    }
+    carry += text.slice(start);
+    if (finalize && carry) {
+      const line = carry.replace(/\r$/, '');
+      carry = '';
+      if (line === '##FASTA') {
+        seenFasta = true;
+        return true;
+      }
+      if (line && line[0] !== '#') onLine(line);
+    }
+    return seenFasta;
+  };
+}
+
 // Minimal scanner for GFF attributes that only extracts requested keys.
 function parseSelectedAttributes(
   attrs: string | undefined,
@@ -149,6 +182,7 @@ function parseSelectedAttributes(
     )
       i++;
     const key = attrs.slice(kStart, i).trim();
+    const lookupKey = key.toLowerCase();
     if (i >= len || attrs.charCodeAt(i) !== 61 /* '=' */) {
       // no '='; skip to next ';'
       while (i < len && attrs.charCodeAt(i) !== 59 /* ';' */) i++;
@@ -164,23 +198,23 @@ function parseSelectedAttributes(
     i++; // skip ';' if present
 
     // Only process if key is wanted (either for indexing or known singletons)
-    if (wanted.has(key)) {
+    if (wanted.has(lookupKey)) {
       // Values may be comma-separated for multi-valued attributes
       // Split only when needed (for index targets). For singletons, take first.
-      if (indexTargets.has(key)) {
+      if (indexTargets.has(lookupKey)) {
         // split on commas, conditionally decode
         const vals = rawVal.length
           ? rawVal.split(',').map((s) => conditionalDecode(s))
           : [];
-        if (vals.length) out.indexableAttrValues[key] = vals;
+        if (vals.length) out.indexableAttrValues[lookupKey] = vals;
       } else {
         // singleton: take first value (before comma)
         const first = rawVal.length ? rawVal.split(',', 1)[0] : '';
         const val = conditionalDecode(first);
-        if (key === 'ID') out.idAttr = val;
-        else if (key === 'Parent') out.parent = val;
-        else if (key === 'Name') out.name = val;
-        else if (key === 'product') out.product = val;
+        if (lookupKey === 'id') out.idAttr = val;
+        else if (lookupKey === 'parent') out.parent = val;
+        else if (lookupKey === 'name') out.name = val;
+        else if (lookupKey === 'product') out.product = val;
       }
     }
   }
@@ -239,7 +273,7 @@ async function getUncompressedSizeFromGzi(
 
 async function importGff(
   url: string,
-  indexUrl: string,
+  indexUrl: string | undefined,
   onProgress: (b: number, t?: number) => void,
   onBatch: (rows: any[]) => Promise<void>,
   attrsToIndex: string[],
@@ -247,14 +281,6 @@ async function importGff(
   headers?: HeadersInitLike
 ) {
   const t0 = performance.now();
-
-  // Build BGZF-aware filehandle using our HTTP-range wrapper
-  const fh = new BgzfFilehandle({
-    filehandle: new HttpRangeFilehandle(url, headers),
-    gziFilehandle: new HttpRangeFilehandle(indexUrl, headers),
-  });
-
-  const uncompressedTotal = await getUncompressedSizeFromGzi(indexUrl, headers);
 
   // Backpressure-aware batching with double-buffer and serialized flush
   let emitBatch: any[] = [];
@@ -269,13 +295,13 @@ async function importGff(
   };
 
   // Prepare attribute selection sets
-  const indexTargets = new Set(attrsToIndex);
+  const indexTargets = new Set(attrsToIndex.map((attr) => attr.toLowerCase()));
   const wanted = new Set<string>([
-    'ID',
-    'Parent',
-    'Name',
+    'id',
+    'parent',
+    'name',
     'product',
-    ...attrsToIndex,
+    ...attrsToIndex.map((attr) => attr.toLowerCase()),
   ]);
 
   const onLine = (line: string) => {
@@ -302,6 +328,8 @@ async function importGff(
       parent,
       name,
       product,
+      annotationText:
+        attrs && attrs !== '.' ? `${attrs.replace(/;+$/, '')};` : '',
     });
 
     if (emitBatch.length >= batchSize) {
@@ -311,22 +339,53 @@ async function importGff(
   };
 
   const processLines = makeLineProcessor(onLine);
+  const processPlainLines = makePlainGffLineProcessor(onLine);
 
-  // Stream until EOF
-  // eslint-disable-next-line no-bitwise
-  const CHUNK = 1 << 20; // 1 MiB (uncompressed)
-  let pos = 0;
-  for (;;) {
-    const chunk = await fh.read(CHUNK, pos); // returns Uint8Array (decompressed bytes)
-    if (!chunk.length) break;
-    onProgress(pos + chunk.length, uncompressedTotal);
-    processLines(chunk);
-    // apply backpressure at chunk boundaries
-    await inFlight;
-    pos += chunk.length;
+  if (indexUrl) {
+    // Build BGZF-aware filehandle using our HTTP-range wrapper
+    const fh = new BgzfFilehandle({
+      filehandle: new HttpRangeFilehandle(url, headers),
+      gziFilehandle: new HttpRangeFilehandle(indexUrl, headers),
+    });
+
+    const uncompressedTotal = await getUncompressedSizeFromGzi(
+      indexUrl,
+      headers
+    );
+
+    // Stream until EOF
+    // eslint-disable-next-line no-bitwise
+    const CHUNK = 1 << 20; // 1 MiB (uncompressed)
+    let pos = 0;
+    for (;;) {
+      const chunk = await fh.read(CHUNK, pos); // returns Uint8Array (decompressed bytes)
+      if (!chunk.length) break;
+      onProgress(pos + chunk.length, uncompressedTotal);
+      processLines(chunk);
+      // apply backpressure at chunk boundaries
+      await inFlight;
+      pos += chunk.length;
+    }
+    // finalize any trailing line
+    processLines(new Uint8Array(0), true);
+  } else {
+    const statHandle = new HttpRangeFilehandle(url, headers);
+    const { size } = await statHandle.stat();
+    // eslint-disable-next-line no-bitwise
+    const CHUNK = 1 << 20; // 1 MiB raw HTTP range chunks
+    let pos = 0;
+    for (;;) {
+      const chunk = await statHandle.read(CHUNK, pos);
+      if (!chunk.length) break;
+      onProgress(pos + chunk.length, size);
+      const reachedFasta = processPlainLines(chunk);
+      await inFlight;
+      pos += chunk.length;
+      if (reachedFasta || chunk.length < CHUNK) break;
+    }
+    processPlainLines(new Uint8Array(0), true);
   }
-  // finalize any trailing line
-  processLines(new Uint8Array(0), true);
+
   // flush the remainder and wait for all deliveries
   scheduleFlush();
   await inFlight;

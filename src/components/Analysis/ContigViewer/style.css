@@ -1,42 +1,65 @@
 @media (min-width: 846px) {
-    .mg-contigs-list {
-        grid-template-columns: 25% 75%;
-    }
+  .mg-contigs-list {
+    grid-template-columns: 25% 75%;
+  }
 }
 
 .contig-igv-container {
-    min-height: 240px;
+  min-height: 240px;
 }
 
 .mg-contig-filter.vf-form__legend {
-    font-size: 1.2rem;
+  font-size: 1.2rem;
+}
+
+.mg-contig-search-examples {
+  display: block;
+  width: 15rem;
+  max-width: 100%;
+  line-height: 1.2;
+}
+
+.mg-contig-search-example-links {
+  display: inline;
+}
+
+button.mg-contig-search-example {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 1.2;
+  vertical-align: baseline;
 }
 
 details summary {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 details summary > * {
-    display: inline;
+  display: inline;
 }
 
 .gff-attribute {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.4rem 0.65rem;
-    font-family: monospace;
-    border: 1px solid rgba(100, 116, 139, 0.60);
-    border-radius: 6px;
-    color: #64748b;
-    font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.65rem;
+  font-family: monospace;
+  border: 1px solid rgba(100, 116, 139, 0.6);
+  border-radius: 6px;
+  color: #64748b;
+  font-size: 0.8rem;
 }
 
 .gff-attributes {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 /* fix scaling of labels in the JBrowse rubber band */
-[class*="-root-refLabel"],[class*="-majorTickLabel"],[class*="-minorTickLabel"] {
-    font-size: 12px !important;
+[class*='-root-refLabel'],
+[class*='-majorTickLabel'],
+[class*='-minorTickLabel'] {
+  font-size: 12px !important;
 }

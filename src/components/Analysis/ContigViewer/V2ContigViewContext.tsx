@@ -13,6 +13,14 @@ type LGVContextValue = {
 
 const LGVContext = React.createContext<LGVContextValue | null>(null);
 
+const gffDisplayConfig = (alias: string, height?: number) => ({
+  type: 'LinearBasicDisplay',
+  displayId: `${alias}-LinearBasicDisplay`,
+  ...(height ? { height } : {}),
+});
+
+const ADDITIONAL_GFF_TRACK_HEIGHT = 60;
+
 export function useLGV() {
   const ctx = React.useContext(LGVContext);
   if (!ctx) throw new Error('useLGV must be used within <LGVProvider>');
@@ -43,6 +51,28 @@ export function LGVProvider({
     [fasta]
   );
 
+  const fastaAdapter = React.useMemo(() => {
+    if (fastaGziUrl) {
+      return {
+        type: 'BgzipFastaAdapter',
+        fastaLocation: { uri: fasta.url },
+        ...(fastaFaiUrl && { faiLocation: { uri: fastaFaiUrl } }),
+        gziLocation: { uri: fastaGziUrl },
+      };
+    }
+    if (fastaFaiUrl) {
+      return {
+        type: 'IndexedFastaAdapter',
+        fastaLocation: { uri: fasta.url },
+        faiLocation: { uri: fastaFaiUrl },
+      };
+    }
+    return {
+      type: 'UnindexedFastaAdapter',
+      fastaLocation: { uri: fasta.url },
+    };
+  }, [fasta.url, fastaFaiUrl, fastaGziUrl]);
+
   const viewState = React.useMemo(
     () =>
       createViewState({
@@ -51,18 +81,13 @@ export function LGVProvider({
           sequence: {
             type: 'ReferenceSequenceTrack',
             trackId: 'refseq',
-            adapter: {
-              type: 'BgzipFastaAdapter',
-              fastaLocation: { uri: fasta.url },
-              ...(fastaFaiUrl && { faiLocation: { uri: fastaFaiUrl } }),
-              ...(fastaGziUrl && { gziLocation: { uri: fastaGziUrl } }),
-            },
+            adapter: fastaAdapter,
           },
         },
         tracks: [],
         location: initialLoc,
       }),
-    [fasta.alias, fasta.url, fastaFaiUrl, fastaGziUrl, initialLoc]
+    [fasta.alias, fastaAdapter, initialLoc]
   );
 
   const view = (viewState as any)?.session?.view;
@@ -168,16 +193,20 @@ export function LGVProvider({
 
     const trackExists = !!session.getTrack?.(gff.alias);
 
-    const adapter: any = {
-      type: 'Gff3TabixAdapter',
-      gffGzLocation: { uri: gff.url },
-    };
-    if (csi || tbi) {
-      adapter.index = {
-        location: { uri: csi || tbi },
-        indexType: csi ? 'CSI' : 'TBI',
-      };
-    }
+    const adapter: any =
+      csi || tbi
+        ? {
+            type: 'Gff3TabixAdapter',
+            gffGzLocation: { uri: gff.url },
+            index: {
+              location: { uri: csi || tbi },
+              indexType: csi ? 'CSI' : 'TBI',
+            },
+          }
+        : {
+            type: 'Gff3Adapter',
+            gffLocation: { uri: gff.url },
+          };
 
     const conf = {
       type: 'FeatureTrack',
@@ -185,12 +214,7 @@ export function LGVProvider({
       name: gff.alias,
       assemblyNames: [fasta.alias],
       adapter,
-      displays: [
-        {
-          type: 'LinearBasicDisplay',
-          displayId: `${gff.alias}-LinearBasicDisplay`,
-        },
-      ],
+      displays: [gffDisplayConfig(gff.alias)],
     } as any;
 
     if (!trackExists) {
@@ -215,7 +239,7 @@ export function LGVProvider({
 
       let adapter: any = {
         type: 'Gff3Adapter',
-        uri: { uri: aGff.url },
+        gffLocation: { uri: aGff.url },
       };
       if (csi || tbi) {
         adapter = {
@@ -234,12 +258,7 @@ export function LGVProvider({
         name: aGff.alias,
         assemblyNames: [fasta.alias],
         adapter,
-        displays: [
-          {
-            type: 'LinearBasicDisplay',
-            displayId: `${aGff.alias}-LinearBasicDisplay`,
-          },
-        ],
+        displays: [gffDisplayConfig(aGff.alias, ADDITIONAL_GFF_TRACK_HEIGHT)],
       } as any;
 
       if (!trackExists) {

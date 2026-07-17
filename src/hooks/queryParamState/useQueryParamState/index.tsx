@@ -4,7 +4,7 @@ import SharedQueryParamsProvider, {
   SharedQueryParamSet,
   SharedTextQueryParam,
 } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { camelCase, forEach, upperFirst } from 'lodash-es';
 
 
@@ -12,15 +12,19 @@ function useSharedQueryParamState<T>(
   parameter: string,
 ): readonly [T, (next: T) => void] {
   const { queryParams, setQueryParams } = useContext(SharedQueryParamContext);
-
-  return [
-    (queryParams[parameter]?.value as unknown as T ) ?? queryParams[parameter]?.defaultValue as T ?? (undefined as unknown as T),
+  const setValue = useCallback(
     (next: T) => {
       setQueryParams((prev: SharedQueryParamSet) => ({
         ...prev,
         [parameter]: { ...(prev?.[parameter] ?? {}), value: next },
       }));
     },
+    [parameter, setQueryParams]
+  );
+
+  return [
+    (queryParams[parameter]?.value as unknown as T ) ?? queryParams[parameter]?.defaultValue as T ?? (undefined as unknown as T),
+    setValue,
   ];
 }
 

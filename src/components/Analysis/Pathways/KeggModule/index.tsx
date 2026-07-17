@@ -9,12 +9,23 @@ import LegacyFunctionalTable from 'components/Analysis/Functional/LegacyFunction
 type KeggModuleProps = {
   isLegacy?: boolean;
   legacyFile?: Download;
+  dataFiles?: Download[];
+  barChartColumnIndexes?: {
+    label: number;
+    count: number;
+  };
 };
 
-const KeggModuleTab: React.FC<KeggModuleProps> = ({ isLegacy, legacyFile }) => {
+const KeggModuleTab: React.FC<KeggModuleProps> = ({
+  isLegacy,
+  legacyFile,
+  dataFiles: providedDataFiles,
+  barChartColumnIndexes = { label: 1, count: 2 },
+}) => {
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
 
   let dataFiles: Download[] | undefined =
+    providedDataFiles ??
     analysisOverviewData?.downloads.filter(
       (file: Download) =>
         file.download_group === 'pathways_and_systems.kegg_modules' &&
@@ -61,7 +72,7 @@ const KeggModuleTab: React.FC<KeggModuleProps> = ({ isLegacy, legacyFile }) => {
     );
   }
 
-  if (!dataFiles) {
+  if (!dataFiles?.length) {
     return (
       <div className="vf-stack vf-stack--200" data-cy="assembly-tsv-table">
         <p>No KEGG modules available</p>
@@ -94,12 +105,12 @@ const KeggModuleTab: React.FC<KeggModuleProps> = ({ isLegacy, legacyFile }) => {
                 labelsCol: {
                   id: 'module_accession',
                   Header: 'Module identifier',
-                  accessor: (d) => d[1],
+                  accessor: (d) => d[barChartColumnIndexes.label],
                 },
                 countsCol: {
                   id: 'completeness',
                   Header: 'Completeness',
-                  accessor: (d) => Number(d[2]),
+                  accessor: (d) => Number(d[barChartColumnIndexes.count]),
                 },
               }}
             />
