@@ -9,7 +9,6 @@ cypress/downloads/
 # IDE (Webstorm) files
 *.iml
 .idea/*
-!.idea/runConfigurations
 .vscode
 
 # Merged fixture file
