@@ -81,8 +81,18 @@ export function getCRISPRColour(featureType: any) {
 
 const FEATURE_TYPE_MAP = {
   CRISPR: CRISPR_MAP.CRISPRdr,
+  gene: '#3b6fb6',
+  mRNA: '#007c89',
+  transcript: '#007c89',
+  exon: '#6cc24a',
   CDS: '#18974c',
+  start_codon: '#f49e17',
+  stop_codon: '#d41645',
+  five_prime_UTR: '#b654c4',
+  three_prime_UTR: '#b654c4',
   ncRNA: '#6cc24a',
+  rRNA: '#6cc24a',
+  tRNA: '#6cc24a',
   CLUSTER: '#3b6fb6',
   prophage: '#d41645',
   viral_sequence: '#d41645',
