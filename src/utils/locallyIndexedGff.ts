@@ -1,6 +1,6 @@
 import Dexie, { Table } from 'dexie';
 import * as Comlink from 'comlink';
-import { filter, flatMap, forIn, groupBy, map, uniq } from 'lodash-es';
+import { filter, flatMap, forIn, groupBy, uniq } from 'lodash-es';
 import { RemoteFile } from 'generic-filehandle2';
 import { BgzipIndexedFasta, IndexedFasta } from '@gmod/indexedfasta';
 
@@ -210,7 +210,7 @@ const normalizeAttributeIndexSpecs = (
     typeof attr === 'string' ? { gffKey: attr, field: attr } : attr
   );
 
-const GFF_INDEX_CONTENT_VERSION = 2;
+const GFF_INDEX_CONTENT_VERSION = 3;
 
 export const getGffIndexSpec = (
   attrsToIndex: Array<TypeAheadAttributes | GffAttributeIndexSpec>
@@ -224,10 +224,9 @@ const getPresenceFlags = (
   annotations: ContigDetails['annotations']
 ): ContigDetails['annotationsPresence'] =>
   Object.fromEntries(
-    Object.entries(PRESENCE_FIELD_BY_ATTRIBUTE).map(([attribute, presence]) => [
-      presence,
-      (annotations[attribute]?.length ?? 0) > 0 ? 1 : 0,
-    ])
+    Object.entries(PRESENCE_FIELD_BY_ATTRIBUTE)
+      .filter(([attribute]) => annotations[attribute]?.length)
+      .map(([, presence]) => [presence, 1])
   );
 
 export async function getTypeaheadSuggestions(
@@ -297,6 +296,7 @@ export function importGffToIndexedDB(opts: ImportOptions) {
   const { worker, api } = createWorker();
   let startT = performance.now();
   let cancelled = false;
+  let contigLengths: Record<string, number> = {};
 
   const progressCb = Comlink.proxy((bytes: number, total?: number) => {
     onProgress?.({
@@ -427,6 +427,7 @@ export function importGffToIndexedDB(opts: ImportOptions) {
         contigsToUpsert.push({
           contigId: contigNameToContigId(contigId),
           contigName: contigId,
+          length: contigLengths[contigId],
           annotationTextToAppend: annotations
             .map((row) => row.annotationText || '')
             .join(''),
@@ -457,6 +458,20 @@ export function importGffToIndexedDB(opts: ImportOptions) {
         });
       }
 
+      if (fastaUrl && fastaFaiUrl) {
+        const fastaHandler = fastaGziUrl
+          ? new BgzipIndexedFasta({
+              fasta: new RemoteFile(fastaUrl),
+              fai: new RemoteFile(fastaFaiUrl),
+              gzi: new RemoteFile(fastaGziUrl),
+            })
+          : new IndexedFasta({
+              fasta: new RemoteFile(fastaUrl),
+              fai: new RemoteFile(fastaFaiUrl),
+            });
+        contigLengths = await fastaHandler.getSequenceSizes();
+      }
+
       await api.importGff(
         url,
         indexUrl,
@@ -473,28 +488,6 @@ export function importGffToIndexedDB(opts: ImportOptions) {
       );
 
       const seconds = (performance.now() - startT) / 1000;
-
-      if (fastaUrl && fastaFaiUrl) {
-        const fastaHandler = fastaGziUrl
-          ? new BgzipIndexedFasta({
-              fasta: new RemoteFile(fastaUrl),
-              fai: new RemoteFile(fastaFaiUrl),
-              gzi: new RemoteFile(fastaGziUrl),
-            })
-          : new IndexedFasta({
-              fasta: new RemoteFile(fastaUrl),
-              fai: new RemoteFile(fastaFaiUrl),
-            });
-        const contigLengths = await fastaHandler.getSequenceSizes();
-        await db.transaction('rw', db.meta, db.contigs, async () => {
-          await db.contigs.bulkUpdate(
-            map(contigLengths, (length, contigName) => ({
-              key: contigNameToContigId(contigName),
-              changes: { length },
-            }))
-          );
-        });
-      }
       onEnd?.({ seconds, contigsCount: await db.contigs.count() });
     } catch (e) {
       if (!cancelled) onError?.(e);

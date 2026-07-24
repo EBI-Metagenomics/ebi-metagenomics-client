@@ -40,6 +40,7 @@
   "dependencies": {
     "@fontsource/roboto": "^5.2.6",
     "@gmod/bgzf-filehandle": "^4.0.0",
+    "@gmod/http-range-fetcher": "^5.0.7",
     "@gmod/indexedfasta": "^4.0.6",
     "@googlemaps/markerclustererplus": "1.2.10",
     "@googlemaps/react-wrapper": "1.1.19",

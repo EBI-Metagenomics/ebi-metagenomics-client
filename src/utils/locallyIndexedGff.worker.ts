@@ -1,13 +1,41 @@
 // Worker (so background thread) to stream GFF in browser
 import { expose } from 'comlink';
 import { BgzfFilehandle } from '@gmod/bgzf-filehandle';
-
-type HeadersInitLike = HeadersInit | Record<string, string> | undefined;
+import { HttpRangeFetcher } from '@gmod/http-range-fetcher';
 
 import type { GenericFilehandle, FilehandleOptions } from 'generic-filehandle2';
 
+type HeadersInitLike = HeadersInit | Record<string, string> | undefined;
+
+const BGZF_READ_AHEAD_BYTES = 512 * 1024;
+// Cache larger HTTP ranges so nearby small BGZF block reads share one request.
+// Prevents huge numbers of http range requests being made when the bgzip blocks are small.
+const bgzfRangeFetcher = new HttpRangeFetcher({
+  chunkSize: BGZF_READ_AHEAD_BYTES,
+  size: BGZF_READ_AHEAD_BYTES * 2,
+  aggregationTime: 0,
+  fetch: async (url, start, end) => {
+    const response = await fetch(url, {
+      headers: { Range: `bytes=${start}-${end}` },
+    });
+    if (response.status !== 206) {
+      throw new Error(
+        `Range GET failed ${response.status} ${response.statusText}`
+      );
+    }
+    return {
+      headers: response.headers,
+      buffer: new Uint8Array(await response.arrayBuffer()),
+    };
+  },
+});
+
 class HttpRangeFilehandle implements GenericFilehandle {
-  constructor(private url: string, private headers?: HeadersInit) {}
+  constructor(
+    private url: string,
+    private headers?: HeadersInit,
+    private readAhead = false
+  ) {}
   // This is pretty much a shim so that BGZip File Reader can read in the browser
   // without failing on .stat calls (which are only in node)
 
@@ -16,7 +44,17 @@ class HttpRangeFilehandle implements GenericFilehandle {
     position: number,
     opts?: any
   ): Promise<Uint8Array<ArrayBuffer>> {
-    const end = position + Math.max(0, length) - 1;
+    if (length <= 0) return new Uint8Array(0);
+    if (this.readAhead && !this.headers && length <= BGZF_READ_AHEAD_BYTES) {
+      const { buffer } = await bgzfRangeFetcher.getRange(
+        this.url,
+        position,
+        length,
+        { signal: opts?.signal }
+      );
+      return buffer;
+    }
+    const end = position + length - 1;
 
     const controller = new AbortController();
     if (opts?.signal) {
@@ -62,7 +100,21 @@ class HttpRangeFilehandle implements GenericFilehandle {
 
   async stat(): Promise<{ size: number }> {
     try {
-      // try a tiny range probe; avoids HEAD
+      // Content-Range may be hidden by CORS, while HEAD's Content-Length is exposed.
+      const head = await fetch(this.url, {
+        method: 'HEAD',
+        headers: this.headers,
+      });
+      const headLength = head.headers.get('Content-Length');
+      if (head.ok && headLength && Number.isFinite(Number(headLength))) {
+        return { size: Number(headLength) };
+      }
+    } catch {
+      // Fall through to the range probe.
+    }
+
+    try {
+      // Fall back to a tiny range probe for servers that do not support HEAD.
       const r = await fetch(this.url, {
         headers: { Range: 'bytes=0-0', ...(this.headers || {}) },
       });
@@ -73,7 +125,9 @@ class HttpRangeFilehandle implements GenericFilehandle {
         if (Number.isFinite(total)) return { size: total };
       }
       const cl = r.headers.get('Content-Length');
-      if (cl && Number.isFinite(Number(cl))) return { size: Number(cl) };
+      if (r.status === 200 && cl && Number.isFinite(Number(cl))) {
+        return { size: Number(cl) };
+      }
     } catch {
       /* ignore */
     }
@@ -344,7 +398,7 @@ async function importGff(
   if (indexUrl) {
     // Build BGZF-aware filehandle using our HTTP-range wrapper
     const fh = new BgzfFilehandle({
-      filehandle: new HttpRangeFilehandle(url, headers),
+      filehandle: new HttpRangeFilehandle(url, headers, true),
       gziFilehandle: new HttpRangeFilehandle(indexUrl, headers),
     });
 

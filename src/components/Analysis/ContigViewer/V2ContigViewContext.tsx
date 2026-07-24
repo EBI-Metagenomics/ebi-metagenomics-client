@@ -1,7 +1,10 @@
 import React from 'react';
 import { createViewState } from '@jbrowse/react-linear-genome-view2';
 import { Download } from '@/interfaces';
-import { BGZipService } from 'components/Analysis/BgZipService';
+import {
+  createGffTrack,
+  createReferenceSequenceTrack,
+} from 'components/Analysis/ContigViewer/jbrowseConfig';
 
 type LGVViewState = ReturnType<typeof createViewState>;
 
@@ -12,12 +15,6 @@ type LGVContextValue = {
 };
 
 const LGVContext = React.createContext<LGVContextValue | null>(null);
-
-const gffDisplayConfig = (alias: string, height?: number) => ({
-  type: 'LinearBasicDisplay',
-  displayId: `${alias}-LinearBasicDisplay`,
-  ...(height ? { height } : {}),
-});
 
 const ADDITIONAL_GFF_TRACK_HEIGHT = 60;
 
@@ -42,52 +39,22 @@ export function LGVProvider({
 }) {
   const assemblyKey = React.useMemo(() => fasta.alias, [fasta]);
 
-  const fastaFaiUrl = React.useMemo(
-    () => BGZipService.getIndexFileUrl(fasta, 'fai'),
+  const referenceSequenceTrack = React.useMemo(
+    () => createReferenceSequenceTrack(fasta),
     [fasta]
   );
-  const fastaGziUrl = React.useMemo(
-    () => BGZipService.getIndexFileUrl(fasta, 'gzi'),
-    [fasta]
-  );
-
-  const fastaAdapter = React.useMemo(() => {
-    if (fastaGziUrl) {
-      return {
-        type: 'BgzipFastaAdapter',
-        fastaLocation: { uri: fasta.url },
-        ...(fastaFaiUrl && { faiLocation: { uri: fastaFaiUrl } }),
-        gziLocation: { uri: fastaGziUrl },
-      };
-    }
-    if (fastaFaiUrl) {
-      return {
-        type: 'IndexedFastaAdapter',
-        fastaLocation: { uri: fasta.url },
-        faiLocation: { uri: fastaFaiUrl },
-      };
-    }
-    return {
-      type: 'UnindexedFastaAdapter',
-      fastaLocation: { uri: fasta.url },
-    };
-  }, [fasta.url, fastaFaiUrl, fastaGziUrl]);
 
   const viewState = React.useMemo(
     () =>
       createViewState({
         assembly: {
           name: fasta.alias,
-          sequence: {
-            type: 'ReferenceSequenceTrack',
-            trackId: 'refseq',
-            adapter: fastaAdapter,
-          },
+          sequence: referenceSequenceTrack,
         },
         tracks: [],
         location: initialLoc,
       }),
-    [fasta.alias, fastaAdapter, initialLoc]
+    [fasta.alias, referenceSequenceTrack, initialLoc]
   );
 
   const view = (viewState as any)?.session?.view;
@@ -188,34 +155,8 @@ export function LGVProvider({
     const session = (viewState as any)?.session;
     if (!session) return;
 
-    const csi = BGZipService.getIndexFileUrl(gff, 'csi');
-    const tbi = BGZipService.getIndexFileUrl(gff, 'tbi');
-
     const trackExists = !!session.getTrack?.(gff.alias);
-
-    const adapter: any =
-      csi || tbi
-        ? {
-            type: 'Gff3TabixAdapter',
-            gffGzLocation: { uri: gff.url },
-            index: {
-              location: { uri: csi || tbi },
-              indexType: csi ? 'CSI' : 'TBI',
-            },
-          }
-        : {
-            type: 'Gff3Adapter',
-            gffLocation: { uri: gff.url },
-          };
-
-    const conf = {
-      type: 'FeatureTrack',
-      trackId: gff.alias,
-      name: gff.alias,
-      assemblyNames: [fasta.alias],
-      adapter,
-      displays: [gffDisplayConfig(gff.alias)],
-    } as any;
+    const conf = createGffTrack(gff, fasta.alias);
 
     if (!trackExists) {
       session.addTrackConf?.(conf);
@@ -232,34 +173,10 @@ export function LGVProvider({
     additionalGffs.forEach((aGff) => {
       if (!aGff) return;
       console.log('Adding GFF track', aGff.alias, aGff);
-      const csi = BGZipService.getIndexFileUrl(aGff, 'csi');
-      const tbi = BGZipService.getIndexFileUrl(aGff, 'tbi');
-
       const trackExists = !!session.getTrack?.(aGff.alias);
-
-      let adapter: any = {
-        type: 'Gff3Adapter',
-        gffLocation: { uri: aGff.url },
-      };
-      if (csi || tbi) {
-        adapter = {
-          type: 'Gff3TabixAdapter',
-          gffGzLocation: { uri: aGff.url },
-          index: {
-            location: { uri: csi || tbi },
-            indexType: csi ? 'CSI' : 'TBI',
-          },
-        };
-      }
-
-      const conf = {
-        type: 'FeatureTrack',
-        trackId: aGff.alias,
-        name: aGff.alias,
-        assemblyNames: [fasta.alias],
-        adapter,
-        displays: [gffDisplayConfig(aGff.alias, ADDITIONAL_GFF_TRACK_HEIGHT)],
-      } as any;
+      const conf = createGffTrack(aGff, fasta.alias, {
+        height: ADDITIONAL_GFF_TRACK_HEIGHT,
+      });
 
       if (!trackExists) {
         session.addTrackConf?.(conf);
