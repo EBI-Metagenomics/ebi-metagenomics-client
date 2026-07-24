@@ -6,10 +6,20 @@ import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/De
 import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 import LegacyFunctionalTable from 'components/Analysis/Functional/LegacyFunctionalTable';
 
+export const KEGG_MODULE_COLUMN_HEADERS = [
+  'Module Accession',
+  'Completeness',
+  'Pathway Name',
+  'Pathway Class',
+  'Matching KO',
+  'Missing KO',
+];
+
 type KeggModuleProps = {
   isLegacy?: boolean;
   legacyFile?: Download;
   dataFiles?: Download[];
+  columnHeaders?: string[];
   barChartColumnIndexes?: {
     label: number;
     count: number;
@@ -20,7 +30,8 @@ const KeggModuleTab: React.FC<KeggModuleProps> = ({
   isLegacy,
   legacyFile,
   dataFiles: providedDataFiles,
-  barChartColumnIndexes = { label: 1, count: 2 },
+  columnHeaders,
+  barChartColumnIndexes = { label: 0, count: 1 },
 }) => {
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
 
@@ -100,6 +111,7 @@ const KeggModuleTab: React.FC<KeggModuleProps> = ({
           <div className="p-4">
             <CompressedTSVTable
               download={dataFile}
+              columnHeaders={columnHeaders}
               barChartSpec={{
                 title: 'KEGG Modules',
                 labelsCol: {

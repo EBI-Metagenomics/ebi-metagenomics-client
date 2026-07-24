@@ -2,6 +2,39 @@
   width: 100%;
   background: rgba(255, 255, 255, 0.9);
 }
+
+.mg-table .vf-table__header {
+  background-color: #f1f5f9;
+}
+
+.mg-table .vf-table__heading {
+  padding: 14px 16px;
+  font-weight: 600;
+  color: #475569;
+  text-align: left;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.mg-table .vf-table__row {
+  transition: background-color 0.2s ease;
+}
+
+.mg-table .vf-table__row:hover {
+  background-color: #f8fafc;
+}
+
+.mg-table .vf-table__cell {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.mg-table .vf-table__body tr:last-child .vf-table__cell {
+  border-bottom: none;
+}
+
 .mg-table-footer {
   position: sticky;
   bottom: 0;
