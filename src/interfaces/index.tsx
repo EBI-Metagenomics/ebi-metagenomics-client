@@ -26,6 +26,11 @@ export interface Download {
   long_description: string;
   short_description: string;
   url: string;
+  index_file?: {
+    index_type: string;
+    path?: string;
+    url?: string;
+  } | null;
   index_files?: {
     index_type: string;
     url: string;

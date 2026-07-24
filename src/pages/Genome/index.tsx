@@ -35,7 +35,6 @@ import {
   getContainmentHistogram,
   getCountryColor,
   getScatterData,
-  getTotalCountryCount,
 } from 'utils/branchwater';
 import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
 
@@ -46,17 +45,21 @@ const { withQueryParamProvider } = createSharedQueryParamContextForTable(
   '-containment'
 );
 
-const GenomeBrowser = lazy(() => import('components/Genomes/Browser'));
+const GenomeBrowser = lazy(() => import('components/Genomes/ContigViewer'));
 const GenomeGenericAnalysis = lazy(
   () => import('components/Genomes/Annotations')
+);
+const GenomeKeggPathwayAnalysis = lazy(
+  () => import('components/Genomes/KeggPathwayAnalysis')
 );
 
 const tabs = [
   { label: 'Overview', to: '#overview' },
   { label: 'Browse genome', to: '#genome-browser' },
-  { label: 'COG analysis', to: '#cog-analysis' },
-  { label: 'KEGG class analysis', to: '#kegg-class-analysis' },
-  { label: 'KEGG module analysis', to: '#kegg-module-analysis' },
+  { label: 'COG', to: '#cog-analysis' },
+  { label: 'KEGG classes', to: '#kegg-class-analysis' },
+  { label: 'KEGG modules', to: '#kegg-module-analysis' },
+  { label: 'KEGG pathways', to: '#kegg-pathway-analysis' },
   { label: 'Presence in metagenomes', to: '#metagenome-search' },
   { label: 'Downloads', to: '#downloads' },
 ];
@@ -182,11 +185,6 @@ const GenomePage: React.FC = () => {
     [mapSamples, mapPinsLimit]
   );
 
-  const totalCountryCount = useMemo(
-    () => getTotalCountryCount(countryCounts),
-    [countryCounts]
-  );
-
   const containmentHistogram = useMemo(
     () => getContainmentHistogram(searchResults),
     [searchResults]
@@ -275,7 +273,10 @@ const GenomePage: React.FC = () => {
           </RouteForHash>
           <RouteForHash hash="#genome-browser">
             <Suspense fallback={<Loading size="large" />}>
-              <GenomeBrowser />
+              <GenomeBrowser
+                accession={accession}
+                downloads={data.downloads ?? []}
+              />
             </Suspense>
           </RouteForHash>
           <RouteForHash hash="#cog-analysis">
@@ -324,6 +325,11 @@ const GenomePage: React.FC = () => {
               />
             </Suspense>
           </RouteForHash>
+          <RouteForHash hash="#kegg-pathway-analysis">
+            <Suspense fallback={<Loading size="large" />}>
+              <GenomeKeggPathwayAnalysis downloads={data.downloads ?? []} />
+            </Suspense>
+          </RouteForHash>
           <RouteForHash hash="#metagenome-search">
             <div className="vf-stack vf-stack--400">
               <h3>Branchwater</h3>
@@ -355,7 +361,9 @@ const GenomePage: React.FC = () => {
                     isTableVisible={isTableVisible}
                     setIsTableVisible={setIsTableVisible}
                     filters={filters}
-                    onFilterChange={onFilterChange}
+                    onFilterChange={(field, value) =>
+                      onFilterChange(field as keyof BranchwaterFilters, value)
+                    }
                     sortField={order.replace(/^-/, '')}
                     sortDirection={order.startsWith('-') ? 'desc' : 'asc'}
                     onSortChange={onSortChange}
@@ -368,7 +376,6 @@ const GenomePage: React.FC = () => {
                     mapSamples={mapSamples}
                     displayedMapSamples={displayedMapSamples}
                     setMapPinsLimit={setMapPinsLimit}
-                    totalCountryCount={totalCountryCount}
                     getCountryColor={getCountryColor}
                     downloadCSV={downloadCSV}
                     queryParamPrefix="genomeBranchwaterDetailed"

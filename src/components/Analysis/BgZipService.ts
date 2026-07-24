@@ -1,7 +1,7 @@
 /* eslint-disable no-bitwise */
 
 import * as pako from 'pako';
-import { Download } from 'interfaces/index';
+import { Download } from '@/interfaces';
 import { find } from 'lodash-es';
 import { fetchWithCheck } from 'utils/fetch';
 
@@ -16,6 +16,8 @@ export class BGZipService {
   private gziIndex: GziBlock[] = [];
 
   public isInitialized = false;
+
+  private initializePromise?: Promise<boolean>;
 
   private readonly dataFileUrl: string;
 
@@ -34,9 +36,16 @@ export class BGZipService {
       (index) => index.index_type === index_type
     );
 
-    if (!indexFile) return undefined;
+    if (indexFile) return indexFile.url;
 
-    return indexFile.url;
+    if (download.index_file?.index_type !== index_type) return undefined;
+    if (download.index_file.url) return download.index_file.url;
+    if (!download.index_file.path) return undefined;
+
+    const indexFilename = download.index_file.path.split('/').pop();
+    if (!indexFilename) return undefined;
+
+    return download.url.replace(/[^/]+$/, indexFilename);
   }
 
   constructor(
@@ -57,9 +66,15 @@ export class BGZipService {
     }
   }
 
-  public async initialize(): Promise<boolean> {
-    if (this.isInitialized) return true;
+  public initialize(): Promise<boolean> {
+    if (this.isInitialized) return Promise.resolve(true);
+    if (this.initializePromise) return this.initializePromise;
 
+    this.initializePromise = this.loadIndex();
+    return this.initializePromise;
+  }
+
+  private async loadIndex(): Promise<boolean> {
     if (!this.indexFileUrl) {
       console.warn(
         'No index file found for BGZip download; random-access BGZF methods will not be available.'
@@ -91,6 +106,7 @@ export class BGZipService {
       console.error('Error fetching GZI index:', errorMessage);
       return false;
     } finally {
+      this.initializePromise = undefined;
       console.groupEnd();
     }
   }

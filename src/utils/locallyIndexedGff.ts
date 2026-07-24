@@ -2,35 +2,35 @@ import Dexie, { Table } from 'dexie';
 import * as Comlink from 'comlink';
 import { filter, flatMap, forIn, groupBy, map, uniq } from 'lodash-es';
 import { RemoteFile } from 'generic-filehandle2';
-import { BgzipIndexedFasta } from '@gmod/indexedfasta';
+import { BgzipIndexedFasta, IndexedFasta } from '@gmod/indexedfasta';
 
 export type ContigDetails = {
   contigName: string;
   length: number;
-  annotations: {
-    interpros?: string[];
-    pfams?: string[];
-    cogs?: string[];
-    keggs?: string[];
-    gos?: string[];
-  };
-  annotationsPresence: {
-    hasInterpros?: number;
-    hasPfams?: number;
-    hasCogs?: number;
-    hasKeggs?: number;
-    hasGos?: number;
-  };
+  annotationText: string;
+  annotations: Record<string, string[] | undefined>;
+  annotationsPresence: Record<string, number | undefined>;
 };
 
 export type Contig = ContigDetails & {
   contigId: number;
 };
 
-type MetaKeys = 'assemblyAccession' | 'importStartedAt' | 'sourceUrl';
+type MetaKeys =
+  | 'assemblyAccession'
+  | 'importStartedAt'
+  | 'sourceUrl'
+  | 'indexSpec';
 
 export function contigNameToContigId(contigName: string): number {
-  return parseInt(contigName.split('_')[1]);
+  const numericSuffix = parseInt(contigName.split('_')[1], 10);
+  if (Number.isFinite(numericSuffix)) return numericSuffix;
+
+  let hash = 0;
+  for (let i = 0; i < contigName.length; i++) {
+    hash = (hash * 31 + contigName.charCodeAt(i)) % Number.MAX_SAFE_INTEGER;
+  }
+  return hash;
 }
 
 class GffDB extends Dexie {
@@ -38,11 +38,32 @@ class GffDB extends Dexie {
   meta!: Table<{ key: MetaKeys; value: any }, string>;
   constructor(name = 'gffdb') {
     super(name);
-    this.version(2).stores({
+    this.version(5).stores({
       contigs:
         'contigId, length, *annotations.interpros, *annotations.pfams, *annotations.cogs, *annotations.keggs, *annotations.gos, ' +
+        '*annotations.eggnogs, *annotations.ecNumbers, *annotations.genes, *annotations.products, *annotations.rfams, ' +
+        '*annotations.mibigs, *annotations.mibigClasses, *annotations.dbXrefs, ' +
+        '*annotations.geccoBgcTypes, *annotations.antismashProducts, *annotations.antismashFunctions, ' +
+        '*annotations.dbcanProtTypes, *annotations.dbcanProtFamilies, *annotations.dbcanPulSubstrates, ' +
+        '*annotations.dbcanSubstrates, *annotations.amrGenes, *annotations.amrDrugClasses, *annotations.amrDrugSubclasses, ' +
+        '*annotations.amrElementTypes, *annotations.amrElementSubtypes, *annotations.mobileElementTypes, *annotations.mobileOGs, ' +
+        '*annotations.trnaIsotypes, *annotations.ncrnaClasses, *annotations.defenseFinderTypes, ' +
+        '*annotations.defenseFinderSubtypes, *annotations.defenseFinderActivities, *annotations.viralTaxonomies, ' +
+        '*annotations.viphogTaxonomies, ' +
         'annotationsPresence.hasInterpros, annotationsPresence.hasPfams, annotationsPresence.hasCogs, ' +
-        'annotationsPresence.hasKeggs, annotationsPresence.hasGos',
+        'annotationsPresence.hasKeggs, annotationsPresence.hasGos, annotationsPresence.hasEggnogs, ' +
+        'annotationsPresence.hasEcNumbers, annotationsPresence.hasGenes, annotationsPresence.hasProducts, ' +
+        'annotationsPresence.hasRfams, annotationsPresence.hasMibigs, annotationsPresence.hasMibigClasses, ' +
+        'annotationsPresence.hasDbXrefs, annotationsPresence.hasGeccoBgcTypes, annotationsPresence.hasAntismashProducts, ' +
+        'annotationsPresence.hasAntismashFunctions, annotationsPresence.hasDbcanProtTypes, annotationsPresence.hasDbcanProtFamilies, ' +
+        'annotationsPresence.hasDbcanPulSubstrates, annotationsPresence.hasDbcanSubstrates, annotationsPresence.hasAmrGenes, ' +
+        'annotationsPresence.hasAmrDrugClasses, annotationsPresence.hasAmrDrugSubclasses, annotationsPresence.hasAmrElementTypes, ' +
+        'annotationsPresence.hasAmrElementSubtypes, annotationsPresence.hasMobileElementTypes, ' +
+        'annotationsPresence.hasMobileOGs, annotationsPresence.hasTrnaIsotypes, ' +
+        'annotationsPresence.hasNcrnaClasses, annotationsPresence.hasDefenseFinderTypes, ' +
+        'annotationsPresence.hasDefenseFinderSubtypes, annotationsPresence.hasDefenseFinderActivities, ' +
+        'annotationsPresence.hasViralTaxonomies, ' +
+        'annotationsPresence.hasViphogTaxonomies',
       //contigId is the primary key since named first - this is the contig integer index so that contigs
       // can be sorted by contig index rather than alphanumerically... contig 312 should be after contig 99.
       // The assembly key needs prepended to this to make a locus tag.
@@ -65,7 +86,7 @@ type WorkerApi = {
    */
   importGff: (
     url: string,
-    indexUrl: string,
+    indexUrl: string | undefined,
     onProgress: (bytes: number, total?: number) => void,
     onBatch: (rows: any[]) => Promise<void>,
     attrsToIndex: string[],
@@ -85,11 +106,11 @@ function createWorker() {
 export type ImportOptions = {
   url: string; // to get annots
   assemblyAccession: string;
-  indexUrl: string; // to paginate gff
+  indexUrl?: string; // to paginate bgzipped gff when available
   fastaUrl?: string; // to get the length of each contig
   fastaFaiUrl?: string; // ^
   fastaGziUrl?: string; // ^
-  attrsToIndex: string[]; // e.g. ['interpro', 'pfam', ...]
+  attrsToIndex: Array<TypeAheadAttributes | GffAttributeIndexSpec>;
   batchSize?: number; // gff lines per indexing batch,
   // may be useful for performance tuning otherwise remove and rely on blockzip size as batch
   onProgress?: (info: {
@@ -108,21 +129,134 @@ export type TypeAheadAttributes =
   | 'pfams'
   | 'keggs'
   | 'gos'
-  | 'cogs';
+  | 'cogs'
+  | 'eggnogs'
+  | 'ecNumbers'
+  | 'genes'
+  | 'products'
+  | 'rfams'
+  | 'mibigs'
+  | 'mibigClasses'
+  | 'dbXrefs'
+  | 'geccoBgcTypes'
+  | 'antismashProducts'
+  | 'antismashFunctions'
+  | 'dbcanProtTypes'
+  | 'dbcanProtFamilies'
+  | 'dbcanPulSubstrates'
+  | 'dbcanSubstrates'
+  | 'amrGenes'
+  | 'amrDrugClasses'
+  | 'amrDrugSubclasses'
+  | 'amrElementTypes'
+  | 'amrElementSubtypes'
+  | 'mobileElementTypes'
+  | 'mobileOGs'
+  | 'trnaIsotypes'
+  | 'ncrnaClasses'
+  | 'defenseFinderTypes'
+  | 'defenseFinderSubtypes'
+  | 'defenseFinderActivities'
+  | 'viralTaxonomies'
+  | 'viphogTaxonomies';
+
+export type GffAttributeIndexSpec = {
+  gffKey: string | string[];
+  field: TypeAheadAttributes;
+};
+
+export const PRESENCE_FIELD_BY_ATTRIBUTE: Record<TypeAheadAttributes, string> =
+  {
+    interpros: 'hasInterpros',
+    pfams: 'hasPfams',
+    cogs: 'hasCogs',
+    keggs: 'hasKeggs',
+    gos: 'hasGos',
+    eggnogs: 'hasEggnogs',
+    ecNumbers: 'hasEcNumbers',
+    genes: 'hasGenes',
+    products: 'hasProducts',
+    rfams: 'hasRfams',
+    mibigs: 'hasMibigs',
+    mibigClasses: 'hasMibigClasses',
+    dbXrefs: 'hasDbXrefs',
+    geccoBgcTypes: 'hasGeccoBgcTypes',
+    antismashProducts: 'hasAntismashProducts',
+    antismashFunctions: 'hasAntismashFunctions',
+    dbcanProtTypes: 'hasDbcanProtTypes',
+    dbcanProtFamilies: 'hasDbcanProtFamilies',
+    dbcanPulSubstrates: 'hasDbcanPulSubstrates',
+    dbcanSubstrates: 'hasDbcanSubstrates',
+    amrGenes: 'hasAmrGenes',
+    amrDrugClasses: 'hasAmrDrugClasses',
+    amrDrugSubclasses: 'hasAmrDrugSubclasses',
+    amrElementTypes: 'hasAmrElementTypes',
+    amrElementSubtypes: 'hasAmrElementSubtypes',
+    mobileElementTypes: 'hasMobileElementTypes',
+    mobileOGs: 'hasMobileOGs',
+    trnaIsotypes: 'hasTrnaIsotypes',
+    ncrnaClasses: 'hasNcrnaClasses',
+    defenseFinderTypes: 'hasDefenseFinderTypes',
+    defenseFinderSubtypes: 'hasDefenseFinderSubtypes',
+    defenseFinderActivities: 'hasDefenseFinderActivities',
+    viralTaxonomies: 'hasViralTaxonomies',
+    viphogTaxonomies: 'hasViphogTaxonomies',
+  };
+
+const normalizeAttributeIndexSpecs = (
+  attrsToIndex: Array<TypeAheadAttributes | GffAttributeIndexSpec>
+): GffAttributeIndexSpec[] =>
+  attrsToIndex.map((attr) =>
+    typeof attr === 'string' ? { gffKey: attr, field: attr } : attr
+  );
+
+const GFF_INDEX_CONTENT_VERSION = 2;
+
+export const getGffIndexSpec = (
+  attrsToIndex: Array<TypeAheadAttributes | GffAttributeIndexSpec>
+): string =>
+  JSON.stringify({
+    contentVersion: GFF_INDEX_CONTENT_VERSION,
+    attributes: normalizeAttributeIndexSpecs(attrsToIndex),
+  });
+
+const getPresenceFlags = (
+  annotations: ContigDetails['annotations']
+): ContigDetails['annotationsPresence'] =>
+  Object.fromEntries(
+    Object.entries(PRESENCE_FIELD_BY_ATTRIBUTE).map(([attribute, presence]) => [
+      presence,
+      (annotations[attribute]?.length ?? 0) > 0 ? 1 : 0,
+    ])
+  );
 
 export async function getTypeaheadSuggestions(
   query: string,
   attribute: TypeAheadAttributes,
   limit: number = 10
 ): Promise<string[]> {
-  if (!query || query.length < 1) return [];
-
   try {
     const upperQuery = query.toUpperCase();
+    const indexName = `annotations.${attribute}`;
+
+    if (!query) {
+      const contigs = await db.contigs
+        .orderBy(indexName)
+        .limit(limit * 5)
+        .toArray();
+
+      return Array.from(
+        new Set(
+          contigs.flatMap((contig) => contig.annotations[attribute] || [])
+        )
+      )
+        .sort()
+        .slice(0, limit);
+    }
 
     // Get all unique attributes (e.g. interpros) that start with the query
     const suggestions = await db.contigs
-      .where(`annotations.${attribute}`)
+      .where(indexName)
       .startsWithIgnoreCase(upperQuery)
       .limit(limit * 3) // Get more than needed to account for duplicates. *3 is a guess.
       .toArray();
@@ -143,7 +277,7 @@ export function importGffToIndexedDB(opts: ImportOptions) {
   const {
     url,
     assemblyAccession,
-    indexUrl,
+    indexUrl = undefined,
     fastaUrl = undefined,
     fastaFaiUrl = undefined,
     fastaGziUrl = undefined,
@@ -155,6 +289,7 @@ export function importGffToIndexedDB(opts: ImportOptions) {
     onError,
     clearExisting = true,
   } = opts;
+  const attrIndexSpecs = normalizeAttributeIndexSpecs(attrsToIndex);
   // Ask for persistent storage (helps avoid eviction on large datasets)
   // Fire and forget; ignore if unsupported
   navigator.storage?.persist?.();
@@ -175,6 +310,7 @@ export function importGffToIndexedDB(opts: ImportOptions) {
     contigId: Contig['contigId'];
     contigName: Contig['contigName'];
     length?: Contig['length'];
+    annotationTextToAppend: Contig['annotationText'];
     annotsToAppend: Contig['annotations'];
   };
 
@@ -182,15 +318,23 @@ export function importGffToIndexedDB(opts: ImportOptions) {
     updates: contigUpsertDefinition[]
   ) {
     const merged = new Map<Contig['contigId'], ContigDetails>();
-    for (const { contigId, annotsToAppend, contigName, length } of updates) {
+    for (const {
+      contigId,
+      annotsToAppend,
+      annotationTextToAppend,
+      contigName,
+      length,
+    } of updates) {
       const acc =
         merged.get(contigId) ??
         ({
           contigName: contigName,
           length: length,
+          annotationText: '',
           annotations: {},
           annotationsPresence: {},
         } as ContigDetails);
+      acc.annotationText += annotationTextToAppend;
       for (const [annotType, annotValues] of Object.entries(annotsToAppend)) {
         if (!Array.isArray(annotValues)) continue;
         const prev = (acc as any).annotations[annotType] as any[] | undefined;
@@ -217,6 +361,8 @@ export function importGffToIndexedDB(opts: ImportOptions) {
           // Update: append + dedupe each annotation within nested annotations.*
           const next: Contig = {
             ...row,
+            annotationText:
+              (row.annotationText || '') + appendObj.annotationText,
             annotations: { ...(row.annotations || {}) },
           };
           for (const [field, vals] of Object.entries(appendObj.annotations)) {
@@ -228,37 +374,23 @@ export function importGffToIndexedDB(opts: ImportOptions) {
               ...(vals as any[]),
             ]);
           }
-          // compute presence flags (length > 0)
-          (next as any).annotationsPresence = {
-            hasInterpros: (next.annotations.interpros?.length ?? 0) > 0 ? 1 : 0,
-            hasPfams: (next.annotations.pfams?.length ?? 0) > 0 ? 1 : 0,
-            hasCogs: (next.annotations.cogs?.length ?? 0) > 0 ? 1 : 0,
-            hasKeggs: (next.annotations.keggs?.length ?? 0) > 0 ? 1 : 0,
-            hasGos: (next.annotations.gos?.length ?? 0) > 0 ? 1 : 0,
-          };
+          next.annotationsPresence = getPresenceFlags(next.annotations);
 
           toUpdate.push(next);
         } else {
-          const ann = {
-            interpros: uniq((appendObj.annotations.interpros ?? []) as any[]),
-            pfams: uniq((appendObj.annotations.pfams ?? []) as any[]),
-            cogs: uniq(appendObj.annotations.cogs ?? []),
-            keggs: uniq(appendObj.annotations.keggs ?? []),
-            gos: uniq((appendObj.annotations.gos ?? []) as any[]),
-          };
+          const ann = Object.fromEntries(
+            attrIndexSpecs.map(({ field }) => [
+              field,
+              uniq((appendObj.annotations[field] ?? []) as string[]),
+            ])
+          ) as ContigDetails['annotations'];
           const draft: any = {
             contigId: id,
             contigName: appendObj.contigName,
             length: appendObj.length,
+            annotationText: appendObj.annotationText,
             annotations: ann,
-            // compute presence flags (length > 0)
-            annotationsPresence: {
-              hasInterpros: ann.interpros.length > 0 ? 1 : 0,
-              hasPfams: ann.pfams.length > 0 ? 1 : 0,
-              hasCogs: ann.cogs.length > 0 ? 1 : 0,
-              hasKeggs: ann.keggs.length > 0 ? 1 : 0,
-              hasGos: ann.gos.length > 0 ? 1 : 0,
-            },
+            annotationsPresence: getPresenceFlags(ann),
           };
           toAdd.push(draft as Contig);
         }
@@ -272,39 +404,33 @@ export function importGffToIndexedDB(opts: ImportOptions) {
   const onBatch = Comlink.proxy(async (rows: any[]) => {
     if (!rows?.length || cancelled) return;
 
-    let contigsToUpsert: contigUpsertDefinition[] = [];
+    const contigsToUpsert: contigUpsertDefinition[] = [];
 
     forIn(
       groupBy(rows, (row) => row.seqid),
       (annotations, contigId) => {
-        contigsToUpsert.push({
-          contigId: contigNameToContigId(contigId),
-          contigName: contigId,
-          annotsToAppend: {
-            interpros: filter(
-              flatMap(annotations, (row) => row.indexableAttrValues.interpro),
-              (annot) => !!annot
-            ),
-            pfams: filter(
-              flatMap(annotations, (row) => row.indexableAttrValues.pfam),
-              (annot) => !!annot
-            ),
-            cogs: filter(
-              flatMap(annotations, (row) => row.indexableAttrValues.cog),
-              (annot) => !!annot
-            ),
-            keggs: filter(
-              flatMap(annotations, (row) => row.indexableAttrValues.kegg),
-              (annot) => !!annot
-            ),
-            gos: filter(
-              flatMap(
-                annotations,
-                (row) => row.indexableAttrValues.Ontology_term
+        const annotsToAppend = Object.fromEntries(
+          attrIndexSpecs.map(({ gffKey, field }) => [
+            field,
+            filter(
+              flatMap(Array.isArray(gffKey) ? gffKey : [gffKey], (key) =>
+                flatMap(
+                  annotations,
+                  (row) => row.indexableAttrValues[key.toLowerCase()]
+                )
               ),
               (annot) => !!annot
             ),
-          },
+          ])
+        ) as Contig['annotations'];
+
+        contigsToUpsert.push({
+          contigId: contigNameToContigId(contigId),
+          contigName: contigId,
+          annotationTextToAppend: annotations
+            .map((row) => row.annotationText || '')
+            .join(''),
+          annotsToAppend,
         });
       }
     );
@@ -320,6 +446,10 @@ export function importGffToIndexedDB(opts: ImportOptions) {
           await db.contigs.clear();
           await db.meta.put({ key: 'sourceUrl', value: url });
           await db.meta.put({
+            key: 'indexSpec',
+            value: getGffIndexSpec(attrIndexSpecs),
+          });
+          await db.meta.put({
             key: 'assemblyAccession',
             value: assemblyAccession,
           });
@@ -332,19 +462,30 @@ export function importGffToIndexedDB(opts: ImportOptions) {
         indexUrl,
         Comlink.proxy(progressCb),
         Comlink.proxy(onBatch),
-        attrsToIndex,
+        Array.from(
+          new Set(
+            flatMap(attrIndexSpecs, ({ gffKey }) =>
+              Array.isArray(gffKey) ? gffKey : [gffKey]
+            )
+          )
+        ),
         batchSize
       );
 
       const seconds = (performance.now() - startT) / 1000;
 
-      if (fastaUrl && fastaFaiUrl && fastaGziUrl) {
-        const fastaBgzHandler = new BgzipIndexedFasta({
-          fasta: new RemoteFile(fastaUrl),
-          fai: new RemoteFile(fastaFaiUrl),
-          gzi: new RemoteFile(fastaGziUrl),
-        });
-        const contigLengths = await fastaBgzHandler.getSequenceSizes();
+      if (fastaUrl && fastaFaiUrl) {
+        const fastaHandler = fastaGziUrl
+          ? new BgzipIndexedFasta({
+              fasta: new RemoteFile(fastaUrl),
+              fai: new RemoteFile(fastaFaiUrl),
+              gzi: new RemoteFile(fastaGziUrl),
+            })
+          : new IndexedFasta({
+              fasta: new RemoteFile(fastaUrl),
+              fai: new RemoteFile(fastaFaiUrl),
+            });
+        const contigLengths = await fastaHandler.getSequenceSizes();
         await db.transaction('rw', db.meta, db.contigs, async () => {
           await db.contigs.bulkUpdate(
             map(contigLengths, (length, contigName) => ({
