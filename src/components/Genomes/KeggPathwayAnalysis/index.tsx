@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import { Download } from '@/interfaces';
-import KeggModule from 'components/Analysis/Pathways/KeggModule';
+import KeggModule, {
+  KEGG_MODULE_COLUMN_HEADERS,
+} from 'components/Analysis/Pathways/KeggModule';
 
 type GenomeKeggPathwayAnalysisProps = {
   downloads: Download[];
@@ -37,6 +39,7 @@ const GenomeKeggPathwayAnalysis: React.FC<GenomeKeggPathwayAnalysisProps> = ({
   return (
     <KeggModule
       dataFiles={keggPathwayDownloads}
+      columnHeaders={KEGG_MODULE_COLUMN_HEADERS}
       barChartColumnIndexes={{ label: 0, count: 1 }}
     />
   );

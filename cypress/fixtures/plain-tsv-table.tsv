@@ -1,4 +1,4 @@
-pathway_accession	completeness
-map00010	90
-map00020	75
-map00030	50
+module_accession	completeness	pathway_name	pathway_class	matching_ko	missing_ko
+M00135	90	Glycolysis	Carbohydrate metabolism	K00001	K00002
+M00136	75	Citric acid cycle	Energy metabolism	K00003	K00004
+M00137	50	Pentose phosphate pathway	Carbohydrate metabolism	K00005	K00006

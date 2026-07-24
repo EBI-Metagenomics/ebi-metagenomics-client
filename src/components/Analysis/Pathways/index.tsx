@@ -5,7 +5,7 @@ import TabsForQueryParameter from 'components/UI/TabsForQueryParameter';
 import ExtLink from 'components/UI/ExtLink';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import { createSharedQueryParamContext } from 'hooks/queryParamState/useQueryParamState';
-import KeggModule from './KeggModule';
+import KeggModule, { KEGG_MODULE_COLUMN_HEADERS } from './KeggModule';
 import AntiSMASH from './AntiSMASH';
 import GenomeProperties from './GenomeProperties';
 import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
@@ -63,6 +63,7 @@ const PathwaysSubPage: React.FC = () => {
         {activeType === 'kegg-modules' && (
           <KeggModule
             isLegacy={isLegacy}
+            columnHeaders={KEGG_MODULE_COLUMN_HEADERS}
             legacyFile={
               data.downloads.find(
                 (f) =>
