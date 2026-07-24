@@ -28,6 +28,10 @@ describe('Contig viewer and indexer on bgzipped gffs', () => {
       .should('be.visible');
     cy.contains('ERZ101_6')
       .should('be.visible');
+    cy.get('.vf-table__body')
+      .contains('ERZ101_1')
+      .closest('tr')
+      .should('contain.text', '26440');
 
     // MAP GFF should be shown too
     cy.contains('Additional GFFs shown are not searchable').should('be.visible');
@@ -58,6 +62,12 @@ describe('Contig viewer and indexer on bgzipped gffs', () => {
     cy.get('.vf-table__body code').should('contain.text', 'Contig ID=ERZ101_4;');
     cy.get('.vf-table__body mark').should('have.text', 'ERZ101_4');
     cy.get('#contig-search-all').clear();
+    cy.get('.vf-table__body > .vf-table__row').should('have.length', 6);
+
+    cy.get('#contig_required_switch_interpros').click();
+    cy.location('search').should('contain', 'interProSearch=ANY');
+    cy.get('.vf-table__body > .vf-table__row').should('have.length', 2);
+    cy.get('#contig_required_switch_interpros').click();
     cy.get('.vf-table__body > .vf-table__row').should('have.length', 6);
 
     cy.get('#searchitem-interpro_').focus();

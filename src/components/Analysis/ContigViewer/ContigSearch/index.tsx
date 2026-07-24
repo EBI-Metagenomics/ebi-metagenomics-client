@@ -525,7 +525,7 @@ const ContigSearch: React.FC<{
       fastaFaiUrl: BGZipService.getIndexFileUrl(fastaDownload, 'fai'),
       fastaGziUrl: BGZipService.getIndexFileUrl(fastaDownload, 'gzi'),
       attrsToIndex,
-      batchSize: 200,
+      batchSize: 5000,
       onProgress: ({ percent }) => {
         toast.update(`${gffDownload.alias}-index-progress`, {
           progress: percent ? percent / 110 : 0, // extra 10% for roughly the time after batches until the index is complete
