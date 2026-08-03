@@ -46,7 +46,7 @@ const megamenunavItems = [
     ],
   },
 ]
-describe.skip('MegaMenu Component', () => {
+describe('MegaMenu Component', () => {
   beforeEach(() => {
     openPage('');
   });
