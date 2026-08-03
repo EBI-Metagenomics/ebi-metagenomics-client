@@ -153,7 +153,7 @@ const MegaMenu: React.FC = () => {
                 href={`${config.basename}browse/genomes`}
                 onClick={() => setMenuVisible(false)}
               >
-                MGnify genomes &nbsp;
+                MGnify genomes
               </a>
             </li>
             <li className="vf-navigation__item">
