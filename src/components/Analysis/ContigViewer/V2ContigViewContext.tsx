@@ -17,6 +17,7 @@ type LGVContextValue = {
 const LGVContext = React.createContext<LGVContextValue | null>(null);
 
 const ADDITIONAL_GFF_TRACK_HEIGHT = 60;
+const JBROWSE_MODAL_Z_INDEX = 2100;
 
 export function useLGV() {
   const ctx = React.useContext(LGVContext);
@@ -50,6 +51,11 @@ export function LGVProvider({
         assembly: {
           name: fasta.alias,
           sequence: referenceSequenceTrack,
+        },
+        configuration: {
+          theme: {
+            zIndex: { modal: JBROWSE_MODAL_Z_INDEX },
+          },
         },
         tracks: [],
         location: initialLoc,
