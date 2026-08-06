@@ -11,7 +11,7 @@ const Matomo: React.FC = () => {
     () =>
       `${config.basename}${
         pathname.startsWith('/') ? pathname.slice(1) : pathname
-      }?${search}${hash}`,
+      }${search}${hash}`,
     [pathname, search, hash]
   );
 

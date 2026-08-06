@@ -3,7 +3,6 @@
   "version": "2.1.14",
   "description": "Web Client for the Mgnify service at EBI",
   "homepage": "/https://github.com/EBI-Metagenomics/ebi-metagenomics-client#readme",
-  "main": "src/index.tsx",
   "scripts": {
     "serve:fixtures": "http-server -p 5055 cypress/fixtures --cors",
     "cy:test:run": "cypress run",
