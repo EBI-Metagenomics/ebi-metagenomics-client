@@ -137,13 +137,23 @@ const MegaMenu: React.FC = () => {
               <a
                 id="sequence-search-link"
                 target="_blank"
-                href="https://www.ebi.ac.uk/metagenomics/sequence-search/search/phmmer"
+                href="https://www.ebi.ac.uk/metagenomics/proteins/"
                 className="vf-navigation__link vf-mega-menu__link"
                 onClick={() => setMenuVisible(false)}
                 rel="noreferrer"
               >
-                Protein sequence search &nbsp;
+                MGnify Proteins &nbsp;
                 <span className="icon icon-common icon-external-link-alt" />
+              </a>
+            </li>
+            <li className="vf-navigation__item">
+              <a
+                id="about-link"
+                className="vf-navigation__link vf-mega-menu__link"
+                href={`${config.basename}browse/genomes`}
+                onClick={() => setMenuVisible(false)}
+              >
+                MGnify Genomes
               </a>
             </li>
             <li className="vf-navigation__item">

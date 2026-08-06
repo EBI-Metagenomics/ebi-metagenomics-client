@@ -114,6 +114,19 @@ pre.vf-code-example__pre > button {
   text-decoration: underline;
 }
 
+#mgnify-mega-menu .vf-navigation__list {
+  flex-wrap: nowrap;
+}
+
+#mgnify-mega-menu .vf-navigation__item {
+  min-width: 0;
+}
+
+#mgnify-mega-menu .vf-navigation__link {
+  white-space: nowrap;
+  padding-inline: 0.75rem;
+}
+
 .vf-tabs__link.is-active {
   z-index: 1999 !important;  /* Ensure it's below the mega-menu */'
 }
