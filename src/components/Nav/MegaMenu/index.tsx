@@ -142,7 +142,7 @@ const MegaMenu: React.FC = () => {
                 onClick={() => setMenuVisible(false)}
                 rel="noreferrer"
               >
-                Mgnify proteins &nbsp;
+                MGnify Proteins &nbsp;
                 <span className="icon icon-common icon-external-link-alt" />
               </a>
             </li>
