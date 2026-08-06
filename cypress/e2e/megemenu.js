@@ -57,7 +57,7 @@ const megaMenuDirectLinks = [
     href: 'https://www.ebi.ac.uk/metagenomics/proteins/',
   },
   {
-    text: 'MGnify genomes',
+    text: 'MGnify Genomes',
     href: '/metagenomics/browse/genomes',
   },
   {
