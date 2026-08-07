@@ -9,3 +9,81 @@
   margin-top: 0;
   margin-bottom: 1rem;
 }
+
+.compressed-tsv-table__toolbar {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: white;
+  padding: 0.5rem 0;
+}
+
+.compressed-tsv-table__toolbar-actions,
+.compressed-tsv-table__search-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.compressed-tsv-table__search-status {
+  font-size: 0.875rem;
+}
+
+.compressed-tsv-table__search-status .vf-button {
+  margin-left: 0.5rem;
+}
+
+.compressed-tsv-table__search-form {
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+.tsv-table,
+.tsv-table .fixed-height-scrollable__wrapper,
+.tsv-table__scroll {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.tsv-table {
+  /* Do not let wide cells determine the surrounding grid's width. */
+  contain: inline-size;
+}
+
+.tsv-table__scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tsv-table .mg-table {
+  width: 100%;
+  min-width: 100%;
+  font-size: 0.75rem;
+}
+
+.tsv-table .mg-table .vf-table__heading,
+.tsv-table .mg-table .vf-table__cell {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+.tsv-table .mg-table .vf-table__cell {
+  white-space: normal;
+}
+
+.tsv-table__toolbar,
+.tsv-table .mg-table-footer {
+  left: 0;
+}

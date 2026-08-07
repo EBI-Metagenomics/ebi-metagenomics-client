@@ -70,7 +70,6 @@ const GO: React.FC<GOProps> = ({ isLegacy, legacyFile }) => {
         </div>
         <CompressedTSVTable
           download={dataFile}
-          columnHeaders={['GO', 'Term']}
           barChartSpec={{
             title: 'GO Terms',
             labelsCol: {
@@ -81,7 +80,7 @@ const GO: React.FC<GOProps> = ({ isLegacy, legacyFile }) => {
             countsCol: {
               id: 'count',
               Header: 'Count',
-              accessor: (d) => Number(d[2]),
+              accessor: (d) => Number(d[3]),
             },
           }}
         />

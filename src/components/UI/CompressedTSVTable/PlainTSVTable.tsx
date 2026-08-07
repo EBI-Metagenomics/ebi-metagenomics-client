@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import type { PaginatedList } from '@/interfaces';
+import { rowMatchesTSVSearch } from 'utils/tsv';
 import TSVTableView from './TSVTableView';
 import type { TSVTableLoaderProps } from './types';
 
@@ -22,6 +23,11 @@ type RowsState = {
   url: string;
 };
 
+type SearchResults = {
+  rows: string[][];
+  term: string;
+};
+
 const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
   barChartSpec,
   columnHeaders,
@@ -34,12 +40,17 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
     rows: null,
     url: download.url,
   });
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<SearchResults | null>(
+    null
+  );
 
   useEffect(() => {
     let cancelled = false;
     const url = download.url;
 
     setRowsState({ rows: null, url });
+    setSearchResults(null);
     fetch(url)
       .then(async (response) => {
         if (!response.ok) {
@@ -68,7 +79,8 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
     () => (firstRowIsHeader ? rows?.slice(1) : rows) ?? [],
     [firstRowIsHeader, rows]
   );
-  const totalPages = Math.max(1, Math.ceil(dataRows.length / PAGE_SIZE));
+  const visibleRows = searchResults?.rows ?? dataRows;
+  const totalPages = Math.max(1, Math.ceil(visibleRows.length / PAGE_SIZE));
   const currentPage = Math.min(normalizePageNumber(pageNum), totalPages);
 
   useEffect(() => {
@@ -78,10 +90,24 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
   const pageData = useMemo<PaginatedList<string[]>>(() => {
     const offset = (currentPage - 1) * PAGE_SIZE;
     return {
-      items: dataRows.slice(offset, offset + PAGE_SIZE),
-      count: dataRows.length,
+      items: visibleRows.slice(offset, offset + PAGE_SIZE),
+      count: visibleRows.length,
     };
-  }, [currentPage, dataRows]);
+  }, [currentPage, visibleRows]);
+
+  const searchAllRows = async (rawSearchTerm: string) => {
+    const term = rawSearchTerm.trim();
+    if (!term || rows === null) return;
+
+    setIsSearching(true);
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    setSearchResults({
+      rows: dataRows.filter((row) => rowMatchesTSVSearch(row, term)),
+      term,
+    });
+    setPageNum(1);
+    setIsSearching(false);
+  };
 
   return (
     <TSVTableView
@@ -90,8 +116,16 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
       columns={columns}
       data={pageData}
       expectedPageSize={PAGE_SIZE}
+      fileUrl={download.url}
       headerRow={headerRow}
       isLoading={rows === null}
+      isSearching={isSearching}
+      onClearSearch={() => {
+        setSearchResults(null);
+        setPageNum(1);
+      }}
+      onSearch={searchAllRows}
+      searchTerm={searchResults?.term ?? ''}
     />
   );
 };
