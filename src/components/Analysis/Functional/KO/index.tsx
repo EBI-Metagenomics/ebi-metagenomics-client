@@ -72,7 +72,6 @@ const KOTab: React.FC<KOProps> = ({ isLegacy, legacyFile }) => {
         </div>
         <CompressedTSVTable
           download={dataFile}
-          columnHeaders={['KO', 'Description']}
           barChartSpec={{
             title: 'KEGG Orthologs',
             labelsCol: {

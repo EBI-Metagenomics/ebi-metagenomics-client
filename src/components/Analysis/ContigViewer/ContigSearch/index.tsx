@@ -28,6 +28,7 @@ import { Collection } from 'dexie';
 import { KEYWORD_ANY } from 'components/UI/TextInputTypeahead';
 import { filesize } from 'filesize';
 import { camelCase } from 'lodash-es';
+import { getRemoteFileSize } from 'utils/fetch';
 import 'components/Analysis/ContigViewer/style.css';
 
 const ALL_ANNOTATIONS_SEARCH_PARAM = 'allAnnotationsSearch';
@@ -141,24 +142,6 @@ const SearchAllFilter: React.FC<{
       </small>
     </div>
   );
-};
-
-const getFileSize = async (dataFileUrl: string): Promise<number> => {
-  let response = await fetch(dataFileUrl, { method: 'HEAD' });
-  if (!response.ok || !response.headers.get('content-length')) {
-    const controller = new AbortController();
-    response = await fetch(dataFileUrl, {
-      headers: { Range: 'bytes=0-0' },
-      signal: controller.signal,
-    });
-    if (response.status !== 206) controller.abort();
-  }
-  const contentRange = response.headers.get('content-range');
-  const contentLength = Number(
-    contentRange?.split('/')[1] || response.headers.get('content-length') || '0'
-  );
-  console.debug(`Compressed file size: ${contentLength}`);
-  return contentLength;
 };
 
 export type ContigSearchFilterConfig = {
@@ -293,7 +276,7 @@ const ContigSearch: React.FC<{
   );
 
   useEffect(() => {
-    getFileSize(gffDownload.url).then(setGffSize);
+    getRemoteFileSize(gffDownload.url).then(setGffSize);
   }, [gffDownload]);
 
   const [contigsTableData, setContigsTableData] = useState<

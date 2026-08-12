@@ -7,7 +7,7 @@ import '@fontsource/roboto';
 
 import { find, includes } from 'lodash-es';
 import Loading from 'components/UI/Loading';
-import CompressedTSVTable from 'components/UI/CompressedTSVTable';
+import CompressedTSVTable, { TSVCell } from 'components/UI/CompressedTSVTable';
 import DetailedVisualisationCard from '../VisualisationCards/DetailedVisualisationCard';
 import { RouteTabs } from 'components/UI/Tabs';
 import { Navigate, Route, Routes } from 'react-router-dom';
@@ -92,7 +92,7 @@ const ContigsViewer: React.FC = () => {
             <div className="vf-stack vf-stack--200 gff-attributes">
               {value.split(';').map((attr, i) => (
                 <div key={i} className="gff-attribute">
-                  {attr.trim()}
+                  <TSVCell value={attr.trim()} />
                 </div>
               ))}
             </div>

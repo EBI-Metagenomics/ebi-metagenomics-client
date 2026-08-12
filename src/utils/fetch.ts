@@ -68,3 +68,32 @@ export async function fetchBlob(
 
   return blob;
 }
+
+export async function getRemoteFileSize(url: string): Promise<number> {
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    const contentLength = Number(response.headers.get('content-length') || 0);
+    if (response.ok && contentLength > 0) return contentLength;
+  } catch {
+    // Some file servers do not support HEAD; try a minimal range request.
+  }
+
+  const controller = new AbortController();
+  try {
+    const response = await fetch(url, {
+      headers: { Range: 'bytes=0-0' },
+      signal: controller.signal,
+    });
+    const contentRange = response.headers.get('content-range');
+    const contentLength = Number(
+      contentRange?.split('/')[1] || response.headers.get('content-length') || 0
+    );
+    if (response.status !== 206) controller.abort();
+    return (response.status === 200 || response.status === 206) &&
+      contentLength > 0
+      ? contentLength
+      : 0;
+  } catch {
+    return 0;
+  }
+}

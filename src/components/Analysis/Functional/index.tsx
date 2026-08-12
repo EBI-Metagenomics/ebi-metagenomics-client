@@ -13,6 +13,7 @@ import PfamTab from 'components/Analysis/Functional/Pfam';
 import useLegacyAnalysisKnownFiles from 'hooks/data/useLegacyAnalysisKnownFiles';
 import InterProTab from './InterPro';
 import GOTab from './GO';
+import RheaTab from './Rhea';
 import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const PARAMETER_NAME = 'type';
@@ -23,6 +24,7 @@ const tabs = [
   { label: 'Pfam', to: 'pfam' },
   { label: 'KO', to: 'ko' },
 ];
+const rheaTab = { label: 'Rhea', to: 'rhea' };
 
 const { useType, withQueryParamProvider } = createSharedQueryParamContext({
   type: SharedTextQueryParam(PARAMETER_DEFAULT),
@@ -33,7 +35,6 @@ const FunctionalAnalysis: React.FC = () => {
   const { resultsDir, interproPath, goPath } = useLegacyAnalysisKnownFiles();
 
   const [type] = useType<string>();
-  const activeType = type || PARAMETER_DEFAULT;
 
   if (!data) {
     return <div>Loading...</div>; // or whatever loading component you prefer
@@ -44,6 +45,12 @@ const FunctionalAnalysis: React.FC = () => {
   const version = parseFloat(versionStr.replace(/^V/i, ''));
   const isLegacy = !Number.isNaN(version) && version < 6;
   const longReadExperiment = data.experiment_type === 'LRASS';
+  const supportsRhea =
+    version >= 6 && data.experiment_type.toLowerCase() === 'assembly';
+  const availableTabs = supportsRhea ? [...tabs, rheaTab] : tabs;
+  const activeType = availableTabs.some((tab) => tab.to === type)
+    ? type
+    : PARAMETER_DEFAULT;
 
   if (version < 4.1) {
     return (
@@ -61,7 +68,7 @@ const FunctionalAnalysis: React.FC = () => {
   return (
     <div className="vf-stack">
       <p>
-        These charts present the functional analysis outputs of our pipeline,
+        These views present the functional analysis outputs of our pipeline,
         which focus on{' '}
         <ExtLink href="http://www.ebi.ac.uk/interpro" title="InterPro website">
           InterPro
@@ -82,6 +89,14 @@ const FunctionalAnalysis: React.FC = () => {
             >
               KEGG orthologue
             </ExtLink>
+            {supportsRhea && (
+              <>
+                ,{' '}
+                <ExtLink href="https://www.rhea-db.org/" title="Rhea website">
+                  Rhea reactions
+                </ExtLink>
+              </>
+            )}
           </>
         )}{' '}
         and{' '}
@@ -103,7 +118,7 @@ const FunctionalAnalysis: React.FC = () => {
         </InfoBanner>
       )}
       <TabsForQueryParameter
-        tabs={version >= 5 ? tabs : tabs.slice(0, 4)}
+        tabs={availableTabs}
         queryParameter={PARAMETER_NAME}
         defaultValue={PARAMETER_DEFAULT}
       />
@@ -186,6 +201,7 @@ const FunctionalAnalysis: React.FC = () => {
             }
           />
         )}
+        {activeType === 'rhea' && supportsRhea && <RheaTab />}
       </div>
     </div>
   );

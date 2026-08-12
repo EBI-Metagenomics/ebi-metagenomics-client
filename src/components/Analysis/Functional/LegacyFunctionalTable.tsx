@@ -8,6 +8,8 @@ import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
 import BarChartForTable from 'components/Analysis/BarChartForTable';
 import protectedAxios from '@/utils/protectedAxios';
 import axios from 'axios';
+import { TSVCell } from 'components/UI/CompressedTSVTable';
+import { getTSVColumnLabel } from 'utils/tsv';
 
 interface LegacyFunctionalTableProps {
   url: string;
@@ -101,7 +103,7 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
             });
             if (isHeader) {
               headerIdx = i;
-              headers = row.map((h) => startCase(h));
+              headers = row.map(getTSVColumnLabel);
               break;
             }
           }
@@ -149,6 +151,7 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
             headers.map((header, colNum) => ({
               Header: header,
               accessor: (row: string[]) => row[colNum],
+              Cell: ({ value }) => <TSVCell value={value} />,
               id: `col_${colNum}`,
             }))
           );
@@ -275,6 +278,7 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
 
   const viewModeSelector = (
     <div
+      className="tsv-table__toolbar"
       style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -337,9 +341,9 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
     );
 
   return (
-    <div className="legacy-functional-table">
+    <div className="legacy-functional-table tsv-table">
       {title && <h4 className="vf-text-heading--4">{title}</h4>}
-      <FixedHeightScrollable heightPx={600}>
+      <FixedHeightScrollable heightPx={600} className="tsv-table__scroll">
         {viewModeSelector}
         {content}
       </FixedHeightScrollable>

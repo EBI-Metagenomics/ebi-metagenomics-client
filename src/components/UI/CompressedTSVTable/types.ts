@@ -22,6 +22,11 @@ export interface TSVTableLoaderProps extends TSVTableProps {
 export interface TSVTableViewProps extends Omit<TSVTableProps, 'download'> {
   data: PaginatedList<string[]>;
   expectedPageSize: number;
+  fileUrl: string;
   headerRow?: string[];
   isLoading: boolean;
+  isSearching: boolean;
+  onClearSearch: () => void;
+  onSearch: (searchTerm: string) => Promise<void>;
+  searchTerm: string;
 }

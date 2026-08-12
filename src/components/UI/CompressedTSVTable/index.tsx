@@ -28,4 +28,5 @@ const CompressedTSVTable: React.FC<TSVTableProps> = (props) => {
   );
 };
 
+export { default as TSVCell } from './TSVCell';
 export default withQueryParamProvider(CompressedTSVTable);
