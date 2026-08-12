@@ -10,7 +10,7 @@ Sentry.init({
   environment: config.sentryEnv,
   integrations: [Sentry.browserTracingIntegration()],
   tracesSampleRate: config.sentryTransactionRate,
-  tracePropagationTargets: [/api/],
+  // tracePropagationTargets: [/api/],
 });
 
 const matomo = createInstance(config.matomo);

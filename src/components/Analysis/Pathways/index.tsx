@@ -8,6 +8,7 @@ import { createSharedQueryParamContext } from 'hooks/queryParamState/useQueryPar
 import KeggModule, { KEGG_MODULE_COLUMN_HEADERS } from './KeggModule';
 import AntiSMASH from './AntiSMASH';
 import GenomeProperties from './GenomeProperties';
+import DRAM from './DRAM';
 import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
 
 const PARAMETER_NAME = 'type';
@@ -16,6 +17,7 @@ const tabs = [
   { label: 'KEGG Module', to: 'kegg-modules' },
   { label: 'Genome properties', to: 'genome-properties' },
   { label: 'antiSMASH', to: 'antismash' },
+  { label: 'DRAM', to: 'dram' },
 ];
 
 const { useType, withQueryParamProvider } = createSharedQueryParamContext({
@@ -46,13 +48,15 @@ const PathwaysSubPage: React.FC = () => {
         ,{' '}
         <ExtLink href="https://www.ebi.ac.uk/interpro/genomeproperties/">
           Genome Properties
-        </ExtLink>{' '}
-        and{' '}
+        </ExtLink>
+        ,{' '}
         <ExtLink href="https://antismash.secondarymetabolites.org">
           antiSMASH
         </ExtLink>{' '}
-        annotations in this assembly. The full set of results files may be found
-        under the <Link to="#download">Download</Link> tab.
+        and <ExtLink href="https://dramit.readthedocs.io/">DRAM</ExtLink>{' '}
+        annotations in this assembly (depending on pipeline version). The full
+        set of results files may be found under the{' '}
+        <Link to="#download">Downloads</Link> tab.
       </p>
       <TabsForQueryParameter
         tabs={tabs}
@@ -118,6 +122,7 @@ const PathwaysSubPage: React.FC = () => {
             }
           />
         )}
+        {activeType === 'dram' && <DRAM />}
       </div>
     </div>
   );
