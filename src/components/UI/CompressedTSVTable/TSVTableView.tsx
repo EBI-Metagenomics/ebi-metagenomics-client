@@ -60,15 +60,20 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
   const isBusy = isLoading || isSearching;
 
   useEffect(() => {
-    let cancelled = false;
     setFileSize(undefined);
+  }, [fileUrl]);
+
+  useEffect(() => {
+    if (!isSearchModalOpen || fileSize !== undefined) return undefined;
+
+    let cancelled = false;
     getRemoteFileSize(fileUrl).then((size) => {
       if (!cancelled) setFileSize(size || null);
     });
     return () => {
       cancelled = true;
     };
-  }, [fileUrl]);
+  }, [fileSize, fileUrl, isSearchModalOpen]);
 
   const openSearchModal = () => {
     setSearchInput(searchTerm);
