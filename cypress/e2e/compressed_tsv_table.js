@@ -1,4 +1,5 @@
 import config from 'utils/config';
+import { gzip } from 'pako';
 import { openPage, waitForPageLoad } from '../util/util.js';
 
 const assertKeggModuleHeaders = () => {
@@ -92,5 +93,43 @@ describe('TSV table loaders', () => {
     cy.get('.compressed-tsv-table').should('be.visible');
     assertKeggModuleHeaders();
     cy.wait('@assemblyTsv');
+  });
+});
+
+describe('DRAM reports', () => {
+  it('renders a gzipped DRAM report in an iframe', () => {
+    const accession = 'MGYA00000002';
+    const dramUrl = 'https://example.test/dram-report.html.gz';
+    const reportHtml = '<h1>DRAM Distill report</h1>';
+
+    cy.fixture('apiv2/analyses/analysisMGYA00000002.json').then((analysis) => {
+      cy.intercept('GET', `${config.api_v2}analyses/${accession}`, {
+        ...analysis,
+        downloads: [
+          ...analysis.downloads,
+          {
+            alias: 'ERZ857107_dram.html.gz',
+            download_group: 'pathways_and_systems.dram_distill',
+            long_description: 'DRAM Distill HTML visualization',
+            short_description: 'DRAM Distill HTML report',
+            url: dramUrl,
+          },
+        ],
+      });
+    });
+    cy.intercept('GET', dramUrl, {
+      body: gzip(reportHtml).buffer,
+      headers: { 'content-type': 'application/x-gzip' },
+    }).as('dramReport');
+
+    openPage(`analyses/${accession}/path-systems`);
+    waitForPageLoad(`Analysis ${accession}`);
+
+    cy.contains('button', 'DRAM').click();
+    cy.contains('DRAM (Distilling and Refining Annotations of Metabolism)');
+    cy.wait('@dramReport');
+    cy.get('iframe[title="DRAM Distill HTML report"]')
+      .should('have.attr', 'srcdoc')
+      .and('contain', reportHtml);
   });
 });
