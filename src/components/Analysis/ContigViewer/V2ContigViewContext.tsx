@@ -59,6 +59,14 @@ export function LGVProvider({
         },
         tracks: [],
         location: initialLoc,
+        defaultSession: {
+          name: fasta.alias,
+          view: {
+            id: 'linearGenomeView',
+            type: 'LinearGenomeView',
+            hideHeader: false,
+          },
+        },
       }),
     [fasta.alias, referenceSequenceTrack, initialLoc]
   );

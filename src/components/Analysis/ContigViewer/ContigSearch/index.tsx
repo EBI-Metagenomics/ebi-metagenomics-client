@@ -621,10 +621,13 @@ const ContigSearch: React.FC<{
           data={contigsTableData as PaginatedList<Contig>}
           expectedPageSize={PAGESIZE}
           Title={
-            <>
+            <div style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
               {entityLabel === 'genome' ? 'Genome' : 'Assembly'} Contigs (
               {contigsTableData.count})
-            </>
+              <p className={'vf-text-body vf-text-body--4'}>
+                Click a Contig ID to browse it above
+              </p>
+            </div>
           }
           className="mg-contigs-table"
           isStale={isStale}
