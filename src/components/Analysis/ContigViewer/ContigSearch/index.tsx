@@ -29,6 +29,7 @@ import { KEYWORD_ANY } from 'components/UI/TextInputTypeahead';
 import { filesize } from 'filesize';
 import { camelCase } from 'lodash-es';
 import { getRemoteFileSize } from 'utils/fetch';
+import { getAnnotationLabel } from 'utils/annotationStringStore';
 import 'components/Analysis/ContigViewer/style.css';
 
 const ALL_ANNOTATIONS_SEARCH_PARAM = 'allAnnotationsSearch';
@@ -145,53 +146,50 @@ const SearchAllFilter: React.FC<{
 };
 
 export type ContigSearchFilterConfig = {
-  title: string;
   attribute: TypeAheadAttributes;
   placeholder: string;
   gffKey?: string | string[];
-  featureDisplay?: string;
+  featureDisplay: string;
   searchParamName?: string;
 };
 
 export const getFilterSearchParamName = (
   filter: ContigSearchFilterConfig
-): string => filter.searchParamName ?? camelCase(`${filter.title} search`);
+): string =>
+  filter.searchParamName ??
+  camelCase(`${getAnnotationLabel(filter.featureDisplay)} search`);
 
 const assemblyFilterConfig: ContigSearchFilterConfig[] = [
   {
-    title: 'InterPro',
     attribute: 'interpros',
     placeholder: 'IPR015200',
     gffKey: 'interpro',
     featureDisplay: 'interpro',
   },
   {
-    title: 'Pfam',
     attribute: 'pfams',
     placeholder: 'PF12574',
     gffKey: 'pfam',
     featureDisplay: 'pfam',
   },
   {
-    title: 'COG Category',
     attribute: 'cogs',
     placeholder: 'S',
     gffKey: 'cog',
     featureDisplay: 'cog',
   },
   {
-    title: 'KEGG Ortholog',
     attribute: 'keggs',
     placeholder: 'ko:K03325',
     gffKey: 'kegg',
     featureDisplay: 'kegg',
   },
   {
-    title: 'Gene Ontology term',
     attribute: 'gos',
     placeholder: 'GO:0044281',
     gffKey: 'Ontology_term',
     featureDisplay: 'go',
+    searchParamName: 'geneOntologyTermSearch',
   },
 ];
 
@@ -461,18 +459,18 @@ const ContigSearch: React.FC<{
         accessor: (row) => row.annotationsPresence,
         id: 'features',
         Cell: ({ cell }) => {
-          const flags = visibleFilterConfig
-            .filter(({ featureDisplay }) => featureDisplay)
-            .map(({ attribute, featureDisplay }) => {
+          const flags = visibleFilterConfig.map(
+            ({ attribute, featureDisplay }) => {
               const annotKeyInIndex = PRESENCE_FIELD_BY_ATTRIBUTE[attribute];
               return (
                 <ContigFeatureFlag
                   key={annotKeyInIndex}
-                  annotationType={featureDisplay as string}
+                  annotationType={featureDisplay}
                   present={cell.value?.[annotKeyInIndex] > 0}
                 />
               );
-            });
+            }
+          );
           return <div className="emg-contig-feature-flags">{flags}</div>;
         },
       },
@@ -603,7 +601,7 @@ const ContigSearch: React.FC<{
             visibleFilterConfig.map((filter, index) => (
               <ContigTypeaheadFilter
                 key={filter.attribute}
-                title={filter.title}
+                title={getAnnotationLabel(filter.featureDisplay)}
                 attribute={filter.attribute}
                 placeholder={filter.placeholder}
                 searchParamName={getFilterSearchParamName(filter)}

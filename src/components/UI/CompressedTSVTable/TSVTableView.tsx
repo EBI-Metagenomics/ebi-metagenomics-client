@@ -8,7 +8,7 @@ import EMGModal from 'components/UI/EMGModal';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
 import Loading from 'components/UI/Loading';
 import { getRemoteFileSize } from 'utils/fetch';
-import { getTSVColumnLabel } from 'utils/tsv';
+import { getAnnotationLabel } from 'utils/annotationStringStore';
 import TSVCell from './TSVCell';
 import type { TSVTableViewProps } from './types';
 
@@ -18,7 +18,7 @@ const columnsFromHeader = (
   searchTerm: string
 ): Column[] =>
   headerRow.map((header, columnIndex) => ({
-    Header: getTSVColumnLabel(columnHeaders?.[columnIndex] ?? header),
+    Header: getAnnotationLabel(columnHeaders?.[columnIndex] ?? header),
     accessor: (row) => row[columnIndex],
     Cell: ({ value }) => <TSVCell value={value} searchTerm={searchTerm} />,
     id: `col_${columnIndex}`,

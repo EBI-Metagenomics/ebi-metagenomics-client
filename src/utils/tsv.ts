@@ -1,31 +1,3 @@
-export const TSV_COLUMN_LABELS: Record<string, string> = {
-  category: 'Category',
-  chebi_reaction: 'ChEBI reaction',
-  completeness: 'Completeness',
-  contig_id: 'Contig ID',
-  count: 'Count',
-  description: 'Description',
-  go: 'GO',
-  interpro: 'InterPro',
-  interpro_accession: 'InterPro accession',
-  ko: 'KO',
-  matching_ko: 'Matching KO',
-  missing_ko: 'Missing KO',
-  module_accession: 'Module accession',
-  pathway_class: 'Pathway class',
-  pathway_name: 'Pathway name',
-  pfam: 'Pfam',
-  protein_hash: 'Protein hash',
-  protein_id: 'Protein ID',
-  reaction: 'Reaction',
-  rhea_id: 'Rhea ID',
-  term: 'Term',
-  top_hit: 'Top hit',
-};
-
-export const getTSVColumnLabel = (columnName: string): string =>
-  TSV_COLUMN_LABELS[columnName.trim().toLowerCase()] ?? columnName;
-
 export const rowMatchesTSVSearch = (
   row: string[],
   rawSearchTerm: string

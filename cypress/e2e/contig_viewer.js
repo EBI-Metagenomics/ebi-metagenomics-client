@@ -73,7 +73,7 @@ describe('Contig viewer and indexer on bgzipped gffs', () => {
     cy.get('#searchitem-interpro_').focus();
     cy.get('.mg-typeahead-suggestion').should('have.length.greaterThan', 0);
 
-    cy.contains('summary', 'Gene Ontology term').click();
+    cy.contains('summary', 'GO').click();
     cy.get('#contig_required_switch_gos').click();
     cy.location('search').should(
       'contain',

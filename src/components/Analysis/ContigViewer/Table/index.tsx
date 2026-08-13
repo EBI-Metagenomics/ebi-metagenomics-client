@@ -17,6 +17,7 @@ import {
   useOfflineCrate,
 } from 'hooks/genomeViewer/CrateStore/useCrates';
 import { MGnifyDatum } from 'hooks/data/useData';
+import { getAnnotationLabel } from 'utils/annotationStringStore';
 
 type ContigFeatureProps = {
   annotationType: string;
@@ -140,9 +141,9 @@ export const ContigFeatureFlag: React.FC<ContigFeatureProps> = ({
   if (!present) {
     color += '55';
   }
-  const tooltip = `${
-    present ? 'Has' : 'Doesn’t have'
-  } ${annotationType} annotations`;
+  const tooltip = `${present ? 'Has' : 'Doesn’t have'} ${getAnnotationLabel(
+    annotationType
+  )} annotations`;
   return (
     <Tooltip content={tooltip}>
       <div
