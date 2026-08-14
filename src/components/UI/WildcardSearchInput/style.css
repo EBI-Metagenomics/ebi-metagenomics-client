@@ -1,0 +1,58 @@
+.wildcard-search-input {
+  display: flex;
+}
+
+.wildcard-search-input__field {
+  position: relative;
+  display: flex;
+  font-size: 1.1875rem;
+  line-height: 1.421;
+}
+
+.wildcard-search-input__field input {
+  min-width: 0;
+  border-inline-end: 0;
+}
+
+.wildcard-search-input__field[data-wildcard] input {
+  padding-inline-start: 1rem;
+}
+
+.wildcard-search-input__wildcards {
+  position: absolute;
+  top: 50%;
+  left: 0.625rem;
+  z-index: 1;
+  color: #707070;
+  opacity: 0.45;
+  pointer-events: none;
+  transform: translateY(-50%);
+  white-space: pre;
+}
+
+.wildcard-search-input__wildcards span {
+  visibility: hidden;
+}
+
+.wildcard-search-input button {
+  box-sizing: border-box;
+  display: grid;
+  width: 2.25rem;
+  padding: 0;
+  place-items: center;
+  border: 0.25rem solid #707070;
+  background: #707070;
+  color: white;
+  cursor: pointer;
+  transition: background-color ease 0.3s, border-color ease 0.3s,
+    filter ease 0.15s;
+}
+
+.wildcard-search-input button[aria-pressed='true'] {
+  border-color: var(--vf-theme--primary);
+  background: var(--vf-theme--primary);
+}
+
+.wildcard-search-input button:not(:disabled):hover {
+  filter: brightness(1.12);
+}

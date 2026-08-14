@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { PaginatedList } from '@/interfaces';
 import { BGZipService } from 'components/Analysis/BgZipService';
-import { rowMatchesTSVSearch } from 'utils/tsv';
+import { searchRegExp } from 'utils/textSearch';
 import TSVTableView from './TSVTableView';
 import type { TSVTableLoaderProps } from './types';
 
@@ -136,7 +136,7 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
     setPageNum,
   ]);
 
-  const searchAllPages = async (rawSearchTerm: string) => {
+  const searchAllPages = async (rawSearchTerm: string, wholeWord: boolean) => {
     const term = rawSearchTerm.trim();
     if (!term) return;
 
@@ -156,8 +156,11 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
       const rows = [firstPageRows, ...remainingPages].flat();
       if (firstRowIsHeader && rows.length) rows.shift();
 
+      const pattern = searchRegExp(term, wholeWord);
       setSearchResults({
-        rows: rows.filter((row) => rowMatchesTSVSearch(row, term)),
+        rows: rows.filter(
+          (row) => !!pattern && row.some((cell) => pattern.test(String(cell)))
+        ),
         term,
       });
       setPageNum(1);

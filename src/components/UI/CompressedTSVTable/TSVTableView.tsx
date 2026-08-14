@@ -7,6 +7,7 @@ import EMGTable from 'components/UI/EMGTable';
 import EMGModal from 'components/UI/EMGModal';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
 import Loading from 'components/UI/Loading';
+import WildcardSearchInput from 'components/UI/WildcardSearchInput';
 import { getRemoteFileSize } from 'utils/fetch';
 import { getAnnotationLabel } from 'utils/annotationStringStore';
 import TSVCell from './TSVCell';
@@ -41,6 +42,7 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
   const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [searchInput, setSearchInput] = useState(searchTerm);
+  const [wholeWord, setWholeWord] = useState(false);
   const [fileSize, setFileSize] = useState<number | null>();
   const tableColumns = useMemo(() => {
     if (!columns.length) {
@@ -100,7 +102,7 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
             event.preventDefault();
             const nextSearchTerm = searchInput.trim();
             if (!nextSearchTerm) return;
-            await onSearch(nextSearchTerm);
+            await onSearch(nextSearchTerm, wholeWord);
             setViewMode('table');
             setIsSearchModalOpen(false);
           }}
@@ -114,16 +116,21 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
               ` (${filesize(fileSize, { round: 1 })})`}{' '}
             to be loaded in your browser.
           </p>
-          <label className="vf-form__label">
+          <label
+            className="vf-form__label"
+            htmlFor="compressed-tsv-search-term"
+          >
             Search&nbsp;term
-            <input
-              type="search"
-              className="vf-form__input"
-              value={searchInput}
-              onChange={(event) => setSearchInput(event.target.value)}
-              autoFocus
-            />
           </label>
+          <WildcardSearchInput
+            id="compressed-tsv-search-term"
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
+            wholeWord={wholeWord}
+            onWholeWordChange={setWholeWord}
+            disabled={isBusy}
+            autoFocus
+          />
           <div className="compressed-tsv-table__search-actions">
             <button
               type="submit"

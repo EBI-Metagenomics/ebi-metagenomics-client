@@ -55,9 +55,28 @@ describe('TSV table loaders', () => {
     cy.get('.compressed-tsv-table').should('contain.text', 'M00135');
     cy.wait('@plainTsv');
 
-    cy.contains('button', 'Switch to chart view').click();
-    cy.get('.compressed-tsv-table .highcharts-container').should('be.visible');
-    cy.get('@plainTsv.all').should('have.length', 1);
+    cy.contains('.compressed-tsv-table button', 'Search...').click();
+    cy.get('#compressed-tsv-search-term').type('M0013');
+    cy.contains('.ReactModal__Content button', 'Search').click();
+    cy.contains('.compressed-tsv-table__search-status', 'Showing 3 rows');
+
+    cy.contains('.compressed-tsv-table button', 'Search...').click();
+    cy.get('.wildcard-search-input__toggle').first().click();
+    cy.contains('.ReactModal__Content button', 'Search').click();
+    cy.contains('.compressed-tsv-table__search-status', 'Showing 0 rows');
+
+    cy.get('.compressed-tsv-table__search-status')
+      .contains('button', 'Clear')
+      .click();
+    cy.get('.compressed-tsv-table tbody tr').should('have.length', 3);
+
+    cy.get('@plainTsv.all').then((requests) => {
+      cy.contains('button', 'Switch to chart view').click();
+      cy.get('.compressed-tsv-table .highcharts-container').should(
+        'be.visible'
+      );
+      cy.get('@plainTsv.all').should('have.length', requests.length);
+    });
   });
 
   it('applies curated KEGG module headers to an assembly analysis', () => {
