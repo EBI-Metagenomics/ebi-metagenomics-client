@@ -24,11 +24,14 @@ import SharedQueryParamsProvider, {
 import { ContigFeatureFlag } from 'components/Analysis/ContigViewer/Table';
 import { useLGV } from 'components/Analysis/ContigViewer/V2ContigViewContext';
 import ContigTypeaheadFilter from 'components/Analysis/ContigViewer/Filter/ContigFilterTypeahead';
+import WildcardSearchInput from 'components/UI/WildcardSearchInput';
 import { Collection } from 'dexie';
 import { KEYWORD_ANY } from 'components/UI/TextInputTypeahead';
 import { filesize } from 'filesize';
 import { camelCase } from 'lodash-es';
 import { getRemoteFileSize } from 'utils/fetch';
+import { getAnnotationLabel } from 'utils/annotationStringStore';
+import { searchRegExp } from 'utils/textSearch';
 import 'components/Analysis/ContigViewer/style.css';
 
 const ALL_ANNOTATIONS_SEARCH_PARAM = 'allAnnotationsSearch';
@@ -41,16 +44,16 @@ type SearchableContig = Contig & {
 
 export const findFirstMatchingAnnotationBlock = (
   annotationText: string,
-  rawTerm: string
+  rawTerm: string,
+  wholeWord = false
 ): string | undefined => {
-  const term = rawTerm.trim().toLowerCase();
-  if (!term) return undefined;
+  const match =
+    searchRegExp(rawTerm, true)?.exec(annotationText || '') ??
+    searchRegExp(rawTerm, wholeWord)?.exec(annotationText || '');
+  if (!match) return undefined;
 
-  const matchIndex = (annotationText || '').toLowerCase().indexOf(term);
-  if (matchIndex < 0) return undefined;
-
-  const blockStart = annotationText.lastIndexOf(';', matchIndex - 1) + 1;
-  const separatorIndex = annotationText.indexOf(';', matchIndex);
+  const blockStart = annotationText.lastIndexOf(';', match.index - 1) + 1;
+  const separatorIndex = annotationText.indexOf(';', match.index);
   const blockEnd =
     separatorIndex < 0 ? annotationText.length : separatorIndex + 1;
   return annotationText.slice(blockStart, blockEnd).trim();
@@ -58,30 +61,32 @@ export const findFirstMatchingAnnotationBlock = (
 
 export const findGlobalSearchMatch = (
   contig: Contig,
-  rawTerm: string
+  rawTerm: string,
+  wholeWord = false
 ): string | undefined => {
-  const term = rawTerm.trim().toLowerCase();
-  if (!term) return undefined;
-  if (contig.contigName.toLowerCase().includes(term)) {
+  if (searchRegExp(rawTerm, wholeWord)?.test(contig.contigName)) {
     return `Contig ID=${contig.contigName};`;
   }
-  return findFirstMatchingAnnotationBlock(contig.annotationText, term);
+  return findFirstMatchingAnnotationBlock(
+    contig.annotationText,
+    rawTerm,
+    wholeWord
+  );
 };
 
 const HighlightedAnnotationMatch: React.FC<{
   text: string;
   searchTerm: string;
-}> = ({ text, searchTerm }) => {
-  const matchIndex = text
-    .toLowerCase()
-    .indexOf(searchTerm.trim().toLowerCase());
-  if (matchIndex < 0) return <>{text}</>;
+  wholeWord: boolean;
+}> = ({ text, searchTerm, wholeWord }) => {
+  const match = searchRegExp(searchTerm, wholeWord)?.exec(text);
+  if (!match) return <>{text}</>;
 
-  const matchEnd = matchIndex + searchTerm.trim().length;
+  const matchEnd = match.index + match[0].length;
   return (
     <code>
-      {text.slice(0, matchIndex)}
-      <mark>{text.slice(matchIndex, matchEnd)}</mark>
+      {text.slice(0, match.index)}
+      <mark>{match[0]}</mark>
       {text.slice(matchEnd)}
     </code>
   );
@@ -90,7 +95,9 @@ const HighlightedAnnotationMatch: React.FC<{
 const SearchAllFilter: React.FC<{
   accession: string;
   includeGenomeExamples: boolean;
-}> = ({ accession, includeGenomeExamples }) => {
+  setWholeWord: (wholeWord: boolean) => void;
+  wholeWord: boolean;
+}> = ({ accession, includeGenomeExamples, setWholeWord, wholeWord }) => {
   const [searchTerm, setSearchTerm] = useQueryParamState<string>(
     ALL_ANNOTATIONS_SEARCH_PARAM
   );
@@ -116,13 +123,13 @@ const SearchAllFilter: React.FC<{
       <label className="vf-form__label" htmlFor="contig-search-all">
         Search all
       </label>
-      <input
+      <WildcardSearchInput
         id="contig-search-all"
-        type="search"
-        className="vf-form__input"
         placeholder="Search GFF"
         value={value}
         onChange={(event) => setValue(event.target.value)}
+        wholeWord={wholeWord}
+        onWholeWordChange={setWholeWord}
       />
       <small className="vf-form__helper mg-contig-search-examples">
         <span>Examples:</span>
@@ -145,53 +152,50 @@ const SearchAllFilter: React.FC<{
 };
 
 export type ContigSearchFilterConfig = {
-  title: string;
   attribute: TypeAheadAttributes;
   placeholder: string;
   gffKey?: string | string[];
-  featureDisplay?: string;
+  featureDisplay: string;
   searchParamName?: string;
 };
 
 export const getFilterSearchParamName = (
   filter: ContigSearchFilterConfig
-): string => filter.searchParamName ?? camelCase(`${filter.title} search`);
+): string =>
+  filter.searchParamName ??
+  camelCase(`${getAnnotationLabel(filter.featureDisplay)} search`);
 
 const assemblyFilterConfig: ContigSearchFilterConfig[] = [
   {
-    title: 'InterPro',
     attribute: 'interpros',
     placeholder: 'IPR015200',
     gffKey: 'interpro',
     featureDisplay: 'interpro',
   },
   {
-    title: 'Pfam',
     attribute: 'pfams',
     placeholder: 'PF12574',
     gffKey: 'pfam',
     featureDisplay: 'pfam',
   },
   {
-    title: 'COG Category',
     attribute: 'cogs',
     placeholder: 'S',
     gffKey: 'cog',
     featureDisplay: 'cog',
   },
   {
-    title: 'KEGG Ortholog',
     attribute: 'keggs',
     placeholder: 'ko:K03325',
     gffKey: 'kegg',
     featureDisplay: 'kegg',
   },
   {
-    title: 'Gene Ontology term',
     attribute: 'gos',
     placeholder: 'GO:0044281',
     gffKey: 'Ontology_term',
     featureDisplay: 'go',
+    searchParamName: 'geneOntologyTermSearch',
   },
 ];
 
@@ -224,6 +228,7 @@ const ContigSearch: React.FC<{
   const [allAnnotationsSearch] = useQueryParamState<string>(
     ALL_ANNOTATIONS_SEARCH_PARAM
   );
+  const [wholeWord, setWholeWord] = useState(false);
   const searchTermsByAttribute = useMemo<
     Partial<Record<TypeAheadAttributes, string>>
   >(
@@ -339,8 +344,11 @@ const ContigSearch: React.FC<{
 
     const globalSearchTerm = (allAnnotationsSearch || '').trim();
     if (globalSearchTerm) {
+      const pattern = searchRegExp(globalSearchTerm, wholeWord);
       const hasGlobalMatch = (contig: Contig) =>
-        !!findGlobalSearchMatch(contig, globalSearchTerm);
+        !!pattern &&
+        (pattern.test(contig.contigName) ||
+          pattern.test(contig.annotationText));
       contigsColl = contigsColl
         ? contigsColl.and(hasGlobalMatch)
         : contigsTable.filter(hasGlobalMatch);
@@ -354,7 +362,11 @@ const ContigSearch: React.FC<{
     const itemsWithMatches: SearchableContig[] = globalSearchTerm
       ? items.map((contig) => ({
           ...contig,
-          globalSearchMatch: findGlobalSearchMatch(contig, globalSearchTerm),
+          globalSearchMatch: findGlobalSearchMatch(
+            contig,
+            globalSearchTerm,
+            wholeWord
+          ),
         }))
       : items;
 
@@ -367,13 +379,13 @@ const ContigSearch: React.FC<{
       .then(setContigsTableData)
       .finally(() => setIsStale(false));
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isIndexed, pageNum, visibleSearchTermsDependency]);
+  }, [isIndexed, pageNum, visibleSearchTermsDependency, wholeWord]);
 
   useEffect(() => {
     if (!isIndexed) return;
     setPageNum(1);
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visibleSearchTermsDependency]);
+  }, [visibleSearchTermsDependency, wholeWord]);
 
   useEffect(() => {
     setAvailableAttributes(undefined);
@@ -461,18 +473,18 @@ const ContigSearch: React.FC<{
         accessor: (row) => row.annotationsPresence,
         id: 'features',
         Cell: ({ cell }) => {
-          const flags = visibleFilterConfig
-            .filter(({ featureDisplay }) => featureDisplay)
-            .map(({ attribute, featureDisplay }) => {
+          const flags = visibleFilterConfig.map(
+            ({ attribute, featureDisplay }) => {
               const annotKeyInIndex = PRESENCE_FIELD_BY_ATTRIBUTE[attribute];
               return (
                 <ContigFeatureFlag
                   key={annotKeyInIndex}
-                  annotationType={featureDisplay as string}
+                  annotationType={featureDisplay}
                   present={cell.value?.[annotKeyInIndex] > 0}
                 />
               );
-            });
+            }
+          );
           return <div className="emg-contig-feature-flags">{flags}</div>;
         },
       },
@@ -488,13 +500,14 @@ const ContigSearch: React.FC<{
                 <HighlightedAnnotationMatch
                   text={cell.value || ''}
                   searchTerm={allAnnotationsSearch}
+                  wholeWord={wholeWord}
                 />
               ),
             },
           ]
         : []),
     ],
-    [allAnnotationsSearch, visibleFilterConfig, navToContig]
+    [allAnnotationsSearch, visibleFilterConfig, navToContig, wholeWord]
   );
 
   const gffIndex = BGZipService.getIndexFileUrl(gffDownload);
@@ -598,12 +611,14 @@ const ContigSearch: React.FC<{
           <SearchAllFilter
             accession={assemblyAccession}
             includeGenomeExamples={entityLabel === 'genome'}
+            wholeWord={wholeWord}
+            setWholeWord={setWholeWord}
           />
           {visibleFilterConfig.length ? (
             visibleFilterConfig.map((filter, index) => (
               <ContigTypeaheadFilter
                 key={filter.attribute}
-                title={filter.title}
+                title={getAnnotationLabel(filter.featureDisplay)}
                 attribute={filter.attribute}
                 placeholder={filter.placeholder}
                 searchParamName={getFilterSearchParamName(filter)}
@@ -621,10 +636,13 @@ const ContigSearch: React.FC<{
           data={contigsTableData as PaginatedList<Contig>}
           expectedPageSize={PAGESIZE}
           Title={
-            <>
+            <div style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
               {entityLabel === 'genome' ? 'Genome' : 'Assembly'} Contigs (
               {contigsTableData.count})
-            </>
+              <p className={'vf-text-body vf-text-body--4'}>
+                Click a Contig ID to browse it above
+              </p>
+            </div>
           }
           className="mg-contigs-table"
           isStale={isStale}

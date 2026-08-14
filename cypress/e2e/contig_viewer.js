@@ -39,6 +39,10 @@ describe('Contig viewer and indexer on bgzipped gffs', () => {
     cy.contains('ERZ101_1|inverted_repeat_element').should('be.visible');
 
     cy.get('#contig-search-all').should('have.attr', 'placeholder', 'Search GFF');
+    cy.get('.mg-textsearch .wildcard-search-input__toggle').should(
+      'have.length',
+      1
+    );
     cy.contains('button', 'IPR000771').click();
     cy.get('#contig-search-all').should('have.value', 'IPR000771').clear();
 
@@ -53,6 +57,14 @@ describe('Contig viewer and indexer on bgzipped gffs', () => {
       'interpro=IPR003593;'
     );
     cy.get('.vf-table__body mark').should('have.text', 'IPR003593');
+    cy.get('#contig-search-all').clear().type('IPR00359');
+    cy.get('.vf-table__body > .vf-table__row').should('have.length', 3);
+    cy.get('.mg-textsearch .wildcard-search-input__toggle').click();
+    cy.get('.vf-table__body > .vf-table__row').should('have.length', 0);
+    cy.get('#contig-search-all').type('3');
+    cy.get('.vf-table__body > .vf-table__row').should('have.length', 3);
+    cy.get('.vf-table__body mark').should('have.text', 'IPR003593');
+    cy.get('.mg-textsearch .wildcard-search-input__toggle').click();
     cy.contains('Browsing 6 annotated contigs').should('be.visible');
     cy.get('#contig-search-all').clear();
     cy.get('.vf-table__body > .vf-table__row').should('have.length', 6);
@@ -73,7 +85,7 @@ describe('Contig viewer and indexer on bgzipped gffs', () => {
     cy.get('#searchitem-interpro_').focus();
     cy.get('.mg-typeahead-suggestion').should('have.length.greaterThan', 0);
 
-    cy.contains('summary', 'Gene Ontology term').click();
+    cy.contains('summary', 'GO').click();
     cy.get('#contig_required_switch_gos').click();
     cy.location('search').should(
       'contain',

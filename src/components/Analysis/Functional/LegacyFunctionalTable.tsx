@@ -9,7 +9,7 @@ import BarChartForTable from 'components/Analysis/BarChartForTable';
 import protectedAxios from '@/utils/protectedAxios';
 import axios from 'axios';
 import { TSVCell } from 'components/UI/CompressedTSVTable';
-import { getTSVColumnLabel } from 'utils/tsv';
+import { getAnnotationLabel } from 'utils/annotationStringStore';
 
 interface LegacyFunctionalTableProps {
   url: string;
@@ -103,7 +103,7 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
             });
             if (isHeader) {
               headerIdx = i;
-              headers = row.map(getTSVColumnLabel);
+              headers = row.map(getAnnotationLabel);
               break;
             }
           }

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import type { PaginatedList } from '@/interfaces';
-import { rowMatchesTSVSearch } from 'utils/tsv';
+import { searchRegExp } from 'utils/textSearch';
 import TSVTableView from './TSVTableView';
 import type { TSVTableLoaderProps } from './types';
 
@@ -95,14 +95,17 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
     };
   }, [currentPage, visibleRows]);
 
-  const searchAllRows = async (rawSearchTerm: string) => {
+  const searchAllRows = async (rawSearchTerm: string, wholeWord: boolean) => {
     const term = rawSearchTerm.trim();
     if (!term || rows === null) return;
 
     setIsSearching(true);
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    const pattern = searchRegExp(term, wholeWord);
     setSearchResults({
-      rows: dataRows.filter((row) => rowMatchesTSVSearch(row, term)),
+      rows: dataRows.filter(
+        (row) => !!pattern && row.some((cell) => pattern.test(String(cell)))
+      ),
       term,
     });
     setPageNum(1);

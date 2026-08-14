@@ -27,6 +27,6 @@ export interface TSVTableViewProps extends Omit<TSVTableProps, 'download'> {
   isLoading: boolean;
   isSearching: boolean;
   onClearSearch: () => void;
-  onSearch: (searchTerm: string) => Promise<void>;
+  onSearch: (searchTerm: string, wholeWord: boolean) => Promise<void>;
   searchTerm: string;
 }
