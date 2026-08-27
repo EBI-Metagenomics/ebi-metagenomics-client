@@ -39,7 +39,7 @@ const megaMenuExpandableItems = [
       'https://docs.mgnify.org/',
       'https://shiny-portal.embl.de/shinyapps/app/06_mgnify-notebook-lab?jlpath=mgnify-examples/home.ipynb',
       'https://hmmer-web-docs.readthedocs.io/en/latest/index.html',
-      'http://ftp.ebi.ac.uk/pub/databases/metagenomics/peptide_database/current_release/README.txt',
+      'http://ftp.ebi.ac.uk/pub/databases/metagenomics/peptide_database/current_release/README.md',
       'https://www.ebi.ac.uk/training/services/mgnify',
       'https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-portal-quick-tour',
       'https://www.ebi.ac.uk/training/online/course/ebi-metagenomics-portal-submitting-metagenomics-da',

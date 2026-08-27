@@ -577,7 +577,7 @@ const MegaMenu: React.FC = () => {
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="http://ftp.ebi.ac.uk/pub/databases/metagenomics/peptide_database/current_release/README.txt"
+                            href="http://ftp.ebi.ac.uk/pub/databases/metagenomics/peptide_database/current_release/README.md"
                             className="vf-navigation__link rotating-link"
                           >
                             <span
