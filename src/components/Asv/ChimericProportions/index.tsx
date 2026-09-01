@@ -1,35 +1,125 @@
 import { useEffect, useState } from 'react';
 import { fetchText } from 'utils/fetch';
 
+type Dada2Stats = {
+  initial_number_of_reads: number | null;
+  proportion_matched: number | null;
+  proportion_chimeric: number | null;
+  final_number_of_reads: number | null;
+};
+
+type ThresholdInfo = {
+  color: string;
+  message: string;
+};
+
+type SummaryCard = {
+  label: string;
+  value: string;
+  description: string;
+  color?: string;
+};
+
+const EMPTY_DADA2_STATS: Dada2Stats = {
+  initial_number_of_reads: null,
+  proportion_matched: null,
+  proportion_chimeric: null,
+  final_number_of_reads: null,
+};
+
+const STAT_KEY_MAPPING: Record<string, keyof Dada2Stats> = {
+  initial_number_of_reads: 'initial_number_of_reads',
+  initial_read_count: 'initial_number_of_reads',
+  proportion_matched: 'proportion_matched',
+  proportion_reads_matched: 'proportion_matched',
+  proportion_chimeric: 'proportion_chimeric',
+  proportion_reads_chimeric: 'proportion_chimeric',
+  final_number_of_reads: 'final_number_of_reads',
+  final_nonchimeric_read_count: 'final_number_of_reads',
+};
+
+const normalizeStatKey = (key: string): string =>
+  key
+    .trim()
+    .toLowerCase()
+    .replace(/[:\s-]+/g, '_');
+
+const parseNumericValue = (value: string): number | null => {
+  const parsedValue = parseFloat(value.trim());
+  return Number.isNaN(parsedValue) ? null : parsedValue;
+};
+
+const formatCount = (value: number | null): string =>
+  value === null ? 'N/A' : value.toLocaleString();
+
+const formatPercent = (value: number | null): string =>
+  value === null ? 'N/A' : `${(value * 100).toFixed(2)}%`;
+
+const calculateReadReductionPercent = (
+  initialReads: number | null,
+  finalReads: number | null
+): string | null => {
+  if (initialReads === null || finalReads === null || initialReads <= 0) {
+    return null;
+  }
+
+  return (((initialReads - finalReads) / initialReads) * 100).toFixed(1);
+};
+
+const deriveMatchedReadProportion = ({
+  proportion_matched: proportionMatched,
+  initial_number_of_reads: initialReads,
+  final_number_of_reads: finalReads,
+}: Dada2Stats): number | null => {
+  if (proportionMatched !== null) {
+    return proportionMatched;
+  }
+
+  if (initialReads === null || finalReads === null || initialReads <= 0) {
+    return null;
+  }
+
+  return finalReads / initialReads;
+};
+
+const getStatusInfo = (
+  proportion: number | null,
+  thresholdPercent: number,
+  goodWhenAtOrAbove: boolean,
+  passingMessage: string,
+  failingMessage: string
+): ThresholdInfo => {
+  if (proportion === null) {
+    return {
+      color: '#475569',
+      message: 'This metric is not available in the current statistics file.',
+    };
+  }
+
+  const percent = proportion * 100;
+  const isPassing = goodWhenAtOrAbove
+    ? percent >= thresholdPercent
+    : percent <= thresholdPercent;
+
+  return isPassing
+    ? {
+        color: '#22c55e',
+        message: passingMessage,
+      }
+    : {
+        color: '#ef4444',
+        message: failingMessage,
+      };
+};
+
 const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [dada2Stats, setDada2Stats] = useState({
-    initial_number_of_reads: 0,
-    proportion_matched: 0,
-    proportion_chimeric: 0,
-    final_number_of_reads: 0,
-  });
+  const [dada2Stats, setDada2Stats] = useState<Dada2Stats>(EMPTY_DADA2_STATS);
 
-  const parseTsvFile = (tsvContent: string) => {
+  const parseTsvFile = (tsvContent: string): Dada2Stats => {
     const lines = tsvContent.trim().split('\n');
-    const stats = {
-      initial_number_of_reads: 0,
-      proportion_matched: 0,
-      proportion_chimeric: 0,
-      final_number_of_reads: 0,
-    };
-
-    const keyMapping: { [key: string]: string } = {
-      initial_number_of_reads: 'initial_number_of_reads',
-      initial_read_count: 'initial_number_of_reads',
-      proportion_matched: 'proportion_matched',
-      proportion_reads_matched: 'proportion_matched',
-      proportion_chimeric: 'proportion_chimeric',
-      proportion_reads_chimeric: 'proportion_chimeric',
-      final_number_of_reads: 'final_number_of_reads',
-      final_nonchimeric_read_count: 'final_number_of_reads',
-    };
+    const stats = { ...EMPTY_DADA2_STATS };
 
     // TODO: DO away with nested loop and or if-elses
     for (let i = 0; i < lines.length; i++) {
@@ -37,16 +127,20 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
 
       if (line.includes('\t')) {
         const [key, value] = line.split('\t');
-        const trimmedKey: string = key.trim();
-        const numValue = parseFloat(value.trim());
-        if (trimmedKey in keyMapping && !Number.isNaN(numValue)) {
-          stats[keyMapping[trimmedKey]] = numValue;
+        const normalizedKey = normalizeStatKey(key);
+        const parsedValue = parseNumericValue(value);
+        const mappedKey = STAT_KEY_MAPPING[normalizedKey];
+
+        if (mappedKey && parsedValue !== null) {
+          stats[mappedKey] = parsedValue;
         }
       } else if (i + 1 < lines.length) {
-        const key = line;
-        const value = parseFloat(lines[i + 1].trim());
-        if (key in keyMapping && !Number.isNaN(value)) {
-          stats[keyMapping[key]] = value;
+        const normalizedKey = normalizeStatKey(line);
+        const parsedValue = parseNumericValue(lines[i + 1]);
+        const mappedKey = STAT_KEY_MAPPING[normalizedKey];
+
+        if (mappedKey && parsedValue !== null) {
+          stats[mappedKey] = parsedValue;
           i++;
         }
       }
@@ -82,25 +176,6 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
     }
   }, [fileUrl]);
 
-  const getChimericInfo = (proportion) => {
-    const percent = proportion * 100;
-    if (percent <= 25) {
-      return {
-        color: '#22c55e', // green-500
-        bgColor: '#dcfce7', // green-100
-        borderColor: '#86efac', // green-300
-        message: "The proportion of chimeric reads is within what you'd expect",
-      };
-    }
-    return {
-      color: '#ef4444', // red-500
-      bgColor: '#fee2e2', // red-100
-      borderColor: '#fca5a5', // red-300
-      message:
-        "The proportion of chimeric reads is above what you'd expect - something might have gone wrong at the primer trimming stage",
-    };
-  };
-
   if (loading) {
     return <div className="p-4 text-center">Loading data...</div>;
   }
@@ -110,41 +185,61 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
   }
 
   const chimericValue = dada2Stats.proportion_chimeric;
-  const chimericInfo = getChimericInfo(chimericValue);
+  const chimericInfo = getStatusInfo(
+    chimericValue,
+    25,
+    false,
+    "The proportion of chimeric reads is within what you'd expect",
+    "The proportion of chimeric reads is above what you'd expect - something might have gone wrong at the primer trimming stage"
+  );
+  const matchedReadProportion = deriveMatchedReadProportion(dada2Stats);
+  console.table(dada2Stats);
+  const matchedReadInfo = getStatusInfo(
+    matchedReadProportion,
+    10,
+    true,
+    'At least 10% of the initial reads contain ASVs',
+    'Less than 10% of the initial reads contain ASVs'
+  );
 
-  const readReductionPercent =
-    dada2Stats.initial_number_of_reads > 0
-      ? (
-          ((dada2Stats.initial_number_of_reads -
-            dada2Stats.final_number_of_reads) /
-            dada2Stats.initial_number_of_reads) *
-          100
-        ).toFixed(1)
-      : 0;
+  const readReductionPercent = calculateReadReductionPercent(
+    dada2Stats.initial_number_of_reads,
+    dada2Stats.final_number_of_reads
+  );
 
-  const statsCards = [
+  const statsCards: SummaryCard[] = [
     {
       label: 'Initial Reads',
-      value: dada2Stats.initial_number_of_reads.toLocaleString(),
+      value: formatCount(dada2Stats.initial_number_of_reads),
       description: 'Total number of initial reads',
     },
     {
       label: 'Final Reads',
-      value: dada2Stats.final_number_of_reads.toLocaleString(),
-      description: `${readReductionPercent}% reduction after processing`,
+      value: formatCount(dada2Stats.final_number_of_reads),
+      description: readReductionPercent
+        ? `${readReductionPercent}% reduction after processing`
+        : 'Number of non-chimeric reads retained after processing',
+    },
+    {
+      label: 'Reads with ASVs',
+      value: formatPercent(matchedReadProportion),
+      description: matchedReadInfo.message,
+      color: matchedReadInfo.color,
     },
     {
       label: 'Proportion Chimeric',
-      value: `${(dada2Stats.proportion_chimeric * 100).toFixed(2)}%`,
+      value: formatPercent(dada2Stats.proportion_chimeric),
       description: chimericInfo.message,
       color: chimericInfo.color,
-      isChimeric: true,
     },
   ];
 
-  const gaugePosition = Math.min(Math.max(chimericValue * 100, 0), 100);
+  const gaugePosition =
+    chimericValue === null
+      ? null
+      : Math.min(Math.max(chimericValue * 100, 0), 100);
 
-  const getSrrId = (url) => {
+  const getSrrId = (url: string): string => {
     const match = url.match(/(SRR\d+)_/);
     return match ? match[1] : 'Sample';
   };
@@ -168,7 +263,7 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
                   <h3 className="vf-card__heading">{stat.label}</h3>
                   <p
                     className="vf-card__subheading"
-                    style={stat.isChimeric ? { color: stat.color } : {}}
+                    style={stat.color ? { color: stat.color } : {}}
                   >
                     {stat.value}
                   </p>
@@ -199,7 +294,9 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
                     <div
                       className="absolute top-0 bottom-0 w-1 bg-black"
                       style={{
-                        left: `${gaugePosition}%`,
+                        display: gaugePosition === null ? 'none' : 'block',
+                        left:
+                          gaugePosition === null ? '0%' : `${gaugePosition}%`,
                         transform: 'translateX(-50%)',
                       }}
                     />
@@ -254,7 +351,7 @@ const ChimericProportions = ({ fileUrl }: { fileUrl: string }) => {
                             className="pt-2 font-medium"
                             style={{ color: chimericInfo.color }}
                           >
-                            Current value: {(chimericValue * 100).toFixed(2)}%
+                            Current value: {formatPercent(chimericValue)}
                           </td>
                         </tr>
                       </tbody>
