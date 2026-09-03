@@ -1,0 +1,185 @@
+.mg-catalogues-table {
+  table-layout: fixed;
+}
+
+.mg-catalogues-table .vf-table__heading {
+  white-space: normal;
+}
+
+.mg-catalogue-biome {
+  width: 14%;
+}
+
+.mg-catalogue-id {
+  width: 16%;
+}
+
+.mg-catalogue-name {
+  width: 20%;
+}
+
+.mg-catalogue-type {
+  width: 10%;
+}
+
+.mg-catalogue-version {
+  width: 8%;
+}
+
+.mg-catalogue-species {
+  width: 9%;
+}
+
+.mg-catalogue-genomes {
+  width: 13%;
+}
+
+.mg-catalogue-updated {
+  width: 10%;
+}
+
+.mg-catalogue-biome__value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mg-catalogue-biome__value .biome_icon {
+  flex: 0 0 auto;
+  float: none;
+}
+
+.mg-catalogue-id,
+.mg-catalogue-id a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mg-catalogue-id a {
+  display: block;
+}
+
+.mg-catalogue-name {
+  overflow-wrap: anywhere;
+}
+
+.mg-catalogue-name__metadata {
+  display: none;
+  margin-top: 0.25rem;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.mg-catalogue-cards {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .mg-catalogue-type,
+  .mg-catalogue-version {
+    display: none;
+  }
+
+  .mg-catalogue-name__metadata {
+    display: block;
+  }
+
+  .mg-catalogue-biome {
+    width: 18%;
+  }
+
+  .mg-catalogue-id {
+    width: 20%;
+  }
+
+  .mg-catalogue-name {
+    width: 24%;
+  }
+
+  .mg-catalogue-species,
+  .mg-catalogue-genomes {
+    width: 13%;
+  }
+
+  .mg-catalogue-updated {
+    width: 12%;
+  }
+}
+
+@media (max-width: 760px) {
+  .mg-catalogues-table {
+    display: none;
+  }
+
+  .mg-catalogue-cards {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .mg-catalogue-card {
+    padding: 1rem;
+    border: 1px solid #d8e0e8;
+    border-radius: 0.25rem;
+    background: #fff;
+  }
+
+  .mg-catalogue-card__biome {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    color: #475569;
+    font-size: 0.875rem;
+  }
+
+  .mg-catalogue-card__biome .biome_icon {
+    float: none;
+  }
+
+  .mg-catalogue-card__name,
+  .mg-catalogue-card__id {
+    display: block;
+  }
+
+  .mg-catalogue-card__name {
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+  }
+
+  .mg-catalogue-card__id {
+    overflow: hidden;
+    color: #64748b;
+    font-size: 0.875rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mg-catalogue-card__stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 1rem;
+    margin: 1rem 0 0;
+  }
+
+  .mg-catalogue-card__stats div:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .mg-catalogue-card__stats dt,
+  .mg-catalogue-card__stats dd {
+    margin: 0;
+  }
+
+  .mg-catalogue-card__stats dt {
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .mg-catalogue-card__stats dd {
+    margin-top: 0.125rem;
+  }
+}
