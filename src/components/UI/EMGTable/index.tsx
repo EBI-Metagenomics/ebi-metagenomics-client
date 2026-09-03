@@ -126,6 +126,7 @@ type EMGTableProps<T extends object> = {
   onMouseLeaveRow?: (row: Row<T>) => void;
   dataCy?: string;
   clientSidePagination?: boolean;
+  horizontalScroll?: boolean;
 };
 
 const EMGTable = <T extends object>({
@@ -148,6 +149,7 @@ const EMGTable = <T extends object>({
   onMouseLeaveRow = () => null,
   dataCy,
   clientSidePagination = false,
+  horizontalScroll = false,
 }: EMGTableProps<T>) => {
   const [page, setPage] = useQueryParamState<number>(
     camelCase(`${namespace} page`)
@@ -265,169 +267,170 @@ const EMGTable = <T extends object>({
   }, [cols]);
 
   const rowsToRender = clientSidePagination ? paginatedRows : rows;
+  const hasToolbar =
+    Title ||
+    showTextFilter ||
+    downloadURL ||
+    onDownloadRequested ||
+    ExtraBarComponent;
+
+  const toolbar = hasToolbar ? (
+    <div className="mg-table-toolbar">
+      <div className="mg-table-toolbar__actions">
+        {ExtraBarComponent}
+        {showTextFilter && <TextInputDebounced namespace={namespace} />}
+        {downloadURL && (
+          <a
+            href={downloadURL}
+            className="vf-button vf-button--secondary vf-button--sm"
+            download
+          >
+            <span className="icon icon-common icon-download" /> Download
+          </a>
+        )}
+        {onDownloadRequested && (
+          <button
+            onClick={onDownloadRequested}
+            type="button"
+            data-cy="emg-table-download-button"
+            className="vf-button vf-button--secondary vf-button--sm"
+          >
+            <span className="icon icon-common icon-download" /> Download
+          </button>
+        )}
+      </div>
+      {Title}
+    </div>
+  ) : null;
 
   if (loading && !isStale) return <Loading size="small" />;
   return (
     <section data-cy={dataCy}>
+      {horizontalScroll && toolbar}
       <LoadingOverlay loading={loading && isStale}>
-        <table
-          {...getTableProps()}
-          className={`vf-table--striped mg-table ${className}`}
-          ref={tableRef}
-        >
-          {(Title || showTextFilter || downloadURL || onDownloadRequested) && (
-            <caption className="vf-table__caption mg-table-caption">
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-end' }}>
-                  {ExtraBarComponent}
-                  {showTextFilter && (
-                    <TextInputDebounced namespace={namespace} />
-                  )}
-                  {downloadURL && (
-                    <div>
-                      {' '}
-                      <a
-                        href={downloadURL}
-                        className="vf-button vf-button--secondary vf-button--sm"
-                        style={{ whiteSpace: 'nowrap', marginBottom: '8px' }}
-                        download
+        <div className={horizontalScroll ? 'mg-table-scroll-x' : undefined}>
+          <table
+            {...getTableProps()}
+            className={`vf-table--striped mg-table ${className}`}
+            ref={tableRef}
+          >
+            {!horizontalScroll && hasToolbar && (
+              <caption className="vf-table__caption mg-table-caption">
+                {toolbar}
+              </caption>
+            )}
+            <thead className="vf-table__header">
+              {headerGroups.map((headerGroup, idx) => (
+                <tr
+                  {...headerGroup.getHeaderGroupProps()}
+                  className="vf-table__row"
+                  key={headerGroup.id || idx}
+                >
+                  {headerGroup.headers.map((column) => {
+                    if (column.isFullWidth) {
+                      return null;
+                    }
+                    return (
+                      <th
+                        {...(sortable && column.canSort
+                          ? column.getHeaderProps(column.getSortByToggleProps())
+                          : { key: column.id })}
+                        className="vf-table__heading"
+                        key={column.id}
                       >
-                        <span className="icon icon-common icon-download" />{' '}
-                        Download
-                      </a>
-                    </div>
-                  )}
-                  {onDownloadRequested && (
-                    <div>
-                      {' '}
-                      <button
-                        onClick={onDownloadRequested}
-                        type="button"
-                        data-cy="emg-table-download-button"
-                        className="vf-button vf-button--secondary vf-button--sm"
-                        style={{ whiteSpace: 'nowrap', marginBottom: '8px' }}
-                      >
-                        <span className="icon icon-common icon-download" />{' '}
-                        Download
-                      </button>
-                    </div>
-                  )}
-                </div>
-                {Title}
-              </div>
-            </caption>
-          )}
-          <thead className="vf-table__header">
-            {headerGroups.map((headerGroup, idx) => (
-              <tr
-                {...headerGroup.getHeaderGroupProps()}
-                className="vf-table__row"
-                key={headerGroup.id || idx}
-              >
-                {headerGroup.headers.map((column) => {
-                  if (column.isFullWidth) {
-                    return null;
-                  }
-                  return (
-                    <th
-                      {...(sortable && column.canSort
-                        ? column.getHeaderProps(column.getSortByToggleProps())
-                        : { key: column.id })}
-                      className="vf-table__heading"
-                      key={column.id}
-                    >
-                      {column.render('Header')}
-                      {sortable && column.canSort && (
-                        <>
-                          &nbsp;
-                          <span>
-                            {/* eslint-disable-next-line no-nested-ternary */}
-                            {column.isSorted ? (
-                              column.isSortedDesc ? (
-                                <i className="icon icon-common icon-sort-down" />
+                        {column.render('Header')}
+                        {sortable && column.canSort && (
+                          <>
+                            &nbsp;
+                            <span>
+                              {/* eslint-disable-next-line no-nested-ternary */}
+                              {column.isSorted ? (
+                                column.isSortedDesc ? (
+                                  <i className="icon icon-common icon-sort-down" />
+                                ) : (
+                                  <i className="icon icon-common icon-sort-up" />
+                                )
                               ) : (
-                                <i className="icon icon-common icon-sort-up" />
-                              )
-                            ) : (
-                              <i className="icon icon-common icon-sort" />
-                            )}
-                          </span>
-                        </>
-                      )}
-                    </th>
-                  );
-                })}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()} className="vf-table__body">
-            {rowsToRender.map((row) => {
-              prepareRow(row);
-              return (
-                <React.Fragment key={row.id}>
-                  <tr
-                    {...row.getRowProps()}
-                    className="vf-table__row"
-                    onMouseEnter={() => onMouseEnterRow(row)}
-                    onMouseLeave={() => onMouseLeaveRow(row)}
-                  >
+                                <i className="icon icon-common icon-sort" />
+                              )}
+                            </span>
+                          </>
+                        )}
+                      </th>
+                    );
+                  })}
+                </tr>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()} className="vf-table__body">
+              {rowsToRender.map((row) => {
+                prepareRow(row);
+                return (
+                  <React.Fragment key={row.id}>
+                    <tr
+                      {...row.getRowProps()}
+                      className="vf-table__row"
+                      onMouseEnter={() => onMouseEnterRow(row)}
+                      onMouseLeave={() => onMouseLeaveRow(row)}
+                    >
+                      {row.cells.map((cell) => {
+                        if (cell.column.isFullWidth) {
+                          return null;
+                        }
+                        return (
+                          <td
+                            {...cell.getCellProps()}
+                            key={cell.column.id}
+                            colSpan={
+                              typeof cell.column?.colspan === 'function'
+                                ? cell.column.colspan(cell)
+                                : cell.column?.colspan
+                            }
+                            className={`vf-table__cell vf-u-type__text-body--3 ${
+                              cell.column?.className || ''
+                            }`}
+                            style={{ ...(cell.column?.style || {}) }}
+                          >
+                            {cell.render('Cell')}
+                          </td>
+                        );
+                      })}
+                    </tr>
                     {row.cells.map((cell) => {
                       if (cell.column.isFullWidth) {
-                        return null;
-                      }
-                      return (
-                        <td
-                          {...cell.getCellProps()}
-                          key={cell.column.id}
-                          colSpan={
-                            typeof cell.column?.colspan === 'function'
-                              ? cell.column.colspan(cell)
-                              : cell.column?.colspan
-                          }
-                          className={`vf-table__cell vf-u-type__text-body--3 ${
-                            cell.column?.className || ''
-                          }`}
-                          style={{ ...(cell.column?.style || {}) }}
-                        >
-                          {cell.render('Cell')}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                  {row.cells.map((cell) => {
-                    if (cell.column.isFullWidth) {
-                      return (
-                        <>
-                          <tr className="vf-table__row" />
-                          {/* Empty row to maintain striping */}
-                          <tr
-                            {...row.getRowProps()}
-                            className="vf-table__row"
-                            onMouseEnter={() => onMouseEnterRow(row)}
-                            onMouseLeave={() => onMouseLeaveRow(row)}
-                          >
-                            <td
-                              {...cell.getCellProps()}
-                              colSpan={fullWidthColSpan}
-                              className={`vf-table__cell vf-u-type__text-body--3 ${
-                                cell.column?.className || ''
-                              }`}
-                              style={{ ...(cell.column?.style || {}) }}
+                        return (
+                          <>
+                            <tr className="vf-table__row" />
+                            {/* Empty row to maintain striping */}
+                            <tr
+                              {...row.getRowProps()}
+                              className="vf-table__row"
+                              onMouseEnter={() => onMouseEnterRow(row)}
+                              onMouseLeave={() => onMouseLeaveRow(row)}
                             >
-                              <strong>{cell.render('Header')}:&nbsp;</strong>
-                              {cell.render('Cell')}
-                            </td>
-                          </tr>
-                        </>
-                      );
-                    }
-                    return null;
-                  })}
-                </React.Fragment>
-              );
-            })}
-          </tbody>
-        </table>
+                              <td
+                                {...cell.getCellProps()}
+                                colSpan={fullWidthColSpan}
+                                className={`vf-table__cell vf-u-type__text-body--3 ${
+                                  cell.column?.className || ''
+                                }`}
+                                style={{ ...(cell.column?.style || {}) }}
+                              >
+                                <strong>{cell.render('Header')}:&nbsp;</strong>
+                                {cell.render('Cell')}
+                              </td>
+                            </tr>
+                          </>
+                        );
+                      }
+                      return null;
+                    })}
+                  </React.Fragment>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
         {!loading && !rowsToRender.length && (
           <div
             className="vf-box vf-box-theme--primary vf-box--easy"

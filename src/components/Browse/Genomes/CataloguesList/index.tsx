@@ -150,6 +150,8 @@ const BrowseGenomesByCatalogue: React.FC = () => {
           loading={loading}
           isStale={isStale}
           onDownloadRequested={download}
+          horizontalScroll
+          className="mg-table--wrap-headings"
         />
       )}
     </section>
