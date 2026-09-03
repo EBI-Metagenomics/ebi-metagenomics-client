@@ -127,6 +127,7 @@ type EMGTableProps<T extends object> = {
   dataCy?: string;
   clientSidePagination?: boolean;
   horizontalScroll?: boolean;
+  toolbarOutsideTable?: boolean;
 };
 
 const EMGTable = <T extends object>({
@@ -150,6 +151,7 @@ const EMGTable = <T extends object>({
   dataCy,
   clientSidePagination = false,
   horizontalScroll = false,
+  toolbarOutsideTable = false,
 }: EMGTableProps<T>) => {
   const [page, setPage] = useQueryParamState<number>(
     camelCase(`${namespace} page`)
@@ -306,7 +308,7 @@ const EMGTable = <T extends object>({
   if (loading && !isStale) return <Loading size="small" />;
   return (
     <section data-cy={dataCy}>
-      {horizontalScroll && toolbar}
+      {(horizontalScroll || toolbarOutsideTable) && toolbar}
       <LoadingOverlay loading={loading && isStale}>
         <div className={horizontalScroll ? 'mg-table-scroll-x' : undefined}>
           <table
@@ -314,7 +316,7 @@ const EMGTable = <T extends object>({
             className={`vf-table--striped mg-table ${className}`}
             ref={tableRef}
           >
-            {!horizontalScroll && hasToolbar && (
+            {!horizontalScroll && !toolbarOutsideTable && hasToolbar && (
               <caption className="vf-table__caption mg-table-caption">
                 {toolbar}
               </caption>
@@ -335,7 +337,9 @@ const EMGTable = <T extends object>({
                         {...(sortable && column.canSort
                           ? column.getHeaderProps(column.getSortByToggleProps())
                           : { key: column.id })}
-                        className="vf-table__heading"
+                        className={`vf-table__heading ${
+                          column.className || ''
+                        }`}
                         key={column.id}
                       >
                         {column.render('Header')}
