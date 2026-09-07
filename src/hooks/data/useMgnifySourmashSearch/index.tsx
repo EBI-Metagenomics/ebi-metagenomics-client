@@ -75,7 +75,7 @@ const useMgnifySourmashSearch: (
     Object.keys(signatures || {}).length;
 
   const data = useData(
-    shouldSendRequest ? `${config.api_v2}genomes-search/${endpoint}` : null,
+    shouldSendRequest ? `${config.api_v2}genomes-search/${endpoint}/` : null,
     ResponseFormat.JSON,
     {
       method: 'POST',
