@@ -3,12 +3,11 @@ import React from 'react';
 import SourmashLogo from 'images/sourmash_logo.png';
 import useSearchStorage from '@/hooks/useSearchStorage';
 import SourmashHistory from './History';
-// import SourmashForm from './Form';
-// import SourmashResults from './Results';
+import SourmashForm from './Form';
+import SourmashResults from './Results';
 import SharedQueryParamsProvider, {
   SharedTextQueryParam,
 } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
-import InfoBanner from 'components/UI/InfoBanner';
 
 type SourmashProps = {
   catalogueName?: string;
@@ -19,8 +18,7 @@ const SourmashSearch: React.FC<SourmashProps> = ({
   catalogueName,
   catalogueID,
 }) => {
-  // const { jobs, addToStorage, removeFromStorage } = useSearchStorage(
-  const { jobs, removeFromStorage } = useSearchStorage(
+  const { jobs, addToStorage, removeFromStorage } = useSearchStorage(
     `sourmashJobs-${catalogueID || 'xcat'}`
   );
   const isSingleCatalogue = !!catalogueID;
@@ -60,12 +58,6 @@ const SourmashSearch: React.FC<SourmashProps> = ({
           Compare your MAG file or your MAG collection against MGnify’s
           catalogues to see if they are novel.
         </p>
-        <InfoBanner
-          type={'warning'}
-          title={
-            'The MAG Search tool is currently unavailable. Please check back later.'
-          }
-        />
         <details className="mg-sourmash-readmore">
           <summary>Instructions</summary>
           <p className="vf-text-body vf-text-body--3">
@@ -90,8 +82,8 @@ const SourmashSearch: React.FC<SourmashProps> = ({
           </p>
         </details>
         <SharedQueryParamsProvider params={{ jobId: SharedTextQueryParam('') }}>
-          {/*<SourmashForm catalogueID={catalogueID} />*/}
-          {/*<SourmashResults addToStorage={addToStorage} />*/}
+          <SourmashForm catalogueID={catalogueID} />
+          <SourmashResults addToStorage={addToStorage} />
           <SourmashHistory jobs={jobs} removeFromStorage={removeFromStorage} />
         </SharedQueryParamsProvider>
       </section>
