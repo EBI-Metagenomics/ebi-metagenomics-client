@@ -13,7 +13,9 @@ const useMgnifySourmashStatus: (
   const { config } = useContext(UserContext);
 
   const data = useData(
-    endpoint.length ? `${config.api}genomes-search/${endpoint}/${jobID}` : null,
+    endpoint.length
+      ? `${config.api_v2}genomes-search/${endpoint}/${jobID}`
+      : null,
     ResponseFormat.JSON,
     {
       method: 'GET',
