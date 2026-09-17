@@ -18,14 +18,12 @@ type ProgrammaticAccessBoxProps = {
   apiPath: string;
   entityLabel: string;
   notebooks?: NotebookLinkProps[];
-  isApiV2?: boolean;
 };
 
 const ProgrammaticAccessBox: React.FC<ProgrammaticAccessBoxProps> = ({
   apiPath,
   entityLabel,
   notebooks,
-  isApiV2 = false,
 }) => {
   const { config } = useContext(UserContext);
   const sayCopied = () =>
@@ -38,7 +36,7 @@ const ProgrammaticAccessBox: React.FC<ProgrammaticAccessBoxProps> = ({
       draggable: true,
       progress: undefined,
     });
-  const root = isApiV2 ? config.api_v2 : config.api;
+  const root = config.api_v2;
   const apiUrl = `${root}${apiPath}`;
 
   return (
@@ -72,26 +70,27 @@ const ProgrammaticAccessBox: React.FC<ProgrammaticAccessBoxProps> = ({
           <p>
             The{' '}
             <ExtLink
-              href={`${config.jupyterLabURL}?jlpath=mgnify-examples/home.ipynb`}
+              href={`${config.notebooksURL}?jlpath=mgnify-examples/home.ipynb`}
             >
-              MGnify Jupyter Lab
+              MGnify Docs
             </ExtLink>{' '}
-            server hosts examples of data analysis using R and Python. These are
-            live examples that you can modify without downloading or installing
-            any software.
+            host examples of data analysis using R and Python. These are live
+            examples that you can modify without downloading or installing any
+            software.
           </p>
           {notebooks?.map((notebook) => {
-            let jlLink = `${config.jupyterLabURL}?jlpath=${notebook.notebookPath}`;
-            jlLink += Object.entries(notebook.notebookVars || {}).reduce(
-              (vars, [varName, varVal]) => `${vars}&jlvar_${varName}=${varVal}`,
-              ''
+            let nbLink = new URL(
+              `${config.notebooksURL}/${notebook.notebookPath}`
             );
+            nbLink.search = new URLSearchParams(
+              notebook.notebookVars
+            ).toString();
             return (
               <button
                 key={notebook.notebookPath}
                 className="vf-button vf-button--secondary vf-button--sm"
                 type="button"
-                onClick={() => window.open(jlLink, '_blank')}
+                onClick={() => window.open(nbLink, '_blank')}
               >
                 {notebook.notebookLang === 'R' && (
                   <img
@@ -115,7 +114,7 @@ const ProgrammaticAccessBox: React.FC<ProgrammaticAccessBoxProps> = ({
             <button
               className="vf-button vf-button--secondary vf-button--sm"
               type="button"
-              onClick={() => window.open(config.jupyterLabURL, '_blank')}
+              onClick={() => window.open(config.notebooksURL, '_blank')}
             >
               Open examples
             </button>

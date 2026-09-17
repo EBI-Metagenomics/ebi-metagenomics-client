@@ -22,7 +22,7 @@ export type ConfigType = {
     urlBase: string;
     siteId: number;
   };
-  jupyterLabURL: string;
+  notebooksURL: string;
   magsPipelineRepo: string;
   whenDownloadingListsFromApi?: {
     maxPages: number;

@@ -110,22 +110,18 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
       <ProgrammaticAccessBox
         apiPath={`studies/${data.accession}`}
         entityLabel="Study"
-        notebooks={[]}
-        isApiV2
-        // notebooks={[
-        //   {
-        //     notebookPath:
-        //       'mgnify-examples/R%20Examples/Fetch%20Analyses%20metadata%20for%20a%20Study.ipynb',
-        //     notebookLang: 'R',
-        //     notebookVars: { MGYS: data.id },
-        //   },
-        //   {
-        //     notebookPath:
-        //       'mgnify-examples/Python%20Examples/Load%20Analyses%20for%20a%20MGnify%20Study.ipynb',
-        //     notebookLang: 'Python',
-        //     notebookVars: { MGYS: data.id },
-        //   },
-        // ]}
+        notebooks={[
+          {
+            notebookPath: 'r.html',
+            notebookLang: 'R',
+            notebookVars: { study: data.accession },
+          },
+          {
+            notebookPath: 'python.html',
+            notebookLang: 'Python',
+            notebookVars: { study: data.accession },
+          },
+        ]}
       />
       <br />
       <div>

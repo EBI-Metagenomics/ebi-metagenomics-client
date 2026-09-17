@@ -18,7 +18,7 @@
     "urlBase": "https://ebi-mgnify.matomo.cloud/",
     "siteId": 2
   },
-  "jupyterLabURL": "https://shiny-portal.embl.de/shinyapps/app/06_mgnify-notebook-lab",
+  "notebooksURL": "https://docs.mgnify.org/src/examples",
   "magsPipelineRepo": "https://github.com/EBI-Metagenomics/genomes-pipeline",
   "whenDownloadingListsFromApi": {
     "maxPages": 100,
