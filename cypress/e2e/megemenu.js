@@ -37,7 +37,7 @@ const megaMenuExpandableItems = [
     links: [
       '/metagenomics/help',
       'https://docs.mgnify.org/',
-      'https://shiny-portal.embl.de/shinyapps/app/06_mgnify-notebook-lab?jlpath=mgnify-examples/home.ipynb',
+      'https://docs.mgnify.org/src/docs/api.html',
       'https://hmmer-web-docs.readthedocs.io/en/latest/index.html',
       'http://ftp.ebi.ac.uk/pub/databases/metagenomics/peptide_database/current_release/README.md',
       'https://www.ebi.ac.uk/training/services/mgnify',

@@ -554,7 +554,7 @@ const MegaMenu: React.FC = () => {
                         </li>
                         <li className="vf-navigation__item">
                           <a
-                            href="https://shiny-portal.embl.de/shinyapps/app/06_mgnify-notebook-lab?jlpath=mgnify-examples/home.ipynb"
+                            href="https://docs.mgnify.org/src/docs/api.html"
                             className="vf-navigation__link rotating-link"
                           >
                             <i className="icon icon-common icon-code" />

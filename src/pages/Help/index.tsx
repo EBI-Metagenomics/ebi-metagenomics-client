@@ -61,7 +61,7 @@ const HelpPage: React.FC = () => {
         <article className="vf-card vf-card--brand vf-card--bordered">
           <div className="vf-card__content | vf-stack vf-stack--400">
             <h3 className="vf-card__heading">
-              <a href="https://shiny-portal.embl.de/shinyapps/app/06_mgnify-notebook-lab?jlpath=mgnify-examples/home.ipynb">
+              <a href="https://docs.mgnify.org/src/examples/">
                 <i className="icon icon-common icon-code" /> Programmatic access
                 and examples
                 <ArrowForLink />
@@ -77,11 +77,11 @@ const HelpPage: React.FC = () => {
               <ExtLink href="https://curl.se">curl</ExtLink> to search for and
               download data. You can also discover the API’s endpoints by
               visiting it in a web browser. The{' '}
-              <ExtLink href="https://shiny-portal.embl.de/shinyapps/app/06_mgnify-notebook-lab?jlpath=mgnify-examples/home.ipynb">
-                MGnify Jupyter Lab
+              <ExtLink href="https://docs.mgnify.org/src/examples/">
+                MGnify docs
               </ExtLink>{' '}
-              server hosts examples of data analysis using R and Python. These
-              are live examples that you can modify without downloading or
+              includes examples of data analysis using R and Python. These are
+              live examples that you can modify without downloading or
               installing any software.
             </p>
           </div>
