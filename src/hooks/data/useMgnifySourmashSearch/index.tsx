@@ -4,45 +4,8 @@ import useData, {
   MGnifyResponseGenericObj,
   ResponseFormat,
 } from '@/hooks/data/useData';
+import normaliseSourmashSignature from '@/utils/normaliseSourmashSignature';
 import UserContext from 'pages/Login/UserContext';
-
-const normaliseSourmashSignature = (signature: string): string => {
-  try {
-    const parsedSignature = JSON.parse(signature);
-
-    /**
-     * First request format:
-     *
-     * [
-     *   {
-     *     "class": "sourmash_signature",
-     *     ...
-     *   }
-     * ]
-     */
-    if (Array.isArray(parsedSignature)) {
-      return JSON.stringify(parsedSignature);
-    }
-
-    /**
-     * Second request format:
-     *
-     * {
-     *   "class": "sourmash_signature",
-     *   ...
-     * }
-     *
-     * Wrap it so it matches the first request format.
-     */
-    return JSON.stringify([parsedSignature]);
-  } catch {
-    /**
-     * If this is not valid JSON, send it unchanged.
-     * This prevents us from breaking unexpected input.
-     */
-    return signature;
-  }
-};
 
 const useMgnifySourmashSearch: (
   endpoint: 'gather' | '',
