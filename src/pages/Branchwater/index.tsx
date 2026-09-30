@@ -414,13 +414,7 @@ const Branchwater = () => {
         <details className="vf-details">
           <summary className="vf-details--summary">Instructions</summary>
           <p className="vf-text-body vf-text-body--3">
-            Use the Browse button below to select a file (.fasta, .fna, .gz,
-            .sig)
-          </p>
-          <p className="vf-text-body vf-text-body--3">
-            If your FASTA file is larger than 10MB, please gzip it. If your
-            gzipped file is larger than 20MB, please upload a sketch (.sig
-            file).
+            Use the Browse button below to select a file (.fasta, .fna, .gz)
           </p>
           <p className="vf-text-body vf-text-body--3">
             The file is then sketched in your browser and sent to our servers
