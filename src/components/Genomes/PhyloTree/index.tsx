@@ -5,12 +5,17 @@ import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import HierarchyNode, { Node } from 'components/UI/Hierarchy';
 import useData from '@/hooks/data/useData';
+import { getGenomeUrl } from '@/utils/genomes';
 
 interface PhyloTreeProps {
   phylo_tree_url?: string;
+  catalogueID?: string;
 }
 
-const PhyloTree: React.FC<PhyloTreeProps> = ({ phylo_tree_url }) => {
+const PhyloTree: React.FC<PhyloTreeProps> = ({
+  phylo_tree_url,
+  catalogueID,
+}) => {
   const { data, loading, error } = useData(phylo_tree_url || null);
   if (loading) return <Loading size="large" />;
   if (error) return <FetchError error={error} />;
@@ -22,7 +27,10 @@ const PhyloTree: React.FC<PhyloTreeProps> = ({ phylo_tree_url }) => {
         const label = node.name.split('__').pop();
         if (node.type === 'genome') {
           return (
-            <Link to={`/genomes/${label}`} style={{ backgroundColor: 'white' }}>
+            <Link
+              to={getGenomeUrl(label || '', catalogueID)}
+              style={{ backgroundColor: 'white' }}
+            >
               {label}
             </Link>
           );

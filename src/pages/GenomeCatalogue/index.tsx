@@ -136,7 +136,10 @@ const GenomePage: React.FC = () => {
             <GenomesTable />
           </RouteForHash>
           <RouteForHash hash="#phylo-tab">
-            <PhyloTree phylo_tree_url={phylo_tree_url} />
+            <PhyloTree
+              phylo_tree_url={phylo_tree_url}
+              catalogueID={accession}
+            />
           </RouteForHash>
           <RouteForHash hash="#genome-search-tab">
             <CobsSearch

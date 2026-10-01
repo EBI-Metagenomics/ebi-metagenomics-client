@@ -8,8 +8,15 @@ type TabsProps = {
   }>;
   preservedQueryParameters?: string[];
 };
-const Tabs: React.FC<TabsProps> = ({ tabs }) => {
-  const { pathname, hash } = useLocation();
+const Tabs: React.FC<TabsProps> = ({ tabs, preservedQueryParameters }) => {
+  const { pathname, hash, search } = useLocation();
+  const preserved = new URLSearchParams();
+  const existing = new URLSearchParams(search);
+  preservedQueryParameters?.forEach((queryParam) => {
+    if (existing.has(queryParam)) {
+      preserved.set(queryParam, existing.get(queryParam)!);
+    }
+  });
 
   return (
     <div className="vf-tabs mg-search-tabs">
@@ -24,7 +31,11 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
                   ? 'is-active'
                   : ''
               }`}
-              to={to}
+              to={
+                to.startsWith('#') && preserved.toString()
+                  ? { search: `?${preserved.toString()}`, hash: to }
+                  : to
+              }
             >
               {typeof Label === 'string' ? Label : <Label />}
             </Link>
