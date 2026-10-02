@@ -1,13 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import useApiData from '@/hooks/data/useApiData';
-import { getBiomeIcon } from '@/utils/biomes';
+import {
+  getBiomeCategory,
+  getBiomeIcon,
+  getGenomeBiomeGroup,
+} from '@/utils/biomes';
 import { Link } from 'react-router-dom';
+import { Column } from 'react-table';
 import Loading from 'components/UI/Loading';
 import EMGTable from 'components/UI/EMGTable';
+import InnerCard from 'components/UI/InnerCard';
 import { GenomeCatalogue, GenomeCatalogueList } from '@/interfaces';
-import BiomeSelector from 'components/UI/BiomeSelector';
-import { some } from 'lodash-es';
+import { countBy, groupBy, map } from 'lodash-es';
 import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/QueryParamContext';
 import config from 'utils/config';
 import { sortByOrder } from '@/utils/sorting';
@@ -19,51 +24,55 @@ const formatCatalogueType = (catalogueType: string) =>
 const formatDate = (date: string) =>
   date ? new Date(date).toLocaleDateString() : '';
 
-const CatalogueCards: React.FC<{ catalogues: GenomeCatalogue[] }> = ({
-  catalogues,
-}) => (
-  <div className="mg-catalogue-cards">
-    {catalogues.map((catalogue) => (
-      <article className="mg-catalogue-card" key={catalogue.catalogue_id}>
-        <div className="mg-catalogue-card__biome">
-          <span
-            className={`biome_icon icon_xs ${getBiomeIcon(
-              catalogue.biome?.lineage || ''
-            )}`}
+const genomeBiomeGroupIcons: Record<string, string> = {
+  Environmental: 'default_b',
+  Engineered: 'engineered_b',
+  'Human-associated': 'human_host_b',
+  'Non-human host-associated': 'mammals_b',
+};
+
+const CatalogueBiomeBrowser: React.FC<{
+  catalogues: GenomeCatalogue[];
+  onSelect: (biomeGroup: string) => void;
+}> = ({ catalogues, onSelect }) => (
+  <div className="mg-catalogue-biome-browser">
+    {map(
+      groupBy(catalogues, (catalogue) =>
+        getGenomeBiomeGroup(catalogue.biome?.lineage || '')
+      ),
+      (biomeGroupCatalogues, biomeGroup) => {
+        const counts = countBy(biomeGroupCatalogues, 'catalogue_type');
+        const prokaryotes = counts.prokaryotes || 0;
+        const eukaryotes = counts.eukaryotes || 0;
+
+        return (
+          <InnerCard
+            key={biomeGroup}
+            title={biomeGroup || 'Unknown biome'}
+            icon={
+              <span
+                className={`biome_icon icon_xs ${
+                  genomeBiomeGroupIcons[biomeGroup] || 'default_b'
+                }`}
+              />
+            }
+            label={
+              <>
+                <strong>
+                  {biomeGroupCatalogues.length} catalogue
+                  {biomeGroupCatalogues.length === 1 ? '' : 's'}
+                </strong>
+                <br />
+                <small>
+                  {prokaryotes} prokaryotic · {eukaryotes} eukaryotic
+                </small>
+              </>
+            }
+            to={() => onSelect(biomeGroup)}
           />
-          {catalogue.catalogue_biome_label}
-        </div>
-        <Link
-          className="mg-catalogue-card__name"
-          to={`/genome-catalogues/${catalogue.catalogue_id}`}
-        >
-          {catalogue.name}
-        </Link>
-        <span className="mg-catalogue-card__id">{catalogue.catalogue_id}</span>
-        <dl className="mg-catalogue-card__stats">
-          <div>
-            <dt>Type</dt>
-            <dd>{formatCatalogueType(catalogue.catalogue_type)}</dd>
-          </div>
-          <div>
-            <dt>Version</dt>
-            <dd>{catalogue.version}</dd>
-          </div>
-          <div>
-            <dt>Species</dt>
-            <dd>{catalogue.genome_count}</dd>
-          </div>
-          <div>
-            <dt>Genomes</dt>
-            <dd>{catalogue.unclustered_genome_count ?? '-'}</dd>
-          </div>
-          <div>
-            <dt>Updated</dt>
-            <dd>{formatDate(catalogue.updated_at)}</dd>
-          </div>
-        </dl>
-      </article>
-    ))}
+        );
+      }
+    )}
   </div>
 );
 
@@ -73,9 +82,9 @@ const { usePage, useBiome, useOrder, withQueryParamProvider } =
   });
 
 const BrowseGenomesByCatalogue: React.FC = () => {
-  const [page] = usePage<number>();
+  const [page, setPage] = usePage<number>();
   const [hasData, setHasData] = useState(false);
-  const [biome] = useBiome<string>();
+  const [biome, setBiome] = useBiome<string>();
   const [order] = useOrder<string>();
   const {
     data: apiData,
@@ -89,8 +98,10 @@ const BrowseGenomesByCatalogue: React.FC = () => {
   const genomeCataloguesList: GenomeCatalogueList | null = useMemo(() => {
     if (!apiData) return null;
     const filteredItems = biome
-      ? apiData.items.filter((item) =>
-          item?.biome?.lineage?.startsWith?.(biome)
+      ? apiData.items.filter(
+          (item) =>
+            getGenomeBiomeGroup(item?.biome?.lineage || '') === biome ||
+            item?.biome?.lineage?.startsWith?.(biome)
         )
       : apiData.items;
     const sortedItems = sortByOrder(filteredItems, order);
@@ -100,12 +111,29 @@ const BrowseGenomesByCatalogue: React.FC = () => {
     } as GenomeCatalogueList;
   }, [apiData, biome, order]);
 
-  const columns = React.useMemo(
+  const columns = React.useMemo<Column<GenomeCatalogue>[]>(
     () => [
+      {
+        Header: 'Catalogue',
+        accessor: 'catalogue_id',
+        Cell: ({ cell }) => (
+          <Link to={`/genome-catalogues/${cell.value}`}>
+            {formatCatalogueType(cell.row.original?.name)}
+          </Link>
+        ),
+        className: 'mg-catalogue-name',
+      },
       {
         id: 'catalogue-biome-label',
         Header: 'Biome',
-        accessor: (catalogue: any) => catalogue?.catalogue_biome_label,
+        accessor: (catalogue) => catalogue.catalogue_biome_label,
+        disableSortBy: true,
+        className: 'mg-catalogue-biome',
+      },
+      {
+        id: 'catalogue-biome-category',
+        Header: 'Biome category',
+        accessor: (catalogue) => catalogue.biome.lineage,
         Cell: ({ cell }) => (
           <span className="mg-catalogue-biome__value">
             <span
@@ -113,47 +141,21 @@ const BrowseGenomesByCatalogue: React.FC = () => {
                 cell.row.original?.biome?.lineage || ''
               )}`}
             />
-            {cell.value || ''}
+            {getBiomeCategory(cell.value)}
           </span>
         ),
         disableSortBy: true,
         className: 'mg-catalogue-biome',
       },
-
       {
         id: 'catalogue-type',
         Header: 'Type',
-        accessor: (catalogue: any) => catalogue?.catalogue_type,
-        Cell: ({ cell }) => formatCatalogueType(cell.value),
+        accessor: (catalogue) => catalogue.catalogue_type,
+        Cell: ({ cell }) => <>{formatCatalogueType(cell.value)}</>,
         aggregate: (catTypes) => catTypes,
         className: 'mg-catalogue-type',
       },
-      {
-        id: 'catalogue_id',
-        Header: 'Catalogue ID',
-        accessor: 'catalogue_id',
-        Cell: ({ cell }) =>
-          cell.value ? (
-            <Link to={`/genome-catalogues/${cell.value}`}>{cell.value}</Link>
-          ) : (
-            ''
-          ),
-        className: 'mg-catalogue-id',
-      },
-      {
-        Header: 'Catalogue',
-        accessor: 'name',
-        Cell: ({ cell }) => (
-          <>
-            <span>{cell.value}</span>
-            <span className="mg-catalogue-name__metadata">
-              {formatCatalogueType(cell.row.original?.catalogue_type)} · v
-              {cell.row.original?.version}
-            </span>
-          </>
-        ),
-        className: 'mg-catalogue-name',
-      },
+
       {
         Header: 'Version',
         accessor: 'version',
@@ -161,7 +163,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
         className: 'mg-catalogue-version',
       },
       {
-        Header: 'Species',
+        Header: 'Species reps',
         accessor: 'genome_count',
         className: 'mg-catalogue-species',
       },
@@ -185,25 +187,33 @@ const BrowseGenomesByCatalogue: React.FC = () => {
     setHasData(!!genomeCataloguesList);
   }, [genomeCataloguesList]);
 
-  const isBiomeCatalogued = (lineage) => {
-    if (!apiData?.items) return true;
-    return some(apiData.items, (catalogue: any) =>
-      catalogue?.biome?.lineage?.startsWith?.(lineage)
-    );
-  };
-
   if (!genomeCataloguesList && loading) return <Loading />;
   return (
     <section className="mg-browse-section">
+      <h2 className="vf-heading vf-heading--3">Browse by biome</h2>
       <p className="vf-text-body vf-text-body--3">
-        Select a catalogue in the table to browse or search its genomes.
+        Select a group to see its biomes in the table below.
+        Select a catalogue to browse or search its genomes.
       </p>
-      <BiomeSelector
-        onSelect={async () => {
-          await setHasData(false);
+      <CatalogueBiomeBrowser
+        catalogues={apiData?.items || []}
+        onSelect={(biomeGroup) => {
+          setBiome(biomeGroup);
+          setPage(1);
         }}
-        lineageFilter={isBiomeCatalogued}
       />
+      {biome && (
+        <button
+          type="button"
+          className="vf-button vf-button--link mg-button-as-link"
+          onClick={() => {
+            setBiome('');
+            setPage(1);
+          }}
+        >
+          Show all biomes
+        </button>
+      )}
       {hasData && (
         <>
           <EMGTable
@@ -216,8 +226,8 @@ const BrowseGenomesByCatalogue: React.FC = () => {
             onDownloadRequested={download}
             toolbarOutsideTable
             className="mg-catalogues-table"
+            showPagination={false}
           />
-          <CatalogueCards catalogues={genomeCataloguesList.items} />
         </>
       )}
     </section>

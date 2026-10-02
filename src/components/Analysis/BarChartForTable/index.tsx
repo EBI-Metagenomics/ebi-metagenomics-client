@@ -17,6 +17,7 @@ export interface BarChartForTableProps {
   countsCol: BarChartColSpec;
   title: string;
   maxLabels?: number;
+  subtitle?: string;
 }
 
 const BarChartForTable: React.FC<BarChartForTableProps> = ({
@@ -25,6 +26,7 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
   countsCol,
   title = 'Annotations',
   maxLabels = 50,
+  subtitle,
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const labelAccessor = labelsCol.accessor as
@@ -62,11 +64,13 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
     },
     title: { text: capitalize(title) },
     subtitle: {
-      text: `Showing ${
-        maxLabels === 0
-          ? data.items.length
-          : min([data.items.length, maxLabels])
-      } of ${total} annotations`,
+      text:
+        subtitle ??
+        `Showing ${
+          maxLabels === 0
+            ? data.items.length
+            : min([data.items.length, maxLabels])
+        } of ${total} annotations`,
     },
     yAxis: {
       min: 0,

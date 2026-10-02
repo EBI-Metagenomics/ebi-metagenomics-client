@@ -21,7 +21,8 @@ const CompressedTSVTable: React.FC<TSVTableProps> = (props) => {
   const sourceKey = JSON.stringify([download.url, indexUrl]);
   const loaderProps = { ...props, pageNum, setPageNum };
 
-  return indexUrl ? (
+  // Histograms need all rows to count each category across the whole file.
+  return indexUrl && !props.barChartSpec?.histogramColumn ? (
     <IndexedBGZipTSVTable key={sourceKey} {...loaderProps} />
   ) : (
     <PlainTSVTable key={sourceKey} {...loaderProps} />
