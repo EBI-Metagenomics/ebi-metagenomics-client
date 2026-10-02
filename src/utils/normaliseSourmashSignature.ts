@@ -1,24 +1,61 @@
+export type SourmashSignatureNormalisationTarget = 'branchwater' | 'sourmash';
+export type SourmashSignatureEnvelope = 'object' | 'array';
+
 /**
- * Ensure a Sourmash signature uses the API's array-based format without
- * parsing and re-serialising its 64-bit hash values through JavaScript.
+ * Return the signature in the required format: either one object or an array.
+ * Preserve the original number text so JavaScript does not round large hash
+ * values while converting the signature back to JSON.
  */
-const normaliseSourmashSignature = (signature: string): string => {
+export const normaliseSourmashSignatureEnvelope = (
+  signature: string,
+  envelope: SourmashSignatureEnvelope
+): string => {
+  if (envelope !== 'object' && envelope !== 'array') {
+    throw new Error(`Unsupported signature envelope: ${envelope}`);
+  }
+
   const trimmedSignature = signature.trim();
 
   try {
     const parsedSignature = JSON.parse(trimmedSignature);
+    const isArray = Array.isArray(parsedSignature);
 
-    // Keep the original JSON text so integers larger than Number.MAX_SAFE_INTEGER
-    // retain the exact representation produced by Sourmash's WASM serializer.
-    if (Array.isArray(parsedSignature)) {
-      return trimmedSignature;
+    if (envelope === 'object') {
+      if (!isArray) return trimmedSignature;
+      if (parsedSignature.length !== 1) return signature;
+      return trimmedSignature.slice(1, -1).trim();
     }
 
-    return `[${trimmedSignature}]`;
+    return isArray ? trimmedSignature : `[${trimmedSignature}]`;
   } catch {
-    // Preserve unexpected input so the API can return the validation error.
     return signature;
   }
+};
+
+/**
+ * Preserve the Branchwater request contract: one signature object encoded as
+ * a JSON string.
+ */
+export const normaliseBranchwaterSignature = (signature: string): string =>
+  normaliseSourmashSignatureEnvelope(signature, 'object');
+
+/** Preserve the Sourmash gather contract: an array-encoded signature file. */
+export const normaliseSourmashGatherSignature = (signature: string): string =>
+  normaliseSourmashSignatureEnvelope(signature, 'array');
+
+const normaliseSourmashSignature = (
+  signature: string,
+  target: SourmashSignatureNormalisationTarget
+): string => {
+  if (target === 'branchwater') {
+    return normaliseBranchwaterSignature(signature);
+  }
+
+  if (target === 'sourmash') {
+    return normaliseSourmashGatherSignature(signature);
+  }
+
+  throw new Error(`Unsupported signature normalisation target: ${target}`);
 };
 
 export default normaliseSourmashSignature;

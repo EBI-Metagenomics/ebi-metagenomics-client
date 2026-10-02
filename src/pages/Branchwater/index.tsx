@@ -33,10 +33,18 @@ import {
 import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
 import BranchwaterLogo from 'images/branchwater_logo.png';
 import InfoBanner from 'components/UI/InfoBanner';
+import normaliseSourmashSignature from 'utils/normaliseSourmashSignature';
+import validateBranchwaterSignature from 'utils/validateBranchwaterSignature';
+import './style.css';
 
 type SourmashEventDetail = {
   signatures: Record<string, string>;
   errors: Record<string, string>;
+};
+
+type SourmashErrorEventDetail = {
+  filename: string;
+  error: string;
 };
 
 const { withQueryParamProvider } = createSharedQueryParamContextForTable(
@@ -66,6 +74,9 @@ const Branchwater = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [searchError, setSearchError] = useState<string | null>(null);
+  const [signatureValidationError, setSignatureValidationError] = useState<
+    string | null
+  >(null);
 
   // Pagination state
   const [itemsPerPage] = useState<number>(25);
@@ -205,9 +216,29 @@ const Branchwater = () => {
       const event = evt as CustomEvent<SourmashEventDetail>;
       setSignatures(event.detail.signatures);
       setSignatureErrors(event.detail.errors);
-      if (Object.keys(event.detail.signatures).length > 0) {
-        setSelectedFileName(Object.keys(event.detail.signatures)[0]);
+      const signatureEntries = Object.entries(event.detail.signatures);
+      if (signatureEntries.length > 0) {
+        const [filename, signature] = signatureEntries[0];
+        setSelectedFileName(filename);
+        const validation = validateBranchwaterSignature(signature);
+        setSignatureValidationError(validation.valid ? null : validation.error);
+      } else {
+        const processingError = Object.entries(event.detail.errors)[0];
+        setSelectedFileName(processingError?.[0] ?? null);
+        setSignatureValidationError(
+          processingError
+            ? `The file could not be processed: ${processingError[1]}`
+            : null
+        );
       }
+    };
+
+    const sketchedError = (evt: Event): void => {
+      const event = evt as CustomEvent<SourmashErrorEventDetail>;
+      setSelectedFileName(event.detail.filename);
+      setSignatureValidationError(
+        `The file could not be processed: ${event.detail.error}`
+      );
     };
 
     const changedFiles = (): void => {
@@ -215,6 +246,7 @@ const Branchwater = () => {
       setSignatureErrors({});
       setSearchResults([]);
       setSearchError(null);
+      setSignatureValidationError(null);
       setSelectedFileName(null);
     };
 
@@ -222,11 +254,13 @@ const Branchwater = () => {
       sourmashElement = sourmash.current;
       sourmashElement.ksize = 21;
       sourmashElement.addEventListener('sketchedall', sketchedAll);
+      sourmashElement.addEventListener('sketchedError', sketchedError);
       sourmashElement.addEventListener('change', changedFiles);
     }
     return () => {
       if (sourmashElement) {
         sourmashElement.removeEventListener('sketchedall', sketchedAll);
+        sourmashElement.removeEventListener('sketchedError', sketchedError);
         sourmashElement.removeEventListener('change', changedFiles);
       }
     };
@@ -236,16 +270,27 @@ const Branchwater = () => {
     event: React.MouseEvent<HTMLButtonElement>
   ): void => {
     event.preventDefault();
-    sourmash.current?.clear();
     if (Object.keys(signatures).length > 0) {
-      setIsLoading(true);
       const sigString = Object.values(signatures)[0];
+      const validation = validateBranchwaterSignature(sigString);
+      if (!validation.valid) {
+        setSignatureValidationError(validation.error);
+        return;
+      }
+
+      setSignatureValidationError(null);
+      sourmash.current?.clear();
+      setIsLoading(true);
+      const normalisedSignature = normaliseSourmashSignature(
+        sigString,
+        'branchwater'
+      );
 
       axios
         .post(
           `${config.api_branchwater}`,
           {
-            signatures: sigString,
+            signatures: normalisedSignature,
           },
           {
             headers: {
@@ -316,6 +361,7 @@ const Branchwater = () => {
     setSignatureErrors({});
     setSearchResults([]);
     setSelectedFileName(null);
+    setSignatureValidationError(null);
 
     setTextQuery('');
     setCaniRange('');
@@ -345,6 +391,7 @@ const Branchwater = () => {
     setSignatureErrors({});
     setSearchResults([]);
     setSelectedFileName(null);
+    setSignatureValidationError(null);
 
     setIsLoading(true);
     const examples = [
@@ -411,34 +458,49 @@ const Branchwater = () => {
         </div>
       </div>
       <div className="vf-u-margin__top--400">
-        <details className="vf-details">
+        <details className="vf-details mg-branchwater-disclosure">
           <summary className="vf-details--summary">Instructions</summary>
-          <p className="vf-text-body vf-text-body--3">
-            Use the Browse button below to select a file (.fasta, .fna, .gz)
-          </p>
-          <p className="vf-text-body vf-text-body--3">
-            The file is then sketched in your browser and sent to our servers
-            for processing.
-          </p>
-          <p className="vf-text-body vf-text-body--3">
-            This search engine searches for the containment of a query genome
-            sequence in over 1 million metagenomes available from INSDC archives
-            as of {config.branchwaterDbDate}
-          </p>
-          <p className="vf-text-body vf-text-body--3">
-            Sequences shorter than 10kb will rarely produce results. For better
-            results, it is recommended to use sequences of lengths greater than
-            50kb. The Quality of the match to the uploaded genome is represented
-            by the cANI score (calculated from containment). The relationship
-            between cANI and taxonomic level of the match varies with the genome
-            of interest. In general, matches are most robust to the genus
-            taxonomic level and a cANI greater than 0.97 often represents a
-            species-level match.
-          </p>
-          <p className="vf-text-body vf-text-body--3">
-            Notes: processing time depends on file size and your device; keep
-            this tab open until the search completes.
-          </p>
+          <div className="mg-branchwater-disclosure__content">
+            <p className="vf-text-body vf-text-body--3">
+              Use the Browse button below to select a sequence file (.fa,
+              .fasta, .fna, .fq, .fastq, or .gz) or an uncompressed Sourmash
+              signature file (.sig).
+            </p>
+            <p className="vf-text-body vf-text-body--3">
+              If your FASTA file is larger than 10 MB, gzip it. If the gzipped
+              file is larger than 20 MB, upload a Sourmash signature (.sig)
+              instead.
+            </p>
+            <p className="vf-text-body vf-text-body--3">
+              A .sig file must contain one Sourmash signature, either as a JSON
+              object or a one-item array. It must include a DNA sketch with
+              k-mer size 21, scaled 1000, seed 42, and hash function 0.murmur64.
+              Other sketches are allowed.
+            </p>
+            <p className="vf-text-body vf-text-body--3">
+              Sequence files are sketched in your browser. Existing .sig files
+              are validated and sent without changing their sketch data.
+            </p>
+            <p className="vf-text-body vf-text-body--3">
+              This search engine searches for the containment of a query genome
+              sequence in over 1 million metagenomes available from INSDC
+              archives as of {config.branchwaterDbDate}
+            </p>
+            <p className="vf-text-body vf-text-body--3">
+              Sequences shorter than 10kb will rarely produce results. For
+              better results, it is recommended to use sequences of lengths
+              greater than 50kb. The Quality of the match to the uploaded genome
+              is represented by the cANI score (calculated from containment).
+              The relationship between cANI and taxonomic level of the match
+              varies with the genome of interest. In general, matches are most
+              robust to the genus taxonomic level and a cANI greater than 0.97
+              often represents a species-level match.
+            </p>
+            <p className="vf-text-body vf-text-body--3">
+              Notes: processing time depends on file size and your device; keep
+              this tab open until the search completes.
+            </p>
+          </div>
         </details>
       </div>
 
@@ -449,6 +511,13 @@ const Branchwater = () => {
               id="sourmash"
               ref={sourmash}
               ksize={21}
+              accept-sigs
+              aria-invalid={Boolean(signatureValidationError)}
+              aria-describedby={
+                signatureValidationError
+                  ? 'branchwater-signature-error'
+                  : undefined
+              }
             />
 
             {selectedFileName && (
@@ -459,13 +528,33 @@ const Branchwater = () => {
               </div>
             )}
 
+            {signatureValidationError && (
+              <p
+                id="branchwater-signature-error"
+                className="vf-form__helper vf-form__helper--error"
+                role="alert"
+                aria-live="assertive"
+              >
+                <strong>
+                  {selectedFileName?.toLowerCase().endsWith('.sig')
+                    ? 'Invalid .sig file:'
+                    : 'File error:'}
+                </strong>{' '}
+                {signatureValidationError}
+              </p>
+            )}
+
             <div style={{ display: 'flex', gap: '10px' }}>
               <button
                 id="branchwater-search-button"
                 type="button"
                 className="vf-button vf-button--sm vf-button--primary mg-button vf-u-margin__top--400"
                 onClick={handleSearchClick}
-                disabled={Object.keys(signatures).length === 0 || isLoading}
+                disabled={
+                  Object.keys(signatures).length === 0 ||
+                  Boolean(signatureValidationError) ||
+                  isLoading
+                }
               >
                 Search
               </button>
@@ -499,90 +588,92 @@ const Branchwater = () => {
           />
         )}
 
-        <details className="vf-details" open={true}>
+        <details className="vf-details mg-branchwater-disclosure" open={true}>
           <summary id="bw-example-panel" className="vf-details--summary">
             Try an example
           </summary>
-          <div className="vf-u-margin__top--200">
-            <fieldset className="vf-form__fieldset">
-              <legend className="vf-form__legend">Choose an organism</legend>
-              <div className="vf-form__item vf-form__item--radio">
-                <input
-                  className="vf-form__radio"
-                  type="radio"
-                  id="example-mag-1st"
-                  name="exampleMag1st"
-                  value="example-mag-1st"
-                  checked={selectedExample === 'example-mag-1st'}
-                  onChange={() => setSelectedExample('example-mag-1st')}
-                />
-                <label className="vf-form__label" htmlFor="example-mag-1st">
-                  RUG705 sp. — Cow Rumen &nbsp;
-                  <a
-                    className="vf-link"
-                    href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000290005#overview"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    MGYG000290005
-                  </a>
-                </label>
-              </div>
-              <div className="vf-form__item vf-form__item--radio">
-                <input
-                  className="vf-form__radio"
-                  type="radio"
-                  id="example-mag-2nd"
-                  name="exampleMag2nd"
-                  value="example-mag-2nd"
-                  checked={selectedExample === 'example-mag-2nd'}
-                  onChange={() => setSelectedExample('example-mag-2nd')}
-                />
-                <label className="vf-form__label" htmlFor="example-mag-2nd">
-                  Dyadobacter sp946482605— Barley Rhizosphere &nbsp;
-                  <a
-                    className="vf-link"
-                    href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000518603#overview"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    MGYG000518603
-                  </a>
-                </label>
-              </div>
+          <div className="mg-branchwater-disclosure__content">
+            <div className="vf-u-margin__top--200">
+              <fieldset className="vf-form__fieldset">
+                <legend className="vf-form__legend">Choose an organism</legend>
+                <div className="vf-form__item vf-form__item--radio">
+                  <input
+                    className="vf-form__radio"
+                    type="radio"
+                    id="example-mag-1st"
+                    name="exampleMag1st"
+                    value="example-mag-1st"
+                    checked={selectedExample === 'example-mag-1st'}
+                    onChange={() => setSelectedExample('example-mag-1st')}
+                  />
+                  <label className="vf-form__label" htmlFor="example-mag-1st">
+                    RUG705 sp. — Cow Rumen &nbsp;
+                    <a
+                      className="vf-link"
+                      href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000290005#overview"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      MGYG000290005
+                    </a>
+                  </label>
+                </div>
+                <div className="vf-form__item vf-form__item--radio">
+                  <input
+                    className="vf-form__radio"
+                    type="radio"
+                    id="example-mag-2nd"
+                    name="exampleMag2nd"
+                    value="example-mag-2nd"
+                    checked={selectedExample === 'example-mag-2nd'}
+                    onChange={() => setSelectedExample('example-mag-2nd')}
+                  />
+                  <label className="vf-form__label" htmlFor="example-mag-2nd">
+                    Dyadobacter sp946482605— Barley Rhizosphere &nbsp;
+                    <a
+                      className="vf-link"
+                      href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000518603#overview"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      MGYG000518603
+                    </a>
+                  </label>
+                </div>
 
-              <div className="vf-form__item vf-form__item--radio">
-                <input
-                  className="vf-form__radio"
-                  type="radio"
-                  id="example-mag-3rd"
-                  name="exampleMag3rd"
-                  value="metagenome"
-                  checked={selectedExample === 'example-mag-3rd'}
-                  onChange={() => setSelectedExample('example-mag-3rd')}
-                />
-                <label className="vf-form__label" htmlFor="example-mag-3rd">
-                  Salmonella enterica — Human Gut &nbsp;{' '}
-                  <a
-                    className="vf-link"
-                    href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000002366#overview"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    MGYG000002366
-                  </a>
-                </label>
-              </div>
-            </fieldset>
-            <button
-              id="bw-examples-button"
-              type="button"
-              className="vf-button vf-button--sm vf-button--secondary"
-              onClick={handleExampleSubmit}
-              disabled={isLoading}
-            >
-              Use selected example
-            </button>
+                <div className="vf-form__item vf-form__item--radio">
+                  <input
+                    className="vf-form__radio"
+                    type="radio"
+                    id="example-mag-3rd"
+                    name="exampleMag3rd"
+                    value="metagenome"
+                    checked={selectedExample === 'example-mag-3rd'}
+                    onChange={() => setSelectedExample('example-mag-3rd')}
+                  />
+                  <label className="vf-form__label" htmlFor="example-mag-3rd">
+                    Salmonella enterica — Human Gut &nbsp;{' '}
+                    <a
+                      className="vf-link"
+                      href="https://www.ebi.ac.uk/metagenomics/genomes/MGYG000002366#overview"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      MGYG000002366
+                    </a>
+                  </label>
+                </div>
+              </fieldset>
+              <button
+                id="bw-examples-button"
+                type="button"
+                className="vf-button vf-button--sm vf-button--secondary"
+                onClick={handleExampleSubmit}
+                disabled={isLoading}
+              >
+                Use selected example
+              </button>
+            </div>
           </div>
         </details>
       </div>

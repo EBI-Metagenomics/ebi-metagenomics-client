@@ -12,6 +12,7 @@
 type HTMLMgnifySourmashComponentElement = HTMLElement & {
   show_directory_checkbox: boolean;
   show_signatures: boolean;
+  acceptSigs: boolean;
   ksize: number;
   clear: () => void;
 };

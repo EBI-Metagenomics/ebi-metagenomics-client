@@ -1,0 +1,26 @@
+.mg-branchwater-disclosure {
+  interpolate-size: allow-keywords;
+}
+
+.mg-branchwater-disclosure::details-content {
+  block-size: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(-2px);
+  transition: block-size 180ms cubic-bezier(0.2, 0, 0, 1),
+    content-visibility 180ms allow-discrete, opacity 130ms ease-out,
+    transform 180ms ease-out;
+}
+
+.mg-branchwater-disclosure[open]::details-content {
+  block-size: auto;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-branchwater-disclosure::details-content {
+    transform: none;
+    transition: none;
+  }
+}

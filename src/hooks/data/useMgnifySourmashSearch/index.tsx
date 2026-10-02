@@ -21,7 +21,10 @@ const useMgnifySourmashSearch: (
   });
 
   Object.entries(signatures || {}).forEach(([filename, signature]) => {
-    const normalisedSignature = normaliseSourmashSignature(signature);
+    const normalisedSignature = normaliseSourmashSignature(
+      signature,
+      'sourmash'
+    );
 
     formdata.append(
       'file_uploaded',
