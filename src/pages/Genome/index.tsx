@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import axios from 'axios';
+import { useSearchParams } from 'react-router-dom';
 
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
@@ -66,14 +67,23 @@ const tabs = [
 
 const GenomePage: React.FC = () => {
   const accession = useURLAccession();
+  const [searchParams] = useSearchParams();
+  const catalogue = searchParams.get('catalogue');
+  const catalogueQuery = catalogue
+    ? `?${new URLSearchParams({ catalogue_id: catalogue }).toString()}`
+    : '';
   const { config } = useContext(UserContext);
 
   const { data, loading, error } = useApiData<GenomeApiResponse>({
-    url: accession ? `${config.api_v2}genomes/${accession}` : null,
+    url: accession
+      ? `${config.api_v2}genomes/${accession}${catalogueQuery}`
+      : null,
   });
 
   const genomeAnnotationsData = useApiData<GenomeDetailWithAnnotations>({
-    url: accession ? `${config.api_v2}genomes/${accession}/annotations` : null,
+    url: accession
+      ? `${config.api_v2}genomes/${accession}/annotations${catalogueQuery}`
+      : null,
   });
 
   const [searchResults, setSearchResults] = useState<BranchwaterResult[]>([]);
@@ -265,7 +275,7 @@ const GenomePage: React.FC = () => {
       {/*    ' > '*/}
       {/*  )}*/}
       {/*</p>*/}
-      <Tabs tabs={tabs} />
+      <Tabs tabs={tabs} preservedQueryParameters={['catalogue']} />
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
           <RouteForHash hash="#overview" isDefault>

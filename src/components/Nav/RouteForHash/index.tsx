@@ -10,7 +10,7 @@ const RouteForHash: React.FC<PropsType> = ({
   isDefault = false,
   children,
 }) => {
-  const { hash: currentHash } = useLocation();
+  const { hash: currentHash, search } = useLocation();
   const navigate = useNavigate();
 
   const targetHash = hash ? (hash.startsWith('#') ? hash : `#${hash}`) : '';
@@ -22,9 +22,9 @@ const RouteForHash: React.FC<PropsType> = ({
 
     if (currentHash === '' && targetHash !== '') {
       didReplaceRef.current = true;
-      navigate({ hash: targetHash }, { replace: true });
+      navigate({ search, hash: targetHash }, { replace: true });
     }
-  }, [currentHash, targetHash, isDefault, navigate]);
+  }, [currentHash, search, targetHash, isDefault, navigate]);
 
   if (currentHash === targetHash) {
     return <div id={`tab-${targetHash.slice(1) || 'default'}`}>{children}</div>;

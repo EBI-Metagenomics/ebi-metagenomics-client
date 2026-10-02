@@ -11,8 +11,8 @@ const { usePage, withQueryParamProvider } =
   createSharedQueryParamContextForTable();
 
 /**
- * Displays an ordinary TSV file or an indexed BGZF-compressed TSV file.
- * Can also take a plain TSV file as input, for cases where the BGZF-compression is not done.
+ * Displays plain or gzip-compressed TSV files, with indexed paging for BGZF
+ * downloads that provide an index.
  */
 const CompressedTSVTable: React.FC<TSVTableProps> = (props) => {
   const { download } = props;
