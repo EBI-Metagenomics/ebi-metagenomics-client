@@ -23,6 +23,20 @@ const MOCK_RESULTS = [
   }
 ];
 
+const VALID_BRANCHWATER_SIGNATURE = JSON.stringify({
+  class: 'sourmash_signature',
+  hash_function: '0.murmur64',
+  signatures: [
+    {
+      ksize: 21,
+      scaled: 1000,
+      mins: [12345],
+      molecule: 'DNA',
+      seed: 42,
+    },
+  ],
+});
+
 describe('Branchwater Search page', () => {
   beforeEach(() => {
     cy.intercept('POST', '**/services/branchwater/', {
@@ -75,7 +89,7 @@ describe('Branchwater Search page', () => {
       $el[0].dispatchEvent(
         new CustomEvent('sketchedall', {
           detail: {
-            signatures: { 'test.fasta': 'mock-signature-data' },
+            signatures: { 'test.fasta': VALID_BRANCHWATER_SIGNATURE },
             errors: {},
           },
         })
@@ -89,6 +103,36 @@ describe('Branchwater Search page', () => {
 
     cy.get('table').should('exist');
     cy.contains('ERR123456').should('be.visible');
+  });
+
+  it('shows incompatible signature settings as a form error', () => {
+    const invalidSignature = JSON.stringify({
+      ...JSON.parse(VALID_BRANCHWATER_SIGNATURE),
+      signatures: [
+        {
+          ...JSON.parse(VALID_BRANCHWATER_SIGNATURE).signatures[0],
+          ksize: 31,
+        },
+      ],
+    });
+
+    cy.get('#sourmash').then(($el) => {
+      $el[0].dispatchEvent(
+        new CustomEvent('sketchedall', {
+          detail: {
+            signatures: { 'wrong-ksize.sig': invalidSignature },
+            errors: {},
+          },
+        })
+      );
+    });
+
+    cy.get('#branchwater-signature-error')
+      .should('be.visible')
+      .and('contain', 'Invalid .sig file')
+      .and('contain', 'k-mer size 31 instead of 21');
+    cy.get('#sourmash').should('have.attr', 'aria-invalid', 'true');
+    cy.get('#branchwater-search-button').should('be.disabled');
   });
 
   it('clears results when Clear button is clicked', () => {
