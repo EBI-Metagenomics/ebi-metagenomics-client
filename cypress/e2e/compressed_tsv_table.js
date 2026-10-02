@@ -59,7 +59,7 @@ describe('TSV table loaders', () => {
       });
       cy.intercept('GET', '**/*.gzi*').as('tsvIndex');
 
-      openPage(`genomes/${accession}#kegg-pathway-analysis`);
+      openPage(`genomes/${accession}?keggTab=pathways#kegg`);
       waitForPageLoad(`Genome ${accession}`);
 
       cy.get('.compressed-tsv-table').should('be.visible');
