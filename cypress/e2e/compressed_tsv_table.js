@@ -11,71 +11,91 @@ const assertKeggModuleHeaders = () => {
 };
 
 describe('TSV table loaders', () => {
-  it('renders an ordinary TSV without requesting a BGZF index', () => {
-    const accession = 'MGYG000000001';
-    const tsvUrl = `${Cypress.env('FIXTURE_BASE')}/plain-tsv-table.tsv`;
+  [
+    { label: 'an ordinary TSV', suffix: '', compressed: false },
+    { label: 'a gzip TSV without an index', suffix: '.gz', compressed: true },
+    {
+      label: 'an already decompressed gzip response',
+      suffix: '.gz',
+      compressed: false,
+    },
+  ].forEach(({ label, suffix, compressed }) => {
+    it(`renders ${label} without requesting a BGZF index`, () => {
+      const accession = 'MGYG000000001';
+      const tsvUrl = `${Cypress.env(
+        'FIXTURE_BASE'
+      )}/plain-tsv-table.tsv${suffix}`;
 
-    cy.fixture('apiv2/genomes/genomeDetail_MGYG000000001.json').then(
-      (genome) => {
-        cy.intercept('GET', `${config.api_v2}genomes/${accession}`, {
-          ...genome,
-          downloads: [
-            ...genome.downloads,
-            {
-              alias: 'MGYG000000001_kegg_pathway_completeness.tsv',
-              download_group: 'pathways_and_systems.kegg_pathways',
-              download_type: 'Functional analysis',
-              file_type: 'tsv',
-              long_description: 'KEGG pathway completeness',
-              short_description: 'KEGG pathway completeness',
-              url: tsvUrl,
-            },
-          ],
-        });
-      }
-    );
-    cy.intercept(
-      'GET',
-      `${config.api_v2}genomes/${accession}/annotations`,
-      { fixture: 'apiv2/genomes/genomeAnnotations_MGYG000000001.json' }
-    );
-    cy.intercept('GET', tsvUrl).as('plainTsv');
-
-    openPage(`genomes/${accession}#kegg-pathway-analysis`);
-    waitForPageLoad(`Genome ${accession}`);
-
-    cy.get('.compressed-tsv-table').should('be.visible');
-    assertKeggModuleHeaders();
-    cy.get('.compressed-tsv-table thead').should(
-      'have.css',
-      'background-color',
-      'rgb(241, 245, 249)'
-    );
-    cy.get('.compressed-tsv-table tbody tr').should('have.length', 3);
-    cy.get('.compressed-tsv-table').should('contain.text', 'M00135');
-    cy.wait('@plainTsv');
-
-    cy.contains('.compressed-tsv-table button', 'Search...').click();
-    cy.get('#compressed-tsv-search-term').type('M0013');
-    cy.contains('.ReactModal__Content button', 'Search').click();
-    cy.contains('.compressed-tsv-table__search-status', 'Showing 3 rows');
-
-    cy.contains('.compressed-tsv-table button', 'Search...').click();
-    cy.get('.wildcard-search-input__toggle').first().click();
-    cy.contains('.ReactModal__Content button', 'Search').click();
-    cy.contains('.compressed-tsv-table__search-status', 'Showing 0 rows');
-
-    cy.get('.compressed-tsv-table__search-status')
-      .contains('button', 'Clear')
-      .click();
-    cy.get('.compressed-tsv-table tbody tr').should('have.length', 3);
-
-    cy.get('@plainTsv.all').then((requests) => {
-      cy.contains('button', 'Switch to chart view').click();
-      cy.get('.compressed-tsv-table .highcharts-container').should(
-        'be.visible'
+      cy.fixture('apiv2/genomes/genomeDetail_MGYG000000001.json').then(
+        (genome) => {
+          cy.intercept('GET', `${config.api_v2}genomes/${accession}`, {
+            ...genome,
+            downloads: [
+              ...genome.downloads,
+              {
+                alias: `MGYG000000001_kegg_pathway_completeness.tsv${suffix}`,
+                download_group: 'pathways_and_systems.kegg_pathways',
+                download_type: 'Functional analysis',
+                file_type: 'tsv',
+                index_files: null,
+                long_description: 'KEGG pathway completeness',
+                short_description: 'KEGG pathway completeness',
+                url: tsvUrl,
+              },
+            ],
+          });
+        }
       );
-      cy.get('@plainTsv.all').should('have.length', requests.length);
+      cy.intercept('GET', `${config.api_v2}genomes/${accession}/annotations`, {
+        fixture: 'apiv2/genomes/genomeAnnotations_MGYG000000001.json',
+      });
+      cy.fixture('plain-tsv-table.tsv', 'utf8').then((tsv) => {
+        cy.intercept('GET', tsvUrl, {
+          body: compressed ? gzip(tsv).buffer : tsv,
+          headers: {
+            'content-type': compressed ? 'application/gzip' : 'text/plain',
+          },
+        }).as('plainTsv');
+      });
+      cy.intercept('GET', '**/*.gzi*').as('tsvIndex');
+
+      openPage(`genomes/${accession}#kegg-pathway-analysis`);
+      waitForPageLoad(`Genome ${accession}`);
+
+      cy.get('.compressed-tsv-table').should('be.visible');
+      assertKeggModuleHeaders();
+      cy.get('.compressed-tsv-table thead').should(
+        'have.css',
+        'background-color',
+        'rgb(241, 245, 249)'
+      );
+      cy.get('.compressed-tsv-table tbody tr').should('have.length', 3);
+      cy.get('.compressed-tsv-table').should('contain.text', 'M00135');
+      cy.wait('@plainTsv');
+
+      cy.contains('.compressed-tsv-table button', 'Search...').click();
+      cy.get('#compressed-tsv-search-term').type('M0013');
+      cy.contains('.ReactModal__Content button', 'Search').click();
+      cy.contains('.compressed-tsv-table__search-status', 'Showing 3 rows');
+
+      cy.contains('.compressed-tsv-table button', 'Search...').click();
+      cy.get('.wildcard-search-input__toggle').first().click();
+      cy.contains('.ReactModal__Content button', 'Search').click();
+      cy.contains('.compressed-tsv-table__search-status', 'Showing 0 rows');
+
+      cy.get('.compressed-tsv-table__search-status')
+        .contains('button', 'Clear')
+        .click();
+      cy.get('.compressed-tsv-table tbody tr').should('have.length', 3);
+
+      cy.get('@tsvIndex.all').should('have.length', 0);
+      cy.get('@plainTsv.all').then((requests) => {
+        cy.contains('button', 'Switch to chart view').click();
+        cy.get('.compressed-tsv-table .highcharts-container').should(
+          'be.visible'
+        );
+        cy.get('@plainTsv.all').should('have.length', requests.length);
+      });
     });
   });
 
