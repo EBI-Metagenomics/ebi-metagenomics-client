@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { ungzip } from 'pako';
 
 import type { PaginatedList } from '@/interfaces';
 import { searchRegExp } from 'utils/textSearch';
@@ -58,7 +59,12 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
             `Failed to fetch TSV file: ${response.status} ${response.statusText}`
           );
         }
-        return parseRows(await response.text());
+        const bytes = new Uint8Array(await response.arrayBuffer());
+        // Inspect the body because HTTP content encoding may already have
+        // decompressed a .gz URL before fetch exposes the response.
+        const isGzip = bytes[0] === 0x1f && bytes[1] === 0x8b;
+        const text = new TextDecoder().decode(isGzip ? ungzip(bytes) : bytes);
+        return parseRows(text);
       })
       .then((rows) => {
         if (!cancelled) setRowsState({ rows, url });

@@ -1,6 +1,6 @@
 // Worker (so background thread) to stream GFF in browser
 import { expose } from 'comlink';
-import { BgzfFilehandle } from '@gmod/bgzf-filehandle';
+import { BgzfFilehandle, unzip } from '@gmod/bgzf-filehandle';
 import { HttpRangeFetcher } from '@gmod/http-range-fetcher';
 
 import type { GenericFilehandle, FilehandleOptions } from 'generic-filehandle2';
@@ -432,6 +432,16 @@ async function importGff(
       const chunk = await statHandle.read(CHUNK, pos);
       if (!chunk.length) break;
       onProgress(pos + chunk.length, size);
+      // Without a GZI index, a gzip/BGZF file must be decompressed in full.
+      // Detect the body so already decoded HTTP responses still parse as text.
+      if (pos === 0 && chunk[0] === 0x1f && chunk[1] === 0x8b) {
+        const compressed =
+          chunk.length < size ? await statHandle.readFile() : chunk;
+        processPlainLines(await unzip(compressed), true);
+        onProgress(size, size);
+        await inFlight;
+        break;
+      }
       const reachedFasta = processPlainLines(chunk);
       await inFlight;
       pos += chunk.length;

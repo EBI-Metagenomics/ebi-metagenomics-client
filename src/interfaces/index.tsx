@@ -31,10 +31,12 @@ export interface Download {
     path?: string;
     url?: string;
   } | null;
-  index_files?: {
-    index_type: string;
-    url: string;
-  }[];
+  index_files?:
+    | {
+        index_type: string;
+        url: string;
+      }[]
+    | null;
 }
 
 export interface Sample extends EnaDerivedObject {

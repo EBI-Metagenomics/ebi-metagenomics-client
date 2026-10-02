@@ -13,6 +13,7 @@ import { getBiomeIcon } from '@/utils/biomes';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import UserContext from 'pages/Login/UserContext';
 import { cleanTaxLineage, getSimpleTaxLineage } from 'utils/taxon';
+import { getGenomeUrl } from '@/utils/genomes';
 
 const {
   useGenomesPage,
@@ -67,7 +68,7 @@ const GenomesTable: React.FC = () => {
         Header: 'Accession',
         accessor: 'accession' as const,
         Cell: ({ cell }: { cell: { value: string } }) => (
-          <Link to={`/genomes/${cell.value}`}>{cell.value}</Link>
+          <Link to={getGenomeUrl(cell.value, accession)}>{cell.value}</Link>
         ),
       } as Column<Genome>,
       {
@@ -118,7 +119,7 @@ const GenomesTable: React.FC = () => {
         disableSortBy: true,
       } as Column<Genome>,
     ],
-    []
+    [accession]
   );
 
   if (loading && !stale) return <Loading size="small" />;
