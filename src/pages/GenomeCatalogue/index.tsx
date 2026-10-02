@@ -65,14 +65,18 @@ const GenomePage: React.FC = () => {
         <div className="vf-card-container__inner">
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
-              <h3 className="vf-card__heading">{unclustered_genome_count}</h3>
+              <h3 className="vf-card__heading">
+                {unclustered_genome_count?.toLocaleString()}
+              </h3>
               <p className="vf-card__subheading">Total genomes</p>
             </div>
           </article>
 
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
-              <h3 className="vf-card__heading">{genome_count}</h3>
+              <h3 className="vf-card__heading">
+                {genome_count.toLocaleString()}
+              </h3>
               <p className="vf-card__subheading">Species-level clusters</p>
             </div>
           </article>
