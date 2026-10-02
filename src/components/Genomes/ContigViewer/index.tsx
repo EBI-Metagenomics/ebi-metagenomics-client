@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import { find } from 'lodash-es';
 
 import { Download } from '@/interfaces';
 import ContigBrowser from 'components/ContigViewer/ContigBrowser';
@@ -9,6 +8,7 @@ import ContigSearch, {
 } from 'components/Analysis/ContigViewer/ContigSearch';
 import { LGVProvider } from 'components/Analysis/ContigViewer/V2ContigViewContext';
 import Loading from 'components/UI/Loading';
+import { findGenomeFasta, findGenomeGff, isGff } from './downloads';
 
 const genomeFilterConfig: ContigSearchFilterConfig[] = [
   {
@@ -147,42 +147,6 @@ type GenomeContigViewerProps = {
   downloads: Download[];
 };
 
-const downloadName = (download: Download) =>
-  download.alias || download.url.split('/').pop() || '';
-
-const isGenomeFna = (download: Download) => {
-  const name = downloadName(download).toLowerCase();
-  return (
-    name.endsWith('.fna') ||
-    name.endsWith('.fa') ||
-    name.endsWith('.fasta') ||
-    download.long_description?.toLowerCase() === 'nucleic acid sequence' ||
-    download.short_description?.toLowerCase() === 'nucleic acid sequence'
-  );
-};
-
-const isGff = (download: Download) =>
-  download.file_type === 'gff' ||
-  downloadName(download).toLowerCase().endsWith('.gff');
-
-const findGenomeFasta = (downloads: Download[]) =>
-  find(downloads, isGenomeFna) ??
-  find(downloads, (d) => d.file_type === 'fna') ??
-  find(
-    downloads,
-    (d) => d.file_type === 'fasta' && !downloadName(d).endsWith('.faa')
-  );
-
-const findGenomeGff = (downloads: Download[], accession: string) =>
-  find(
-    downloads,
-    (d) =>
-      isGff(d) &&
-      (d.alias === `${accession}.gff` ||
-        d.url.endsWith(`/${accession}.gff`) ||
-        (!d.alias?.includes('_virify') && !d.alias?.includes('_sanntis')))
-  ) ?? find(downloads, isGff);
-
 const withDownloadAlias = (
   download: Download | undefined
 ): Download | undefined => {
@@ -198,8 +162,8 @@ const GenomeContigViewer: React.FC<GenomeContigViewerProps> = ({
   downloads,
 }) => {
   const fasta = useMemo(
-    () => withDownloadAlias(findGenomeFasta(downloads)),
-    [downloads]
+    () => withDownloadAlias(findGenomeFasta(downloads, accession)),
+    [downloads, accession]
   );
 
   const gff = useMemo(
@@ -209,7 +173,7 @@ const GenomeContigViewer: React.FC<GenomeContigViewerProps> = ({
 
   const additionalGffs = useMemo(() => {
     if (!downloads.length) return [];
-    return downloads.filter((d) => isGff(d) && d !== gff);
+    return downloads.filter((d) => isGff(d) && d.url !== gff?.url);
   }, [downloads, gff]);
 
   if (!accession) return <Loading size="small" />;
