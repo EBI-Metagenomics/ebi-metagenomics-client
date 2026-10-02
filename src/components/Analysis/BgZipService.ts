@@ -31,6 +31,20 @@ export class BGZipService {
     download: Download,
     index_type: string = 'gzi'
   ): string | undefined {
+    // TEMPORARY: remove once the genomes API ships resolved index_files URLs.
+    if (Array.isArray(download.index_file)) {
+      const legacyIndex = download.index_file.find(
+        (index) => index.index_type === index_type
+      );
+      if (legacyIndex?.url) return legacyIndex.url;
+      if (legacyIndex?.path) {
+        return download.url.replace(
+          /[^/]+$/,
+          legacyIndex.path.split('/').pop()
+        );
+      }
+    }
+
     const indexFile = find(
       download.index_files ?? [],
       (index) => index.index_type === index_type

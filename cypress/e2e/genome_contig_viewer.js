@@ -1,5 +1,5 @@
 import config from 'utils/config';
-import { ungzip } from 'pako';
+import { gzip, ungzip } from 'pako';
 import {
   findGenomeFasta,
   findGenomeGff,
@@ -19,41 +19,128 @@ const download = (alias, file_type, extra = {}) => ({
 });
 
 describe('Genome browser download compatibility', () => {
-  it('loads the browser with legacy uncompressed files and no aliases', () => {
-    const fastaUrl = `${Cypress.env('FIXTURE_BASE')}/legacy-genome.fna`;
-    const gffUrl = `${Cypress.env('FIXTURE_BASE')}/legacy-genome.gff`;
-    const fixtureDir = 'apiv2/analyses/contigviewer/';
-    [
-      [fastaUrl, `${fixtureDir}ERZ857107_filtered_contigs.fasta.gz`],
-      [gffUrl, `${fixtureDir}ERZ857107_annotation_summary.gff.gz`],
-    ].forEach(([url, fixture]) => {
-      cy.fixture(fixture, 'binary').then((binary) => {
-        const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
-        cy.intercept('GET', url, {
-          body: ungzip(bytes, { to: 'string' }),
-          headers: { 'content-type': 'text/plain' },
-        });
-      });
+  it('indexes the real multi-block BGZF genome GFF without GZI', () => {
+    const realAccession = 'MGYG000842761';
+    const base = Cypress.env('FIXTURE_BASE');
+    const fastaUrl = `${base}/${realAccession}.fna`;
+    const gffUrl = `${base}/apiv2/genomes/${realAccession}.gff.gz`;
+    cy.intercept('GET', fastaUrl, {
+      body: [666371, 119726, 95728]
+        .map(
+          (length, i) => `>${realAccession}_${i + 1}\n${'N'.repeat(length)}\n`
+        )
+        .join(''),
+      headers: { 'content-type': 'text/plain' },
     });
     cy.fixture('apiv2/genomes/genomeDetail_MGYG000000001.json').then(
       (genome) => {
-        cy.intercept('GET', `${config.api_v2}genomes/${accession}`, {
+        cy.intercept('GET', `${config.api_v2}genomes/${realAccession}`, {
           ...genome,
-          downloads: genome.downloads.map((d) => ({
-            ...d,
-            url: d.file_type === 'fna' ? fastaUrl : gffUrl,
-          })),
+          accession: realAccession,
+          downloads: [
+            download(`${realAccession}.fna`, 'fasta', { url: fastaUrl }),
+            download(`${realAccession}.gff.gz`, 'gff', {
+              url: gffUrl,
+              index_files: null,
+            }),
+          ],
         });
       }
     );
-    cy.intercept('GET', `${config.api_v2}genomes/${accession}/annotations`, {
-      fixture: 'apiv2/genomes/genomeAnnotations_MGYG000000001.json',
+    cy.intercept(
+      'GET',
+      `${config.api_v2}genomes/${realAccession}/annotations`,
+      {
+        fixture: 'apiv2/genomes/genomeAnnotations_MGYG000000001.json',
+      }
+    );
+    openPage(`genomes/${realAccession}#genome-browser`);
+    waitForPageLoad(`Genome ${realAccession}`);
+    cy.contains('button', 'View & search contigs').click();
+    cy.get('.Toastify__toast-body').should(
+      'contain',
+      'Indexed 3 genome contigs'
+    );
+    cy.get('.vf-table__body > .vf-table__row').should('have.length', 3);
+    cy.get('.vf-table__body').should('contain.text', `${realAccession}_1`);
+  });
+
+  beforeEach(() => {
+    cy.window().then(
+      (win) =>
+        new Cypress.Promise((resolve, reject) => {
+          const request = win.indexedDB.deleteDatabase('gffdb');
+          request.onsuccess = resolve;
+          request.onerror = () => reject(request.error);
+          request.onblocked = resolve;
+        })
+    );
+  });
+
+  ['plain', 'gzip', 'bgzf'].forEach((format) => {
+    it(`loads and searches ${format} GFF without a GZI index`, () => {
+      const fastaUrl = `${Cypress.env('FIXTURE_BASE')}/legacy-genome.fna`;
+      const gffUrl = `${Cypress.env('FIXTURE_BASE')}/legacy-genome.gff${
+        format === 'plain' ? '' : '.gz'
+      }`;
+      const fixtureDir = 'apiv2/analyses/contigviewer/';
+      [
+        [fastaUrl, `${fixtureDir}ERZ857107_filtered_contigs.fasta.gz`],
+        [gffUrl, `${fixtureDir}ERZ857107_annotation_summary.gff.gz`],
+      ].forEach(([url, fixture]) => {
+        cy.fixture(fixture, 'binary').then((binary) => {
+          const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+          const text = ungzip(bytes, { to: 'string' });
+          const isGff = url === gffUrl;
+          const compressed = isGff && format !== 'plain';
+          const body =
+            isGff && format === 'bgzf'
+              ? bytes.buffer
+              : compressed
+              ? gzip(text).buffer
+              : text;
+          cy.intercept('GET', url, {
+            body,
+            headers: {
+              'content-type': compressed ? 'application/gzip' : 'text/plain',
+            },
+          });
+        });
+      });
+      cy.fixture('apiv2/genomes/genomeDetail_MGYG000000001.json').then(
+        (genome) => {
+          cy.intercept('GET', `${config.api_v2}genomes/${accession}`, {
+            ...genome,
+            downloads: genome.downloads.map((d) => ({
+              ...d,
+              url: d.file_type === 'fna' ? fastaUrl : gffUrl,
+            })),
+          });
+        }
+      );
+      cy.intercept('GET', `${config.api_v2}genomes/${accession}/annotations`, {
+        fixture: 'apiv2/genomes/genomeAnnotations_MGYG000000001.json',
+      });
+      openPage(`genomes/${accession}#genome-browser`);
+      waitForPageLoad(`Genome ${accession}`);
+      cy.contains('ERZ101_1').should('be.visible');
+      cy.contains('File download required').should('be.visible');
+      cy.contains('Additional GFFs shown are not searchable').should(
+        'not.exist'
+      );
+      cy.contains('button', 'View & search contigs').click();
+      cy.get('.Toastify__toast-body').should(
+        'contain',
+        'Indexed 6 genome contigs'
+      );
+      cy.get('.vf-table__body')
+        .contains('ERZ101_1')
+        .closest('tr')
+        .should('be.visible');
+      cy.get('.vf-table__body > .vf-table__row').should('have.length', 6);
+      cy.get('#contig-search-all').type('IPR003593');
+      cy.get('.vf-table__body > .vf-table__row').should('have.length', 3);
     });
-    openPage(`genomes/${accession}#genome-browser`);
-    waitForPageLoad(`Genome ${accession}`);
-    cy.contains('ERZ101_1').should('be.visible');
-    cy.contains('File download required').should('be.visible');
-    cy.contains('Additional GFFs shown are not searchable').should('not.exist');
   });
 
   it('selects the main compressed files regardless of download order', () => {
