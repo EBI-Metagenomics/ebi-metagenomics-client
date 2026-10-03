@@ -24,8 +24,7 @@
     "screenshots": "playwright test tests/analysis-screenshots.spec.ts",
     "mcp-playwright": "playwright-mcp",
     "prettier": "prettier --write .",
-    "prepare": "husky install",
-    "postinstall": "node scripts/copy-mgnify-sourmash-component-assets.mjs"
+    "prepare": "husky install"
   },
   "author": "MGnify Team",
   "license": "ISC",
@@ -68,7 +67,6 @@
     "leaflet": "^1.9.4",
     "lodash-es": "4.17.21",
     "lucide-react": "^0.476.0",
-    "mgnify-sourmash-component": "0.3.4",
     "native-file-system-adapter": "^3.0.1",
     "pako": "^2.1.0",
     "papaparse": "^5.5.3",
@@ -91,6 +89,9 @@
     "textarea-sequence": "3.5.1",
     "universal-cookie": "4.0.4",
     "uuid": "^8.3.2"
+  },
+  "overrides": {
+    "unrs-resolver": "1.11.1"
   },
   "devDependencies": {
     "@cypress/code-coverage": "3.12.1",
@@ -127,7 +128,7 @@
     "eslint": "^9.33.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "8.3.0",
-    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-import-resolver-typescript": "4.4.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-prettier": "4.0.0",

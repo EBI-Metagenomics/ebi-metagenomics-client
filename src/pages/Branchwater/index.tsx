@@ -511,7 +511,7 @@ const Branchwater = () => {
               id="sourmash"
               ref={sourmash}
               ksize={21}
-              accept-sigs
+              accept_sigs
               aria-invalid={Boolean(signatureValidationError)}
               aria-describedby={
                 signatureValidationError
