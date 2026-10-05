@@ -17,19 +17,11 @@ import { SharedTextQueryParam } from '@/hooks/queryParamState/QueryParamStore/Qu
 import config from 'utils/config';
 import { sortByOrder } from '@/utils/sorting';
 import './style.css';
-
-const formatCatalogueType = (catalogueType: string) =>
-  catalogueType ? catalogueType[0].toUpperCase() + catalogueType.slice(1) : '';
-
-const formatDate = (date: string) =>
-  date ? new Date(date).toLocaleDateString() : '';
-
-const genomeBiomeGroupIcons: Record<string, string> = {
-  Environmental: 'default_b',
-  Engineered: 'engineered_b',
-  'Human-associated': 'human_host_b',
-  'Non-human host-associated': 'mammals_b',
-};
+import {
+  formatCatalogueType,
+  formatDate,
+  genomeBiomeGroupIcons,
+} from 'utils/genomes';
 
 const CatalogueBiomeBrowser: React.FC<{
   catalogues: GenomeCatalogue[];
@@ -192,8 +184,8 @@ const BrowseGenomesByCatalogue: React.FC = () => {
     <section className="mg-browse-section">
       <h2 className="vf-heading vf-heading--3">Browse by biome</h2>
       <p className="vf-text-body vf-text-body--3">
-        Select a group to see its biomes in the table below.
-        Select a catalogue to browse or search its genomes.
+        Select a group to see its biomes in the table below. Select a catalogue
+        to browse or search its genomes.
       </p>
       <CatalogueBiomeBrowser
         catalogues={apiData?.items || []}
