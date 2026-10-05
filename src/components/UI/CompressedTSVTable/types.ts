@@ -4,8 +4,10 @@ import type { Column } from 'react-table';
 
 export type BarChartSpec = Pick<
   BarChartForTableProps,
-  'title' | 'labelsCol' | 'countsCol' | 'maxLabels'
->;
+  'title' | 'labelsCol' | 'countsCol' | 'maxLabels' | 'subtitle'
+> & {
+  histogramColumn?: string;
+};
 
 export interface TSVTableProps {
   columns?: Column[];
@@ -21,6 +23,7 @@ export interface TSVTableLoaderProps extends TSVTableProps {
 
 export interface TSVTableViewProps extends Omit<TSVTableProps, 'download'> {
   data: PaginatedList<string[]>;
+  chartData?: PaginatedList<string[]>;
   expectedPageSize: number;
   fileUrl: string;
   headerRow?: string[];

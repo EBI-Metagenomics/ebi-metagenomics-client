@@ -50,17 +50,21 @@ const GenomeBrowser = lazy(() => import('components/Genomes/ContigViewer'));
 const GenomeGenericAnalysis = lazy(
   () => import('components/Genomes/Annotations')
 );
-const GenomeKeggPathwayAnalysis = lazy(
-  () => import('components/Genomes/KeggPathwayAnalysis')
+const GenomeKeggAnalysis = lazy(
+  () => import('components/Genomes/KeggAnalysis')
+);
+const GenomeAmrAnalysis = lazy(() => import('components/Genomes/AmrAnalysis'));
+const GenomePathofactAnalysis = lazy(
+  () => import('components/Genomes/PathofactAnalysis')
 );
 
 const tabs = [
   { label: 'Overview', to: '#overview' },
   { label: 'Browse genome', to: '#genome-browser' },
   { label: 'COG', to: '#cog-analysis' },
-  { label: 'KEGG classes', to: '#kegg-class-analysis' },
-  { label: 'KEGG modules', to: '#kegg-module-analysis' },
-  { label: 'KEGG pathways', to: '#kegg-pathway-analysis' },
+  { label: 'KEGG', to: '#kegg' },
+  { label: 'AMR', to: '#amr' },
+  { label: 'PathoFact', to: '#pathofact' },
   { label: 'Presence in metagenomes', to: '#metagenome-search' },
   { label: 'Downloads', to: '#downloads' },
 ];
@@ -260,6 +264,32 @@ const GenomePage: React.FC = () => {
 
   if (!accession) return null;
 
+  const amrDownload = data.downloads?.find(
+    (download) =>
+      download.file_type === 'tsv' &&
+      [download.alias, download.short_description, download.url].some((value) =>
+        value
+          ?.replace(/[\s_-]/g, '')
+          .toLowerCase()
+          .includes('amrfinderplus')
+      )
+  );
+  const pathofactDownload = data.downloads?.find(
+    (download) =>
+      download.file_type === 'tsv' &&
+      [download.alias, download.short_description, download.url].some((value) =>
+        value
+          ?.replace(/[\s_-]/g, '')
+          .toLowerCase()
+          .includes('pathofact')
+      )
+  );
+  const genomeTabs = tabs.filter(
+    (tab) =>
+      (tab.to !== '#amr' || amrDownload) &&
+      (tab.to !== '#pathofact' || pathofactDownload)
+  );
+
   return (
     <section className="vf-content">
       <Breadcrumbs links={breadcrumbs} />
@@ -275,7 +305,7 @@ const GenomePage: React.FC = () => {
       {/*    ' > '*/}
       {/*  )}*/}
       {/*</p>*/}
-      <Tabs tabs={tabs} preservedQueryParameters={['catalogue']} />
+      <Tabs tabs={genomeTabs} preservedQueryParameters={['catalogue']} />
       <section className="vf-grid">
         <div className="vf-stack vf-stack--200">
           <RouteForHash hash="#overview" isDefault>
@@ -303,43 +333,28 @@ const GenomePage: React.FC = () => {
               />
             </Suspense>
           </RouteForHash>
-          <RouteForHash hash="#kegg-class-analysis">
+          <RouteForHash hash="#kegg">
             <Suspense fallback={<Loading size="large" />}>
-              <GenomeGenericAnalysis
-                items={genomeAnnotationsData.data?.annotations.kegg_classes}
-                chartTitle="Top 10 KEGG brite categories"
-                subtitleSuffix="KEGG matches"
-                tooltipEntityLabel="KEGG Class"
-                tableType="kegg-class"
-                tableTitlePrefix="KEGG classes"
-                firstColumnHeaderOverride="Class ID"
-                labelAccessor={(d: any) =>
-                  String((d as any).class_id ?? (d as any).name)
-                }
-                dataCy="genome-kegg-analysis"
+              <GenomeKeggAnalysis
+                annotations={genomeAnnotationsData.data?.annotations}
+                downloads={data.downloads ?? []}
               />
             </Suspense>
           </RouteForHash>
-          <RouteForHash hash="#kegg-module-analysis">
-            <Suspense fallback={<Loading size="large" />}>
-              <GenomeGenericAnalysis
-                items={genomeAnnotationsData.data?.annotations.kegg_modules}
-                chartTitle="Top 10 KEGG module categories"
-                subtitleSuffix="KEGG module matches"
-                tooltipEntityLabel="KEGG Module"
-                tableType="kegg-module"
-                tableTitlePrefix="KEGG modules"
-                labelAccessor={(d: any) => String(d.name)}
-                firstColumnHeaderOverride="Module ID"
-                dataCy="genome-kegg-module-analysis"
-              />
-            </Suspense>
-          </RouteForHash>
-          <RouteForHash hash="#kegg-pathway-analysis">
-            <Suspense fallback={<Loading size="large" />}>
-              <GenomeKeggPathwayAnalysis downloads={data.downloads ?? []} />
-            </Suspense>
-          </RouteForHash>
+          {amrDownload && (
+            <RouteForHash hash="#amr">
+              <Suspense fallback={<Loading size="large" />}>
+                <GenomeAmrAnalysis download={amrDownload} />
+              </Suspense>
+            </RouteForHash>
+          )}
+          {pathofactDownload && (
+            <RouteForHash hash="#pathofact">
+              <Suspense fallback={<Loading size="large" />}>
+                <GenomePathofactAnalysis download={pathofactDownload} />
+              </Suspense>
+            </RouteForHash>
+          )}
           <RouteForHash hash="#metagenome-search">
             <div className="vf-stack vf-stack--400">
               <h3>Branchwater</h3>

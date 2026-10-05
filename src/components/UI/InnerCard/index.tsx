@@ -6,7 +6,7 @@ import './style.css';
 
 type InnerCardProps = {
   title: string | React.ReactNode;
-  label: string;
+  label: React.ReactNode;
   image?: string;
   imageAltText?: string;
   externalLink?: boolean;

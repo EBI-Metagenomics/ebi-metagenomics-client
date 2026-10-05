@@ -16,11 +16,12 @@ import ExtLink from 'components/UI/ExtLink';
 import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import { Download, GenomeCatalogue } from '@/interfaces';
 import PhyloTree from 'components/Genomes/PhyloTree';
+import { formatDate } from 'utils/genomes';
+import { upperFirst } from 'lodash-es';
 
 const tabs = [
   { label: 'Genome list', to: '#' },
   { label: 'Taxonomy tree', to: '#phylo-tab' },
-  { label: 'Protein catalogue', to: '#protein-catalog-tab' },
   { label: 'Search by Gene', to: '#genome-search-tab' },
   { label: 'Search by MAG', to: '#genome-search-mag-tab' },
 ];
@@ -46,6 +47,9 @@ const GenomePage: React.FC = () => {
     protein_catalogue_name,
     unclustered_genome_count,
     downloads,
+    updated_at,
+    catalogue_type,
+    version,
   } = data as GenomeCatalogue;
   const breadcrumbs = [
     { label: 'Home', url: '/' },
@@ -59,21 +63,44 @@ const GenomePage: React.FC = () => {
   return (
     <section className="vf-content">
       <Breadcrumbs links={breadcrumbs} />
-      <h2>{name}</h2>
+      <h2 className="vf-heading vf-heading--h2">{name}</h2>
+      <div>
+        <ReactMarkdown>{description as string}</ReactMarkdown>
+      </div>
 
       <section className="vf-card-container vf-card-container__col-4">
         <div className="vf-card-container__inner">
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
-              <h3 className="vf-card__heading">{unclustered_genome_count}</h3>
-              <p className="vf-card__subheading">Total genomes</p>
+              <h3 className="vf-card__heading">
+                {genome_count.toLocaleString()}
+              </h3>
+              <p className="vf-card__subheading stat_label">
+                Species representatives
+              </p>
             </div>
           </article>
 
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
-              <h3 className="vf-card__heading">{genome_count}</h3>
-              <p className="vf-card__subheading">Species-level clusters</p>
+              <h3 className="vf-card__heading">
+                {unclustered_genome_count?.toLocaleString()}
+              </h3>
+              <p className="vf-card__subheading stat_label">Genomes</p>
+            </div>
+          </article>
+
+          <article className="vf-card vf-card--brand vf-card--bordered">
+            <div className="vf-card__content | vf-stack vf-stack--200">
+              <h3 className="vf-card__heading">{formatDate(updated_at)}</h3>
+              <p className="vf-card__subheading stat_label">Last updated</p>
+            </div>
+          </article>
+
+          <article className="vf-card vf-card--brand vf-card--bordered">
+            <div className="vf-card__content | vf-stack vf-stack--200">
+              <h3 className="vf-card__heading">{upperFirst(catalogue_type)}</h3>
+              <p className="vf-card__subheading stat_label">Catalogue type</p>
             </div>
           </article>
 
@@ -92,23 +119,11 @@ const GenomePage: React.FC = () => {
                   <h3 className="vf-card__heading">
                     {parseInt(other_stats[stat] as string).toLocaleString()}
                   </h3>
-                  <p className="vf-card__subheading">{stat}</p>
+                  <p className="vf-card__subheading stat_label">{stat}</p>
                 </div>
               </article>
             );
           })}
-
-          <article className="vf-card vf-card--brand vf-card--bordered">
-            <div className="vf-card__content | vf-stack vf-stack--200">
-              <h3 className="vf-card__heading">
-                <a href={ftp_url}>
-                  FTP Site
-                  <ArrowForLink />
-                </a>
-              </h3>
-              <p className="vf-card__subheading">Download full catalogue</p>
-            </div>
-          </article>
 
           <article className="vf-card vf-card--brand vf-card--bordered">
             <div className="vf-card__content | vf-stack vf-stack--200">
@@ -125,9 +140,80 @@ const GenomePage: React.FC = () => {
         </div>
       </section>
 
-      <div>
-        <ReactMarkdown>{description as string}</ReactMarkdown>
-      </div>
+      <section className={'vf-section mg-bordered'}>
+        <h3 className={'vf-heading vf-heading--3'}>Downloads</h3>
+        <div className="vf-flag vf-flag--top vf-flag--200">
+          <div className="vf-flag__body">
+            <h5 className="vf-card__subheading">{name} genome catalogue</h5>
+            <p className={'vf-text'}>
+              Species-representative genomes, MAGs, taxonomic assignments,
+              functional annotations, phylogenetic trees and metadata for the
+              full catalogue.
+            </p>
+          </div>
+          <div className="vf-flag__media">
+            <a
+              className={'vf-link'}
+              style={{ textWrap: 'nowrap' }}
+              href={ftp_url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              FTP site
+              <ArrowForLink />
+            </a>
+          </div>
+        </div>
+        <hr className="vf-divider" />
+        <div className="vf-flag vf-flag--top vf-flag--200">
+          <div className="vf-flag__body">
+            <h5 className="vf-card__subheading">
+              {protein_catalogue_name || name + ' protein catalogue'}
+            </h5>
+            <ReactMarkdown
+              components={{
+                p: ({ ...props }) => <p {...props} className="vf-text" />,
+              }}
+            >
+              {protein_catalogue_description as string}
+            </ReactMarkdown>
+          </div>
+          <div className="vf-flag__media">
+            <a
+              className={'vf-link'}
+              style={{ textWrap: 'nowrap' }}
+              href={ftp_url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              FTP site
+              <ArrowForLink />
+            </a>
+          </div>
+        </div>
+        <hr className="vf-divider" />
+        <div className="vf-flag vf-flag--top vf-flag--200">
+          <div className="vf-flag__body">
+            <h5 className="vf-card__subheading">README</h5>
+            <p className={'vf-text'}>
+              Full list of course studies and pipeline notes for this catalogue
+              version.
+            </p>
+          </div>
+          <div className="vf-flag__media">
+            <a
+              className={'vf-link'}
+              style={{ textWrap: 'nowrap' }}
+              href={ftp_url + '/README_v' + version + '.txt'}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View
+              <ArrowForLink />
+            </a>
+          </div>
+        </div>
+      </section>
 
       <Tabs tabs={tabs} />
       <section className="vf-grid">
@@ -152,13 +238,6 @@ const GenomePage: React.FC = () => {
               catalogueName={name as string}
               catalogueID={catalogue_id}
             />
-          </RouteForHash>
-          <RouteForHash hash="#protein-catalog-tab">
-            <h3>{protein_catalogue_name as string}</h3>
-            <ReactMarkdown>
-              {(protein_catalogue_description as string) ||
-                'No protein catalogue description available for this catalogue.'}
-            </ReactMarkdown>
           </RouteForHash>
         </div>
       </section>

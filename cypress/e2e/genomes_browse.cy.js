@@ -48,7 +48,7 @@ describe.skip('Browse Genomes', () => {
     openPage('browse/genomes');
     waitForPageLoad('Browse MGnify');
 
-    // Default tab should be biome (Catalogues list)
+    // Default tab should be biome (Genomes catalogues list)
     cy.get('table.vf-table--striped tbody tr').should('have.length.at.least', 1);
 
     // Click on Gene search
@@ -57,12 +57,12 @@ describe.skip('Browse Genomes', () => {
     cy.contains('h3', 'Search DNA fragments across catalogues').should('be.visible');
 
     // Click on MAG search
-    cy.contains('.vf-tabs__link', 'MAG search').click();
+    cy.contains('.vf-tabs__link', 'Genome search').click();
     cy.url().should('include', 'browseBy=mag-search');
     cy.contains('h3', 'Search MAG files across catalogues').should('be.visible');
 
     // Click back to All genomes
-    cy.contains('.vf-tabs__link', 'All genomes').click();
+    cy.contains('.vf-tabs__link', 'All representative genomes').click();
     cy.url().should('include', 'browseBy=search-all');
     cy.get('table.vf-table--striped tbody tr').should('have.length', 2);
   });

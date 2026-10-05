@@ -3,7 +3,6 @@ import config from 'utils/config';
 
 describe('Genome catalogue page', () => {
   const catalogueIdValid = 'human-gut-v2-0-2';
-  const catalogueNameValid = 'Human Gut v2.0.2'
 
   beforeEach(() => {
     cy.intercept('GET', `${config.api_v2}genomes/catalogues/${catalogueIdValid}`, {
@@ -23,62 +22,67 @@ describe('Genome catalogue page', () => {
   context('Genome list', () => {
     it('Should have structured overview data', () => {
       openAndWait('genome-catalogues/' + catalogueIdValid, 'Marine MAGs');
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__heading').should('contain.text', '8')
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__subheading').should('contain.text', 'Total genomes')
-
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__heading').should('contain.text', '5')
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__subheading').should('contain.text', 'Species-level clusters')
-
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__heading').should('contain.text', '1,000')
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__subheading').should('contain.text', 'Total proteins')
-
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__heading').should('contain.text', '10')
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__subheading').should('contain.text', 'Clusters with pan-genomes')
-
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__heading').should('contain.text', '5')
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__subheading').should('contain.text', 'Clusters with isolate genomes')
-
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__heading').should('contain.text', 'FTP Site')
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__subheading').should('contain.text', 'Download full catalogue')
-
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__heading').should('contain.text', 'Pipeline v1.0.0')
-      cy.get('.vf-body > .vf-content .vf-card__content .vf-card__subheading').should('contain.text', 'View workflow & tools')
+      const stats = [
+        ['Species representatives', '5'],
+        ['Genomes', '8'],
+        ['Last updated', '01/10/2024'],
+        ['Catalogue type', 'Mag'],
+        ['Total proteins', '1,000'],
+        ['Clusters with pan-genomes', '10'],
+        ['Clusters with isolate genomes', '5'],
+        ['View workflow & tools', 'Pipeline v1.0.0'],
+      ];
+      stats.forEach(([label, value]) => {
+        cy.contains('.vf-card__subheading', new RegExp(`^${label}$`))
+          .closest('.vf-card')
+          .find('.vf-card__heading')
+          .should(($heading) => {
+            expect($heading.text().trim()).to.equal(value);
+          });
+      });
     });
 
     it('Should have table of genomes', () => {
       openAndWait('genome-catalogues/' + catalogueIdValid, 'Marine MAGs');
       cy.get('.mg-table tbody tr').should('have.length', 2);
-      const rowData = [null, 'MGYG000000001', '123456', '10', '95', '2', 'MAG'];
-      cy.get('.mg-table tbody tr:nth-child(1) td').each(($el, idx) => {
-        if (rowData[idx]) {
-          expect($el.text()).to.contain(rowData[idx]);
-        }
+      const headers = ['Accession', 'Taxonomy', 'Type', 'Completeness', 'Contamination', 'Length (MB)', 'N50', 'GC%'];
+      cy.get('.mg-table thead th').should('have.length', headers.length).each(($el, idx) => {
+        expect($el.text()).to.contain(headers[idx]);
+      });
+      const rowData = ['MGYG000000001', 'Bacillus subtilis', 'MAG', '95.00%', '2.00%', '0.12', '12,345', '42.50%'];
+      cy.get('.mg-table tbody tr:first-child td').should('have.length', rowData.length).each(($el, idx) => {
+        expect($el.text().trim()).to.equal(rowData[idx]);
       });
     });
 
     it('Should be searchable', () => {
       openAndWait('genome-catalogues/' + catalogueIdValid, 'Marine MAGs');
-      cy.intercept('GET', `${config.api_v2}genomes/catalogues/${catalogueIdValid}/genomes?**search=MGYG000000001**`, {
-        body: {
-          count: 1,
-          items: [
-            {
-              accession: "MGYG000000001",
-              length: 123456,
-              num_contigs: 10,
-              completeness: 95,
-              contamination: 2,
-              type: "MAG",
-              biome: {"lineage": "root:Environmental:Marine"}
-            }
-          ]
-        }
-      }).as('searchGenomes');
+      cy.fixture('apiv2/genomes/catalogue_mar1_genomes.json').then(({ items }) => {
+        cy.intercept('GET', `${config.api_v2}genomes/catalogues/${catalogueIdValid}/genomes?**search=MGYG000000001**`, {
+          body: { count: 1, items: [items[0]] },
+        }).as('searchGenomes');
+      });
 
       cy.get('#searchitem').type('MGYG000000001');
+      cy.wait('@searchGenomes');
       cy.get('.mg-table tbody tr').should('have.length', 1);
     });
 
+  });
+
+  context('Downloads', () => {
+    it('Should show catalogue and protein downloads on the main page', () => {
+      openAndWait('genome-catalogues/' + catalogueIdValid, 'Marine MAGs');
+      cy.contains('h3', 'Downloads').closest('section').within(() => {
+        cy.contains('.vf-flag', 'Marine MAGs genome catalogue').within(() => {
+          cy.contains('a', 'FTP site').should('have.attr', 'href', 'https://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/');
+        });
+        cy.contains('.vf-flag', 'UHGP').within(() => {
+          cy.contains('Protein coding sequences from the human gut.').should('be.visible');
+          cy.contains('a', 'FTP site').should('have.attr', 'href', 'https://ftp.ebi.ac.uk/pub/databases/metagenomics/mgnify_genomes/');
+        });
+      });
+    });
   });
 
   context('Taxonomy tree', () => {
@@ -88,14 +92,6 @@ describe('Genome catalogue page', () => {
       cy.get(':nth-child(3) > .mg-hierarchy-selector > .mg-expander').click();
       cy.get(':nth-child(7) > .mg-hierarchy-selector > .mg-expander').click();
       cy.get('.mg-hierarchy-label').should('contain.text', 'Negativicutes');
-    });
-
-    context('Protein catalogue', () => {
-      it('Should show catalogue description', () => {
-        openAndWait('genome-catalogues/' + catalogueIdValid + '#protein-catalog-tab', 'Marine MAGs');
-        cy.get('#tab-protein-catalog-tab').should('contain.text', 'UHGP');
-        cy.get('#tab-protein-catalog-tab').should('contain.text', 'Protein coding sequences');
-      });
     });
 
     context('COBS gene fragment search', () => {

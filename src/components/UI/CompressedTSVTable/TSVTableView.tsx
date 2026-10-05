@@ -28,6 +28,7 @@ const columnsFromHeader = (
 const TSVTableView: React.FC<TSVTableViewProps> = ({
   barChartSpec,
   columnHeaders,
+  chartData,
   columns = [],
   data,
   expectedPageSize,
@@ -158,60 +159,59 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
           )}
         </form>
       </EMGModal>
-      <FixedHeightScrollable heightPx={600} className="tsv-table__scroll">
-        <div className="compressed-tsv-table__toolbar tsv-table__toolbar">
-          <div className="compressed-tsv-table__search-status">
-            {searchTerm && (
-              <>
-                Showing {data.count.toLocaleString()}{' '}
-                {data.count === 1 ? 'row' : 'rows'} matching{' '}
-                <strong>{searchTerm}</strong>
-                <button
-                  type="button"
-                  className="vf-button vf-button--link vf-button--sm"
-                  onClick={clearSearch}
-                  disabled={isSearching}
-                >
-                  Clear
-                </button>
-              </>
-            )}
-          </div>
-          <div className="compressed-tsv-table__toolbar-actions">
-            {barChartSpec && (
+      <div className="compressed-tsv-table__toolbar tsv-table__toolbar">
+        <div className="compressed-tsv-table__search-status">
+          {searchTerm && (
+            <>
+              Showing {data.count.toLocaleString()}{' '}
+              {data.count === 1 ? 'row' : 'rows'} matching{' '}
+              <strong>{searchTerm}</strong>
               <button
                 type="button"
-                className="vf-search__button | vf-button vf-button--primary mg-text-search-button vf-button--sm"
-                onClick={() =>
-                  setViewMode((currentMode) =>
-                    currentMode === 'table' ? 'chart' : 'table'
-                  )
-                }
-                disabled={isBusy}
+                className="vf-button vf-button--link vf-button--sm"
+                onClick={clearSearch}
+                disabled={isSearching}
               >
-                <span
-                  className={`icon icon-common icon-${
-                    viewMode === 'table' ? 'chart-bar' : 'table'
-                  }`}
-                  style={{ color: '#dcfce7' }}
-                />
-                <span className="vf-button__text">
-                  Switch to {viewMode === 'table' ? 'chart' : 'table'} view
-                </span>
+                Clear
               </button>
-            )}
+            </>
+          )}
+        </div>
+        <div className="compressed-tsv-table__toolbar-actions">
+          {barChartSpec && (
             <button
               type="button"
-              className="vf-button vf-button--secondary vf-button--sm"
-              onClick={openSearchModal}
+              className="vf-search__button | vf-button vf-button--primary mg-text-search-button vf-button--sm"
+              onClick={() =>
+                setViewMode((currentMode) =>
+                  currentMode === 'table' ? 'chart' : 'table'
+                )
+              }
               disabled={isBusy}
             >
-              <span className="icon icon-common icon-search" />{' '}
-              <span className="vf-button__text">Search...</span>
+              <span
+                className={`icon icon-common icon-${
+                  viewMode === 'table' ? 'chart-bar' : 'table'
+                }`}
+                style={{ color: '#dcfce7' }}
+              />
+              <span className="vf-button__text">
+                Switch to {viewMode === 'table' ? 'chart' : 'table'} view
+              </span>
             </button>
-          </div>
+          )}
+          <button
+            type="button"
+            className="vf-button vf-button--secondary vf-button--sm"
+            onClick={openSearchModal}
+            disabled={isBusy}
+          >
+            <span className="icon icon-common icon-search" />{' '}
+            <span className="vf-button__text">Search...</span>
+          </button>
         </div>
-
+      </div>
+      <FixedHeightScrollable heightPx={600} className="tsv-table__scroll">
         {isBusy && <Loading />}
         {!isBusy && viewMode === 'table' && (
           <EMGTable
@@ -222,7 +222,7 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
           />
         )}
         {!isBusy && viewMode === 'chart' && barChartSpec && (
-          <BarChartForTable data={data} {...barChartSpec} />
+          <BarChartForTable data={chartData ?? data} {...barChartSpec} />
         )}
       </FixedHeightScrollable>
     </div>
