@@ -9,7 +9,12 @@
       "completeness": 95,
       "contamination": 2,
       "type": "MAG",
-      "biome": {"lineage": "root:Environmental:Marine"}
+      "biome": {
+        "lineage": "root:Environmental:Marine"
+      },
+      "n_50": 12345,
+      "gc_content": 42.5,
+      "taxon_lineage": "d__Bacteria;p__Bacillota;g__Bacillus;s__Bacillus subtilis"
     },
     {
       "accession": "MGYG000000003",
@@ -19,7 +24,12 @@
       "completeness": 90,
       "contamination": 3,
       "type": "MAG",
-      "biome": {"lineage": "root:Environmental:Marine"}
+      "biome": {
+        "lineage": "root:Environmental:Marine"
+      },
+      "n_50": 22222,
+      "gc_content": 51.25,
+      "taxon_lineage": "d__Bacteria;p__Pseudomonadota;g__Escherichia;s__Escherichia coli"
     }
   ]
 }
