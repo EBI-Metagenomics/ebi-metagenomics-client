@@ -110,12 +110,6 @@
     max-width: 800px;
 }
 
-/* Ensure cards don’t get chopped */
-.home-search-cards {
-    margin-top: 2rem;
-}
-
-
 .home-search-cards.vf-grid.vf-grid__col-2 .vf-card {
     display: flex;
     flex-direction: column;
@@ -193,21 +187,6 @@
     cursor: pointer;
 }
 
-/* Search card spacing */
-.home-search-cards {
-    margin-top: 3rem;
-}
-
-/* Card tweaks */
-.home-search-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.home-search-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
-
 .search-by-section, .request-by-section {
     padding: 0.4rem;
 }
@@ -249,11 +228,6 @@
     flex: 1;
     min-width: 250px;
     max-width: 350px;
-    transition: transform 0.2s ease-in-out;
-}
-
-.home-search-card:hover {
-    transform: translateY(-5px);
 }
 
 /* Make the content sections more minimalist */
