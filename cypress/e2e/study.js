@@ -116,6 +116,38 @@ describe('Study page', function() {
             cy.get('span.mg-number').should('contain', '11');
         });
 
+        it('Should request ordering for every analysis column', function() {
+            const sortableColumns = [
+                ['Analysis accession', 'accession'],
+                ['Sample accession', 'sample_accession'],
+                ['Sample title', 'sample_title'],
+                ['Run / Assembly accession', 'run_or_assembly_accession'],
+                ['Pipeline version', 'pipeline_version'],
+            ];
+
+            sortableColumns.forEach(([heading, order]) => {
+                const ascendingAlias = `getAnalysesAscending-${order}`;
+                const descendingAlias = `getAnalysesDescending-${order}`;
+
+                cy.intercept(
+                  'GET',
+                  `${config.api_v2}/studies/${projectId}/analyses/?page=1&page_size=10&order=${order}`,
+                  {fixture: 'apiv2/studies/studyMGYS00000001AnalysesPage1.json'}
+                ).as(ascendingAlias);
+                cy.intercept(
+                  'GET',
+                  `${config.api_v2}/studies/${projectId}/analyses/?page=1&page_size=10&order=-${order}`,
+                  {fixture: 'apiv2/studies/studyMGYS00000001AnalysesPage1.json'}
+                ).as(descendingAlias);
+
+                cy.contains('th', heading).click();
+                cy.wait(`@${ascendingAlias}`);
+
+                cy.contains('th', heading).click();
+                cy.wait(`@${descendingAlias}`);
+            });
+        });
+
         it('Analysis table download should paginate', function() {
             const writtenChunks = [];
             openPage(origPage, {
