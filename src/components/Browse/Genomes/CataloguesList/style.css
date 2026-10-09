@@ -1,3 +1,25 @@
+.mg-catalogue-biome-intro {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.mg-catalogue-biome-intro p {
+  flex: 1 1 20rem;
+  margin: 0;
+}
+
+.mg-catalogue-biome-reset {
+  flex-shrink: 0;
+  margin: 0 0 0 auto;
+}
+
+.mg-catalogue-biome-reset--hidden {
+  visibility: hidden;
+}
+
 .mg-catalogue-biome-browser {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
@@ -17,10 +39,6 @@
 
 .mg-catalogue-biome-browser .inner-card__text {
   font-size: 1rem;
-}
-
-.mg-catalogue-biome-browser .vf-card__link:hover:not(:focus-visible)::after {
-  box-shadow: none;
 }
 
 .mg-catalogues-table {
