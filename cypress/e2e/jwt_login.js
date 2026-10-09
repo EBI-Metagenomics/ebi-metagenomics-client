@@ -29,14 +29,12 @@ describe('JWT Login', () => {
         });
       }
     }).as('authRequest');
-    cy.intercept('POST', '**/utils/token/verify', (req) => {
+    cy.intercept('POST', '**/auth/sliding/refresh', (req) => {
       if (req && req.body && req.body.token && req.body.token.startsWith("ey")) {
         req.reply({
           statusCode: 200,
           body: {
-            data: {
-              token: req.body.token,
-            }
+            token: req.body.token,
           },
         });
       } else {
