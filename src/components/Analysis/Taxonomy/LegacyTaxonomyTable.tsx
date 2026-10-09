@@ -7,7 +7,6 @@ import { startCase } from 'lodash-es';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
 import BarChartForTable from 'components/Analysis/BarChartForTable';
 import protectedAxios from '@/utils/protectedAxios';
-import axios from 'axios';
 
 interface LegacyTaxonomyTableProps {
   url: string;
@@ -93,12 +92,8 @@ const LegacyTaxonomyTable: React.FC<LegacyTaxonomyTableProps> = ({
             count: items.length,
           });
         }
-      } catch (err) {
+      } catch {
         if (!cancelled) {
-          if (axios.isAxiosError(err) && err.response?.status === 401) {
-            localStorage.setItem('mgnify.sessionExpired', 'true');
-            window.location.reload();
-          }
           setData({ items: [], count: 0 });
         }
       } finally {

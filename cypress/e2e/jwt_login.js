@@ -1,4 +1,4 @@
-import {openPage} from '../util/util';
+import {openPage} from '../util/util.js';
 import config from 'utils/config';
 const loginUrl = 'http://localhost:9000/metagenomics/login';
 const homePageUrl = 'http://localhost:9000/metagenomics/';
@@ -29,14 +29,12 @@ describe('JWT Login', () => {
         });
       }
     }).as('authRequest');
-    cy.intercept('POST', '**/utils/token/verify', (req) => {
+    cy.intercept('POST', '**/auth/sliding/refresh', (req) => {
       if (req && req.body && req.body.token && req.body.token.startsWith("ey")) {
         req.reply({
           statusCode: 200,
           body: {
-            data: {
-              token: req.body.token,
-            }
+            token: req.body.token,
           },
         });
       } else {
@@ -48,6 +46,12 @@ describe('JWT Login', () => {
     }).as('authVerifyRequest');
     openPage('login');
   });
+
+  const logUserIn = () => {
+    cy.get('#id_username').type(allowedUsername);
+    cy.get('#id_password').type(allowedPassword);
+    cy.get('#submit-id-submit').click();
+  }
 
   it('should log in successfully with valid credentials and the login should be persisted', () => {
     logUserIn();
@@ -81,10 +85,4 @@ describe('JWT Login', () => {
     cy.url().should('eq', (`${homePageUrl}?from=private-request`));
     cy.get('.ReactModal__Content--after-open').should('be.visible');
   });
-
-  const logUserIn = () => {
-    cy.get('#id_username').type(allowedUsername);
-    cy.get('#id_password').type(allowedPassword);
-    cy.get('#submit-id-submit').click();
-  }
 });
