@@ -1,4 +1,4 @@
-import {openPage} from '../util/util';
+import {openPage} from '../util/util.js';
 import config from 'utils/config';
 const loginUrl = 'http://localhost:9000/metagenomics/login';
 const homePageUrl = 'http://localhost:9000/metagenomics/';
@@ -47,6 +47,12 @@ describe('JWT Login', () => {
     openPage('login');
   });
 
+  const logUserIn = () => {
+    cy.get('#id_username').type(allowedUsername);
+    cy.get('#id_password').type(allowedPassword);
+    cy.get('#submit-id-submit').click();
+  }
+
   it('should log in successfully with valid credentials and the login should be persisted', () => {
     logUserIn();
     cy.contains(`You are logged in as ${allowedUsername}`).should('be.visible');
@@ -79,10 +85,4 @@ describe('JWT Login', () => {
     cy.url().should('eq', (`${homePageUrl}?from=private-request`));
     cy.get('.ReactModal__Content--after-open').should('be.visible');
   });
-
-  const logUserIn = () => {
-    cy.get('#id_username').type(allowedUsername);
-    cy.get('#id_password').type(allowedPassword);
-    cy.get('#submit-id-submit').click();
-  }
 });
