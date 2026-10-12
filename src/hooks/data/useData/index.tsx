@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import protectedAxios from '@/utils/protectedAxios';
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 export enum ResponseFormat {
   JSON,
@@ -253,12 +253,6 @@ async function fetchData(
       rawResponse: response,
     });
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 401) {
-      // localStorage.removeItem('mgnify.v2.token');
-      // localStorage.removeItem('mgnify.v2.username');
-      localStorage.setItem('mgnify.sessionExpired', 'true');
-      window.location.reload();
-    }
     updateState({
       error: {
         error,

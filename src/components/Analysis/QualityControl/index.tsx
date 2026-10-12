@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
 
 import Loading from 'components/UI/Loading';
 import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
@@ -57,10 +56,6 @@ const QualityControl: React.FC = () => {
           setLoading(false);
         })
         .catch((err) => {
-          if (axios.isAxiosError(err) && err.response?.status === 401) {
-            localStorage.setItem('mgnify.sessionExpired', 'true');
-            window.location.reload();
-          }
           setError(err);
           setLoading(false);
         });

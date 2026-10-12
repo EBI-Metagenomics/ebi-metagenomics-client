@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
 import * as Highcharts from 'highcharts';
 import addExportMenu from 'highcharts/modules/exporting';
 import HighchartsReact from 'highcharts-react-official';
@@ -41,10 +40,6 @@ const NucleotidesHistogram: React.FC = () => {
           setLoading(false);
         })
         .catch((err) => {
-          if (axios.isAxiosError(err) && err.response?.status === 401) {
-            localStorage.setItem('mgnify.sessionExpired', 'true');
-            window.location.reload();
-          }
           setError(err);
           setLoading(false);
         });

@@ -7,7 +7,6 @@ import { startCase } from 'lodash-es';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
 import BarChartForTable from 'components/Analysis/BarChartForTable';
 import protectedAxios from '@/utils/protectedAxios';
-import axios from 'axios';
 import { TSVCell } from 'components/UI/CompressedTSVTable';
 import { getAnnotationLabel } from 'utils/annotationStringStore';
 
@@ -166,12 +165,8 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
             count: 0,
           });
         }
-      } catch (err) {
+      } catch {
         if (!cancelled) {
-          if (axios.isAxiosError(err) && err.response?.status === 401) {
-            localStorage.setItem('mgnify.sessionExpired', 'true');
-            window.location.reload();
-          }
           setData({ items: [], count: 0 });
         }
       } finally {
