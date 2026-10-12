@@ -25,8 +25,9 @@ import {
 
 const CatalogueBiomeBrowser: React.FC<{
   catalogues: GenomeCatalogue[];
+  selectedBiomeGroup: string;
   onSelect: (biomeGroup: string) => void;
-}> = ({ catalogues, onSelect }) => (
+}> = ({ catalogues, selectedBiomeGroup, onSelect }) => (
   <div className="mg-catalogue-biome-browser">
     {map(
       groupBy(catalogues, (catalogue) =>
@@ -36,10 +37,13 @@ const CatalogueBiomeBrowser: React.FC<{
         const counts = countBy(biomeGroupCatalogues, 'catalogue_type');
         const prokaryotes = counts.prokaryotes || 0;
         const eukaryotes = counts.eukaryotes || 0;
+        const isActive =
+          !!selectedBiomeGroup && selectedBiomeGroup === biomeGroup;
 
         return (
           <InnerCard
             key={biomeGroup}
+            isActive={isActive}
             title={biomeGroup || 'Unknown biome'}
             icon={
               <span
@@ -60,7 +64,7 @@ const CatalogueBiomeBrowser: React.FC<{
                 </small>
               </>
             }
-            to={() => onSelect(biomeGroup)}
+            to={() => onSelect(isActive ? '' : biomeGroup)}
           />
         );
       }
@@ -68,13 +72,12 @@ const CatalogueBiomeBrowser: React.FC<{
   </div>
 );
 
-const { usePage, useBiome, useOrder, withQueryParamProvider } =
+const { useBiome, useOrder, withQueryParamProvider } =
   createSharedQueryParamContextForTable('', {
     biome: SharedTextQueryParam(''),
   });
 
 const BrowseGenomesByCatalogue: React.FC = () => {
-  const [page, setPage] = usePage<number>();
   const [hasData, setHasData] = useState(false);
   const [biome, setBiome] = useBiome<string>();
   const [order] = useOrder<string>();
@@ -83,7 +86,7 @@ const BrowseGenomesByCatalogue: React.FC = () => {
     loading,
     stale: isStale,
     download,
-  } = useApiData<{ count: number; items: any[] }>({
+  } = useApiData<{ count: number; items: GenomeCatalogue[] }>({
     url: `${config.api_v2}genomes/catalogues/`,
   });
   // Apply biome filtering client-side and adapt to PaginatedList shape expected by EMGTable
@@ -183,35 +186,37 @@ const BrowseGenomesByCatalogue: React.FC = () => {
   return (
     <section className="mg-browse-section">
       <h2 className="vf-heading vf-heading--3">Browse by biome</h2>
-      <p className="vf-text-body vf-text-body--3">
-        Select a group to see its biomes in the table below. Select a catalogue
-        to browse or search its genomes.
-      </p>
-      <CatalogueBiomeBrowser
-        catalogues={apiData?.items || []}
-        onSelect={(biomeGroup) => {
-          setBiome(biomeGroup);
-          setPage(1);
-        }}
-      />
-      {biome && (
+      <div className="mg-catalogue-biome-intro">
+        <p className="vf-text-body vf-text-body--3">
+          Select a group to see its biomes in the table below. Select a
+          catalogue to browse or search its genomes.
+        </p>
         <button
           type="button"
-          className="vf-button vf-button--link mg-button-as-link"
+          className={`vf-button vf-button--link mg-button-as-link mg-catalogue-biome-reset${
+            biome ? '' : ' mg-catalogue-biome-reset--hidden'
+          }`}
+          disabled={!biome}
           onClick={() => {
             setBiome('');
-            setPage(1);
           }}
         >
           Show all biomes
         </button>
-      )}
+      </div>
+      <CatalogueBiomeBrowser
+        catalogues={apiData?.items || []}
+        selectedBiomeGroup={biome}
+        onSelect={(biomeGroup) => {
+          setBiome(biomeGroup);
+        }}
+      />
       {hasData && (
         <>
           <EMGTable
             cols={columns}
             data={genomeCataloguesList as GenomeCatalogueList}
-            initialPage={(page as number) - 1}
+            initialPage={1}
             sortable
             loading={loading}
             isStale={isStale}

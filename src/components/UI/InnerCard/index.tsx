@@ -14,6 +14,7 @@ type InnerCardProps = {
   to: string | (() => void);
   badge?: string;
   icon?: React.ReactNode; // optional small icon shown before the title
+  isActive?: boolean;
 };
 
 const InnerCard: React.FC<InnerCardProps> = ({
@@ -26,10 +27,13 @@ const InnerCard: React.FC<InnerCardProps> = ({
   className = 'vf-card--bordered',
   badge,
   icon,
+  isActive = false,
 }) => {
   return (
     <article
-      className={`vf-card vf-card--brand vf-card--raised ${className} inner-card`}
+      className={`vf-card vf-card--brand vf-card--raised ${className} inner-card${
+        isActive ? ' inner-card--active' : ''
+      }`}
     >
       {image && (
         <img

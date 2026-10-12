@@ -11,6 +11,24 @@
 .inner-card {
     background-color: white;
     border: 1px solid #d8d8d8;
+    border-bottom: 4px solid transparent;
+    transition: box-shadow 0.2s ease;
+}
+
+.inner-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.inner-card .vf-card__link:hover:not(:focus-visible)::after {
+    box-shadow: none;
+}
+
+.inner-card--active {
+    border-bottom-color: #3b6fb6;
+}
+
+.inner-card--active .vf-card__link {
+    font-weight: 700;
 }
 
 .inner-card .vf-card__heading {
