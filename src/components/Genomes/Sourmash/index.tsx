@@ -31,10 +31,12 @@ const SourmashSearch: React.FC<SourmashProps> = ({
           <div className="vf-sidebar__inner">
             <div>
               {isSingleCatalogue && (
-                <h3>Search MAG files against the {catalogueName} catalogue</h3>
+                <h3>
+                  Search genome files against the {catalogueName} catalogue
+                </h3>
               )}
               {!isSingleCatalogue && (
-                <h3>Search MAG files across catalogues</h3>
+                <h3>Search genome files across catalogues</h3>
               )}
             </div>
             <div className="vf-flag vf-flag--middle vf-flag--200 vf-flag--reversed">
@@ -55,8 +57,8 @@ const SourmashSearch: React.FC<SourmashProps> = ({
           </div>
         </div>
         <p className="vf-text-body vf-text-body--3">
-          Compare your MAG file or your MAG collection against MGnify’s
-          catalogues to see if they are novel.
+          Compare your genome sequence file or your genome collection against
+          MGnify’s catalogues to see if they are novel.
         </p>
         <details className="mg-sourmash-readmore">
           <summary>Instructions</summary>
@@ -71,7 +73,7 @@ const SourmashSearch: React.FC<SourmashProps> = ({
           <p className="vf-text-body vf-text-body--3">
             Your files are not uploaded into our servers. Rather, Sourmash
             generates a signature of your file(s) in your browser, and compares
-            this against our MAG catalogue.
+            this against our genome catalogue.
           </p>
           <p className="vf-text-body vf-text-body--3">
             Successful searches create a CSV result file for each signature

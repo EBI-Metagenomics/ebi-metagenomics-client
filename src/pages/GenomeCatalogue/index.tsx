@@ -23,7 +23,7 @@ const tabs = [
   { label: 'Genome list', to: '#' },
   { label: 'Taxonomy tree', to: '#phylo-tab' },
   { label: 'Search by Gene', to: '#genome-search-tab' },
-  { label: 'Search by MAG', to: '#genome-search-mag-tab' },
+  { label: 'Search by Genome', to: '#genome-search-mag-tab' },
 ];
 
 const GenomePage: React.FC = () => {

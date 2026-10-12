@@ -56,10 +56,10 @@ describe.skip('Browse Genomes', () => {
     cy.url().should('include', 'browseBy=gene-search');
     cy.contains('h3', 'Search DNA fragments across catalogues').should('be.visible');
 
-    // Click on MAG search
+    // Click on Genome search
     cy.contains('.vf-tabs__link', 'Genome search').click();
     cy.url().should('include', 'browseBy=mag-search');
-    cy.contains('h3', 'Search MAG files across catalogues').should('be.visible');
+    cy.contains('h3', 'Search genome files across catalogues').should('be.visible');
 
     // Click back to All genomes
     cy.contains('.vf-tabs__link', 'All representative genomes').click();
