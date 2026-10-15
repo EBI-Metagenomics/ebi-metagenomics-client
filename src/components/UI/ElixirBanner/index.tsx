@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { vfBannerElixir } from '@visual-framework/vf-banner-elixir/vf-banner-elixir';
 
 const ElixirBanner: React.FC = () => {
-  vfBannerElixir();
+  useEffect(() => {
+    vfBannerElixir();
+  }, []);
+
   return (
     <section className="vf-u-fullbleed | vf-u-background-color-ui--grey--light">
       <div
