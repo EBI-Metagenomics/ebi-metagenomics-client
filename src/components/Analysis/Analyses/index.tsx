@@ -45,7 +45,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   const { data, error, loading, download } = useAnalysesHook(accession || '', {
     page: analysesPage,
     page_size: analysesPageSize,
-    ordering: analysesOrder,
+    order: analysesOrder,
   });
 
   if (loading) return <Loading size="small" />;
@@ -53,7 +53,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
 
   const columns = [
     {
-      id: 'analysis_id',
+      id: 'accession',
       Header: 'Analysis accession',
       accessor: (analysis: Analysis) => analysis.accession,
       Cell: ({ cell }: { cell: { value: string } }) => (
@@ -74,7 +74,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
     //   className: 'mg-biome',
     // },
     {
-      id: 'sample',
+      id: 'sample_accession',
       Header: 'Sample accession',
       accessor: (analysis: Analysis) => analysis?.sample?.accession,
       Cell: ({ cell }) => (
@@ -90,7 +90,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       ),
     },
     {
-      id: 'assembly_run_id',
+      id: 'run_or_assembly_accession',
       Header: ' Run / Assembly accession',
       accessor: (analysis: Analysis) => ({
         assembly: analysis.assembly?.accession,
@@ -115,7 +115,7 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
       ),
     },
     {
-      id: 'pipeline_id',
+      id: 'pipeline_version',
       Header: 'Pipeline version',
       accessor: (analysis: Analysis) =>
         analysis.pipeline_version.toLowerCase().startsWith('v')
