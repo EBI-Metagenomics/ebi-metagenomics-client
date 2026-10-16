@@ -73,6 +73,10 @@ const GenomesTable: React.FC = () => {
         disableSortBy: true,
       } as Column<Genome>,
       {
+        Header: 'Cluster size',
+        accessor: 'num_genomes_total' as const,
+      } as Column<Genome>,
+      {
         Header: 'Type',
         accessor: 'type' as const,
         disableSortBy: true,
