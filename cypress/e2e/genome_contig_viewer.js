@@ -1,5 +1,7 @@
 import config from 'utils/config';
 import { gzip, ungzip } from 'pako';
+import { parseStringSyncJBrowse } from 'gff-nostream';
+import { Jexl } from '@jbrowse/jexl';
 import {
   findGenomeFasta,
   findGenomeGff,
@@ -7,6 +9,7 @@ import {
 import {
   createFastaAdapter,
   createGffAdapter,
+  createGffTrack,
 } from 'components/Analysis/ContigViewer/jbrowseConfig';
 import { openPage, waitForPageLoad } from '../util/util.js';
 
@@ -19,6 +22,31 @@ const download = (alias, file_type, extra = {}) => ({
 });
 
 describe('Genome browser download compatibility', () => {
+  it('labels parsed GFF features with their ID and gene name', () => {
+    const jexl = new Jexl();
+    jexl.addFunction('get', (feature, key) => feature[key]);
+    const track = createGffTrack(download('labels.gff', 'gff'), accession);
+    const display = track.displays[0];
+    expect(display.renderer.type).to.equal('CanvasFeatureRenderer');
+    const expression = jexl.compile(display.renderer.labels.name.slice('jexl:'.length));
+    const id = 'MGYG000299377_00597';
+    [
+      [`ID=${id};gene=blh;Name=other;`, `${id} (blh)`],
+      [`ID=${id};Name=blh;`, `${id} (blh)`],
+      [`ID=${id};`, id],
+      ['gene=blh;', 'blh'],
+      ['Name=blh;', 'blh'],
+      [`ID=${id};gene=${id};`, id],
+      [`ID=${id};Name=${id};`, id],
+      ['.', ''],
+    ].forEach(([attributes, expected]) => {
+      const [feature] = parseStringSyncJBrowse(
+        `contig_1\tProdigal\tCDS\t19415\t21307\t.\t+\t0\t${attributes}\n`
+      );
+      expect(expression.eval({ feature }), attributes).to.equal(expected);
+    });
+  });
+
   it('indexes the real multi-block BGZF genome GFF without GZI', () => {
     const realAccession = 'MGYG000842761';
     const base = Cypress.env('FIXTURE_BASE');

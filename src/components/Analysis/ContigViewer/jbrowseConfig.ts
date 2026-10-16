@@ -8,6 +8,16 @@ type GffTrackOptions = {
 const createGffDisplay = (alias: string, height?: number) => ({
   type: 'LinearBasicDisplay' as const,
   displayId: `${alias}-LinearBasicDisplay`,
+  renderer: {
+    type: 'CanvasFeatureRenderer' as const,
+    labels: {
+      name:
+        "jexl:get(feature,'id') && (get(feature,'gene') || get(feature,'name')) && " +
+        "get(feature,'id') != (get(feature,'gene') || get(feature,'name')) " +
+        "? get(feature,'id') + ' (' + (get(feature,'gene') || get(feature,'name')) + ')' " +
+        ": get(feature,'id') || get(feature,'gene') || get(feature,'name') || ''",
+    },
+  },
   ...(height ? { height } : {}),
 });
 

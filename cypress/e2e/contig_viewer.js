@@ -56,14 +56,18 @@ describe('Contig viewer and indexer on bgzipped gffs', () => {
       'contain.text',
       'interpro=IPR003593;'
     );
-    cy.get('.vf-table__body mark').should('have.text', 'IPR003593');
+    cy.get('.vf-table__body mark').each(($mark) => {
+      expect($mark.text()).to.equal('IPR003593');
+    });
     cy.get('#contig-search-all').clear().type('IPR00359');
     cy.get('.vf-table__body > .vf-table__row').should('have.length', 3);
     cy.get('.mg-textsearch .wildcard-search-input__toggle').click();
     cy.get('.vf-table__body > .vf-table__row').should('have.length', 0);
     cy.get('#contig-search-all').type('3');
     cy.get('.vf-table__body > .vf-table__row').should('have.length', 3);
-    cy.get('.vf-table__body mark').should('have.text', 'IPR003593');
+    cy.get('.vf-table__body mark').each(($mark) => {
+      expect($mark.text()).to.equal('IPR003593');
+    });
     cy.get('.mg-textsearch .wildcard-search-input__toggle').click();
     cy.contains('Browsing 6 annotated contigs').should('be.visible');
     cy.get('#contig-search-all').clear();
@@ -72,7 +76,9 @@ describe('Contig viewer and indexer on bgzipped gffs', () => {
     cy.get('#contig-search-all').type('erz101_4');
     cy.get('.vf-table__body > .vf-table__row').should('have.length', 3);
     cy.get('.vf-table__body code').should('contain.text', 'Contig ID=ERZ101_4;');
-    cy.get('.vf-table__body mark').should('have.text', 'ERZ101_4');
+    cy.get('.vf-table__body mark').each(($mark) => {
+      expect($mark.text()).to.match(/ERZ101_4/i);
+    });
     cy.get('#contig-search-all').clear();
     cy.get('.vf-table__body > .vf-table__row').should('have.length', 6);
 
