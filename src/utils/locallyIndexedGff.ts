@@ -19,6 +19,7 @@ export type Contig = ContigDetails & {
 type MetaKeys =
   | 'assemblyAccession'
   | 'importStartedAt'
+  | 'importCompletedAt'
   | 'sourceUrl'
   | 'indexSpec';
 
@@ -35,6 +36,7 @@ export function contigNameToContigId(contigName: string): number {
 
 class GffDB extends Dexie {
   contigs!: Table<Contig, number>;
+  coordinates!: Table<CoordinateBatch, [string, number]>;
   meta!: Table<{ key: MetaKeys; value: any }, string>;
   constructor(name = 'gffdb') {
     super(name);
@@ -69,7 +71,24 @@ class GffDB extends Dexie {
       // The assembly key needs prepended to this to make a locus tag.
       meta: 'key',
     });
+    this.version(6).stores({
+      coordinates: '[contigName+textStart]',
+    });
   }
+}
+
+export type CoordinateBatch = {
+  contigName: string;
+  textStart: number;
+  // Triples: local annotation end offset, one-based feature start, inclusive end.
+  // Typed arrays avoid one object and three database keys per feature.
+  spans: Uint32Array | Float64Array;
+};
+
+export function packFeatureSpans(values: number[]) {
+  return values.every((value) => value <= 0xffffffff)
+    ? new Uint32Array(values)
+    : new Float64Array(values);
 }
 export let db = new GffDB();
 
@@ -210,7 +229,7 @@ const normalizeAttributeIndexSpecs = (
     typeof attr === 'string' ? { gffKey: attr, field: attr } : attr
   );
 
-const GFF_INDEX_CONTENT_VERSION = 3;
+const GFF_INDEX_CONTENT_VERSION = 4;
 
 export const getGffIndexSpec = (
   attrsToIndex: Array<TypeAheadAttributes | GffAttributeIndexSpec>
@@ -289,11 +308,7 @@ export function importGffToIndexedDB(opts: ImportOptions) {
     clearExisting = true,
   } = opts;
   const attrIndexSpecs = normalizeAttributeIndexSpecs(attrsToIndex);
-  // Ask for persistent storage (helps avoid eviction on large datasets)
-  // Fire and forget; ignore if unsupported
-  navigator.storage?.persist?.();
-
-  const { worker, api } = createWorker();
+  let worker: Worker | undefined;
   let startT = performance.now();
   let cancelled = false;
   let contigLengths: Record<string, number> = {};
@@ -312,6 +327,7 @@ export function importGffToIndexedDB(opts: ImportOptions) {
     length?: Contig['length'];
     annotationTextToAppend: Contig['annotationText'];
     annotsToAppend: Contig['annotations'];
+    featureSpans: number[];
   };
 
   async function bulkUpsertContigAnnotations(
@@ -325,6 +341,12 @@ export function importGffToIndexedDB(opts: ImportOptions) {
       contigName,
       length,
     } of updates) {
+      if (
+        merged.has(contigId) &&
+        merged.get(contigId)!.contigName !== contigName
+      ) {
+        throw new Error(`Contig key collision for ${contigName}`);
+      }
       const acc =
         merged.get(contigId) ??
         ({
@@ -346,8 +368,11 @@ export function importGffToIndexedDB(opts: ImportOptions) {
     }
 
     const ids = Array.from(merged.keys());
+    const updatesById = new Map(
+      updates.map((update) => [update.contigId, update])
+    );
 
-    await db.transaction('rw', db.contigs, async () => {
+    await db.transaction('rw', db.contigs, db.coordinates, async () => {
       const existing = await db.contigs.bulkGet(ids);
       const toUpdate: Contig[] = [];
       const toAdd: Contig[] = [];
@@ -356,6 +381,20 @@ export function importGffToIndexedDB(opts: ImportOptions) {
         const id = ids[i];
         const row = existing[i] as Contig | undefined;
         const appendObj = merged.get(id)!;
+        if (row && row.contigName !== appendObj.contigName) {
+          throw new Error(
+            `Contig key collision: ${row.contigName}, ${appendObj.contigName}`
+          );
+        }
+
+        const update = updatesById.get(id)!;
+        if (update.featureSpans.length) {
+          await db.coordinates.add({
+            contigName: appendObj.contigName,
+            textStart: row?.annotationText.length ?? 0,
+            spans: packFeatureSpans(update.featureSpans),
+          });
+        }
 
         if (row) {
           // Update: append + dedupe each annotation within nested annotations.*
@@ -424,6 +463,22 @@ export function importGffToIndexedDB(opts: ImportOptions) {
           ])
         ) as Contig['annotations'];
 
+        let textEnd = 0;
+        const featureSpans: number[] = [];
+        for (const annotation of annotations) {
+          if (!annotation.annotationText) continue;
+          textEnd += annotation.annotationText.length;
+          const valid =
+            Number.isSafeInteger(annotation.start) &&
+            Number.isSafeInteger(annotation.end) &&
+            annotation.start >= 1 &&
+            annotation.end >= annotation.start;
+          featureSpans.push(
+            textEnd,
+            valid ? annotation.start : 0,
+            valid ? annotation.end : 0
+          );
+        }
         contigsToUpsert.push({
           contigId: contigNameToContigId(contigId),
           contigName: contigId,
@@ -432,6 +487,7 @@ export function importGffToIndexedDB(opts: ImportOptions) {
             .map((row) => row.annotationText || '')
             .join(''),
           annotsToAppend,
+          featureSpans,
         });
       }
     );
@@ -440,23 +496,37 @@ export function importGffToIndexedDB(opts: ImportOptions) {
 
   const start = async () => {
     try {
+      navigator.storage?.persist?.().catch(() => undefined);
+      const created = createWorker();
+      worker = created.worker;
+      const { api } = created;
       onBegin?.();
 
       if (clearExisting) {
-        await db.transaction('rw', db.meta, db.contigs, async () => {
-          await db.contigs.clear();
-          await db.meta.put({ key: 'sourceUrl', value: url });
-          await db.meta.put({
-            key: 'indexSpec',
-            value: getGffIndexSpec(attrIndexSpecs),
-          });
-          await db.meta.put({
-            key: 'assemblyAccession',
-            value: assemblyAccession,
-          });
-          await db.meta.put({ key: 'importStartedAt', value: Date.now() });
-        });
+        await db.transaction(
+          'rw',
+          db.meta,
+          db.contigs,
+          db.coordinates,
+          async () => {
+            await db.meta.delete('importCompletedAt');
+            await db.contigs.clear();
+            await db.coordinates.clear();
+            await db.meta.put({ key: 'sourceUrl', value: url });
+            await db.meta.put({
+              key: 'indexSpec',
+              value: getGffIndexSpec(attrIndexSpecs),
+            });
+            await db.meta.put({
+              key: 'assemblyAccession',
+              value: assemblyAccession,
+            });
+            await db.meta.put({ key: 'importStartedAt', value: Date.now() });
+          }
+        );
       }
+
+      if (!clearExisting) await db.meta.delete('importCompletedAt');
 
       if (fastaUrl && fastaFaiUrl) {
         const fastaHandler = fastaGziUrl
@@ -471,6 +541,8 @@ export function importGffToIndexedDB(opts: ImportOptions) {
             });
         contigLengths = await fastaHandler.getSequenceSizes();
       }
+
+      if (cancelled) return;
 
       await api.importGff(
         url,
@@ -487,19 +559,21 @@ export function importGffToIndexedDB(opts: ImportOptions) {
         batchSize
       );
 
+      if (cancelled) return;
+      await db.meta.put({ key: 'importCompletedAt', value: Date.now() });
       const seconds = (performance.now() - startT) / 1000;
       onEnd?.({ seconds, contigsCount: await db.contigs.count() });
     } catch (e) {
       if (!cancelled) onError?.(e);
       throw e;
     } finally {
-      worker.terminate();
+      worker?.terminate();
     }
   };
 
   const cancel = () => {
     cancelled = true;
-    worker.terminate();
+    worker?.terminate();
   };
   return { start, cancel };
 }

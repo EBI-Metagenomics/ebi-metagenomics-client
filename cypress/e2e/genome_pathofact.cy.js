@@ -89,7 +89,7 @@ describe('Genome PathoFact preview', () => {
     openPage(`genomes/${accession}?catalogue=uhgg-3.0`);
     waitForPageLoad(`Genome ${accession}`);
     cy.get('@pathofactFile.all').should('have.length', 0);
-    cy.contains('.vf-tabs__link', /^PathoFact$/).click();
+    cy.contains('.vf-tabs__link', /^PathoFact2$/).click();
     cy.location('search').should('equal', '?catalogue=uhgg-3.0');
     cy.location('hash').should('equal', '#pathofact');
     cy.wait('@pathofactFile');
@@ -140,7 +140,7 @@ describe('Genome PathoFact preview', () => {
       mockGenome(downloads);
       openPage(`genomes/${accession}`);
       waitForPageLoad(`Genome ${accession}`);
-      cy.contains('.vf-tabs__link', /^PathoFact$/).should('not.exist');
+      cy.contains('.vf-tabs__link', /^PathoFact2$/).should('not.exist');
       cy.get('[data-cy="genome-pathofact"]').should('not.exist');
     });
   });
