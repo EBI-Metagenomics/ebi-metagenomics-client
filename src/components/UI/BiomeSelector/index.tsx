@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import axios from 'axios';
+import axios, { type AxiosResponse } from 'axios';
 import { countBy, filter, find, flatMap, groupBy, map, split } from 'lodash-es';
 import Select from 'react-select';
 import { getBiomeIcon } from '@/utils/biomes';
@@ -59,7 +59,7 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
     }
     let cancelled = false;
     setPaginatingRemaining(true);
-    const remainingRequests = [];
+    const remainingRequests: Promise<AxiosResponse<BiomeList>>[] = [];
     for (let p = 2; p <= totalPages; p += 1) {
       remainingRequests.push(
         axios.get<BiomeList>(

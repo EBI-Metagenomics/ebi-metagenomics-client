@@ -1,4 +1,3 @@
-import React from 'react';
 import { ColumnDef as Column } from '@tanstack/react-table';
 
 // Row shape for Branchwater/Metagenome results used in this table.

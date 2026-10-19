@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 // Narrow the generic constraint to only what this component actually needs,
 // removing reliance on `any`.

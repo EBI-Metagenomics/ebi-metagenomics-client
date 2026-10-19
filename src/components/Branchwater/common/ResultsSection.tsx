@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import EMGTable from 'components/UI/EMGTable';
 import FiltersBar from './FiltersBar';
 import getBranchwaterResultColumns from './resultColumns';
@@ -9,6 +9,7 @@ import useBranchwaterResults, {
 
 export type BranchwaterResultGeneric = Record<string, unknown> & {
   acc?: string;
+  geo_loc_name_country_calc?: string | null;
   cANI?: number | string;
   containment?: number | string;
 };
@@ -68,7 +69,7 @@ function ResultsSection<T extends BranchwaterResultGeneric>(
         <EMGTable
           cols={getBranchwaterResultColumns()}
           data={{
-            items: results.paginatedResults as unknown as T[],
+            items: results.paginatedResults,
             count: results.total,
           }}
           className="vf-table"
@@ -79,7 +80,7 @@ function ResultsSection<T extends BranchwaterResultGeneric>(
         />
       </div>
 
-      <ResultsDashboard items={results.filteredResults as unknown as T[]} />
+      <ResultsDashboard items={results.filteredResults} />
     </div>
   );
 }

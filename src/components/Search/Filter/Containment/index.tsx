@@ -13,7 +13,8 @@ interface ContainmentFilterProps {
 const ContainmentFilter: React.FC<ContainmentFilterProps> = ({
   queryParamKey = 'containment',
 }) => {
-  const [containment, setContainment] = useQueryParamState(queryParamKey, '');
+  const [containment, setContainment] =
+    useQueryParamState<string>(queryParamKey);
 
   const range = useMemo(() => {
     const parts = containment?.split(',').map(Number);
