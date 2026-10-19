@@ -1,11 +1,13 @@
+import { publicImageUrl } from 'utils/assets';
 import React, { ReactNode, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import GenomesCoverImage from 'images/cover_genomes_publication.png';
-import MainCoverImage from 'images/cover_main_publication.png';
 import publications from './publications.json';
 
 import './style.css';
+
+const GenomesCoverImage = publicImageUrl('cover_genomes_publication.png');
+const MainCoverImage = publicImageUrl('cover_main_publication.png');
 
 const trimAuthors = (text: string, maxAuthorsLength: number): string => {
   const authorList = text.slice(0, maxAuthorsLength).split(',');

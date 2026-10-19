@@ -1,6 +1,6 @@
+import { publicImageUrl } from 'utils/assets';
 import React from 'react';
 // import 'mgnify-sourmash-component';
-import SourmashLogo from 'images/sourmash_logo.png';
 import useSearchStorage from '@/hooks/useSearchStorage';
 import SourmashHistory from './History';
 import SourmashForm from './Form';
@@ -8,6 +8,8 @@ import SourmashResults from './Results';
 import SharedQueryParamsProvider, {
   SharedTextQueryParam,
 } from 'hooks/queryParamState/QueryParamStore/QueryParamContext';
+
+const SourmashLogo = publicImageUrl('sourmash_logo.png');
 
 type SourmashProps = {
   catalogueName?: string;

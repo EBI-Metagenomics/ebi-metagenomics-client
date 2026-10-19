@@ -27,7 +27,6 @@
       "styles/*": ["src/styles/*"],
       "utils/*": ["src/utils/*"],
       "hooks/*": ["src/hooks/*"],
-      "images/*": ["public/images/*"],
       "data/*": ["public/data/*"]
     },
     "allowSyntheticDefaultImports": true

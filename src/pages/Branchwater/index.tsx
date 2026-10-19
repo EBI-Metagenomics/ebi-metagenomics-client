@@ -1,3 +1,4 @@
+import { publicImageUrl } from 'utils/assets';
 import React, {
   useCallback,
   useEffect,
@@ -30,11 +31,12 @@ import {
   processBranchwaterResults,
 } from 'utils/branchwater';
 import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
-import BranchwaterLogo from 'images/branchwater_logo.png';
 import InfoBanner from 'components/UI/InfoBanner';
 import normaliseSourmashSignature from 'utils/normaliseSourmashSignature';
 import validateBranchwaterSignature from 'utils/validateBranchwaterSignature';
 import './style.css';
+
+const BranchwaterLogo = publicImageUrl('branchwater_logo.png');
 
 type SourmashEventDetail = {
   signatures: Record<string, string>;
