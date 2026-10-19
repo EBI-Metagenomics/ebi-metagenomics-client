@@ -45,14 +45,15 @@ describe('Genome catalogue page', () => {
     it('Should have table of genomes', () => {
       openAndWait('genome-catalogues/' + catalogueIdValid, 'Marine MAGs');
       cy.get('.mg-table tbody tr').should('have.length', 2);
-      const headers = ['Accession', 'Taxonomy', 'Type', 'Completeness', 'Contamination', 'Length (MB)', 'N50', 'GC%'];
+      const headers = ['Accession', 'Taxonomy', 'Cluster size', 'Type', 'Completeness', 'Contamination', 'Length (MB)', 'N50', 'GC%'];
       cy.get('.mg-table thead th').should('have.length', headers.length).each(($el, idx) => {
         expect($el.text()).to.contain(headers[idx]);
       });
-      const rowData = ['MGYG000000001', 'Bacillus subtilis', 'MAG', '95.00%', '2.00%', '0.12', '12,345', '42.50%'];
+      const rowData = ['MGYG000000001', 'Bacillus subtilis', '10', 'MAG', '95.00%', '2.00%', '0.12', '12,345', '42.50%'];
       cy.get('.mg-table tbody tr:first-child td').should('have.length', rowData.length).each(($el, idx) => {
         expect($el.text().trim()).to.equal(rowData[idx]);
       });
+      cy.get('.mg-table tbody tr').eq(1).find('td').eq(2).should('have.text', '20');
     });
 
     it('Should be searchable', () => {

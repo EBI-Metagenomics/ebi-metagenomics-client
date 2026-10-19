@@ -64,7 +64,7 @@ const tabs = [
   { label: 'COG', to: '#cog-analysis' },
   { label: 'KEGG', to: '#kegg' },
   { label: 'AMR', to: '#amr' },
-  { label: 'PathoFact', to: '#pathofact' },
+  { label: 'PathoFact2', to: '#pathofact' },
   { label: 'Presence in metagenomes', to: '#metagenome-search' },
   { label: 'Downloads', to: '#downloads' },
 ];

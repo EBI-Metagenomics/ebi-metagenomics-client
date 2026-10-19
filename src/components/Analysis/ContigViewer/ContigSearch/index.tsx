@@ -32,6 +32,12 @@ import { camelCase } from 'lodash-es';
 import { getRemoteFileSize } from 'utils/fetch';
 import { getAnnotationLabel } from 'utils/annotationStringStore';
 import { searchRegExp } from 'utils/textSearch';
+import {
+  findFirstMatchingAnnotationBlock,
+  getFeatureMatchPage,
+  FeatureMatchPage,
+  FeatureSearchMatch,
+} from 'utils/gffSearchMatches';
 import 'components/Analysis/ContigViewer/style.css';
 
 const ALL_ANNOTATIONS_SEARCH_PARAM = 'allAnnotationsSearch';
@@ -42,22 +48,7 @@ type SearchableContig = Contig & {
   globalSearchMatch?: string;
 };
 
-export const findFirstMatchingAnnotationBlock = (
-  annotationText: string,
-  rawTerm: string,
-  wholeWord = false
-): string | undefined => {
-  const match =
-    searchRegExp(rawTerm, true)?.exec(annotationText || '') ??
-    searchRegExp(rawTerm, wholeWord)?.exec(annotationText || '');
-  if (!match) return undefined;
-
-  const blockStart = annotationText.lastIndexOf(';', match.index - 1) + 1;
-  const separatorIndex = annotationText.indexOf(';', match.index);
-  const blockEnd =
-    separatorIndex < 0 ? annotationText.length : separatorIndex + 1;
-  return annotationText.slice(blockStart, blockEnd).trim();
-};
+export { findFirstMatchingAnnotationBlock } from 'utils/gffSearchMatches';
 
 export const findGlobalSearchMatch = (
   contig: Contig,
@@ -89,6 +80,163 @@ const HighlightedAnnotationMatch: React.FC<{
       <mark>{match[0]}</mark>
       {text.slice(matchEnd)}
     </code>
+  );
+};
+
+const SearchMatches: React.FC<{
+  contig: SearchableContig;
+  term: string;
+  wholeWord: boolean;
+}> = ({ contig, term, wholeWord }) => {
+  const { navTo, navToFeature } = useLGV();
+  const [page, setPage] = useState<FeatureMatchPage>();
+  const [cursors, setCursors] = useState<Array<FeatureMatchPage['next']>>([
+    undefined,
+  ]);
+  const pendingCursors = React.useRef<Array<FeatureMatchPage['next']>>([
+    undefined,
+  ]);
+  const [loading, setLoading] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const request = React.useRef<AbortController>();
+  const contigMatch = searchRegExp(term, wholeWord)?.test(contig.contigName);
+  const hasFeatureMatch = useMemo(
+    () =>
+      !contigMatch ||
+      !!searchRegExp(term, wholeWord)?.test(contig.annotationText),
+    [contigMatch, contig.annotationText, term, wholeWord]
+  );
+
+  const load = React.useCallback(
+    async (nextCursors: Array<FeatureMatchPage['next']> = [undefined]) => {
+      request.current?.abort();
+      const controller = new AbortController();
+      request.current = controller;
+      pendingCursors.current = nextCursors;
+      setLoading(true);
+      setFailed(false);
+      try {
+        const result = await getFeatureMatchPage(
+          contig,
+          term,
+          wholeWord,
+          nextCursors[nextCursors.length - 1],
+          10,
+          controller.signal
+        );
+        if (!controller.signal.aborted) {
+          setPage(result);
+          setCursors(nextCursors);
+        }
+      } catch {
+        if (!controller.signal.aborted) setFailed(true);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    },
+    [contig, term, wholeWord]
+  );
+
+  useEffect(() => {
+    setPage(undefined);
+    setCursors([undefined]);
+    setLoading(false);
+    if (hasFeatureMatch) load();
+    return () => request.current?.abort();
+  }, [load, hasFeatureMatch]);
+
+  const renderMatch = (match: FeatureSearchMatch) => {
+    return (
+      <>
+        <HighlightedAnnotationMatch
+          text={match.text}
+          searchTerm={term}
+          wholeWord={wholeWord}
+        />{' '}
+        {match.start > 0 && match.end >= match.start ? (
+          <button
+            type="button"
+            className="vf-button vf-button--link vf-button--sm mg-feature-match"
+            onClick={() =>
+              navToFeature({
+                refName: contig.contigName,
+                start: match.start,
+                end: match.end,
+              })
+            }
+          >
+            Jump to {match.start}–{match.end}
+          </button>
+        ) : (
+          <span>(location unavailable)</span>
+        )}
+      </>
+    );
+  };
+
+  return (
+    <div
+      className="mg-search-matches"
+      data-cy="contig-search-matches"
+      aria-busy={loading}
+    >
+      {contigMatch && (
+        <button
+          type="button"
+          className="vf-button vf-button--link vf-button--sm"
+          onClick={() => navTo(contig.contigName)}
+        >
+          <HighlightedAnnotationMatch
+            text={`Contig ID=${contig.contigName};`}
+            searchTerm={term}
+            wholeWord={wholeWord}
+          />
+        </button>
+      )}
+      {!page && !contigMatch && (loading || failed) && (
+        <HighlightedAnnotationMatch
+          text={contig.globalSearchMatch || ''}
+          searchTerm={term}
+          wholeWord={wholeWord}
+        />
+      )}
+      {!!page?.matches.length && (
+        <ul className="vf-list mg-feature-match-list">
+          {page.matches.map((match) => (
+            <li key={match.textOffset}>{renderMatch(match)}</li>
+          ))}
+        </ul>
+      )}
+      {loading && <span role="status">Loading matches…</span>}
+      {failed && (
+        <span role="alert">
+          Cannot load matching locations.{' '}
+          <button type="button" onClick={() => load(pendingCursors.current)}>
+            Retry
+          </button>
+        </span>
+      )}
+      {(cursors.length > 1 || page?.next) && (
+        <div>
+          <button
+            type="button"
+            className="vf-button vf-button--link vf-button--sm"
+            disabled={loading || cursors.length === 1}
+            onClick={() => load(cursors.slice(0, -1))}
+          >
+            Previous matches
+          </button>
+          <button
+            type="button"
+            className="vf-button vf-button--link vf-button--sm"
+            disabled={loading || !page?.next}
+            onClick={() => load([...cursors, page?.next])}
+          >
+            Next matches
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -218,6 +366,8 @@ const ContigSearch: React.FC<{
   const [existingIndexChecked, setExistingIndexChecked] =
     useState<boolean>(false);
   const [isIndexing, setIsIndexing] = useState<boolean>(false);
+  const activeImport = React.useRef<() => void>();
+  useEffect(() => () => activeImport.current?.(), []);
   const [isIndexed, setIsIndexed] = useState<boolean>(false);
   const [isStale, setIsStale] = useState<boolean>(false);
   const [totalContigsCount, setTotalContigsCount] = useState<number>(0);
@@ -375,9 +525,17 @@ const ContigSearch: React.FC<{
 
   useEffect(() => {
     if (!isIndexed) return;
+    let cancelled = false;
     searchContigs()
-      .then(setContigsTableData)
-      .finally(() => setIsStale(false));
+      .then((results) => {
+        if (!cancelled) setContigsTableData(results);
+      })
+      .finally(() => {
+        if (!cancelled) setIsStale(false);
+      });
+    return () => {
+      cancelled = true;
+    };
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isIndexed, pageNum, visibleSearchTermsDependency, wholeWord]);
 
@@ -423,12 +581,17 @@ const ContigSearch: React.FC<{
 
   useEffectOnce(() => {
     if (!isIndexed && !existingIndexChecked) {
-      Promise.all([db.meta.get('sourceUrl'), db.meta.get('indexSpec')])
-        .then(async ([sourceUrlRow, indexSpecRow]) => {
+      Promise.all([
+        db.meta.get('sourceUrl'),
+        db.meta.get('indexSpec'),
+        db.meta.get('importCompletedAt'),
+      ])
+        .then(async ([sourceUrlRow, indexSpecRow, completedRow]) => {
           if (
             sourceUrlRow?.value &&
             sourceUrlRow.value === gffDownload.url &&
-            indexSpecRow?.value === indexSpec
+            indexSpecRow?.value === indexSpec &&
+            completedRow?.value
           ) {
             console.debug(
               `File already indexed in local db: ${sourceUrlRow.value}`
@@ -496,10 +659,11 @@ const ContigSearch: React.FC<{
               id: 'global-search-match',
               isFullWidth: true,
               className: 'break-anywhere',
-              Cell: ({ cell }) => (
-                <HighlightedAnnotationMatch
-                  text={cell.value || ''}
-                  searchTerm={allAnnotationsSearch}
+              Cell: ({ row }) => (
+                <SearchMatches
+                  key={`${row.original.contigName}:${allAnnotationsSearch}:${wholeWord}`}
+                  contig={row.original}
+                  term={allAnnotationsSearch}
                   wholeWord={wholeWord}
                 />
               ),
@@ -582,7 +746,8 @@ const ContigSearch: React.FC<{
               className="vf-button vf-button vf-button--primary"
               onClick={async () => {
                 await setPageNum(1);
-                fetchAndIndex();
+                activeImport.current = cancelFetchAndIndex;
+                fetchAndIndex().catch(() => undefined);
               }}
             >
               View & search contigs
@@ -591,7 +756,10 @@ const ContigSearch: React.FC<{
           {isIndexing && (
             <button
               className="vf-button vf-button vf-button--tertiary"
-              onClick={cancelFetchAndIndex}
+              onClick={() => {
+                activeImport.current?.();
+                setIsIndexing(false);
+              }}
             >
               Cancel
             </button>
