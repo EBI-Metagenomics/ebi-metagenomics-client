@@ -11,12 +11,11 @@ import ArrowForLink from 'components/UI/ArrowForLink';
 import CursorPagination from 'components/UI/EMGTable/CursorPagination';
 import TruncatedText from 'components/UI/TextTruncated';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import {
   useCrates,
   useOfflineCrate,
 } from 'hooks/genomeViewer/CrateStore/useCrates';
-import { MGnifyDatum } from 'hooks/data/useData';
 import { getAnnotationLabel } from 'utils/annotationStringStore';
 
 type ContigFeatureProps = {
@@ -163,10 +162,9 @@ const ContigsTable: React.FC = () => {
   const [, setContigsPageCursor] = useQueryParamState('contigsPageCursor');
 
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
-  const assemblyId = (analysisOverviewData as MGnifyDatum | null)?.relationships
-    ?.assembly?.data?.id;
+  const assemblyId = analysisOverviewData?.assembly?.accession;
   const { crates, loading: loadingCrates } = useCrates(
-    `assemblies/${assemblyId}/extra-annotations`
+    assemblyId ? `assemblies/${assemblyId}/extra-annotations` : undefined
   );
   const { crate: offlineCrate, isUploading: loadingOfflineCrate } =
     useOfflineCrate();

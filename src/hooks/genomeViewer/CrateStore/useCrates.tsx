@@ -167,33 +167,46 @@ export interface Crates {
   loading: boolean;
 }
 
-export const useCrates = (associatedCratesUrl: string): Crates => {
+export const useCrates = (associatedCratesUrl?: string): Crates => {
   const [crates, setCrates] = useState<Crate[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { config } = useContext(UserContext);
 
-  const endpoint = associatedCratesUrl.startsWith(config.api)
-    ? associatedCratesUrl.replace(config.api, '')
+  const endpoint = associatedCratesUrl?.startsWith(config.api)
+    ? associatedCratesUrl.slice(config.api.length)
     : associatedCratesUrl;
 
-  const { data, loading } = useMGnifyData(endpoint);
+  const { data, loading, error } = useMGnifyData(endpoint);
 
   useEffect(() => {
     if (loading) return;
+    if (!endpoint || error || !Array.isArray(data?.data)) {
+      setCrates([]);
+      setIsLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setIsLoading(true);
     Promise.all(
       (data.data as MGnifyDatum[]).map((crateItem) =>
         getCrate(crateItem.links.self as string)
       )
     )
       .then((newCrates) => {
+        if (cancelled) return;
         setCrates(newCrates);
         setIsLoading(false);
       })
       .catch(() => {
+        if (cancelled) return;
+        setCrates([]);
         setIsLoading(false);
       });
-  }, [data, loading]);
+    return () => {
+      cancelled = true;
+    };
+  }, [data, loading, error, endpoint]);
 
   return {
     crates,

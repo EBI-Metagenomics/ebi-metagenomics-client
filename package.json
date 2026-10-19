@@ -5,8 +5,8 @@
   "homepage": "/https://github.com/EBI-Metagenomics/ebi-metagenomics-client#readme",
   "scripts": {
     "serve:fixtures": "http-server -p 5055 cypress/fixtures --cors",
-    "cy:test:run": "cypress run",
-    "cy:test:open": "cypress open",
+    "cy:test:run": "cypress run --browser chrome",
+    "cy:test:open": "cypress open --browser chrome",
     "test": "concurrently -k \"npm run start\" \"npm run cy:test:run\" \"npm run serve:fixtures\"",
     "test:open": "concurrently -k \"npm run start\" \"npm run cy:test:open\" \"npm run serve:fixtures\"",
     "clean": "rimraf dist coverage .nyc_output",
