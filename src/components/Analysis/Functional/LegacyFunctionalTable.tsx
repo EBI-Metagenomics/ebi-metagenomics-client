@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { PaginatedList } from '@/interfaces';
 import Loading from 'components/UI/Loading';
 import EMGTable from 'components/UI/EMGTable';
-import { Column } from 'react-table';
+import { ColumnDef as Column } from '@tanstack/react-table';
 import { startCase } from 'lodash-es';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
 import BarChartForTable from 'components/Analysis/BarChartForTable';
@@ -27,7 +27,7 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
     items: [],
     count: 0,
   });
-  const [cols, setCols] = useState<Column<string[]>[]>([]);
+  const [cols, setCols] = useState<Column<string[], any>[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
 
@@ -148,9 +148,12 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
 
           setCols(
             headers.map((header, colNum) => ({
-              Header: header,
-              accessor: (row: string[]) => row[colNum],
-              Cell: ({ value }) => <TSVCell value={value} />,
+              header: header,
+              accessorFn: (row: string[]) => row[colNum],
+              cell: ({ getValue }) => {
+                const value = getValue();
+                return <TSVCell value={value} />;
+              },
               id: `col_${colNum}`,
             }))
           );
@@ -188,7 +191,7 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
     let accessionColIdx = -1;
 
     const headerLabels = cols.map((c) =>
-      (c.Header as string).toLowerCase().replace(/_/g, ' ')
+      (c.header as string).toLowerCase().replace(/_/g, ' ')
     );
 
     accessionColIdx = headerLabels.findIndex(
@@ -255,14 +258,14 @@ const LegacyFunctionalTable: React.FC<LegacyFunctionalTableProps> = ({
     return {
       title: chartTitle,
       labelsCol: {
-        accessor: (row: { label: string; count: number }) => row.label,
+        accessorFn: (row: { label: string; count: number }) => row.label,
         id: 'Label',
-        Header: 'Label',
+        header: 'Label',
       },
       countsCol: {
-        accessor: (row: { label: string; count: number }) => row.count,
+        accessorFn: (row: { label: string; count: number }) => row.count,
         id: 'Count',
-        Header: 'Count',
+        header: 'Count',
       },
       data: {
         items: chartDataItems,

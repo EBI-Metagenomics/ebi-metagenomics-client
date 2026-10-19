@@ -10,11 +10,11 @@ import UserContext from 'pages/Login/UserContext';
 import { MGnifyDatum } from 'hooks/data/useData';
 import JSZip from 'jszip';
 import { ROCrate } from 'ro-crate';
-import { Track } from 'utils/trackView';
+import { Track, CrateSchema } from 'utils/trackView';
 import { useEffectOnce } from 'react-use';
 import { fetchBlob } from 'utils/fetch';
 
-const extractSchema = async (crateZip: JSZip): Promise<object> => {
+const extractSchema = async (crateZip: JSZip): Promise<CrateSchema> => {
   const metadataJsonFile = crateZip.file('ro-crate-metadata.json');
   if (!metadataJsonFile) {
     // TODO: toast or equivalent
@@ -28,12 +28,12 @@ const extractSchema = async (crateZip: JSZip): Promise<object> => {
     array: true,
   });
 
-  return trackCrate.getNormalizedTree();
+  return trackCrate.getNormalizedTree(trackCrate.rootDataset);
 };
 
 const extractGffIfExists = async (
   crateZip: JSZip,
-  schema: ROCrate
+  schema: CrateSchema
 ): Promise<string | undefined> => {
   let filePointer;
   schema.hasPart.forEach((dataset) => {
@@ -54,7 +54,7 @@ const extractGffIfExists = async (
 };
 
 const getTrackProperties = async (
-  schema: ROCrate,
+  schema: CrateSchema,
   crateURL: string,
   gff?: string
 ): Promise<Track> => {

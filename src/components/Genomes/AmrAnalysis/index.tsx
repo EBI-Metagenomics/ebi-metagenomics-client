@@ -24,13 +24,13 @@ const GenomeAmrAnalysis: React.FC<GenomeAmrAnalysisProps> = ({ download }) => (
             maxLabels: 0,
             labelsCol: {
               id: 'class',
-              Header: 'Class',
-              accessor: (row) => row[0],
+              header: 'Class',
+              accessorFn: (row) => row[0],
             },
             countsCol: {
               id: 'Records',
-              Header: 'Records',
-              accessor: (row) => Number(row[1]),
+              header: 'Records',
+              accessorFn: (row) => Number(row[1]),
             },
           }}
         />

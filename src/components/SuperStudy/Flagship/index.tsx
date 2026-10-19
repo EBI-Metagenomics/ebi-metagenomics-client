@@ -20,27 +20,27 @@ const FlagshipTable: React.FC = () => {
   const columns = [
     {
       id: 'biome_id',
-      Header: 'Biome',
-      accessor: (study) => study.biome.lineage,
-      Cell: ({ cell }) => (
+      header: 'Biome',
+      accessorFn: (study) => study.biome.lineage,
+      cell: ({ cell }) => (
         <span
-          className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
+          className={`biome_icon icon_xs ${getBiomeIcon(cell.getValue())}`}
           style={{ float: 'initial' }}
         />
       ),
-      className: 'mg-biome',
+      meta: { className: 'mg-biome' },
     },
     {
       id: 'study',
-      Header: 'Study accession',
-      accessor: 'accession',
-      Cell: ({ cell }) => (
-        <Link to={`/studies/${cell.value}`}>{cell.value}</Link>
+      header: 'Study accession',
+      accessorKey: 'accession',
+      cell: ({ cell }) => (
+        <Link to={`/studies/${cell.getValue()}`}>{cell.getValue()}</Link>
       ),
     },
     {
-      Header: 'Name',
-      accessor: 'title',
+      header: 'Name',
+      accessorKey: 'title',
     },
     // {
     //   Header: 'Samples Count',
@@ -48,9 +48,9 @@ const FlagshipTable: React.FC = () => {
     // },
     {
       id: 'last_update',
-      Header: 'Last Updated',
-      accessor: 'updated_at',
-      Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
+      header: 'Last Updated',
+      accessorKey: 'updated_at',
+      cell: ({ cell }) => <>{new Date(cell.getValue()).toLocaleDateString()}</>,
     },
   ];
 

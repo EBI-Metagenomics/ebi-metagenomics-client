@@ -37,33 +37,33 @@ const ExtraAnnotations: React.FC<ExtraAnnotationsProps> = ({ namespace }) => {
   const columns = useMemo(
     () => [
       {
-        Header: 'Name',
-        accessor: 'attributes.alias',
+        header: 'Name',
+        accessorKey: 'attributes.alias',
       },
       {
-        Header: 'Description',
-        accessor: 'attributes.description.description',
+        header: 'Description',
+        accessorKey: 'attributes.description.description',
       },
       {
-        Header: 'Compression',
-        accessor: 'attributes.file-format.compression',
-        Cell: ({ cell }) => <>{cell.value ? 'Yes' : '-'}</>,
+        header: 'Compression',
+        accessorKey: 'attributes.file-format.compression',
+        cell: ({ cell }) => <>{cell.getValue() ? 'Yes' : '-'}</>,
       },
       {
-        Header: 'Format',
-        accessor: 'attributes.file-format.name',
+        header: 'Format',
+        accessorKey: 'attributes.file-format.name',
       },
       {
-        Header: 'Action',
-        accessor: 'links.self',
-        Cell: ({ cell }) => (
+        header: 'Action',
+        accessorKey: 'links.self',
+        cell: ({ cell }) => (
           <>
             {cell.row.original.attributes.description.label ===
               'Analysis RO Crate' && (
-              <ROCrateBrowser useButtonVariant crateUrl={cell.value} />
+              <ROCrateBrowser useButtonVariant crateUrl={cell.getValue()} />
             )}
             <a
-              href={cell.value}
+              href={cell.getValue()}
               className="vf-button vf-button--sm vf-button--secondary"
               style={{ whiteSpace: 'nowrap' }}
               download

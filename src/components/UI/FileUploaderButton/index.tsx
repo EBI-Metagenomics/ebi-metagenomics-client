@@ -1,6 +1,7 @@
 import React, { useRef, FormEvent } from 'react';
 
 type FileUploaderButtonProps = {
+  children?: React.ReactNode;
   onChange: (event: FormEvent) => void;
   accept?: string;
   buttonClassName?: string;

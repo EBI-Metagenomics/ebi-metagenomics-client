@@ -16,48 +16,52 @@ const SuperStudyGenomeCataloguesTable: React.FC = () => {
     () => [
       {
         id: 'biome',
-        Header: 'Biome',
-        accessor: (catalogue) => catalogue.biome.lineage,
-        Cell: ({ cell }) => (
+        header: 'Biome',
+        accessorFn: (catalogue) => catalogue.biome.lineage,
+        cell: ({ cell }) => (
           <span
-            className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
+            className={`biome_icon icon_xs ${getBiomeIcon(cell.getValue())}`}
             style={{ float: 'initial' }}
           />
         ),
-        disableSortBy: true,
-        className: 'mg-biome',
+        enableSorting: false,
+        meta: { className: 'mg-biome' },
       },
       {
         id: 'catalogue_id',
-        Header: () => <span className="nowrap">Catalogue ID</span>,
-        accessor: 'catalogue_id',
-        Cell: ({ cell }) => (
-          <Link to={`/genome-catalogues/${cell.value}`}>{cell.value}</Link>
+        header: () => <span className="nowrap">Catalogue ID</span>,
+        accessorKey: 'catalogue_id',
+        cell: ({ cell }) => (
+          <Link to={`/genome-catalogues/${cell.getValue()}`}>
+            {cell.getValue()}
+          </Link>
         ),
-        className: 'nowrap',
+        meta: { className: 'nowrap' },
       },
       {
-        Header: 'Catalogue name',
-        accessor: 'name',
+        header: 'Catalogue name',
+        accessorKey: 'name',
       },
       {
-        Header: 'Catalogue version',
-        accessor: 'version',
-        disableSortBy: true,
+        header: 'Catalogue version',
+        accessorKey: 'version',
+        enableSorting: false,
       },
       {
-        Header: 'Species count',
-        accessor: 'genome_count',
+        header: 'Species count',
+        accessorKey: 'genome_count',
       },
       {
-        Header: 'Total genomes count',
-        accessor: 'unclustered_genome_count',
+        header: 'Total genomes count',
+        accessorKey: 'unclustered_genome_count',
       },
       {
         id: 'last_update',
-        Header: 'Last Updated',
-        accessor: 'updated_at',
-        Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
+        header: 'Last Updated',
+        accessorKey: 'updated_at',
+        cell: ({ cell }) => (
+          <>{new Date(cell.getValue()).toLocaleDateString()}</>
+        ),
       },
     ],
     []

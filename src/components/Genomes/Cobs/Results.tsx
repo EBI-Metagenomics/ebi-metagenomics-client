@@ -50,66 +50,68 @@ const Results: React.FC<ResultsProps> = ({
   const columns = [
     {
       id: 'biome_id',
-      Header: 'Biome',
-      accessor: (genome) =>
+      header: 'Biome',
+      accessorFn: (genome) =>
         decodeURI(last(split(genome.mgnify.biome, '/')) as string),
-      Cell: ({ cell }) => (
+      cell: ({ cell }) => (
         <span
-          className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
+          className={`biome_icon icon_xs ${getBiomeIcon(cell.getValue())}`}
           style={{ float: 'initial' }}
         />
       ),
-      disableSortBy: true,
-      className: 'mg-biome',
+      enableSorting: false,
+      meta: { className: 'mg-biome' },
     },
     {
       id: 'genome',
-      Header: 'Accession',
-      accessor: 'cobs.genome',
-      Cell: ({ cell }) => (
-        <Link to={`/genomes/${cell.value}`}>{cell.value}</Link>
+      header: 'Accession',
+      accessorKey: 'cobs.genome',
+      cell: ({ cell }) => (
+        <Link to={`/genomes/${cell.getValue()}`}>{cell.getValue()}</Link>
       ),
     },
     {
       id: 'catalogue',
-      Header: 'Catalogue',
-      accessor: (genome) => last(split(genome.mgnify.catalogue, '/')),
-      Cell: ({ cell }) => (
-        <Link to={`/genome-catalogues/${cell.value}`}>{cell.value}</Link>
+      header: 'Catalogue',
+      accessorFn: (genome) => last(split(genome.mgnify.catalogue, '/')),
+      cell: ({ cell }) => (
+        <Link to={`/genome-catalogues/${cell.getValue()}`}>
+          {cell.getValue()}
+        </Link>
       ),
-      disableSortBy: true,
+      enableSorting: false,
     },
     {
-      Header: 'Type',
-      accessor: 'mgnify.type',
-      disableSortBy: true,
+      header: 'Type',
+      accessorKey: 'mgnify.type',
+      enableSorting: false,
     },
     {
-      Header: 'Taxonomy',
-      accessor: 'mgnify.taxon_lineage',
-      Cell: ({ cell }) => (
+      header: 'Taxonomy',
+      accessorKey: 'mgnify.taxon_lineage',
+      cell: ({ cell }) => (
         <>
-          {getSimpleTaxLineage(cell.value, true)}{' '}
-          <Tooltip content={cleanTaxLineage(cell.value, ' > ')}>
+          {getSimpleTaxLineage(cell.getValue(), true)}{' '}
+          <Tooltip content={cleanTaxLineage(cell.getValue(), ' > ')}>
             <sup>
               <span className="icon icon-common icon-info" />
             </sup>
           </Tooltip>
         </>
       ),
-      disableSortBy: true,
+      enableSorting: false,
     },
     {
-      Header: 'K-mers in query',
-      accessor: 'cobs.num_kmers',
+      header: 'K-mers in query',
+      accessorKey: 'cobs.num_kmers',
     },
     {
-      Header: 'K-mers found in genome',
-      accessor: 'cobs.num_kmers_found',
+      header: 'K-mers found in genome',
+      accessorKey: 'cobs.num_kmers_found',
     },
     {
-      Header: '% K-mers found',
-      accessor: 'cobs.percent_kmers_found',
+      header: '% K-mers found',
+      accessorKey: 'cobs.percent_kmers_found',
     },
   ];
   if (!data) return null;

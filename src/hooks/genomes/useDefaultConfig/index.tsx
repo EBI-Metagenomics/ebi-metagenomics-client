@@ -5,8 +5,8 @@ import { TAXONOMY_COLOURS } from '@/utils/taxon';
 
 type DefaultConfigType = {
   columns: {
-    Header: string;
-    accessor: string;
+    header: string;
+    accessorKey: string;
   }[];
   options: Highcharts.Options;
 };
@@ -15,16 +15,16 @@ const useGenomeDefaultConfig = (): DefaultConfigType => {
   const columns = useMemo(
     () => [
       {
-        Header: 'COG ID',
-        accessor: 'name',
+        header: 'COG ID',
+        accessorKey: 'name',
       },
       {
-        Header: 'Genome Count',
-        accessor: 'count',
+        header: 'Genome Count',
+        accessorKey: 'count',
       },
       {
-        Header: 'Description',
-        accessor: 'description',
+        header: 'Description',
+        accessorKey: 'description',
       },
     ],
     []

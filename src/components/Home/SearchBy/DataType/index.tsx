@@ -35,7 +35,7 @@ const DataAnalysesTypeRow: React.FC<{
         style={{ textAlign: 'right' }}
       >
         <Link to={link} className="mg-link">
-          {data?.hitCount || '...'}
+          {String(data?.hitCount || '...')}
         </Link>
       </td>
       <td className="vf-table__cell vf-u-type__text-body--3">
@@ -69,7 +69,7 @@ const DataTypeRow: React.FC<{
           <Loading size="small" />
         ) : (
           <Link to={link} className="mg-link">
-            {data?.hitCount || '??'}
+            {String(data?.hitCount || '??')}
           </Link>
         )}
       </td>

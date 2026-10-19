@@ -1,13 +1,12 @@
 import Dexie, { Table } from 'dexie';
-import { ROCrate } from 'ro-crate';
-import { Track } from '@/utils/trackView';
+import { Track, CrateSchema } from '@/utils/trackView';
 import JSZip from 'jszip';
 
 export interface StorableCrate {
   url: string;
   zipBlob: Blob;
   gff?: string;
-  schema: ROCrate;
+  schema: CrateSchema;
   track?: Track;
 }
 

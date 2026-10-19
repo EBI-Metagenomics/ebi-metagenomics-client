@@ -20,24 +20,24 @@ const Downloads: React.FC<DownloadsProps> = ({ endpoint, accession }) => {
   const columns = useMemo(
     () => [
       {
-        Header: 'Name',
-        accessor: 'attributes.description.description',
+        header: 'Name',
+        accessorKey: 'attributes.description.description',
       },
       {
-        Header: 'Compression',
-        accessor: 'attributes.file-format.compression',
-        Cell: ({ cell }) => <>{cell.value ? 'Yes' : '-'}</>,
+        header: 'Compression',
+        accessorKey: 'attributes.file-format.compression',
+        cell: ({ cell }) => <>{cell.getValue() ? 'Yes' : '-'}</>,
       },
       {
-        Header: 'Format',
-        accessor: 'attributes.file-format.name',
+        header: 'Format',
+        accessorKey: 'attributes.file-format.name',
       },
       {
-        Header: 'Action',
-        accessor: 'links.self',
-        Cell: ({ cell }) => (
+        header: 'Action',
+        accessorKey: 'links.self',
+        cell: ({ cell }) => (
           <a
-            href={cell.value}
+            href={cell.getValue()}
             className="vf-button vf-button--link"
             style={{ whiteSpace: 'nowrap' }}
             download

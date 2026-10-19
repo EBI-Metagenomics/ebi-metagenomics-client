@@ -70,7 +70,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   const { crate: offlineCrate } = useOfflineCrate();
 
   const antiSMASH = contig.attributes['has-antismash'];
-  const displayName = contig.attributes['contig-name'];
+  const displayName = contig.attributes['contig-name'] as string;
   const [igvBrowser, setIgvBrowser] = useState<Browser>(null);
 
   const [trackColorBys, setTrackColorBys] = useState({});

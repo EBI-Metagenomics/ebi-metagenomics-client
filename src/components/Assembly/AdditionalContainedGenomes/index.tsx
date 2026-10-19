@@ -142,8 +142,8 @@ const AdditionalContainedGenomes: React.FC<AdditionalContainedGenomesProps> = ({
   const columns = [
     {
       id: 'genome_accession',
-      Header: 'Genome accession',
-      accessor: (row: ContainedGenome) => (
+      header: 'Genome accession',
+      accessorFn: (row: ContainedGenome) => (
         <Link to={`/genomes/${row.genome.accession}`}>
           {row.genome.accession}
         </Link>
@@ -151,8 +151,8 @@ const AdditionalContainedGenomes: React.FC<AdditionalContainedGenomesProps> = ({
     },
     {
       id: 'ena',
-      Header: 'ENA',
-      accessor: (row: ContainedGenome) =>
+      header: 'ENA',
+      accessorFn: (row: ContainedGenome) =>
         row.ena_genome_accession &&
         !row.ena_genome_accession.startsWith('GUT_GENOME') ? (
           <a
@@ -168,22 +168,22 @@ const AdditionalContainedGenomes: React.FC<AdditionalContainedGenomesProps> = ({
     },
     {
       id: 'containment',
-      Header: 'Containment',
-      accessor: (row: ContainedGenome) => `${row.containment.toFixed(2)}%`,
+      header: 'Containment',
+      accessorFn: (row: ContainedGenome) => `${row.containment.toFixed(2)}%`,
     },
     {
       id: 'cani',
-      Header: 'cANI',
-      accessor: (row: ContainedGenome) => `${row.cani.toFixed(2)}%`,
+      header: 'cANI',
+      accessorFn: (row: ContainedGenome) => `${row.cani.toFixed(2)}%`,
     },
     {
       id: 'taxonomy',
-      Header: 'Taxonomy',
-      accessor: (row: ContainedGenome) => row.genome.taxon_lineage,
-      Cell: ({ cell }) => (
+      header: 'Taxonomy',
+      accessorFn: (row: ContainedGenome) => row.genome.taxon_lineage,
+      cell: ({ cell }) => (
         <>
-          {getSimpleTaxLineage(cell.value, true)}{' '}
-          <Tooltip content={cleanTaxLineage(cell.value, ' > ')}>
+          {getSimpleTaxLineage(cell.getValue(), true)}{' '}
+          <Tooltip content={cleanTaxLineage(cell.getValue(), ' > ')}>
             <sup>
               <span className="icon icon-common icon-info" />
             </sup>
@@ -193,8 +193,8 @@ const AdditionalContainedGenomes: React.FC<AdditionalContainedGenomesProps> = ({
     },
     {
       id: 'catalogue',
-      Header: 'Genome Catalogue',
-      accessor: (row: ContainedGenome) =>
+      header: 'Genome Catalogue',
+      accessorFn: (row: ContainedGenome) =>
         `${String(row.genome.catalogue_id).split('-v')[0]} v${
           row.genome.catalogue_version
         }`,

@@ -1,4 +1,4 @@
-import React, { ReactChild, ReactChildren, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import GenomesCoverImage from 'images/cover_genomes_publication.png';
@@ -23,7 +23,7 @@ export const Publication: React.FC<{
   doi: string;
   authors: string;
   maxAuthorsLength?: number;
-  children?: ReactChild | ReactChildren;
+  children?: ReactNode;
 }> = ({
   id,
   title,

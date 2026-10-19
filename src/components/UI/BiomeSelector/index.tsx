@@ -35,7 +35,7 @@ const OptionLabel: React.FC<OptionProps> = ({ value, label }) => (
         style={{ float: 'initial' }}
       />
     </div>
-    <div className="vf-flag__body">{label}</div>
+    <div className="vf-flag__body">{String(label)}</div>
   </div>
 );
 
@@ -52,9 +52,7 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
 
   useEffect(() => {
     if (!firstPage) return;
-    const totalPages = Math.ceil(
-      (firstPage.count || 0) / BIOMES_PAGE_SIZE
-    );
+    const totalPages = Math.ceil((firstPage.count || 0) / BIOMES_PAGE_SIZE);
     if (totalPages <= 1) {
       setAllBiomes(firstPage.items);
       return;
@@ -147,7 +145,7 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
             setBiomeQP(biomeId);
           }
         }}
-        formatOptionLabel={OptionLabel}
+        formatOptionLabel={(option) => <OptionLabel {...option} />}
         isLoading={loading}
         isSearchable
         name="biome"

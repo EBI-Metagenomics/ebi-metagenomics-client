@@ -51,7 +51,9 @@ const StudyOverview: React.FC<StudyOverviewProps> = ({ data }) => {
             <BiomeClassificationFlag lineage={lineage} />
           </Box>
           <Box label="Description">
-            {data.metadata.study_description || <i>No description provided</i>}
+            {(data.metadata.study_description as string) || (
+              <i>No description provided</i>
+            )}
           </Box>
         </div>
         {data.accession && <SamplesMapByStudy study={data} />}

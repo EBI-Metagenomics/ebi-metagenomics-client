@@ -7,7 +7,7 @@ import {
   getGenomeBiomeGroup,
 } from '@/utils/biomes';
 import { Link } from 'react-router-dom';
-import { Column } from 'react-table';
+import { ColumnDef as Column } from '@tanstack/react-table';
 import Loading from 'components/UI/Loading';
 import EMGTable from 'components/UI/EMGTable';
 import InnerCard from 'components/UI/InnerCard';
@@ -106,73 +106,73 @@ const BrowseGenomesByCatalogue: React.FC = () => {
     } as GenomeCatalogueList;
   }, [apiData, biome, order]);
 
-  const columns = React.useMemo<Column<GenomeCatalogue>[]>(
+  const columns = React.useMemo<Column<GenomeCatalogue, any>[]>(
     () => [
       {
-        Header: 'Catalogue',
-        accessor: 'catalogue_id',
-        Cell: ({ cell }) => (
-          <Link to={`/genome-catalogues/${cell.value}`}>
+        header: 'Catalogue',
+        accessorKey: 'catalogue_id',
+        cell: ({ cell }) => (
+          <Link to={`/genome-catalogues/${cell.getValue()}`}>
             {formatCatalogueType(cell.row.original?.name)}
           </Link>
         ),
-        className: 'mg-catalogue-name',
+        meta: { className: 'mg-catalogue-name' },
       },
       {
         id: 'catalogue-biome-label',
-        Header: 'Biome',
-        accessor: (catalogue) => catalogue.catalogue_biome_label,
-        disableSortBy: true,
-        className: 'mg-catalogue-biome',
+        header: 'Biome',
+        accessorFn: (catalogue) => catalogue.catalogue_biome_label,
+        enableSorting: false,
+        meta: { className: 'mg-catalogue-biome' },
       },
       {
         id: 'catalogue-biome-category',
-        Header: 'Biome category',
-        accessor: (catalogue) => catalogue.biome.lineage,
-        Cell: ({ cell }) => (
+        header: 'Biome category',
+        accessorFn: (catalogue) => catalogue.biome.lineage,
+        cell: ({ cell }) => (
           <span className="mg-catalogue-biome__value">
             <span
               className={`biome_icon icon_xs ${getBiomeIcon(
                 cell.row.original?.biome?.lineage || ''
               )}`}
             />
-            {getBiomeCategory(cell.value)}
+            {getBiomeCategory(cell.getValue())}
           </span>
         ),
-        disableSortBy: true,
-        className: 'mg-catalogue-biome',
+        enableSorting: false,
+        meta: { className: 'mg-catalogue-biome' },
       },
       {
         id: 'catalogue-type',
-        Header: 'Type',
-        accessor: (catalogue) => catalogue.catalogue_type,
-        Cell: ({ cell }) => <>{formatCatalogueType(cell.value)}</>,
+        header: 'Type',
+        accessorFn: (catalogue) => catalogue.catalogue_type,
+        cell: ({ cell }) => <>{formatCatalogueType(cell.getValue())}</>,
         aggregate: (catTypes) => catTypes,
-        className: 'mg-catalogue-type',
+        meta: { className: 'mg-catalogue-type' },
       },
 
       {
-        Header: 'Version',
-        accessor: 'version',
-        disableSortBy: true,
-        className: 'mg-catalogue-version',
+        header: 'Version',
+        accessorKey: 'version',
+        enableSorting: false,
+        meta: { className: 'mg-catalogue-version' },
       },
       {
-        Header: 'Species reps',
-        accessor: 'genome_count',
-        className: 'mg-catalogue-species',
+        header: 'Species reps',
+        accessorKey: 'genome_count',
+        meta: { className: 'mg-catalogue-species' },
       },
       {
-        Header: 'Genomes',
-        accessor: 'unclustered_genome_count',
-        className: 'mg-catalogue-genomes',
+        header: 'Genomes',
+        accessorKey: 'unclustered_genome_count',
+        meta: { className: 'mg-catalogue-genomes' },
       },
       {
         id: 'last_update',
-        Header: 'Updated',
-        accessor: 'updated_at',
-        Cell: ({ cell }) => <>{formatDate(cell.value)}</>,
-        className: 'mg-catalogue-updated',
+        header: 'Updated',
+        accessorKey: 'updated_at',
+        cell: ({ cell }) => <>{formatDate(cell.getValue())}</>,
+        meta: { className: 'mg-catalogue-updated' },
       },
     ],
     []

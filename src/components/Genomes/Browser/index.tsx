@@ -52,7 +52,7 @@ const GenomeBrowser: React.FC = () => {
   };
 
   const igvContainer = useCallback(
-    async (node) => {
+    (node: HTMLDivElement | null) => {
       const options = {
         showChromosomeWidget: true,
         showTrackLabelButton: true,

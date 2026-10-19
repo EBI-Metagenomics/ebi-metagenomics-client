@@ -7,7 +7,7 @@ type InfoBannerProps = {
   onDismiss?: () => void;
   dismissAriaLabel?: string;
 };
-const InfoBanner: React.FC<InfoBannerProps> = ({
+const InfoBanner: React.FC<React.PropsWithChildren<InfoBannerProps>> = ({
   type,
   title,
   children,

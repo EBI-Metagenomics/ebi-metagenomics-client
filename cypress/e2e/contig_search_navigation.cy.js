@@ -212,7 +212,9 @@ describe('Contig search feature navigation', { scrollBehavior: 'center' }, () =>
     const annotations = `${refName}\ttest\tCDS\t${start}\t${start + 99}\t.\t+\t0\tID=wide_feature;`;
     openBrowser('genome', annotations, { name: refName, length: 2 ** 32 + 5000 });
     cy.get('#contig-search-all').type('wide_feature');
-    cy.get('.mg-feature-match').should('contain.text', `Jump to ${start}–${start + 99}`).click();
+    cy.location('search').should('contain', 'allAnnotationsSearch=wide_feature');
+    cy.contains('button', `Jump to ${start}–${start + 99}`).should('be.visible');
+    cy.contains('button', `Jump to ${start}–${start + 99}`).click();
     expectRulerNear(start - 300, start + 500);
   });
 

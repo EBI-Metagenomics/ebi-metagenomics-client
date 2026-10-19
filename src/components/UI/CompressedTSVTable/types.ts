@@ -1,6 +1,6 @@
 import type { Download, PaginatedList } from '@/interfaces';
 import type { BarChartForTableProps } from 'components/Analysis/BarChartForTable';
-import type { Column } from 'react-table';
+import type { ColumnDef as Column } from '@tanstack/react-table';
 
 export type BarChartSpec = Pick<
   BarChartForTableProps,
@@ -10,7 +10,7 @@ export type BarChartSpec = Pick<
 };
 
 export interface TSVTableProps {
-  columns?: Column[];
+  columns?: Column<any, any>[];
   columnHeaders?: string[];
   download: Download;
   barChartSpec?: BarChartSpec;

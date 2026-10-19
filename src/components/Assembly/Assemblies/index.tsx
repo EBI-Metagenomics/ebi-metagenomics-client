@@ -59,47 +59,49 @@ const AssociatedAssemblies: React.FC<AssociatedAssembliesProps> = ({
 
   const columns = [
     {
-      Header: 'Assembly ID',
+      header: 'Assembly ID',
       id: 'accession',
-      accessor: 'accession',
-      Cell: ({ cell }) => (
-        <Link to={`/assemblies/${cell.value}`}>{cell.value}</Link>
+      accessorKey: 'accession',
+      cell: ({ cell }) => (
+        <Link to={`/assemblies/${cell.getValue()}`}>{cell.getValue()}</Link>
       ),
     },
     {
-      Header: 'Run',
-      accessor: 'run_accession',
-      Cell: ({ cell }) => <Link to={`/runs/${cell.value}`}>{cell.value}</Link>,
-    },
-    {
-      Header: 'Sample',
-      accessor: 'sample_accession',
-      Cell: ({ cell }) => (
-        <Link to={`/samples/${cell.value}`}>{cell.value}</Link>
+      header: 'Run',
+      accessorKey: 'run_accession',
+      cell: ({ cell }) => (
+        <Link to={`/runs/${cell.getValue()}`}>{cell.getValue()}</Link>
       ),
     },
     {
-      Header: 'Assembler',
+      header: 'Sample',
+      accessorKey: 'sample_accession',
+      cell: ({ cell }) => (
+        <Link to={`/samples/${cell.getValue()}`}>{cell.getValue()}</Link>
+      ),
+    },
+    {
+      header: 'Assembler',
       id: 'assembler',
-      accessor: (row: Assembly) =>
+      accessorFn: (row: Assembly) =>
         `${formatValue(row.assembler_name, {
           placeholder: 'Unknown',
         })} (${formatValue(row.assembler_version)})`,
     },
     {
-      Header: 'Coverage',
-      accessor: 'metadata.coverage',
-      Cell: ({ cell }) => <>{formatValue(cell.value, { precision: 2 })}</>,
+      header: 'Coverage',
+      accessorKey: 'metadata.coverage',
+      cell: ({ cell }) => <>{formatValue(cell.getValue(), { precision: 2 })}</>,
     },
     {
-      Header: 'Coverage Depth',
-      accessor: 'metadata.coverage_depth',
-      Cell: ({ cell }) => <>{formatValue(cell.value, { precision: 2 })}</>,
+      header: 'Coverage Depth',
+      accessorKey: 'metadata.coverage_depth',
+      cell: ({ cell }) => <>{formatValue(cell.getValue(), { precision: 2 })}</>,
     },
     {
-      Header: 'Updated at',
-      accessor: 'updated_at',
-      Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
+      header: 'Updated at',
+      accessorKey: 'updated_at',
+      cell: ({ cell }) => <>{new Date(cell.getValue()).toLocaleDateString()}</>,
     },
   ];
   const showPagination = (data.count || 1) > initialPageSize;
