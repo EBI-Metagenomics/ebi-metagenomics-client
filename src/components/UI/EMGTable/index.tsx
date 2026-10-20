@@ -8,13 +8,15 @@ import React, {
 import { camelCase, filter } from 'lodash-es';
 
 import {
-  Column,
-  Row,
-  SortingRule,
-  usePagination,
-  useSortBy,
-  useTable,
-} from 'react-table';
+  type ColumnDef,
+  type Row,
+  type SortingState,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
 import Loading from 'components/UI/Loading';
 import TextInputDebounced from 'components/UI/TextInputDebounced';
 import LoadingOverlay from 'components/UI/LoadingOverlay';
@@ -71,7 +73,7 @@ function getPaginationRanges(
 }
 
 function getOrderingQueryParamFromSortedColumn(
-  tableSortBy: Array<SortingRule<string>>
+  tableSortBy: SortingState
 ): string {
   if (!tableSortBy.length) return '';
   const col = tableSortBy[0];
@@ -82,7 +84,7 @@ function getOrderingQueryParamFromSortedColumn(
 
 function getSortedColumnFromOrderingQueryParam<T extends object>(
   ordering: string,
-  cols: Column<T>[]
+  cols: ColumnDef<T, any>[]
 ): Array<{ id: string; desc: boolean }> {
   if (!ordering) return [];
   const desc = ordering.startsWith('-');
@@ -90,18 +92,27 @@ function getSortedColumnFromOrderingQueryParam<T extends object>(
 
   // Try to find the matching column from cols to get the correct ID
   const match = cols.find((c) => {
-    const id = (c.id ||
-      (typeof c.accessor === 'string' ? c.accessor : '')) as string;
+    const id = (c.id || ('accessorKey' in c ? c.accessorKey : '')) as string;
     if (!id) return false;
     const transformedId = id.replace(/attributes\./g, '').replace(/-/g, '_');
     return transformedId === field;
   });
 
-  return [{ id: match?.id || (match?.accessor as string) || field, desc }];
+  return [
+    {
+      id:
+        match?.id ||
+        (match && 'accessorKey' in match
+          ? (match.accessorKey as string)
+          : '') ||
+        field,
+      desc,
+    },
+  ];
 }
 
 type EMGTableProps<T extends object> = {
-  cols: Column<T>[];
+  cols: ColumnDef<T, any>[];
   data:
     | PaginatedList<T | any>
     | T[]
@@ -175,43 +186,47 @@ const EMGTable = <T extends object>({
       data) as T[];
   }, [data]);
 
-  const initialTableState = useMemo(
-    () => ({
-      pageIndex: initialPage,
-      pageSize: expectedPageSize,
-      sortBy: getSortedColumnFromOrderingQueryParam(ordering, cols),
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [] // Only on mount
+  const [pagination, setPagination] = useState({
+    pageIndex: initialPage,
+    pageSize: expectedPageSize,
+  });
+  const [sortBy, setSortBy] = useState<SortingState>(() =>
+    getSortedColumnFromOrderingQueryParam(ordering, cols)
   );
-
-  const tableOptions = useMemo(
-    () => ({
-      columns: cols as Column<T>[],
-      data: tableData,
-      initialState: initialTableState,
-      pageCount: pageCount || 1,
-      manualPagination: !clientSidePagination,
-      manualSortBy: !clientSidePagination,
-      autoResetPage: false,
-    }),
-    [cols, tableData, initialTableState, pageCount, clientSidePagination]
+  // Keep dotted accessor IDs stable for existing URL ordering parameters.
+  const columns = useMemo(
+    () =>
+      cols.map((column) =>
+        'accessorKey' in column
+          ? { ...column, id: column.id ?? String(column.accessorKey) }
+          : column
+      ),
+    [cols]
   );
+  const table = useReactTable<T>({
+    columns,
+    data: tableData,
+    state: { pagination, sorting: sortBy },
+    onPaginationChange: setPagination,
+    onSortingChange: setSortBy,
+    pageCount: clientSidePagination ? undefined : pageCount,
+    manualPagination: !clientSidePagination,
+    manualSorting: !clientSidePagination,
+    autoResetPageIndex: false,
+    enableSorting: sortable,
+    enableMultiSort: true,
+    sortDescFirst: false,
+    defaultColumn: { cell: ({ getValue }) => getValue() ?? '' },
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  });
+  const { pageIndex } = pagination;
+  const gotoPage = table.setPageIndex;
+  const canPreviousPage = table.getCanPreviousPage();
+  const canNextPage = table.getCanNextPage();
+  const headerGroups = table.getHeaderGroups();
 
-  const table = useTable<T>(tableOptions, useSortBy, usePagination);
-  const {
-    setSortBy,
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    page: paginatedRows,
-    prepareRow,
-    canPreviousPage,
-    canNextPage,
-    gotoPage,
-    state: { pageIndex, sortBy },
-  } = table;
   const tableRef = useRef(null);
   const [isChangingPage, setChangingPage] = useState(false);
   const lastSyncedOrder = useRef(ordering);
@@ -253,9 +268,10 @@ const EMGTable = <T extends object>({
     }
   }, [sortable, sortBy, ordering, setOrdering, setPage, setSortBy, cols]);
 
+  const totalPages = table.getPageCount();
   const paginationRanges = useMemo(
-    () => getPaginationRanges(pageIndex, pageCount),
-    [pageIndex, pageCount]
+    () => getPaginationRanges(pageIndex, totalPages),
+    [pageIndex, totalPages]
   );
   const goToPageAndScroll = (pageNumber): MouseEventHandler => {
     return () => {
@@ -265,10 +281,10 @@ const EMGTable = <T extends object>({
   };
 
   const fullWidthColSpan = useMemo(() => {
-    return filter(cols, (col) => !col.isFullWidth).length;
+    return filter(cols, (col) => !col.meta?.isFullWidth).length;
   }, [cols]);
 
-  const rowsToRender = clientSidePagination ? paginatedRows : rows;
+  const rowsToRender = table.getRowModel().rows;
   const hasToolbar =
     Title ||
     showTextFilter ||
@@ -312,7 +328,6 @@ const EMGTable = <T extends object>({
       <LoadingOverlay loading={loading && isStale}>
         <div className={horizontalScroll ? 'mg-table-scroll-x' : undefined}>
           <table
-            {...getTableProps()}
             className={`vf-table--striped mg-table ${className}`}
             ref={tableRef}
           >
@@ -322,41 +337,39 @@ const EMGTable = <T extends object>({
               </caption>
             )}
             <thead className="vf-table__header">
-              {headerGroups.map((headerGroup, idx) => (
-                <tr
-                  {...headerGroup.getHeaderGroupProps()}
-                  className="vf-table__row"
-                  key={headerGroup.id || idx}
-                >
-                  {headerGroup.headers.map((column) => {
-                    if (column.isFullWidth) {
-                      return null;
-                    }
+              {headerGroups.map((headerGroup) => (
+                <tr className="vf-table__row" key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    const { column } = header;
+                    const meta = column.columnDef.meta;
+                    if (meta?.isFullWidth) return null;
+                    const sorted = column.getIsSorted();
                     return (
                       <th
-                        {...(sortable && column.canSort
-                          ? column.getHeaderProps(column.getSortByToggleProps())
-                          : { key: column.id })}
-                        className={`vf-table__heading ${
-                          column.className || ''
-                        }`}
-                        key={column.id}
+                        className={`vf-table__heading ${meta?.className || ''}`}
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        onClick={column.getToggleSortingHandler()}
                       >
-                        {column.render('Header')}
-                        {sortable && column.canSort && (
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              column.columnDef.header,
+                              header.getContext()
+                            )}
+                        {sortable && column.getCanSort() && (
                           <>
                             &nbsp;
                             <span>
-                              {/* eslint-disable-next-line no-nested-ternary */}
-                              {column.isSorted ? (
-                                column.isSortedDesc ? (
-                                  <i className="icon icon-common icon-sort-down" />
-                                ) : (
-                                  <i className="icon icon-common icon-sort-up" />
-                                )
-                              ) : (
-                                <i className="icon icon-common icon-sort" />
-                              )}
+                              <i
+                                className={`icon icon-common icon-sort${
+                                  sorted === 'desc'
+                                    ? '-down'
+                                    : sorted === 'asc'
+                                    ? '-up'
+                                    : ''
+                                }`}
+                              />
                             </span>
                           </>
                         )}
@@ -366,72 +379,80 @@ const EMGTable = <T extends object>({
                 </tr>
               ))}
             </thead>
-            <tbody {...getTableBodyProps()} className="vf-table__body">
-              {rowsToRender.map((row) => {
-                prepareRow(row);
-                return (
-                  <React.Fragment key={row.id}>
-                    <tr
-                      {...row.getRowProps()}
-                      className="vf-table__row"
-                      onMouseEnter={() => onMouseEnterRow(row)}
-                      onMouseLeave={() => onMouseLeaveRow(row)}
-                    >
-                      {row.cells.map((cell) => {
-                        if (cell.column.isFullWidth) {
-                          return null;
-                        }
-                        return (
-                          <td
-                            {...cell.getCellProps()}
-                            key={cell.column.id}
-                            colSpan={
-                              typeof cell.column?.colspan === 'function'
-                                ? cell.column.colspan(cell)
-                                : cell.column?.colspan
-                            }
-                            className={`vf-table__cell vf-u-type__text-body--3 ${
-                              cell.column?.className || ''
-                            }`}
-                            style={{ ...(cell.column?.style || {}) }}
-                          >
-                            {cell.render('Cell')}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                    {row.cells.map((cell) => {
-                      if (cell.column.isFullWidth) {
-                        return (
-                          <>
-                            <tr className="vf-table__row" />
-                            {/* Empty row to maintain striping */}
-                            <tr
-                              {...row.getRowProps()}
-                              className="vf-table__row"
-                              onMouseEnter={() => onMouseEnterRow(row)}
-                              onMouseLeave={() => onMouseLeaveRow(row)}
-                            >
-                              <td
-                                {...cell.getCellProps()}
-                                colSpan={fullWidthColSpan}
-                                className={`vf-table__cell vf-u-type__text-body--3 ${
-                                  cell.column?.className || ''
-                                }`}
-                                style={{ ...(cell.column?.style || {}) }}
-                              >
-                                <strong>{cell.render('Header')}:&nbsp;</strong>
-                                {cell.render('Cell')}
-                              </td>
-                            </tr>
-                          </>
-                        );
-                      }
-                      return null;
+            <tbody className="vf-table__body">
+              {rowsToRender.map((row) => (
+                <React.Fragment key={row.id}>
+                  <tr
+                    className="vf-table__row"
+                    onMouseEnter={() => onMouseEnterRow(row)}
+                    onMouseLeave={() => onMouseLeaveRow(row)}
+                  >
+                    {row.getVisibleCells().map((cell) => {
+                      const meta = cell.column.columnDef.meta;
+                      if (meta?.isFullWidth) return null;
+                      return (
+                        <td
+                          key={cell.id}
+                          colSpan={
+                            typeof meta?.colspan === 'function'
+                              ? meta.colspan(cell.getContext())
+                              : meta?.colspan
+                          }
+                          className={`vf-table__cell vf-u-type__text-body--3 ${
+                            meta?.className || ''
+                          }`}
+                          style={meta?.style}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      );
                     })}
-                  </React.Fragment>
-                );
-              })}
+                  </tr>
+                  {row.getVisibleCells().map((cell) => {
+                    const meta = cell.column.columnDef.meta;
+                    if (!meta?.isFullWidth) return null;
+                    return (
+                      <React.Fragment key={cell.id}>
+                        <tr className="vf-table__row" />
+                        {/* Empty row to maintain striping */}
+                        <tr
+                          className="vf-table__row"
+                          onMouseEnter={() => onMouseEnterRow(row)}
+                          onMouseLeave={() => onMouseLeaveRow(row)}
+                        >
+                          <td
+                            colSpan={fullWidthColSpan}
+                            className={`vf-table__cell vf-u-type__text-body--3 ${
+                              meta.className || ''
+                            }`}
+                            style={meta.style}
+                          >
+                            <strong>
+                              {flexRender(cell.column.columnDef.header, {
+                                ...cell.getContext(),
+                                header: table
+                                  .getFlatHeaders()
+                                  .find(
+                                    (header) =>
+                                      header.column.id === cell.column.id
+                                  )!,
+                              })}
+                              :&nbsp;
+                            </strong>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        </tr>
+                      </React.Fragment>
+                    );
+                  })}
+                </React.Fragment>
+              ))}
             </tbody>
           </table>
         </div>

@@ -54,10 +54,10 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
   const columns = [
     {
       id: 'analysis_id',
-      Header: 'Analysis accession',
-      accessor: (analysis: Analysis) => analysis.accession,
-      Cell: ({ cell }: { cell: { value: string } }) => (
-        <Link to={`/analyses/${cell.value}`}>{cell.value}</Link>
+      header: 'Analysis accession',
+      accessorFn: (analysis: Analysis) => analysis.accession,
+      cell: ({ cell }: { cell: { getValue: () => string } }) => (
+        <Link to={`/analyses/${cell.getValue()}`}>{cell.getValue()}</Link>
       ),
     },
     // {
@@ -65,9 +65,9 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
     //   Header: 'Biome',
     //   accessor: (analysis) =>
     //     samples?.[analysis?.relationships?.sample?.data?.id]?.biome || '',
-    //   Cell: ({ cell }) => (
+    //   cell: ({ cell }) => (
     //     <span
-    //       className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
+    //       className={`biome_icon icon_xs ${getBiomeIcon(cell.getValue())}`}
     //       style={{ float: 'initial' }}
     //     />
     //   ),
@@ -75,54 +75,56 @@ const AnalysesTable: React.FC<AssociatedAnaysesProps> = ({ rootEndpoint }) => {
     // },
     {
       id: 'sample',
-      Header: 'Sample accession',
-      accessor: (analysis: Analysis) => analysis?.sample?.accession,
-      Cell: ({ cell }) => (
-        <Link to={`/samples/${cell.value}`}>{cell.value}</Link>
+      header: 'Sample accession',
+      accessorFn: (analysis: Analysis) => analysis?.sample?.accession,
+      cell: ({ cell }) => (
+        <Link to={`/samples/${cell.getValue()}`}>{cell.getValue()}</Link>
       ),
     },
     {
       id: 'sample_title',
-      Header: 'Sample title',
-      accessor: (analysis) => analysis?.sample?.sample_title ?? '—',
-      Cell: ({ cell }) => (
-        <>{truncate(decodeURI(cell.value), { length: 120 })}</>
+      header: 'Sample title',
+      accessorFn: (analysis) => analysis?.sample?.sample_title ?? '—',
+      cell: ({ cell }) => (
+        <>{truncate(decodeURI(cell.getValue()), { length: 120 })}</>
       ),
     },
     {
       id: 'assembly_run_id',
-      Header: ' Run / Assembly accession',
-      accessor: (analysis: Analysis) => ({
+      header: ' Run / Assembly accession',
+      accessorFn: (analysis: Analysis) => ({
         assembly: analysis.assembly?.accession,
         run: analysis.run?.accession,
       }),
-      Cell: ({
+      cell: ({
         cell,
       }: {
-        cell: { value: { assembly?: string; run?: string } };
+        cell: { getValue: () => { assembly?: string; run?: string } };
       }) => (
         <>
-          {/*{cell.value.assembly || cell.value.run}*/}
-          {cell.value.assembly && (
-            <Link to={`/assemblies/${cell.value.assembly}`}>
-              {cell.value.assembly}
+          {/*{cell.getValue().assembly || cell.getValue().run}*/}
+          {cell.getValue().assembly && (
+            <Link to={`/assemblies/${cell.getValue().assembly}`}>
+              {cell.getValue().assembly}
             </Link>
           )}
-          {cell.value.run && (
-            <Link to={`/runs/${cell.value.run}`}>{cell.value.run}</Link>
+          {cell.getValue().run && (
+            <Link to={`/runs/${cell.getValue().run}`}>
+              {cell.getValue().run}
+            </Link>
           )}
         </>
       ),
     },
     {
       id: 'pipeline_id',
-      Header: 'Pipeline version',
-      accessor: (analysis: Analysis) =>
+      header: 'Pipeline version',
+      accessorFn: (analysis: Analysis) =>
         analysis.pipeline_version.toLowerCase().startsWith('v')
           ? analysis.pipeline_version.slice(1)
           : analysis.pipeline_version,
-      Cell: ({ cell }: { cell: { value: string } }) => (
-        <Link to={`/pipelines/${cell.value}`}>{cell.value}</Link>
+      cell: ({ cell }: { cell: { getValue: () => string } }) => (
+        <Link to={`/pipelines/${cell.getValue()}`}>{cell.getValue()}</Link>
       ),
     },
   ];

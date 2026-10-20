@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { PaginatedList } from '@/interfaces';
 import Loading from 'components/UI/Loading';
 import EMGTable from 'components/UI/EMGTable';
-import { Column } from 'react-table';
+import { ColumnDef as Column } from '@tanstack/react-table';
 import { startCase } from 'lodash-es';
 import FixedHeightScrollable from 'components/UI/FixedHeightScrollable';
 import BarChartForTable from 'components/Analysis/BarChartForTable';
@@ -23,7 +23,7 @@ const LegacyTaxonomyTable: React.FC<LegacyTaxonomyTableProps> = ({
     items: [],
     count: 0,
   });
-  const [cols, setCols] = useState<Column[]>([]);
+  const [cols, setCols] = useState<Column<any, any>[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
 
@@ -81,8 +81,8 @@ const LegacyTaxonomyTable: React.FC<LegacyTaxonomyTableProps> = ({
 
           setCols(
             headers.map((header, colNum) => ({
-              Header: header.includes('_') ? startCase(header) : header,
-              accessor: (row: any) => row[colNum],
+              header: header.includes('_') ? startCase(header) : header,
+              accessorFn: (row: any) => row[colNum],
               id: `col_${colNum}`,
             }))
           );
@@ -109,7 +109,7 @@ const LegacyTaxonomyTable: React.FC<LegacyTaxonomyTableProps> = ({
 
   const phylumColIdx = useMemo(() => {
     const idx = cols.findIndex((c) => {
-      const header = (c.Header as string).toLowerCase();
+      const header = (c.header as string).toLowerCase();
       return (
         header === 'taxonomy' ||
         header === 'phylum' ||
@@ -125,7 +125,7 @@ const LegacyTaxonomyTable: React.FC<LegacyTaxonomyTableProps> = ({
     // For TSV: OTU ID, LSU_rRNA, taxonomy, taxid (LSU_rRNA is count)
     // For TXT: count is first column
     const rRNAIdx = cols.findIndex((c) => {
-      const header = (c.Header as string).toLowerCase();
+      const header = (c.header as string).toLowerCase();
       return (
         header.includes('rrna') ||
         header.includes('otu count') ||
@@ -135,7 +135,7 @@ const LegacyTaxonomyTable: React.FC<LegacyTaxonomyTableProps> = ({
     });
     if (rRNAIdx !== -1) return rRNAIdx;
 
-    const firstColHeader = cols[0]?.Header as string;
+    const firstColHeader = cols[0]?.header as string;
     if (
       firstColHeader?.toLowerCase() === 'column 1' ||
       firstColHeader?.toLowerCase() === 'otu id'
@@ -144,7 +144,7 @@ const LegacyTaxonomyTable: React.FC<LegacyTaxonomyTableProps> = ({
       return firstColHeader?.toLowerCase() === 'column 1' ? 0 : 1;
     }
     // Check for "Column 2" as well for TSVs that might not have headers and taxonomy is in Col 3
-    const secondColHeader = cols[1]?.Header as string;
+    const secondColHeader = cols[1]?.header as string;
     if (secondColHeader?.toLowerCase() === 'column 2') return 1;
 
     return 1;
@@ -185,14 +185,14 @@ const LegacyTaxonomyTable: React.FC<LegacyTaxonomyTableProps> = ({
     return {
       title: 'Phylum composition (top 10)',
       labelsCol: {
-        accessor: (row: any) => row.phylum,
+        accessorFn: (row: any) => row.phylum,
         id: 'Phylum',
-        Header: 'Phylum',
+        header: 'Phylum',
       },
       countsCol: {
-        accessor: (row: any) => row.count,
+        accessorFn: (row: any) => row.count,
         id: 'Count',
-        Header: 'Count',
+        header: 'Count',
       },
       data: {
         items: chartDataItems,

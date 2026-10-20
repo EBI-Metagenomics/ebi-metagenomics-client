@@ -92,13 +92,13 @@ const InterPro: React.FC<InterProProps> = ({ isLegacy, legacyFile }) => {
                   title: 'interpro',
                   labelsCol: {
                     id: 'interpro_accession',
-                    Header: 'Interpro identifier',
-                    accessor: (d) => `${d[0]}: ${d[1]}`,
+                    header: 'Interpro identifier',
+                    accessorFn: (d) => `${d[0]}: ${d[1]}`,
                   },
                   countsCol: {
                     id: 'count',
-                    Header: 'Count',
-                    accessor: (d) => Number(last(d)),
+                    header: 'Count',
+                    accessorFn: (d) => Number(last(d)),
                   },
                 }}
               />

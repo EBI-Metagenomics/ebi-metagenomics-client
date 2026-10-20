@@ -29,13 +29,6 @@ declare module '*.txt' {
 }
 
 declare global {
-  declare namespace JSX {
-    interface IntrinsicElements {
-      'textarea-sequence': TextareaSequenceProps;
-      'mgnify-sourmash-component': MGnifySourmashComponentProps;
-    }
-  }
-
   interface HTMLElementTagNameMap {
     'textarea-sequence': TextareaSequenceElement;
   }
@@ -64,6 +57,7 @@ declare global {
     id: string;
     show_directory_checkbox?: boolean;
     show_signatures?: boolean;
+    accept_sigs?: boolean;
     ksize: number;
   }
 
@@ -102,32 +96,23 @@ declare module 'igv/dist/igv.esm' {
   export { default } from 'igv';
 }
 
-import 'react-table';
+import 'react';
 
-declare module 'react-table' {
-  export interface TableInstance<D extends object = {}>
-    extends UseSortByInstanceProps<D>,
-      UsePaginationInstanceProps<D> {}
-
-  export interface TableState<D extends object = {}>
-    extends UseSortByState<D>,
-      UsePaginationState<D> {}
-
-  export interface TableOptions<D extends object = {}>
-    extends UseSortByOptions<D>,
-      UsePaginationOptions<D> {}
-
-  export interface ColumnInterface<D extends object = {}> {
-    isFullWidth?: boolean; // custom prop we use for e.g. text search page
-    colspan?: number | ((cell: Cell<D>) => number);
-    className?: string;
-    style?: import('react').CSSProperties;
+declare module 'react' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'textarea-sequence': TextareaSequenceProps;
+      'mgnify-sourmash-component': MGnifySourmashComponentProps;
+    }
   }
+}
 
-  export interface ColumnInstance<D extends object = {}>
-    extends UseSortByColumnProps<D> {
+import '@tanstack/react-table';
+
+declare module '@tanstack/react-table' {
+  interface ColumnMeta<TData extends RowData, TValue> {
     isFullWidth?: boolean;
-    colspan?: number | ((cell: Cell<D>) => number);
+    colspan?: number | ((cell: CellContext<TData, TValue>) => number);
     className?: string;
     style?: import('react').CSSProperties;
   }

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import EMGTable from 'components/UI/EMGTable';
-import { Column } from 'react-table';
+import { ColumnDef as Column } from '@tanstack/react-table';
 import { camelCase } from 'lodash-es';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
 
@@ -73,11 +73,11 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
       {/* Enhanced Table using EMGTable */}
       <div style={{ overflowX: 'auto' }}>
         {(() => {
-          const columns: Column<BranchwaterResult>[] = [
+          const columns: Column<BranchwaterResult, any>[] = [
             {
-              Header: 'Accession',
-              accessor: 'acc',
-              Cell: ({ row }) => {
+              header: 'Accession',
+              accessorKey: 'acc',
+              cell: ({ row }) => {
                 const entry = row.original;
                 return (
                   <div>
@@ -113,10 +113,10 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
             {
-              Header: 'ENA',
-              accessor: 'acc_ena',
-              disableSortBy: true,
-              Cell: ({ row }) => {
+              header: 'ENA',
+              accessorKey: 'acc_ena',
+              enableSorting: false,
+              cell: ({ row }) => {
                 const entry = row.original;
                 const enaBase = 'https://www.ebi.ac.uk/ena/browser/view/';
                 const href = `${enaBase}${entry.acc}`;
@@ -133,9 +133,9 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
             {
-              Header: 'Assay Type',
-              accessor: 'assay_type',
-              Cell: ({ row }) => {
+              header: 'Assay Type',
+              accessorKey: 'assay_type',
+              cell: ({ row }) => {
                 const entry = row.original;
                 return (
                   <span
@@ -155,9 +155,9 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
             {
-              Header: 'cANI',
-              accessor: 'cANI',
-              Cell: ({ row }) => {
+              header: 'cANI',
+              accessorKey: 'cANI',
+              cell: ({ row }) => {
                 const entry = row.original;
                 return (
                   <div
@@ -173,9 +173,9 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
             {
-              Header: 'Containment',
-              accessor: 'containment',
-              Cell: ({ row }) => {
+              header: 'Containment',
+              accessorKey: 'containment',
+              cell: ({ row }) => {
                 const entry = row.original;
                 return (
                   <div
@@ -199,9 +199,9 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
             {
-              Header: 'Bioproject',
-              accessor: 'bioproject',
-              Cell: ({ row }) => {
+              header: 'Bioproject',
+              accessorKey: 'bioproject',
+              cell: ({ row }) => {
                 const entry = row.original;
                 const { bioproject } = entry;
                 if (!bioproject) {
@@ -220,9 +220,9 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
             {
-              Header: 'Location',
-              accessor: 'geo_loc_name_country_calc',
-              Cell: ({ row }) => {
+              header: 'Location',
+              accessorKey: 'geo_loc_name_country_calc',
+              cell: ({ row }) => {
                 const entry = row.original;
                 const raw = entry.geo_loc_name_country_calc;
                 const normalized = (raw || '').toString().trim().toLowerCase();
@@ -239,9 +239,9 @@ const DetailedResultsTable: React.FC<DetailedResultsTableProps> = ({
               },
             },
             {
-              Header: 'Metagenome',
-              accessor: 'organism',
-              Cell: ({ row }) => {
+              header: 'Metagenome',
+              accessorKey: 'organism',
+              cell: ({ row }) => {
                 const entry = row.original;
                 return (
                   <span style={{ fontSize: '14px' }}>

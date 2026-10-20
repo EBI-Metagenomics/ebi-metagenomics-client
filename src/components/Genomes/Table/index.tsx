@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Column } from 'react-table';
+import { ColumnDef as Column } from '@tanstack/react-table';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
@@ -47,75 +47,77 @@ const GenomesTable: React.FC = () => {
     url,
   });
 
-  const columns: Column<Genome>[] = React.useMemo(
+  const columns = React.useMemo<Column<Genome, any>[]>(
     () => [
       {
         id: 'accession',
-        Header: 'Accession',
-        accessor: 'accession' as const,
-        Cell: ({ cell }: { cell: { value: string } }) => (
-          <Link to={getGenomeUrl(cell.value, accession)}>{cell.value}</Link>
+        header: 'Accession',
+        accessorKey: 'accession',
+        cell: ({ cell }: { cell: { getValue: () => string } }) => (
+          <Link to={getGenomeUrl(cell.getValue(), accession)}>
+            {cell.getValue()}
+          </Link>
         ),
-      } as Column<Genome>,
+      },
       {
-        Header: 'Taxonomy',
-        accessor: 'taxon_lineage' as const,
-        Cell: ({ cell }: { cell: { value: string } }) => (
+        header: 'Taxonomy',
+        accessorKey: 'taxon_lineage',
+        cell: ({ cell }: { cell: { getValue: () => string } }) => (
           <>
-            {getSimpleTaxLineage(cell.value, true)}{' '}
-            <Tooltip content={cleanTaxLineage(cell.value, ' > ')}>
+            {getSimpleTaxLineage(cell.getValue(), true)}{' '}
+            <Tooltip content={cleanTaxLineage(cell.getValue(), ' > ')}>
               <sup>
                 <span className="icon icon-common icon-info" />
               </sup>
             </Tooltip>
           </>
         ),
-        disableSortBy: true,
-      } as Column<Genome>,
+        enableSorting: false,
+      },
       {
-        Header: 'Cluster size',
-        accessor: 'num_genomes_total' as const,
-      } as Column<Genome>,
+        header: 'Cluster size',
+        accessorKey: 'num_genomes_total',
+      },
       {
-        Header: 'Type',
-        accessor: 'type' as const,
-        disableSortBy: true,
-      } as Column<Genome>,
+        header: 'Type',
+        accessorKey: 'type',
+        enableSorting: false,
+      },
       {
-        Header: 'Completeness',
-        accessor: 'completeness' as const,
-        Cell: ({ cell }: { cell: { value: number } }) => (
-          <span>{cell.value.toFixed(2)}%</span>
+        header: 'Completeness',
+        accessorKey: 'completeness',
+        cell: ({ cell }: { cell: { getValue: () => number } }) => (
+          <span>{cell.getValue().toFixed(2)}%</span>
         ),
-      } as Column<Genome>,
+      },
       {
-        Header: 'Contamination',
-        accessor: 'contamination' as const,
-        Cell: ({ cell }: { cell: { value: number } }) => (
-          <span>{cell.value.toFixed(2)}%</span>
+        header: 'Contamination',
+        accessorKey: 'contamination',
+        cell: ({ cell }: { cell: { getValue: () => number } }) => (
+          <span>{cell.getValue().toFixed(2)}%</span>
         ),
-      } as Column<Genome>,
+      },
       {
-        Header: 'Length (MB)',
+        header: 'Length (MB)',
         id: 'length',
-        accessor: (genome) => (genome.length / 1000000).toFixed(2),
-      } as Column<Genome>,
+        accessorFn: (genome) => (genome.length / 1000000).toFixed(2),
+      },
       {
-        Header: 'N50',
-        disableSortBy: true,
-        accessor: 'n_50' as const,
-        Cell: ({ cell }: { cell: { value: number } }) => (
-          <span>{cell.value.toLocaleString()}</span>
+        header: 'N50',
+        enableSorting: false,
+        accessorKey: 'n_50',
+        cell: ({ cell }: { cell: { getValue: () => number } }) => (
+          <span>{cell.getValue().toLocaleString()}</span>
         ),
-      } as Column<Genome>,
+      },
       {
-        Header: 'GC%',
-        accessor: 'gc_content' as const,
-        disableSortBy: true,
-        Cell: ({ cell }: { cell: { value: number } }) => (
-          <span>{cell.value.toFixed(2)}%</span>
+        header: 'GC%',
+        accessorKey: 'gc_content',
+        enableSorting: false,
+        cell: ({ cell }: { cell: { getValue: () => number } }) => (
+          <span>{cell.getValue().toFixed(2)}%</span>
         ),
-      } as Column<Genome>,
+      },
     ],
     [accession]
   );

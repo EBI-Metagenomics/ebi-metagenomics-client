@@ -1,3 +1,4 @@
+import { publicImageUrl } from 'utils/assets';
 import React from 'react';
 import Publications, {
   MainPublicationForResource,
@@ -5,14 +6,14 @@ import Publications, {
 
 import './style.css';
 
-import emblImg from 'images/funding/embl_logo_colour.png';
-import bbsrcImg from 'images/funding/bbsrc-logo.png';
-import mrcImg from 'images/funding/mrc_logo.svg';
-import wellcomeImg from 'images/funding/wellcome_genome_logo.png';
-import leverhulmeImg from 'images/funding/leverhulme_logo.png';
-import microbeImg from 'images/funding/microbe_logo.webp';
-import b5dImg from 'images/funding/b5d_logo.webp';
-import blueRemediomicsImg from 'images/funding/Blueremediomics-_logo.png';
+const emblImg = publicImageUrl('funding/embl_logo_colour.png');
+const bbsrcImg = publicImageUrl('funding/bbsrc-logo.png');
+const mrcImg = publicImageUrl('funding/mrc_logo.svg');
+const wellcomeImg = publicImageUrl('funding/wellcome_genome_logo.png');
+const leverhulmeImg = publicImageUrl('funding/leverhulme_logo.png');
+const microbeImg = publicImageUrl('funding/microbe_logo.webp');
+const b5dImg = publicImageUrl('funding/b5d_logo.webp');
+const blueRemediomicsImg = publicImageUrl('funding/Blueremediomics-_logo.png');
 
 const AboutPage: React.FC = () => {
   return (

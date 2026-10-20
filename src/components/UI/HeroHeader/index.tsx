@@ -1,8 +1,10 @@
+import { publicImageUrl } from 'utils/assets';
 import React from 'react';
 import './style.css';
 
-import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
 import Link from 'components/UI/Link';
+
+const MGnifyLogo = publicImageUrl('mgnify_logo_reverse.svg');
 
 const HeroHeader: React.FC = () => {
   return (

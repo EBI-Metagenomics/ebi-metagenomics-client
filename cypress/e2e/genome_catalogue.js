@@ -56,6 +56,13 @@ describe('Genome catalogue page', () => {
       cy.get('.mg-table tbody tr').eq(1).find('td').eq(2).should('have.text', '20');
     });
 
+    it('shows taxonomy tooltips with React 19 refs', () => {
+      openAndWait('genome-catalogues/' + catalogueIdValid, 'Marine MAGs');
+      cy.get('.mg-table tbody tr').first().find('sup').trigger('mouseenter');
+      cy.get('[data-tippy-root]').should('be.visible').and('contain.text', 'Bacteria');
+      cy.get('.mg-table tbody tr').first().find('sup').trigger('mouseleave');
+    });
+
     it('Should be searchable', () => {
       openAndWait('genome-catalogues/' + catalogueIdValid, 'Marine MAGs');
       cy.fixture('apiv2/genomes/catalogue_mar1_genomes.json').then(({ items }) => {

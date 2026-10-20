@@ -1,17 +1,25 @@
+import { publicImageUrl } from 'utils/assets';
 import React from 'react';
-
-import AmpliconImgV5 from 'images/pipeline/version_5/pipeline_v5.0_amplicon.png';
-import AssemblyImgV5 from 'images/pipeline/version_5/pipeline_v5.0_assembly.png';
-import RawImgV5 from 'images/pipeline/version_5/pipeline_v5.0_raw.png';
-
-import AmpliconImgV6 from 'images/pipeline/version_6/pipeline_v6.0_amplicon.png';
-import AssemblyImgV6 from 'images/pipeline/version_6/pipeline_v6.0_assembly.png';
-import RawImgV6 from 'images/pipeline/version_6/pipeline_v6.0_raw.png';
 
 import './style.css';
 import Tabs from 'components/UI/Tabs';
 import RouteForHash from 'components/Nav/RouteForHash';
 import ExtLink from 'components/UI/ExtLink';
+
+const AmpliconImgV5 = publicImageUrl(
+  'pipeline/version_5/pipeline_v5.0_amplicon.png'
+);
+const AssemblyImgV5 = publicImageUrl(
+  'pipeline/version_5/pipeline_v5.0_assembly.png'
+);
+const RawImgV5 = publicImageUrl('pipeline/version_5/pipeline_v5.0_raw.png');
+const AmpliconImgV6 = publicImageUrl(
+  'pipeline/version_6/pipeline_v6.0_amplicon.png'
+);
+const AssemblyImgV6 = publicImageUrl(
+  'pipeline/version_6/pipeline_v6.0_assembly.png'
+);
+const RawImgV6 = publicImageUrl('pipeline/version_6/pipeline_v6.0_raw.png');
 
 const WorkflowHubLink: React.FC<{ name: string; link: string }> = ({
   name,

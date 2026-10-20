@@ -33,41 +33,43 @@ const BrowsePublications: React.FC = () => {
     () => [
       {
         id: 'pubmed_id',
-        Header: 'PMID',
-        accessor: 'pubmed_id',
-        Cell: ({ cell }) => (
-          <ExtLink href={`https://europepmc.org/abstract/MED/${cell.value}`}>
-            {cell.value}
+        header: 'PMID',
+        accessorKey: 'pubmed_id',
+        cell: ({ cell }) => (
+          <ExtLink
+            href={`https://europepmc.org/abstract/MED/${cell.getValue()}`}
+          >
+            {cell.getValue()}
           </ExtLink>
         ),
-        disableSortBy: true,
+        enableSorting: false,
       },
       {
-        Header: 'Publication title',
-        accessor: 'title',
-        disableSortBy: true,
+        header: 'Publication title',
+        accessorKey: 'title',
+        enableSorting: false,
       },
       // {
       //   Header: 'Studies',
       //   accessor: 'attributes.studies-count',
       // },
       {
-        Header: 'Year of pub.',
-        accessor: 'published_year',
+        header: 'Year of pub.',
+        accessorKey: 'published_year',
       },
       {
         id: 'link',
-        Header: 'Link',
-        accessor: 'pubmed_id',
-        Cell: ({ cell }) => (
+        header: 'Link',
+        accessorKey: 'pubmed_id',
+        cell: ({ cell }) => (
           <Link
-            to={`/publications/${cell.value}`}
+            to={`/publications/${cell.getValue()}`}
             className="vf-button vf-button--primary vf-button--sm "
           >
             View details
           </Link>
         ),
-        disableSortBy: true,
+        enableSorting: false,
       },
     ],
     []

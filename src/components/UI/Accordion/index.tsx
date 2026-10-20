@@ -1,9 +1,9 @@
-import React, { ReactChild, ReactChildren, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import './style.css';
 
 const AccordionElement: React.FC<{
   title: string;
-  children: ReactChild;
+  children: ReactNode;
 }> = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -38,14 +38,14 @@ const AccordionElement: React.FC<{
 };
 
 export const AccordionContentPanel: React.FC<{
-  children: ReactChild | ReactChild[];
+  children: ReactNode;
 }> = ({ children }) => {
   return <div className="accordion-content-panel">{children}</div>;
 };
 
 type AccordionListProps = {
   titles: string[];
-  children: ReactChild | ReactChild[] | ReactChildren | ReactChildren[];
+  children: ReactNode;
   nestedLevel?: number;
 };
 export const AccordionList: React.FC<AccordionListProps> = ({
@@ -61,7 +61,7 @@ export const AccordionList: React.FC<AccordionListProps> = ({
     >
       {titles.map((title, i) => (
         <AccordionElement title={title} key={i}>
-          {children[i]}
+          {React.Children.toArray(children)[i]}
         </AccordionElement>
       ))}
     </ul>
@@ -70,7 +70,7 @@ export const AccordionList: React.FC<AccordionListProps> = ({
 
 type AccordionProps = {
   titles: string[];
-  children: ReactChild | ReactChild[] | ReactChildren | ReactChildren[];
+  children: ReactNode;
 };
 const Accordion: React.FC<AccordionProps> = ({ titles, children }) => {
   return (

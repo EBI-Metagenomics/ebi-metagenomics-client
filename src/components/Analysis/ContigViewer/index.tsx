@@ -64,13 +64,13 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
   const assemblyId = analysisOverviewData?.assembly?.accession;
 
   const { crates, loading: loadingCrates } = useCrates(
-    `assemblies/${assemblyId}/extra-annotations`
+    assemblyId ? `assemblies/${assemblyId}/extra-annotations` : undefined
   );
 
   const { crate: offlineCrate } = useOfflineCrate();
 
   const antiSMASH = contig.attributes['has-antismash'];
-  const displayName = contig.attributes['contig-name'];
+  const displayName = contig.attributes['contig-name'] as string;
   const [igvBrowser, setIgvBrowser] = useState<Browser>(null);
 
   const [trackColorBys, setTrackColorBys] = useState({});
@@ -183,7 +183,7 @@ const Contig: React.FC<ContigProps> = ({ contig }) => {
         <div className="vf-grid vf-grid__col-3">
           {igvBrowser?.trackViews?.map((trackView) => {
             const trackId = trackView.track.id;
-            if (trackView.track.type !== 'annotation') return React.Fragment;
+            if (trackView.track.type !== 'annotation') return null;
 
             return (
               <AnnotationTrackColorPicker

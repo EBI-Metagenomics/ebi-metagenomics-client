@@ -4,6 +4,7 @@ import ContainmentFilter from 'components/Search/Filter/Containment';
 import LocalMultipleOptionFilter from 'components/Branchwater/LocalMultipleOptionFilter';
 import DetailedResultsTable from 'pages/Branchwater/DetailedResultsTable';
 import Plot from 'react-plotly.js';
+import type { BranchwaterFilters } from 'components/Branchwater/common/useBranchwaterResults';
 import InfoBanner from 'components/UI/InfoBanner';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import config from 'utils/config';
@@ -45,8 +46,8 @@ interface ResultsProps {
   // Table state
   isTableVisible: boolean;
   setIsTableVisible: (isVisible: boolean) => void;
-  filters: any;
-  onFilterChange: (field: string, value: string) => void;
+  filters: BranchwaterFilters;
+  onFilterChange: (field: keyof BranchwaterFilters, value: string) => void;
   sortField: string;
   sortDirection: 'asc' | 'desc';
   onSortChange: (field: string) => void;
@@ -69,7 +70,6 @@ interface ResultsProps {
 
   downloadCSV: () => void;
   queryParamPrefix?: string;
-  order: string;
 
   containmentHistogram: {
     binsDesc: string[];
@@ -405,9 +405,9 @@ const Results: React.FC<ResultsProps> = ({
                 },
               ]}
               layout={{
-                title: 'Containment Distribution',
-                xaxis: { title: 'Bins' },
-                yaxis: { title: 'Count' },
+                title: { text: 'Containment Distribution' },
+                xaxis: { title: { text: 'Bins' } },
+                yaxis: { title: { text: 'Count' } },
               }}
               style={{ width: '100%', height: '400px' }}
             />
@@ -424,9 +424,9 @@ const Results: React.FC<ResultsProps> = ({
                 },
               ]}
               layout={{
-                title: 'cANI Distribution',
-                xaxis: { title: 'Bins' },
-                yaxis: { title: 'Count' },
+                title: { text: 'cANI Distribution' },
+                xaxis: { title: { text: 'Bins' } },
+                yaxis: { title: { text: 'Count' } },
               }}
               style={{ width: '100%', height: '400px' }}
             />
@@ -497,9 +497,9 @@ const Results: React.FC<ResultsProps> = ({
                 ];
               })()}
               layout={{
-                title: 'cANI vs Containment',
-                xaxis: { title: 'Containment' },
-                yaxis: { title: 'cANI' },
+                title: { text: 'cANI vs Containment' },
+                xaxis: { title: { text: 'Containment' } },
+                yaxis: { title: { text: 'cANI' } },
                 showlegend: true,
               }}
               style={{ width: '100%', height: '450px' }}

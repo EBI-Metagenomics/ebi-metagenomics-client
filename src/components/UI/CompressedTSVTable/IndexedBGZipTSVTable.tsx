@@ -35,7 +35,9 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
     null
   );
   const estimatedPageSizeRef = useRef(0);
-  const firstPagePromiseRef = useRef<Promise<string[][]>>();
+  const firstPagePromiseRef = useRef<Promise<string[][]> | undefined>(
+    undefined
+  );
   const firstRowIsHeader = columns.length === 0;
 
   const readFirstPage = useCallback(() => {

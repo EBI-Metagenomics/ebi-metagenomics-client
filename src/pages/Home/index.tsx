@@ -266,15 +266,6 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Explore by data type and biome section */}
-      {/* TODO  Make counts appear in this section */}
-      {/* <section ref={exploreRef} className="vf-section reveal"> */}
-      {/*  <h2 className="vf-section__title">Explore by Data Type or Biome</h2> */}
-      {/*  <div className="search-by-modernized"> */}
-      {/*    <SearchBy /> */}
-      {/*  </div> */}
-      {/* </section> */}
-
       <section className="vf-section">
         <h2 className="vf-section__title">Spotlight & Articles</h2>
         <BlogExcerpts />

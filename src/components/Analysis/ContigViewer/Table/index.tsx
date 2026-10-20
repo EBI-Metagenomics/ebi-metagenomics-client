@@ -11,12 +11,11 @@ import ArrowForLink from 'components/UI/ArrowForLink';
 import CursorPagination from 'components/UI/EMGTable/CursorPagination';
 import TruncatedText from 'components/UI/TextTruncated';
 import useQueryParamState from 'hooks/queryParamState/useQueryParamState';
-import AnalysisContext from 'pages/Analysis/AnalysisContext';
+import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 import {
   useCrates,
   useOfflineCrate,
 } from 'hooks/genomeViewer/CrateStore/useCrates';
-import { MGnifyDatum } from 'hooks/data/useData';
 import { getAnnotationLabel } from 'utils/annotationStringStore';
 
 type ContigFeatureProps = {
@@ -163,10 +162,9 @@ const ContigsTable: React.FC = () => {
   const [, setContigsPageCursor] = useQueryParamState('contigsPageCursor');
 
   const { overviewData: analysisOverviewData } = useContext(AnalysisContext);
-  const assemblyId = (analysisOverviewData as MGnifyDatum | null)?.relationships
-    ?.assembly?.data?.id;
+  const assemblyId = analysisOverviewData?.assembly?.accession;
   const { crates, loading: loadingCrates } = useCrates(
-    `assemblies/${assemblyId}/extra-annotations`
+    assemblyId ? `assemblies/${assemblyId}/extra-annotations` : undefined
   );
   const { crate: offlineCrate, isUploading: loadingOfflineCrate } =
     useOfflineCrate();
@@ -183,37 +181,37 @@ const ContigsTable: React.FC = () => {
     const cols = [
       {
         id: 'contig_id',
-        Header: 'Name',
-        accessor: (contig) => contig.attributes['contig-id'],
-        Cell: ({ cell }) => (
+        header: 'Name',
+        accessorFn: (contig) => contig.attributes['contig-id'],
+        cell: ({ cell }) => (
           <button
             className="vf-button vf-button--link vf-button--sm contig-id-button"
             type="button"
-            onClick={() => setSelectedContig(cell.value)}
+            onClick={() => setSelectedContig(cell.getValue())}
           >
-            <TruncatedText text={cell.value} withTooltip maxLength={24} />
+            <TruncatedText text={cell.getValue()} withTooltip maxLength={24} />
             <ArrowForLink />
           </button>
         ),
       },
       {
         id: 'length',
-        Header: 'Length (bp)',
-        accessor: (contig) => contig.attributes.length,
-        Cell: ({ cell }) => <span>{cell.value}</span>,
+        header: 'Length (bp)',
+        accessorFn: (contig) => contig.attributes.length,
+        cell: ({ cell }) => <span>{cell.getValue()}</span>,
       },
       {
         id: 'coverage',
-        Header: 'Coverage',
-        accessor: (contig) => contig.attributes.coverage,
-        Cell: ({ cell }) => <span>{cell.value}</span>,
+        header: 'Coverage',
+        accessorFn: (contig) => contig.attributes.coverage,
+        cell: ({ cell }) => <span>{cell.getValue()}</span>,
       },
       {
         id: 'features',
-        Header: 'Features',
-        accessor: (contig) => contig.attributes,
-        Cell: ({ cell }) => {
-          const flags = Object.entries(cell.value)
+        header: 'Features',
+        accessorFn: (contig) => contig.attributes,
+        cell: ({ cell }) => {
+          const flags = Object.entries(cell.getValue())
             .filter(([key]) => key.startsWith('has-'))
             .map(([key, value]) => (
               <ContigFeatureFlag
@@ -229,14 +227,14 @@ const ContigsTable: React.FC = () => {
     if (allCrates) {
       cols.push({
         id: 'crates',
-        Header: 'RO-Crates',
-        accessor: (contig) => contig.attributes['contig-id'],
-        Cell: ({ cell }) => {
+        header: 'RO-Crates',
+        accessorFn: (contig) => contig.attributes['contig-id'],
+        cell: ({ cell }) => {
           const crateFlags = allCrates.map((crate) => (
             <ContigFeatureFlag
               key={crate.url}
               annotationType={crate.track?.label?.substring(0) ?? ''}
-              present={(crate?.asciigff?.indexOf(cell.value) || 0) >= 0}
+              present={(crate?.asciigff?.indexOf(cell.getValue()) || 0) >= 0}
             />
           ));
           return <div className="emg-contig-feature-flags">{crateFlags}</div>;

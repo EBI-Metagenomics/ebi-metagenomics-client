@@ -10,11 +10,11 @@ import UserContext from 'pages/Login/UserContext';
 import { MGnifyDatum } from 'hooks/data/useData';
 import JSZip from 'jszip';
 import { ROCrate } from 'ro-crate';
-import { Track } from 'utils/trackView';
+import { Track, CrateSchema } from 'utils/trackView';
 import { useEffectOnce } from 'react-use';
 import { fetchBlob } from 'utils/fetch';
 
-const extractSchema = async (crateZip: JSZip): Promise<object> => {
+const extractSchema = async (crateZip: JSZip): Promise<CrateSchema> => {
   const metadataJsonFile = crateZip.file('ro-crate-metadata.json');
   if (!metadataJsonFile) {
     // TODO: toast or equivalent
@@ -28,12 +28,12 @@ const extractSchema = async (crateZip: JSZip): Promise<object> => {
     array: true,
   });
 
-  return trackCrate.getNormalizedTree();
+  return trackCrate.getNormalizedTree(trackCrate.rootDataset);
 };
 
 const extractGffIfExists = async (
   crateZip: JSZip,
-  schema: ROCrate
+  schema: CrateSchema
 ): Promise<string | undefined> => {
   let filePointer;
   schema.hasPart.forEach((dataset) => {
@@ -54,7 +54,7 @@ const extractGffIfExists = async (
 };
 
 const getTrackProperties = async (
-  schema: ROCrate,
+  schema: CrateSchema,
   crateURL: string,
   gff?: string
 ): Promise<Track> => {
@@ -167,33 +167,46 @@ export interface Crates {
   loading: boolean;
 }
 
-export const useCrates = (associatedCratesUrl: string): Crates => {
+export const useCrates = (associatedCratesUrl?: string): Crates => {
   const [crates, setCrates] = useState<Crate[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { config } = useContext(UserContext);
 
-  const endpoint = associatedCratesUrl.startsWith(config.api)
-    ? associatedCratesUrl.replace(config.api, '')
+  const endpoint = associatedCratesUrl?.startsWith(config.api)
+    ? associatedCratesUrl.slice(config.api.length)
     : associatedCratesUrl;
 
-  const { data, loading } = useMGnifyData(endpoint);
+  const { data, loading, error } = useMGnifyData(endpoint);
 
   useEffect(() => {
     if (loading) return;
+    if (!endpoint || error || !Array.isArray(data?.data)) {
+      setCrates([]);
+      setIsLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setIsLoading(true);
     Promise.all(
       (data.data as MGnifyDatum[]).map((crateItem) =>
         getCrate(crateItem.links.self as string)
       )
     )
       .then((newCrates) => {
+        if (cancelled) return;
         setCrates(newCrates);
         setIsLoading(false);
       })
       .catch(() => {
+        if (cancelled) return;
+        setCrates([]);
         setIsLoading(false);
       });
-  }, [data, loading]);
+    return () => {
+      cancelled = true;
+    };
+  }, [data, loading, error, endpoint]);
 
   return {
     crates,

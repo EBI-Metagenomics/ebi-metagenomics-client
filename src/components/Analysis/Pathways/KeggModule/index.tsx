@@ -116,13 +116,13 @@ const KeggModuleTab: React.FC<KeggModuleProps> = ({
                 title: 'KEGG Modules',
                 labelsCol: {
                   id: 'module_accession',
-                  Header: 'Module identifier',
-                  accessor: (d) => d[barChartColumnIndexes.label],
+                  header: 'Module identifier',
+                  accessorFn: (d) => d[barChartColumnIndexes.label],
                 },
                 countsCol: {
                   id: 'completeness',
-                  Header: 'Completeness',
-                  accessor: (d) => Number(d[barChartColumnIndexes.count]),
+                  header: 'Completeness',
+                  accessorFn: (d) => Number(d[barChartColumnIndexes.count]),
                 },
               }}
             />

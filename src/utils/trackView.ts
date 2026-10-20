@@ -1,4 +1,12 @@
-import { ROCrate } from 'ro-crate';
+// Normalized JSON data stored in IndexedDB, rather than a ROCrate instance.
+export type CrateSchema = {
+  name: { '@value': string }[];
+  hasPart: {
+    '@id': string;
+    '@type': string[];
+    encodingFormat: { '@value': string }[];
+  }[];
+};
 
 export type Track = {
   name: string;
@@ -35,7 +43,7 @@ export type Track = {
   url?: string;
   indexed?: boolean;
   displayMode?: 'EXPANDED' | 'COLLAPSED' | 'SQUISHED';
-  crate?: ROCrate;
+  crate?: { schema: CrateSchema } | null;
   initialCrateURL?: string;
   label?: string;
 };

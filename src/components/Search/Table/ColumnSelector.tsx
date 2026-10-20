@@ -35,8 +35,8 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
         <h3>Available Columns</h3>
         <ul className="vf-list">
           {(
-            columns[pathname].columns as Array<{ id: string; Header: string }>
-          ).map(({ id, Header }) => (
+            columns[pathname].columns as Array<{ id: string; header: string }>
+          ).map(({ id, header }) => (
             <li key={id}>
               <input
                 type="checkbox"
@@ -48,7 +48,7 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
                 checked={selectedColumns[pathname][id]}
               />{' '}
               <label className="vf-form__label" htmlFor={`mg-checkbox-${id}`}>
-                <span className="mg-filter-checkbox-label">{Header}</span>
+                <span className="mg-filter-checkbox-label">{header}</span>
               </label>
             </li>
           ))}

@@ -43,50 +43,51 @@ const ContigsViewer: React.FC = () => {
   const gffColumns = useMemo(
     () => [
       {
-        Header: 'contig-id',
-        accessor: (row) => row[0],
+        header: 'contig-id',
+        accessorFn: (row) => row[0],
         id: 'contig-id',
       },
       {
-        Header: 'source',
-        accessor: (row) => row[1],
+        header: 'source',
+        accessorFn: (row) => row[1],
         id: 'source',
       },
       {
-        Header: 'feature',
-        accessor: (row) => row[2],
+        header: 'feature',
+        accessorFn: (row) => row[2],
         id: 'feature',
       },
       {
-        Header: 'start',
-        accessor: (row) => row[3],
+        header: 'start',
+        accessorFn: (row) => row[3],
         id: 'start',
       },
       {
-        Header: 'end',
-        accessor: (row) => row[4],
+        header: 'end',
+        accessorFn: (row) => row[4],
         id: 'end',
       },
       {
-        Header: 'score',
-        accessor: (row) => row[5],
+        header: 'score',
+        accessorFn: (row) => row[5],
         id: 'score',
       },
       {
-        Header: 'strand',
-        accessor: (row) => row[6],
+        header: 'strand',
+        accessorFn: (row) => row[6],
         id: 'strand',
       },
       {
-        Header: 'frame',
-        accessor: (row) => row[7],
+        header: 'frame',
+        accessorFn: (row) => row[7],
         id: 'frame',
       },
       {
-        Header: 'attributes',
-        accessor: (row) => row[8],
+        header: 'attributes',
+        accessorFn: (row) => row[8],
         id: 'attributes',
-        Cell: ({ value }) => {
+        cell: ({ getValue }) => {
+          const value = getValue();
           if (!value) return null;
           return (
             <div className="vf-stack vf-stack--200 gff-attributes">

@@ -1,11 +1,13 @@
 import React from 'react';
 import './style.css';
 
-const OutterCard: React.FC<{
-  className?: string;
-  image?: string;
-  imageAltText?: string;
-}> = ({ children, className = '', image = null, imageAltText = '' }) => {
+const OutterCard: React.FC<
+  React.PropsWithChildren<{
+    className?: string;
+    image?: string;
+    imageAltText?: string;
+  }>
+> = ({ children, className = '', image = null, imageAltText = '' }) => {
   return (
     <article
       className={`vf-card vf-card--brand vf-card--bordered ${className}`}

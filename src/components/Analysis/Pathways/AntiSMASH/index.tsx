@@ -92,13 +92,13 @@ const AntiSmashTab: React.FC<AntiSmashProps> = ({ isLegacy, legacyFile }) => {
                 title: 'antiSMASH Clusters',
                 labelsCol: {
                   id: 'cluster_type',
-                  Header: 'Cluster type',
-                  accessor: (d) => d[1],
+                  header: 'Cluster type',
+                  accessorFn: (d) => d[1],
                 },
                 countsCol: {
                   id: 'count',
-                  Header: 'Count',
-                  accessor: (d) => Number(d[2]),
+                  header: 'Count',
+                  accessorFn: (d) => Number(d[2]),
                 },
               }}
             />

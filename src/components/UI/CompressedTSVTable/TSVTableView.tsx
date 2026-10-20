@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { filesize } from 'filesize';
-import type { Column } from 'react-table';
+import type { ColumnDef as Column } from '@tanstack/react-table';
 
 import BarChartForTable from 'components/Analysis/BarChartForTable';
 import EMGTable from 'components/UI/EMGTable';
@@ -17,11 +17,14 @@ const columnsFromHeader = (
   headerRow: string[],
   columnHeaders: string[] | undefined,
   searchTerm: string
-): Column[] =>
+): Column<any, any>[] =>
   headerRow.map((header, columnIndex) => ({
-    Header: getAnnotationLabel(columnHeaders?.[columnIndex] ?? header),
-    accessor: (row) => row[columnIndex],
-    Cell: ({ value }) => <TSVCell value={value} searchTerm={searchTerm} />,
+    header: getAnnotationLabel(columnHeaders?.[columnIndex] ?? header),
+    accessorFn: (row) => row[columnIndex],
+    cell: ({ getValue }) => {
+      const value = getValue();
+      return <TSVCell value={value} searchTerm={searchTerm} />;
+    },
     id: `col_${columnIndex}`,
   }));
 
@@ -50,13 +53,14 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
       return columnsFromHeader(headerRow ?? [], columnHeaders, searchTerm);
     }
     return columns.map((column) =>
-      'Cell' in column && column.Cell
+      'cell' in column && column.cell
         ? column
         : {
             ...column,
-            Cell: ({ value }) => (
-              <TSVCell value={value} searchTerm={searchTerm} />
-            ),
+            cell: ({ getValue }) => {
+              const value = getValue();
+              return <TSVCell value={value} searchTerm={searchTerm} />;
+            },
           }
     );
   }, [columnHeaders, columns, headerRow, searchTerm]);

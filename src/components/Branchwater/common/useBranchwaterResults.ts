@@ -80,12 +80,8 @@ export default function useBranchwaterResults<
   pageSize = 25,
   filters,
 }: UseBranchwaterResultsArgs<T>): UseBranchwaterResultsReturn<T> {
-  const [pageQP] = useQueryParamState(
-    camelCase(`${namespace} page`),
-    1,
-    Number
-  );
-  const [orderQP] = useQueryParamState(camelCase(`${namespace} order`), '');
+  const [pageQP] = useQueryParamState<number>(camelCase(`${namespace} page`));
+  const [orderQP] = useQueryParamState<string>(camelCase(`${namespace} order`));
 
   const filteredResults = useMemo(() => {
     const f = filters || ({} as BranchwaterFilters);

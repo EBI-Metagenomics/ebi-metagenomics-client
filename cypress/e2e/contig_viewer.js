@@ -22,8 +22,8 @@ describe('Contig viewer and indexer on bgzipped gffs', () => {
       .should('be.visible');
     cy.contains('File download required').should('be.visible');
     cy.contains('button', 'View & search contigs').click();
-    cy.get('.Toastify__toast-body').should('contain', 'Downloading');
-    cy.get('.Toastify__toast-body').should('contain', 'Indexed 6 assembly contigs');
+    cy.get('.Toastify__toast').should('contain', 'Downloading');
+    cy.get('.Toastify__toast').should('contain', 'Indexed 6 assembly contigs');
     cy.contains('ERZ101_1')
       .should('be.visible');
     cy.contains('ERZ101_6')
@@ -106,7 +106,7 @@ describe('Contig viewer and indexer on bgzipped gffs', () => {
     cy.get('#searchitem-interpro_').type('1');
     cy.get('.vf-table__body > .vf-table__row').should('have.length', 0);
     cy.contains('button', 'Remove contig index').click();
-    cy.get('.Toastify__toast-body').should('contain', 'Contig index removed');
+    cy.get('.Toastify__toast').should('contain', 'Contig index removed');
   });
 
   it('Should load the bgzipped GFF preview only once', () => {

@@ -98,7 +98,7 @@ const SearchMatches: React.FC<{
   ]);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
-  const request = React.useRef<AbortController>();
+  const request = React.useRef<AbortController | undefined>(undefined);
   const contigMatch = searchRegExp(term, wholeWord)?.test(contig.contigName);
   const hasFeatureMatch = useMemo(
     () =>
@@ -366,7 +366,7 @@ const ContigSearch: React.FC<{
   const [existingIndexChecked, setExistingIndexChecked] =
     useState<boolean>(false);
   const [isIndexing, setIsIndexing] = useState<boolean>(false);
-  const activeImport = React.useRef<() => void>();
+  const activeImport = React.useRef<(() => void) | undefined>(undefined);
   useEffect(() => () => activeImport.current?.(), []);
   const [isIndexed, setIsIndexed] = useState<boolean>(false);
   const [isStale, setIsStale] = useState<boolean>(false);
@@ -613,29 +613,29 @@ const ContigSearch: React.FC<{
   const contigsColumns = useMemo(
     () => [
       {
-        Header: 'Contig ID',
-        accessor: (row) => row.contigName,
+        header: 'Contig ID',
+        accessorFn: (row) => row.contigName,
         id: 'contig-id',
-        Cell: ({ cell }) => (
+        cell: ({ cell }) => (
           <button
             className="vf-button vf-button--link vf-button--sm contig-id-button"
             type="button"
-            onClick={() => navToContig(cell.value)}
+            onClick={() => navToContig(cell.getValue())}
           >
-            {cell.value}
+            {cell.getValue()}
           </button>
         ),
       },
       {
-        Header: 'Length (bp)',
-        accessor: (row) => row.length,
+        header: 'Length (bp)',
+        accessorFn: (row) => row.length,
         id: 'length',
       },
       {
-        Header: 'Features',
-        accessor: (row) => row.annotationsPresence,
+        header: 'Features',
+        accessorFn: (row) => row.annotationsPresence,
         id: 'features',
-        Cell: ({ cell }) => {
+        cell: ({ cell }) => {
           const flags = visibleFilterConfig.map(
             ({ attribute, featureDisplay }) => {
               const annotKeyInIndex = PRESENCE_FIELD_BY_ATTRIBUTE[attribute];
@@ -643,7 +643,7 @@ const ContigSearch: React.FC<{
                 <ContigFeatureFlag
                   key={annotKeyInIndex}
                   annotationType={featureDisplay}
-                  present={cell.value?.[annotKeyInIndex] > 0}
+                  present={cell.getValue()?.[annotKeyInIndex] > 0}
                 />
               );
             }
@@ -654,12 +654,11 @@ const ContigSearch: React.FC<{
       ...((allAnnotationsSearch || '').trim()
         ? [
             {
-              Header: 'Search match',
-              accessor: (row: SearchableContig) => row.globalSearchMatch,
+              header: 'Search match',
+              accessorFn: (row: SearchableContig) => row.globalSearchMatch,
               id: 'global-search-match',
-              isFullWidth: true,
-              className: 'break-anywhere',
-              Cell: ({ row }) => (
+
+              cell: ({ row }) => (
                 <SearchMatches
                   key={`${row.original.contigName}:${allAnnotationsSearch}:${wholeWord}`}
                   contig={row.original}
@@ -667,6 +666,7 @@ const ContigSearch: React.FC<{
                   wholeWord={wholeWord}
                 />
               ),
+              meta: { isFullWidth: true, className: 'break-anywhere' },
             },
           ]
         : []),

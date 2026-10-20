@@ -22,13 +22,78 @@ const download = (alias, file_type, extra = {}) => ({
 });
 
 describe('Genome browser download compatibility', () => {
+  it('opens, filters, clears, and toggles tracks in the track selector', () => {
+    const refName = accession + '_1';
+    const fasta = download(accession + '.fna', 'fasta');
+    const gff = download(accession + '.gff', 'gff');
+    cy.intercept(
+      'GET',
+      fasta.url,
+      '>' + refName + '\n' + 'N'.repeat(10000) + '\n'
+    );
+    cy.intercept(
+      'GET',
+      gff.url,
+      refName + '\ttest\tCDS\t100\t200\t.\t+\t0\tID=gene_1;product=test;\n'
+    );
+    cy.intercept('HEAD', gff.url, { headers: { 'content-length': '100' } });
+    cy.fixture('apiv2/genomes/genomeDetail_MGYG000000001.json').then(
+      (genome) => {
+        cy.intercept('GET', config.api_v2 + 'genomes/' + accession, {
+          ...genome,
+          downloads: [fasta, gff],
+        });
+      }
+    );
+    cy.intercept(
+      'GET',
+      config.api_v2 + 'genomes/' + accession + '/annotations',
+      {
+        fixture: 'apiv2/genomes/genomeAnnotations_MGYG000000001.json',
+      }
+    );
+    openPage('genomes/' + accession + '#genome-browser');
+    waitForPageLoad('Genome ' + accession);
+    cy.get('[data-testid="refLabel-' + refName + '"]').should('be.visible');
+    cy.get('[data-testid="view_menu_icon"]').click();
+    cy.contains('[role="menuitem"]', 'Open track selector').click();
+    cy.get('[data-testid="hierarchical_track_selector"]').should('be.visible');
+    cy.contains('label', 'Filter tracks')
+      .invoke('attr', 'for')
+      .then((id) => {
+        cy.get('input[id="' + id + '"]').as('trackFilter');
+      });
+    cy.get('@trackFilter').type('absent_track');
+    cy.contains('label', gff.alias).should('not.exist');
+    cy.get('@trackFilter').parent().find('button').click();
+    cy.get('@trackFilter').should('have.value', '');
+    cy.contains('label', gff.alias)
+      .should('be.visible')
+      .find('input[type="checkbox"]')
+      .as('trackCheckbox');
+    cy.get('@trackCheckbox')
+      .should('be.checked')
+      .uncheck()
+      .should('not.be.checked');
+    cy.get('@trackCheckbox').check().should('be.checked');
+    cy.get('@trackFilter').type(accession);
+    cy.contains('label', gff.alias).should('be.visible');
+    cy.get('@trackFilter').type('{esc}');
+    cy.get('[data-testid="hierarchical_track_selector"]').should('not.exist');
+    cy.get('[data-testid="view_menu_icon"]').click();
+    cy.contains('[role="menuitem"]', 'Open track selector').click();
+    cy.get('[data-testid="hierarchical_track_selector"]').should('be.visible');
+  });
+
   it('labels parsed GFF features with their ID and gene name', () => {
     const jexl = new Jexl();
     jexl.addFunction('get', (feature, key) => feature[key]);
     const track = createGffTrack(download('labels.gff', 'gff'), accession);
     const display = track.displays[0];
     expect(display.renderer.type).to.equal('CanvasFeatureRenderer');
-    const expression = jexl.compile(display.renderer.labels.name.slice('jexl:'.length));
+    const expression = jexl.compile(
+      display.renderer.labels.name.slice('jexl:'.length)
+    );
     const id = 'MGYG000299377_00597';
     [
       [`ID=${id};gene=blh;Name=other;`, `${id} (blh)`],
@@ -84,11 +149,9 @@ describe('Genome browser download compatibility', () => {
     );
     openPage(`genomes/${realAccession}#genome-browser`);
     waitForPageLoad(`Genome ${realAccession}`);
+    cy.get(`[data-testid="refLabel-${realAccession}_1"]`).should('be.visible');
     cy.contains('button', 'View & search contigs').click();
-    cy.get('.Toastify__toast-body').should(
-      'contain',
-      'Indexed 3 genome contigs'
-    );
+    cy.get('.Toastify__toast').should('contain', 'Indexed 3 genome contigs');
     cy.get('.vf-table__body > .vf-table__row').should('have.length', 3);
     cy.get('.vf-table__body').should('contain.text', `${realAccession}_1`);
   });
@@ -157,10 +220,7 @@ describe('Genome browser download compatibility', () => {
         'not.exist'
       );
       cy.contains('button', 'View & search contigs').click();
-      cy.get('.Toastify__toast-body').should(
-        'contain',
-        'Indexed 6 genome contigs'
-      );
+      cy.get('.Toastify__toast').should('contain', 'Indexed 6 genome contigs');
       cy.get('.vf-table__body')
         .contains('ERZ101_1')
         .closest('tr')

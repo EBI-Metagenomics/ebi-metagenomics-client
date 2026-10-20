@@ -23,21 +23,21 @@ const BrowseSuperStudies: React.FC = () => {
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Title',
-        accessor: 'title',
-        disableSortBy: true,
-        Cell: ({ cell }) => (
+        header: 'Title',
+        accessorKey: 'title',
+        enableSorting: false,
+        cell: ({ cell }) => (
           <Link to={`/super-studies/${cell.row.original.slug}`}>
-            {cell.value}
+            {cell.getValue()}
           </Link>
         ),
       },
       {
-        Header: 'Description',
-        accessor: 'description',
-        disableSortBy: true,
-        Cell: ({ cell }) => (
-          <ReactMarkdown>{cell.value as string}</ReactMarkdown>
+        header: 'Description',
+        accessorKey: 'description',
+        enableSorting: false,
+        cell: ({ cell }) => (
+          <ReactMarkdown>{cell.getValue() as string}</ReactMarkdown>
         ),
       },
     ],

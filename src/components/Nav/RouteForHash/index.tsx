@@ -5,7 +5,7 @@ type PropsType = {
   hash: string;
   isDefault?: boolean;
 };
-const RouteForHash: React.FC<PropsType> = ({
+const RouteForHash: React.FC<React.PropsWithChildren<PropsType>> = ({
   hash,
   isDefault = false,
   children,
