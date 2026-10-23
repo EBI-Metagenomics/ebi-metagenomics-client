@@ -56,8 +56,28 @@
 }
 
 .tsv-table__scroll {
+  container-type: inline-size;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Give the banner the full header width, with text pinned to the viewport. */
+.tsv-table__scroll .mg-table--empty .mg-loading-overlay-container {
+  width: max-content;
+  min-width: 100%;
+}
+
+.tsv-table__scroll .mg-table-empty-state {
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+.tsv-table__scroll .mg-table-empty-state .vf-box__heading {
+  position: sticky;
+  left: 1rem;
+  width: fit-content;
+  max-width: calc(100cqi - 2rem);
+  overflow-wrap: anywhere;
 }
 
 .tsv-table .mg-table {

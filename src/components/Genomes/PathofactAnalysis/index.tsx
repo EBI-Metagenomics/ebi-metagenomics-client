@@ -17,7 +17,10 @@ const GenomePathofactAnalysis: React.FC<GenomePathofactAnalysisProps> = ({
         <p className="vf-text text-body--1">{download.long_description}</p>
       </div>
       <div className="p-4">
-        <CompressedTSVTable download={download} />
+        <CompressedTSVTable
+          download={download}
+          emptyStateMessage="The PathoFact2 annotation of this genome produced no results"
+        />
         <p className="text-sm mt-4">
           Download this file to view the complete PathoFact results for this
           genome.

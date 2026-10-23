@@ -34,10 +34,12 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
   chartData,
   columns = [],
   data,
+  emptyStateMessage = 'The file has no content',
   expectedPageSize,
   fileUrl,
   headerRow,
   isLoading,
+  isFileEmpty,
   isSearching,
   onClearSearch,
   onSearch,
@@ -221,6 +223,7 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
           <EMGTable
             cols={tableColumns}
             data={data}
+            emptyStateMessage={isFileEmpty ? emptyStateMessage : undefined}
             showPagination
             expectedPageSize={expectedPageSize}
           />

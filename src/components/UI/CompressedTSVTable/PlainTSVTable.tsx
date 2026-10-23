@@ -34,6 +34,7 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
   columnHeaders,
   columns = [],
   download,
+  emptyStateMessage,
   pageNum,
   setPageNum,
 }) => {
@@ -148,10 +149,12 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
       columnHeaders={columnHeaders}
       columns={columns}
       data={pageData}
+      emptyStateMessage={emptyStateMessage}
       expectedPageSize={PAGE_SIZE}
       fileUrl={download.url}
       headerRow={headerRow}
       isLoading={rows === null}
+      isFileEmpty={rows !== null && dataRows.length === 0}
       isSearching={isSearching}
       onClearSearch={() => {
         setSearchResults(null);
