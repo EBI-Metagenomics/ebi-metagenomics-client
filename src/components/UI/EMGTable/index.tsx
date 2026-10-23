@@ -139,6 +139,7 @@ type EMGTableProps<T extends object> = {
   clientSidePagination?: boolean;
   horizontalScroll?: boolean;
   toolbarOutsideTable?: boolean;
+  emptyStateMessage?: string;
 };
 
 const EMGTable = <T extends object>({
@@ -163,6 +164,7 @@ const EMGTable = <T extends object>({
   clientSidePagination = false,
   horizontalScroll = false,
   toolbarOutsideTable = false,
+  emptyStateMessage = 'No matching data',
 }: EMGTableProps<T>) => {
   const [page, setPage] = useQueryParamState<number>(
     camelCase(`${namespace} page`)
@@ -323,7 +325,12 @@ const EMGTable = <T extends object>({
 
   if (loading && !isStale) return <Loading size="small" />;
   return (
-    <section data-cy={dataCy}>
+    <section
+      data-cy={dataCy}
+      className={
+        !loading && !rowsToRender.length ? 'mg-table--empty' : undefined
+      }
+    >
       {(horizontalScroll || toolbarOutsideTable) && toolbar}
       <LoadingOverlay loading={loading && isStale}>
         <div className={horizontalScroll ? 'mg-table-scroll-x' : undefined}>
@@ -458,15 +465,15 @@ const EMGTable = <T extends object>({
         </div>
         {!loading && !rowsToRender.length && (
           <div
-            className="vf-box vf-box-theme--primary vf-box--easy"
+            className="vf-box vf-box-theme--primary vf-box--easy mg-table-empty-state"
             style={{
               backgroundColor: '#d1e3f6',
             }}
             data-cy="no-matching-data"
           >
             <h3 className="vf-box__heading">
-              <span className="icon icon-common icon-exclamation-triangle" /> No
-              matching data
+              <span className="icon icon-common icon-exclamation-triangle" />{' '}
+              {emptyStateMessage}
             </h3>
           </div>
         )}

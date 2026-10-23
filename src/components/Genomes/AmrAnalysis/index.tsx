@@ -17,6 +17,7 @@ const GenomeAmrAnalysis: React.FC<GenomeAmrAnalysisProps> = ({ download }) => (
       <div className="p-4">
         <CompressedTSVTable
           download={download}
+          emptyStateMessage="The AMR annotation of this genome produced no results."
           barChartSpec={{
             title: 'AMR classes',
             subtitle: 'Number of AMRFinderPlus records in each Class',
