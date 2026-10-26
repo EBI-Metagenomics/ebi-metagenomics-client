@@ -26,8 +26,7 @@
       "pages/*": ["src/pages/*"],
       "styles/*": ["src/styles/*"],
       "utils/*": ["src/utils/*"],
-      "hooks/*": ["src/hooks/*"],
-      "data/*": ["public/data/*"]
+      "hooks/*": ["src/hooks/*"]
     },
     "allowSyntheticDefaultImports": true
   },
