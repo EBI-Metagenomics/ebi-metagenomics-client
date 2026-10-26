@@ -266,7 +266,7 @@ export class BGZipService {
       );
 
     console.debug(`Lines ${lines.length}`);
-    if (lines.length === 0 && pageNum === 1) {
+    if (lines.length === 0 && pageNum === 1 && !this.firstPageIsOnlyComments) {
       this.firstPageIsOnlyComments = true;
       console.log(
         'First page is only comments, so treating block 2 as page 1.'

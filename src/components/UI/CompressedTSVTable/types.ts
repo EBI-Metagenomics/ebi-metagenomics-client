@@ -13,6 +13,7 @@ export interface TSVTableProps {
   columns?: Column<any, any>[];
   columnHeaders?: string[];
   download: Download;
+  emptyStateMessage?: string;
   barChartSpec?: BarChartSpec;
 }
 
@@ -28,6 +29,7 @@ export interface TSVTableViewProps extends Omit<TSVTableProps, 'download'> {
   fileUrl: string;
   headerRow?: string[];
   isLoading: boolean;
+  isFileEmpty: boolean;
   isSearching: boolean;
   onClearSearch: () => void;
   onSearch: (searchTerm: string, wholeWord: boolean) => Promise<void>;
