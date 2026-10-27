@@ -9,6 +9,7 @@ import ContigSearch, {
 import { LGVProvider } from 'components/Analysis/ContigViewer/V2ContigViewContext';
 import Loading from 'components/UI/Loading';
 import { findGenomeFasta, findGenomeGff, isGff } from './downloads';
+import useGenomeBrowserLocation from './useGenomeBrowserLocation';
 
 const genomeFilterConfig: ContigSearchFilterConfig[] = [
   {
@@ -161,6 +162,7 @@ const GenomeContigViewer: React.FC<GenomeContigViewerProps> = ({
   accession,
   downloads,
 }) => {
+  const initialFeature = useGenomeBrowserLocation();
   const fasta = useMemo(
     () => withDownloadAlias(findGenomeFasta(downloads, accession)),
     [downloads, accession]
@@ -181,7 +183,12 @@ const GenomeContigViewer: React.FC<GenomeContigViewerProps> = ({
   if (!gff) return <p>No annotations available</p>;
 
   return (
-    <LGVProvider fasta={fasta} gff={gff} additionalGffs={additionalGffs}>
+    <LGVProvider
+      fasta={fasta}
+      gff={gff}
+      additionalGffs={additionalGffs}
+      initialFeature={initialFeature}
+    >
       <div className="vf-stack vf-stack--400">
         <ContigBrowser />
         <ContigSearch
