@@ -22,6 +22,70 @@ const download = (alias, file_type, extra = {}) => ({
 });
 
 describe('Genome browser download compatibility', () => {
+  it('opens a legacy locus without indexing and preserves it on reload', () => {
+    const refName = `${accession}_22`;
+    const fasta = download(`${accession}.fna`, 'fasta');
+    const gff = download(`${accession}.gff`, 'gff');
+    cy.intercept(
+      'GET',
+      fasta.url,
+      `>${accession}_1\n${'N'.repeat(10000)}\n>${refName}\n${'N'.repeat(10000)}\n`
+    );
+    cy.intercept(
+      'GET',
+      gff.url,
+      `${refName}\ttest\tCDS\t1742\t2016\t.\t+\t0\tID=gene_1;\n`
+    );
+    cy.intercept('HEAD', gff.url, { headers: { 'content-length': '100' } });
+    cy.fixture('apiv2/genomes/genomeDetail_MGYG000000001.json').then(
+      (genome) => {
+        cy.intercept('GET', `${config.api_v2}genomes/${accession}`, {
+          ...genome,
+          downloads: [fasta, gff],
+        });
+      }
+    );
+    cy.intercept('GET', `${config.api_v2}genomes/${accession}/annotations`, {
+      fixture: 'apiv2/genomes/genomeAnnotations_MGYG000000001.json',
+    });
+    openPage(
+      `genomes/${accession}?contig_id=${refName}&start=1742&end=2016&functional-annotation=ncrna&keep=value#genome-browser`
+    );
+    const expectLocation = () => {
+      cy.location('hash').should('equal', '#genome-browser');
+      cy.location('search').should((search) => {
+        const params = new URLSearchParams(search);
+        expect(params.get('genomeBrowserLocation')).to.equal(`${refName}:1742-2016`);
+        expect(params.get('keep')).to.equal('value');
+        ['contig_id', 'start', 'end', 'functional-annotation'].forEach((param) => {
+          expect(params.has(param)).to.equal(false);
+        });
+      });
+      cy.get(`[data-testid="refLabel-${refName}"]`).should('be.visible');
+      cy.get('[data-resizer="true"]')
+        .filter(':has([data-testid^="refLabel-"])')
+        .should(($scalebar) => {
+          const bounds = $scalebar[0].getBoundingClientRect();
+          const ticks = [...$scalebar[0].querySelectorAll('div')]
+            .filter((element) => {
+              const rect = element.getBoundingClientRect();
+              return !element.children.length && /^[\d,]+$/.test(element.textContent) && rect.left >= bounds.left && rect.right <= bounds.right;
+            })
+            .map((element) => Number(element.textContent.replaceAll(',', '')));
+          expect(ticks.length).to.be.greaterThan(0);
+          expect(Math.min(...ticks)).to.be.greaterThan(1500);
+          expect(Math.max(...ticks)).to.be.lessThan(2200);
+        });
+      cy.contains('button', 'View & search contigs').should('be.visible');
+      cy.window().then((win) => win.eval(
+        "import('/metagenomics/src/utils/locallyIndexedGff.ts').then(({ db }) => db.contigs.count())"
+      )).should('equal', 0);
+    };
+    expectLocation();
+    cy.reload();
+    expectLocation();
+  });
+
   it('opens, filters, clears, and toggles tracks in the track selector', () => {
     const refName = accession + '_1';
     const fasta = download(accession + '.fna', 'fasta');
