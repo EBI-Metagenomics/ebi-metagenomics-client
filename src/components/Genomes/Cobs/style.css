@@ -1,4 +1,8 @@
-.vf-content textarea-sequence > div > div.ql-editor p {
+.mg-sequence {
+  width: 100%;
+}
+
+.vf-content nightingale-textarea-sequence > div > div.ql-editor p {
   font-family: 'Courier New', Courier, monospace;
   letter-spacing: 0.1rem;
   font-size: 0.9em;
