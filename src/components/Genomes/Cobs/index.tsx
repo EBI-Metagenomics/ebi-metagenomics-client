@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import 'textarea-sequence/dist/textarea-sequence';
+import '@nightingale-elements/nightingale-textarea-sequence';
+import type TextareaSequence from '@nightingale-elements/nightingale-textarea-sequence';
+import 'quill/dist/quill.core.css';
 
 import Tooltip from 'components/UI/Tooltip';
 
@@ -24,30 +26,35 @@ type CobsProps = {
 const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
   const { config } = useContext(UserContext);
   const isSingleCatalogue = !!catalogueID;
-  const textareaSeq = useRef<TextareaSequenceElement>(null);
+  const textareaSeq = useRef<TextareaSequence>(null);
   const [shouldSearch, setShouldSearch] = useState(false);
   const [kmers, setKmers] = useState(KMERS_DEFAULT);
-  const [errors, setErrors] = useState<{
-    tooShort?: boolean;
-    multipleSequences?: boolean;
-    hasInvalidCharacters?: boolean;
-  }>({});
-  const [valid, setValid] = useState(false);
+  const [errors, setErrors] = useState<Partial<TextareaSequence['errors']>>({
+    tooShort: true,
+  });
+  const valid = !Object.values(errors).some(Boolean);
   useEffect(() => {
-    textareaSeq.current?.addEventListener('error-change', (e) => {
-      setErrors((e as any).detail.errors);
-      setValid((textareaSeq.current as any)?.quill.valid);
+    const element = textareaSeq.current;
+    if (!element) return;
+
+    const updateErrors = () => setErrors(element.errors);
+    element.addEventListener('error-change', updateErrors);
+    element.updateComplete.then(() => {
+      element.format(true);
+      updateErrors();
     });
+
+    return () => element.removeEventListener('error-change', updateErrors);
   }, []);
 
   const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([]);
 
   const setSequence = (seq: string): void => {
-    textareaSeq.current?.quill.setText(seq);
+    textareaSeq.current?.quill?.setText(seq);
   };
 
   const getAccessionFromCataloguesFirstGenome = async (): Promise<string> => {
-    const genomeCatalogueSlug = catalogueID || selectedCatalogues[1];
+    const genomeCatalogueSlug = catalogueID || selectedCatalogues[0];
     const url = `${config.api_v2}genomes/catalogues/${genomeCatalogueSlug}/genomes?page=1&ordering=accession&page_size=1`;
     try {
       const response = await axios.get(url);
@@ -81,7 +88,7 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
     const firstFiftySequenceChars = await getSequenceCharsFromFastaFile(
       fastaUrl
     );
-    textareaSeq.current?.quill.setText(firstFiftySequenceChars);
+    setSequence(firstFiftySequenceChars);
   };
 
   const handleExampleClick = (): void => {
@@ -200,15 +207,15 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
         <section className="vf-stack vf-stack--200">
           <div />
           <div>
-            <textarea-sequence
+            <nightingale-textarea-sequence
               id="textareaID"
               alphabet="dna"
-              height="10em"
-              min-sequence-length={MIN_BASES}
-              single="true"
+              inner-style="height: 10em"
+              minSequenceLength={MIN_BASES}
+              single={true}
               ref={textareaSeq}
               className="mg-sequence"
-              disable-header-check="true"
+              disableHeaderCheck={true}
             />
           </div>
           <div className="row">
