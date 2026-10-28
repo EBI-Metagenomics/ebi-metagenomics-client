@@ -10,6 +10,12 @@ import SourmashResultsTable from './Table';
 
 const INTERVAL_TIME = 1000;
 const COUNT_TO = 5;
+const TERMINAL_STATUSES = [
+  'SUCCESS',
+  'PARTIAL_SUCCESS',
+  'NO_RESULTS',
+  'FAILED',
+];
 type SourmashResultsProps = {
   addToStorage: (jobID: string) => void;
 };
@@ -34,13 +40,12 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({ addToStorage }) => {
   );
   useEffect(() => {
     if (!loading && !error && data) {
-      const results = data?.data as Record<string, Array<{ status: string }>>;
+      const results = data.data as {
+        status: string;
+        signatures: Array<{ status: string }>;
+      };
       // Got the status of the job
-      if (
-        !(results?.signatures || []).some((s) =>
-          ['PENDING', 'IN_QUEUE', 'RUNNING'].includes(s.status)
-        )
-      ) {
+      if (TERMINAL_STATUSES.includes(results.status)) {
         setJobRetrieved(true);
         addToStorage(jobId);
       }
@@ -79,7 +84,7 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({ addToStorage }) => {
             <dd>{jobId}</dd>
             <dt>Status</dt>
             <dd>
-              <span>{jobRetrieved ? 'FINISH' : 'Retrieving'}</span>{' '}
+              <span>{job?.status || 'Retrieving'}</span>{' '}
               {loading && <Loading size="small" />}{' '}
               {!jobRetrieved && !loading && (
                 <span>Checking status in {COUNT_TO - (count % COUNT_TO)}</span>
@@ -100,7 +105,7 @@ const SourmashResults: React.FC<SourmashResultsProps> = ({ addToStorage }) => {
                   </a>
                 )}
             </dd>
-            {job && (
+            {job && (jobRetrieved || job.signatures?.length > 0) && (
               <>
                 <dt>Processed Files</dt>
                 <dd>
