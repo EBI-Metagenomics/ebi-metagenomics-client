@@ -34,12 +34,14 @@ export function LGVProvider({
   gff,
   additionalGffs,
   initialLoc = 'chr1:1-50000',
+  initialFeature,
   children,
 }: {
   fasta: Download;
   gff: Download;
   additionalGffs?: Download[];
   initialLoc?: string;
+  initialFeature?: FeatureLocation;
   children: React.ReactNode;
 }) {
   const assemblyKey = React.useMemo(() => fasta.alias, [fasta]);
@@ -156,7 +158,7 @@ export function LGVProvider({
     [ready, assemblyKey, viewState, view]
   );
 
-  // Initialize once: wait for assembly, set displayed regions to the first ref, hide header
+  // Wait for the assembly, select the requested locus or first reference, and hide the header.
   React.useEffect(() => {
     if (!ready || !assemblyKey) return;
     let cancelled = false;
@@ -169,7 +171,9 @@ export function LGVProvider({
         if (cancelled || !asm) return;
 
         const firstRef = asm.allRefNames?.[0];
-        if (firstRef) {
+        if (initialFeature) {
+          await navToFeature(initialFeature);
+        } else if (firstRef) {
           const canonical = asm.getCanonicalRefName?.(firstRef) ?? firstRef;
           const region =
             asm.regions?.find((r: any) => r.refName === canonical) ??
@@ -201,7 +205,7 @@ export function LGVProvider({
     return () => {
       cancelled = true;
     };
-  }, [ready, assemblyKey, viewState, view]);
+  }, [ready, assemblyKey, viewState, view, initialFeature, navToFeature]);
 
   React.useEffect(() => {
     if (!ready || !gff) return;
