@@ -196,7 +196,7 @@ const GenomePage: React.FC = () => {
           <div className="vf-flag__body">
             <h5 className="vf-card__subheading">README</h5>
             <p className={'vf-text'}>
-              Full list of course studies and pipeline notes for this catalogue
+              Full list of sourse studies and pipeline notes for this catalogue
               version.
             </p>
           </div>
