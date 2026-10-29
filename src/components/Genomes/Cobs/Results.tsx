@@ -73,7 +73,7 @@ const Results: React.FC<ResultsProps> = ({
     {
       id: 'catalogue',
       header: 'Catalogue',
-      accessorFn: (genome) => last(split(genome.mgnify.catalogue, '/')),
+      accessorFn: (genome) => last(split(genome.mgnify.catalogue_id, '/')),
       cell: ({ cell }) => (
         <Link to={`/genome-catalogues/${cell.getValue()}`}>
           {cell.getValue()}

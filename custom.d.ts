@@ -28,25 +28,22 @@ declare module '*.txt' {
   export default file;
 }
 
+import type TextareaSequence from '@nightingale-elements/nightingale-textarea-sequence';
+
 declare global {
   interface HTMLElementTagNameMap {
-    'textarea-sequence': TextareaSequenceElement;
-  }
-
-  interface TextareaSequenceElement extends HTMLElement {
-    quill: any;
-    cleanUp(): void;
-    sequence: string;
+    'nightingale-textarea-sequence': TextareaSequence;
   }
 
   interface TextareaSequenceProps
     extends React.DetailedHTMLProps<
-      React.HTMLAttributes<HTMLElement>,
-      HTMLElement
+      React.HTMLAttributes<TextareaSequence>,
+      TextareaSequence
     > {
-    height: string;
-    single: 'true' | 'false';
+    single: boolean;
     alphabet: string;
+    minSequenceLength: number;
+    disableHeaderCheck: boolean;
   }
 
   interface MGnifySourmashComponentProps
@@ -101,7 +98,7 @@ import 'react';
 declare module 'react' {
   namespace JSX {
     interface IntrinsicElements {
-      'textarea-sequence': TextareaSequenceProps;
+      'nightingale-textarea-sequence': TextareaSequenceProps;
       'mgnify-sourmash-component': MGnifySourmashComponentProps;
     }
   }

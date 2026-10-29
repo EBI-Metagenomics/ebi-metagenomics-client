@@ -12,7 +12,43 @@ export default defineConfig(({ mode }) => {
 
   return {
     base,
-    plugins: [react()],
+    plugins: [
+      react(),
+      {
+        // Nightingale 5.11.0 bundles a Quill namespace and a nonconstructable formatter.
+        name: 'nightingale-quill-compatibility',
+        enforce: 'pre',
+        transform(code, id) {
+          if (
+            id
+              .split('?')[0]
+              .endsWith(
+                '/@nightingale-elements/nightingale-textarea-sequence/dist/index.js'
+              )
+          ) {
+            const patchedCode = code
+              .replace('const ae=c;', 'const ae=c.default;')
+              .replace(
+                'firstUpdated(){ae.register',
+                'firstUpdated(){const component=this;ae.register'
+              )
+              .replace(
+                'ae.register("modules/formatter",(t=>{t.on("text-change",P((()=>this.format()),200))}))',
+                'ae.register("modules/formatter",(function(t){t.on("text-change",P((()=>component.format()),200))}))'
+              );
+            return {
+              code: patchedCode,
+              map: null,
+              // Preserve custom element registration despite the package's sideEffects: false.
+              moduleSideEffects: true,
+            };
+          }
+        },
+      },
+    ],
+    optimizeDeps: {
+      exclude: ['@nightingale-elements/nightingale-textarea-sequence'],
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
