@@ -12,6 +12,9 @@ import CataloguePicker from 'components/Genomes/CrossCatalogueSearchCataloguePic
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import UserContext from 'pages/Login/UserContext';
+import { GenomeApiResponse } from '@/interfaces';
+import { fetchFastaPreview } from '@/utils/fasta';
+import { findGenomeFasta } from 'components/Genomes/ContigViewer/downloads';
 import CobsResults from './Results';
 import './style.css';
 
@@ -64,31 +67,26 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
     }
   };
 
-  const getSequenceCharsFromFastaFile = async (
-    fastaUrl: string
-  ): Promise<string> => {
-    try {
-      const headersConfig = {
-        headers: {
-          Range: 'bytes=0-499',
-        },
-      };
-
-      const response = await axios.get(fastaUrl, headersConfig);
-      const { data } = response;
-      return data.substring(0, 500);
-    } catch {
-      return '';
-    }
-  };
-
   const buildExampleSequence = async () => {
-    const myAccession = await getAccessionFromCataloguesFirstGenome();
-    const fastaUrl = `${config.api}genomes/${myAccession}/downloads/${myAccession}.fna`;
-    const firstFiftySequenceChars = await getSequenceCharsFromFastaFile(
-      fastaUrl
-    );
-    setSequence(firstFiftySequenceChars);
+    const firstAccession = await getAccessionFromCataloguesFirstGenome();
+    if (!firstAccession) return;
+
+    try {
+      const response = await axios.get<GenomeApiResponse>(
+        `${config.api_v2}genomes/${firstAccession}`,
+        { params: { catalogue_id: catalogueID || selectedCatalogues[0] } }
+      );
+      const fastaUrl = findGenomeFasta(
+        response.data.downloads || [],
+        firstAccession
+      )?.url;
+      if (!fastaUrl) return;
+
+      const exampleSequence = await fetchFastaPreview(fastaUrl);
+      setSequence(exampleSequence);
+    } catch {
+      setSequence('');
+    }
   };
 
   const handleExampleClick = (): void => {
