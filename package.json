@@ -60,7 +60,7 @@
     "filesize": "^11.0.13",
     "flat": "^6.0.1",
     "generic-filehandle2": "^2.0.12",
-    "highcharts": "9.3.2",
+    "highcharts": "13.1.1",
     "highcharts-react-official": "3.1.0",
     "igv": "^2.15.8",
     "jszip": "^3.10.1",
