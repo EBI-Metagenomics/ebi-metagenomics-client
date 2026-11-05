@@ -58,34 +58,36 @@ const MyDataStudies: React.FC = () => {
     () => [
       {
         id: 'biome',
-        Header: 'Biome',
-        accessor: (study) => study.biome?.lineage,
-        Cell: ({ cell }) => (
+        header: 'Biome',
+        accessorFn: (study) => study.biome?.lineage,
+        cell: ({ cell }) => (
           <span
-            className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
+            className={`biome_icon icon_xs ${getBiomeIcon(cell.getValue())}`}
             style={{ float: 'initial' }}
           />
         ),
-        disableSortBy: true,
-        className: 'mg-biome',
+        enableSorting: false,
+        meta: { className: 'mg-biome' },
       },
       {
         id: 'accession',
-        Header: 'Accession',
-        accessor: 'accession',
-        Cell: ({ cell }) => (
-          <Link to={`/studies/${cell.value}`}>{cell.value}</Link>
+        header: 'Accession',
+        accessorKey: 'accession',
+        cell: ({ cell }) => (
+          <Link to={`/studies/${cell.getValue()}`}>{cell.getValue()}</Link>
         ),
       },
       {
-        Header: 'Study name',
-        accessor: 'title',
-        disableSortBy: true,
+        header: 'Study name',
+        accessorKey: 'title',
+        enableSorting: false,
       },
       {
-        Header: 'Last updated',
-        accessor: 'updated_at',
-        Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
+        header: 'Last updated',
+        accessorKey: 'updated_at',
+        cell: ({ cell }) => (
+          <>{new Date(cell.getValue()).toLocaleDateString()}</>
+        ),
       },
     ],
     []

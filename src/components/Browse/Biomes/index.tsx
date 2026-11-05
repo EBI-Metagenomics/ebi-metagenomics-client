@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import EMGTable from 'components/UI/EMGTable';
-import { Column } from 'react-table';
+import { ColumnDef as Column } from '@tanstack/react-table';
 import { getBiomeIcon } from '@/utils/biomes';
 import Loading from 'components/UI/Loading';
 import Link from 'components/UI/Link';
@@ -35,47 +35,49 @@ const BrowseBiomes: React.FC = () => {
     biome_lineage: (search as string) || '',
   });
 
-  const columns: Column<Biome>[] = React.useMemo(
+  const columns: Column<Biome, any>[] = React.useMemo(
     () => [
       {
         id: 'biome',
-        Header: '',
-        accessor: 'lineage',
-        Cell: ({ cell }) => (
-          <span className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`} />
+        header: '',
+        accessorKey: 'lineage',
+        cell: ({ cell }) => (
+          <span
+            className={`biome_icon icon_xs ${getBiomeIcon(cell.getValue())}`}
+          />
         ),
-        disableSortBy: true,
-        className: 'mg-biome',
+        enableSorting: false,
+        meta: { className: 'mg-biome' },
       },
       {
         id: 'biome_name',
-        Header: 'Biome name and lineage',
-        accessor: (row: Biome) => row,
-        Cell: ({ cell }) => (
+        header: 'Biome name and lineage',
+        accessorFn: (row: Biome) => row,
+        cell: ({ cell }) => (
           <>
             <Link
               to={`/browse/studies?biome=${encodeURIComponent(
-                cell.value.lineage
+                cell.getValue().lineage
               )}`}
             >
-              {cell.value.biome_name}
+              {cell.getValue().biome_name}
             </Link>
             <br />
-            {cell.value.lineage}
+            {cell.getValue().lineage}
           </>
         ),
-        disableSortBy: true,
+        enableSorting: false,
       },
       {
-        Header: 'Show sub-lineages',
+        header: 'Show sub-lineages',
         id: 'sublineages',
-        accessor: 'lineage',
-        disableSortBy: true,
-        Cell: ({ cell }) => (
+        accessorKey: 'lineage',
+        enableSorting: false,
+        cell: ({ cell }) => (
           <button
             type="button"
             className="vf-button vf-button--sm vf-button--link mg-button"
-            onClick={() => setSearch(cell.value)}
+            onClick={() => setSearch(cell.getValue())}
           >
             Show sub-lineages
           </button>

@@ -29,11 +29,12 @@ there are run configurations to import in `.idea/runConfigurations`.
 
 ##### Run `npm install` in the project's main directory.
 
-Serve with own server, or use built-in dev system by calling 'npm run server:watch'' in main directory.
+Start the Vite development server from the project's main directory.
+Vite watches source files automatically.
 
 ```bash
 npm install
-npm run start --watch
+npm run start
 ```
 
 #### Integration tests

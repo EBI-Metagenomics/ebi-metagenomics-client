@@ -178,7 +178,7 @@ describe.skip('Genome page', () => {
 
     context('KEGG class analysis', () => {
         before(() => {
-            openPage('genomes/' + accessionValid + '#kegg-class-analysis');
+            openPage('genomes/' + accessionValid + '?keggTab=classes#kegg');
         });
 
         it('Should load the chart and the table', () => {
@@ -257,7 +257,7 @@ describe.skip('Genome page', () => {
 
     context('KEGG module analysis', () => {
         before(() => {
-            openPage('genomes/' + accessionValid + '#kegg-module-analysis');
+            openPage('genomes/' + accessionValid + '?keggTab=modules#kegg');
         });
 
         it('Should load the chart and the table', () => {

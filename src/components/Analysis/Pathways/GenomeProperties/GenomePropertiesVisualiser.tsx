@@ -4,7 +4,7 @@ import { Download } from '@/interfaces';
 import { BGZipService } from 'components/Analysis/BgZipService';
 import Loading from 'components/UI/Loading';
 import ExtLink from 'components/UI/ExtLink';
-import gpHierarchyRaw from 'data/genome-properties-hierarchy.json';
+import gpHierarchyRaw from '@/data/genome-properties-hierarchy.json';
 import { cloneDeep } from 'lodash-es';
 import protectedAxios from '@/utils/protectedAxios';
 

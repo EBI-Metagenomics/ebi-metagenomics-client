@@ -19,6 +19,39 @@ protectedAxios.interceptors.request.use((conf) => {
   return conf;
 });
 
+protectedAxios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const token = localStorage.getItem('mgnify.v2.token');
+    if (
+      error.response?.status === 401 &&
+      token &&
+      error.config?.headers?.Authorization === `Bearer ${token}`
+    ) {
+      const requestUrl = new URL(
+        protectedAxios.getUri(error.config),
+        window.location.origin
+      );
+      const apiUrl = new URL(BASE_URL, window.location.origin);
+      const isApiRequest =
+        requestUrl.origin === apiUrl.origin &&
+        requestUrl.pathname.startsWith(apiUrl.pathname);
+      const isCredentialRequest = /\/auth\/(sliding|account)\/?$/.test(
+        requestUrl.pathname
+      );
+      if (isApiRequest && !isCredentialRequest) {
+        // Clear credentials before reloading, so concurrent 401s cannot
+        // trigger another reload and public data can load anonymously.
+        localStorage.removeItem('mgnify.v2.token');
+        localStorage.removeItem('mgnify.v2.username');
+        localStorage.setItem('mgnify.sessionExpired', 'true');
+        window.location.reload();
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const fetchWithFallback = (
   path: string,
   fallbacks: string[] = []

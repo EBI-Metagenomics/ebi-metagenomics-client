@@ -130,3 +130,17 @@ pre.vf-code-example__pre > button {
 .vf-tabs__link.is-active {
   z-index: 1999 !important;  /* Ensure it's below the mega-menu */'
 }
+
+.vf-card__subheading.stat_label {
+  font-size: 16px;
+  color: var(--vf-color--grey);
+  font-weight: normal;
+}
+
+section.mg-bordered {
+  border: 1px solid #eeeeee;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: rgba(84, 88, 90, 0.5) 0 2px 4px 0;
+  margin-bottom: 32px;
+}

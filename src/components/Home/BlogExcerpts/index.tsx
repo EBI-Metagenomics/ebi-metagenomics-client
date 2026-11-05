@@ -1,3 +1,4 @@
+import { publicImageUrl } from 'utils/assets';
 import React, { useContext } from 'react';
 
 import Loading from 'components/UI/Loading';
@@ -7,7 +8,8 @@ import useBlogData from '@/hooks/data/useBlogData';
 
 import UserContext from 'pages/Login/UserContext';
 import './style.css';
-import LinkedInLogo from 'images/linkedin_logo.svg';
+
+const LinkedInLogo = publicImageUrl('linkedin_logo.svg');
 
 const removeHTMLTags = (text: string): string => {
   return text.replace(/&lt;.+?&gt;/g, '').trim();

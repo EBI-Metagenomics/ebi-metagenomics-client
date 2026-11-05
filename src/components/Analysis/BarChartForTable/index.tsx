@@ -5,10 +5,11 @@ import HighchartsReact from 'highcharts-react-official';
 import { capitalize, get, kebabCase, min, unzip } from 'lodash-es';
 
 type BarChartColSpec = {
-  // similar but simplified compared to react-table's column spec... somewhat compatible with it
-  accessor: string | ((row: any, index: number) => any);
+  // Uses the same accessors as the table columns.
+  accessorKey?: string;
+  accessorFn?: (row: any, index: number) => any;
   id: string;
-  Header: string;
+  header: string;
 };
 
 export interface BarChartForTableProps {
@@ -17,6 +18,7 @@ export interface BarChartForTableProps {
   countsCol: BarChartColSpec;
   title: string;
   maxLabels?: number;
+  subtitle?: string;
 }
 
 const BarChartForTable: React.FC<BarChartForTableProps> = ({
@@ -25,12 +27,13 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
   countsCol,
   title = 'Annotations',
   maxLabels = 50,
+  subtitle,
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const labelAccessor = labelsCol.accessor as
+  const labelAccessor = (labelsCol.accessorFn ?? labelsCol.accessorKey) as
     | string
     | ((row: any, index: number) => any);
-  const dataAccessor = countsCol.accessor as
+  const dataAccessor = (countsCol.accessorFn ?? countsCol.accessorKey) as
     | string
     | ((row: any, index: number) => any);
   const [labels, series, descriptions] = useMemo(() => {
@@ -62,11 +65,13 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
     },
     title: { text: capitalize(title) },
     subtitle: {
-      text: `Showing ${
-        maxLabels === 0
-          ? data.items.length
-          : min([data.items.length, maxLabels])
-      } of ${total} annotations`,
+      text:
+        subtitle ??
+        `Showing ${
+          maxLabels === 0
+            ? data.items.length
+            : min([data.items.length, maxLabels])
+        } of ${total} annotations`,
     },
     yAxis: {
       min: 0,

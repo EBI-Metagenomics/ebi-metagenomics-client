@@ -74,13 +74,13 @@ const GO: React.FC<GOProps> = ({ isLegacy, legacyFile }) => {
             title: 'GO Terms',
             labelsCol: {
               id: 'go_term',
-              Header: 'Term',
-              accessor: (d) => `${d[0]}: ${d[1]}`,
+              header: 'Term',
+              accessorFn: (d) => `${d[0]}: ${d[1]}`,
             },
             countsCol: {
               id: 'count',
-              Header: 'Count',
-              accessor: (d) => Number(d[3]),
+              header: 'Count',
+              accessorFn: (d) => Number(d[3]),
             },
           }}
         />

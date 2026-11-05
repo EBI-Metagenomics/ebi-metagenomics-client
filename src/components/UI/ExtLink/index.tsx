@@ -8,7 +8,7 @@ type ExtLinkProps = {
   id?: string;
   className?: string;
 };
-const ExtLink: React.FC<ExtLinkProps> = ({
+const ExtLink: React.FC<React.PropsWithChildren<ExtLinkProps>> = ({
   href,
   id,
   title,

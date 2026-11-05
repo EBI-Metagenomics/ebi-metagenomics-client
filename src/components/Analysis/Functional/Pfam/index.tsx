@@ -76,13 +76,13 @@ const PfamTab: React.FC<PfamProps> = ({ isLegacy, legacyFile }) => {
             title: 'Pfam domains',
             labelsCol: {
               id: 'pfam_accession',
-              Header: 'Description',
-              accessor: (d) => `${d[0]}: ${d[1]}`,
+              header: 'Description',
+              accessorFn: (d) => `${d[0]}: ${d[1]}`,
             },
             countsCol: {
               id: 'count',
-              Header: 'Count',
-              accessor: (d) => Number(d[2]),
+              header: 'Count',
+              accessorFn: (d) => Number(d[2]),
             },
           }}
         />

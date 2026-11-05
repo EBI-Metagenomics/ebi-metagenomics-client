@@ -1,6 +1,7 @@
 import React from 'react';
 import { createViewState } from '@jbrowse/react-linear-genome-view2';
 import { Download } from '@/interfaces';
+import { toast } from 'react-toastify';
 import {
   createGffTrack,
   createReferenceSequenceTrack,
@@ -8,9 +9,12 @@ import {
 
 type LGVViewState = ReturnType<typeof createViewState>;
 
+export type FeatureLocation = { refName: string; start: number; end: number };
+
 type LGVContextValue = {
   viewState: LGVViewState | null;
   navTo: (loc: string) => void;
+  navToFeature: (location: FeatureLocation) => Promise<void>;
   ready: boolean;
 };
 
@@ -73,6 +77,41 @@ export function LGVProvider({
 
   const view = (viewState as any)?.session?.view;
   const ready = Boolean(view && typeof view.navToLocString === 'function');
+
+  const navToFeature = React.useCallback(
+    async ({ refName, start, end }: FeatureLocation) => {
+      try {
+        if (!ready || !assemblyKey)
+          throw new Error('Genome browser is not ready');
+        if (
+          !Number.isSafeInteger(start) ||
+          !Number.isSafeInteger(end) ||
+          start < 1 ||
+          end < start
+        ) {
+          throw new Error('Invalid feature coordinates');
+        }
+        const asm = await (viewState as any).assemblyManager.waitForAssembly(
+          assemblyKey
+        );
+        const canonical = asm?.getCanonicalRefName?.(refName) ?? refName;
+        const region = asm?.regions?.find((r: any) => r.refName === canonical);
+        if (!region || start > region.end || end < region.start + 1) {
+          throw new Error(`No matching reference region for ${refName}`);
+        }
+        view.setDisplayedRegions([region]);
+        const paddedStart = Math.max(region.start + 1, start - 100);
+        const paddedEnd = Math.min(region.end, end + 100);
+        await view.navToLocString(
+          `${canonical}:${paddedStart}-${paddedEnd}`,
+          assemblyKey
+        );
+      } catch (error) {
+        toast.error(`Cannot navigate to ${refName}:${start}-${end}: ${error}`);
+      }
+    },
+    [ready, assemblyKey, viewState, view]
+  );
 
   const navTo = React.useCallback(
     (refName: string) => {
@@ -200,8 +239,8 @@ export function LGVProvider({
   }, [ready, additionalGffs, fasta.alias, viewState]);
 
   const value = React.useMemo<LGVContextValue>(
-    () => ({ viewState, ready, navTo }),
-    [viewState, ready, navTo]
+    () => ({ viewState, ready, navTo, navToFeature }),
+    [viewState, ready, navTo, navToFeature]
   );
 
   return <LGVContext.Provider value={value}>{children}</LGVContext.Provider>;

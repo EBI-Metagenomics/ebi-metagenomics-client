@@ -412,7 +412,7 @@ export function prepareVisualizationData(
 
   const commonKeys = Array.from(new Set(data.flatMap(Object.keys)));
 
-  const values: Record<string | number, unknown>[][] = commonKeys.map((key) =>
+  const values: unknown[][] = commonKeys.map((key) =>
     data.map((row) => row[key])
   );
 

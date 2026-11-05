@@ -1,6 +1,6 @@
+import { publicImageUrl } from 'utils/assets';
 import React, { useState } from 'react';
 import ExtLink from 'components/UI/ExtLink';
-import EuropePMCLogo from 'images/europe_pmc_logo.png';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 
@@ -12,6 +12,8 @@ import Accordion, {
 import EMGModal from 'components/UI/EMGModal';
 import { usePublicationAnnotations } from 'hooks/data/usePublicationDetail';
 import { AnnotationGroup } from '@/interfaces';
+
+const EuropePMCLogo = publicImageUrl('europe_pmc_logo.png');
 
 const AnnotationSuperGroup: React.FC<{
   superGroup: AnnotationGroup[];

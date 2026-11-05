@@ -57,6 +57,32 @@ details summary > * {
   flex-direction: column;
 }
 
+.mg-feature-match {
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.mg-search-matches .vf-button--link {
+  margin: 0 0.5rem 0 0;
+  padding: 0.2rem 0;
+}
+
+.mg-search-matches .vf-button--link:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.mg-feature-match-list > li {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Keep pagination below expanded matches instead of covering their buttons. */
+.mg-contigs-list .mg-table-footer {
+  position: static;
+}
+
 /* fix scaling of labels in the JBrowse rubber band */
 [class*='-root-refLabel'],
 [class*='-majorTickLabel'],

@@ -11,7 +11,7 @@ type KeyValueProps = {
   renderIfEmpty?: boolean;
 };
 
-const hasRenderableValue = (value: React.ReactNode) =>
+const hasRenderableValue = (value: KeyValueItemsList[number]['value']) =>
   value !== null && value !== undefined && value !== '';
 
 const KeyValueList: React.FC<KeyValueProps> = ({

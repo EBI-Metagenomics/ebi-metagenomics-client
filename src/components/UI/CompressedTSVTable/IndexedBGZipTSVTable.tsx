@@ -22,6 +22,7 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
   columnHeaders,
   columns = [],
   download,
+  emptyStateMessage,
   pageNum,
   setPageNum,
 }) => {
@@ -30,12 +31,15 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
   const [headerRow, setHeaderRow] = useState<string[]>();
   const [estimatedPageSize, setEstimatedPageSize] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFileEmpty, setIsFileEmpty] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResults | null>(
     null
   );
   const estimatedPageSizeRef = useRef(0);
-  const firstPagePromiseRef = useRef<Promise<string[][]>>();
+  const firstPagePromiseRef = useRef<Promise<string[][]> | undefined>(
+    undefined
+  );
   const firstRowIsHeader = columns.length === 0;
 
   const readFirstPage = useCallback(() => {
@@ -110,8 +114,9 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
         }
 
         const estimatedRowCount =
-          totalPages * Math.max(nextEstimatedPageSize, response.length, 1) -
+          totalPages * Math.max(nextEstimatedPageSize, response.length) -
           (firstRowIsHeader && firstPageRows.length ? 1 : 0);
+        setIsFileEmpty(estimatedRowCount === 0);
         setPageData({
           items,
           count: Math.max(0, estimatedRowCount),
@@ -155,6 +160,7 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
       );
       const rows = [firstPageRows, ...remainingPages].flat();
       if (firstRowIsHeader && rows.length) rows.shift();
+      setIsFileEmpty(rows.length === 0);
 
       const pattern = searchRegExp(term, wholeWord);
       setSearchResults({
@@ -178,6 +184,7 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
       columnHeaders={columnHeaders}
       columns={columns}
       data={pageData}
+      emptyStateMessage={emptyStateMessage}
       expectedPageSize={
         searchResults
           ? DEFAULT_PAGE_SIZE
@@ -186,6 +193,7 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
       fileUrl={download.url}
       headerRow={headerRow}
       isLoading={isLoading}
+      isFileEmpty={isFileEmpty}
       isSearching={isSearching}
       onClearSearch={() => {
         setSearchResults(null);

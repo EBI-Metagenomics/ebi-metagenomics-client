@@ -1,3 +1,5 @@
+import { upperFirst } from 'lodash-es';
+
 const biomeIconMapD2 = {
   'root:engineered': 'engineered_b',
 };
@@ -83,4 +85,24 @@ export function simplifyBiomeIcons(biomes: Biome[]): Biome[] {
     icons.push({ name: biomesInGroup, icon: biomeIcon });
   });
   return icons;
+}
+/**
+ * Retrieve third tier (or less) of a biome lineage
+ */
+export function getBiomeCategory(lineage: string): string {
+  const lineageList = (lineage || '').split(':').map((x) => x.toLowerCase());
+  const lineageLabel = lineageList.slice(0, 3).pop() || '';
+  return upperFirst(lineageLabel);
+}
+
+/** Group genome catalogue biomes, separating human and non-human hosts. */
+export function getGenomeBiomeGroup(lineage: string): string {
+  const [root, biome, host] = (lineage || '').toLowerCase().split(':');
+  if (root !== 'root') return '';
+  if (biome === 'environmental') return 'Environmental';
+  if (biome === 'engineered') return 'Engineered';
+  if (biome === 'host-associated') {
+    return host === 'human' ? 'Human-associated' : 'Non-human host-associated';
+  }
+  return '';
 }

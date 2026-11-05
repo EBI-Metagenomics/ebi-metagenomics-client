@@ -40,38 +40,40 @@ const GenomesTextSearch: React.FC = () => {
   const columns = [
     {
       id: 'biome_id',
-      Header: 'Biome',
-      accessor: (genome) => genome?.biome?.lineage,
-      Cell: ({ cell }) => (
+      header: 'Biome',
+      accessorFn: (genome) => genome?.biome?.lineage,
+      cell: ({ cell }) => (
         <span
-          className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
+          className={`biome_icon icon_xs ${getBiomeIcon(cell.getValue())}`}
           style={{ float: 'initial' }}
         />
       ),
-      disableSortBy: true,
-      className: 'mg-biome',
+      enableSorting: false,
+      meta: { className: 'mg-biome' },
     },
     {
       id: 'accession',
-      Header: 'Accession',
-      accessor: 'accession',
-      Cell: ({ cell }) => (
-        <Link to={`/genomes/${cell.value}`}>{cell.value}</Link>
+      header: 'Accession',
+      accessorKey: 'accession',
+      cell: ({ cell }) => (
+        <Link to={`/genomes/${cell.getValue()}`}>{cell.getValue()}</Link>
       ),
     },
     {
       id: 'catalogue',
-      Header: 'Catalogue',
-      accessor: 'catalogue_id',
-      Cell: ({ cell }) => (
-        <Link to={`/genome-catalogues/${cell.value}`}>{cell.value}</Link>
+      header: 'Catalogue',
+      accessorKey: 'catalogue_id',
+      cell: ({ cell }) => (
+        <Link to={`/genome-catalogues/${cell.getValue()}`}>
+          {cell.getValue()}
+        </Link>
       ),
-      disableSortBy: true,
+      enableSorting: false,
     },
     {
-      Header: 'Type',
-      accessor: 'type',
-      disableSortBy: true,
+      header: 'Type',
+      accessorKey: 'type',
+      enableSorting: false,
     },
   ];
 

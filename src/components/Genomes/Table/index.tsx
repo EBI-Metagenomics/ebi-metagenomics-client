@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Column } from 'react-table';
+import { ColumnDef as Column } from '@tanstack/react-table';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import EMGTable from 'components/UI/EMGTable';
@@ -9,7 +9,6 @@ import Tooltip from 'components/UI/Tooltip';
 import useApiData from '@/hooks/data/useApiData';
 import { Genome, PaginatedList } from '@/interfaces';
 import useURLAccession from '@/hooks/useURLAccession';
-import { getBiomeIcon } from '@/utils/biomes';
 import { createSharedQueryParamContextForTable } from '@/hooks/queryParamState/useQueryParamState';
 import UserContext from 'pages/Login/UserContext';
 import { cleanTaxLineage, getSimpleTaxLineage } from 'utils/taxon';
@@ -48,76 +47,77 @@ const GenomesTable: React.FC = () => {
     url,
   });
 
-  const columns: Column<Genome>[] = React.useMemo(
+  const columns = React.useMemo<Column<Genome, any>[]>(
     () => [
       {
-        id: 'biome',
-        Header: 'Biome',
-        accessor: (genome: Genome) => genome.biome?.lineage || '',
-        Cell: ({ cell }: { cell: { value: string } }) => (
-          <span
-            className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
-            style={{ float: 'initial' }}
-          />
-        ),
-        disableSortBy: true,
-        className: 'mg-biome',
-      } as Column<Genome>,
-      {
         id: 'accession',
-        Header: 'Accession',
-        accessor: 'accession' as const,
-        Cell: ({ cell }: { cell: { value: string } }) => (
-          <Link to={getGenomeUrl(cell.value, accession)}>{cell.value}</Link>
+        header: 'Accession',
+        accessorKey: 'accession',
+        cell: ({ cell }: { cell: { getValue: () => string } }) => (
+          <Link to={getGenomeUrl(cell.getValue(), accession)}>
+            {cell.getValue()}
+          </Link>
         ),
-      } as Column<Genome>,
+      },
       {
-        Header: 'Length',
-        accessor: 'length' as const,
-      } as Column<Genome>,
-      {
-        Header: 'Num. of genomes',
-        accessor: 'num_genomes_total' as const,
-      } as Column<Genome>,
-      {
-        Header: 'Completeness',
-        accessor: 'completeness' as const,
-      } as Column<Genome>,
-      {
-        Header: 'Contamination',
-        accessor: 'contamination' as const,
-      } as Column<Genome>,
-      {
-        Header: 'Type',
-        accessor: 'type' as const,
-        disableSortBy: true,
-      } as Column<Genome>,
-
-      {
-        Header: 'Taxonomy',
-        accessor: 'taxon_lineage' as const,
-        Cell: ({ cell }: { cell: { value: string } }) => (
+        header: 'Taxonomy',
+        accessorKey: 'taxon_lineage',
+        cell: ({ cell }: { cell: { getValue: () => string } }) => (
           <>
-            {getSimpleTaxLineage(cell.value, true)}{' '}
-            <Tooltip content={cleanTaxLineage(cell.value, ' > ')}>
+            {getSimpleTaxLineage(cell.getValue(), true)}{' '}
+            <Tooltip content={cleanTaxLineage(cell.getValue(), ' > ')}>
               <sup>
                 <span className="icon icon-common icon-info" />
               </sup>
             </Tooltip>
           </>
         ),
-        disableSortBy: true,
-      } as Column<Genome>,
-
+        enableSorting: false,
+      },
       {
-        id: 'last_update',
-        Header: 'Last Updated',
-        accessor: 'updated_at' as const,
-        Cell: ({ cell }: { cell: { value: string } }) => (
-          <>{new Date(cell.value).toLocaleDateString()}</>
+        header: 'Cluster size',
+        accessorKey: 'num_genomes_total',
+      },
+      {
+        header: 'Type',
+        accessorKey: 'type',
+        enableSorting: false,
+      },
+      {
+        header: 'Completeness',
+        accessorKey: 'completeness',
+        cell: ({ cell }: { cell: { getValue: () => number } }) => (
+          <span>{cell.getValue().toFixed(2)}%</span>
         ),
-        disableSortBy: true,
-      } as Column<Genome>,
+      },
+      {
+        header: 'Contamination',
+        accessorKey: 'contamination',
+        cell: ({ cell }: { cell: { getValue: () => number } }) => (
+          <span>{cell.getValue().toFixed(2)}%</span>
+        ),
+      },
+      {
+        header: 'Length (MB)',
+        id: 'length',
+        accessorFn: (genome) => (genome.length / 1000000).toFixed(2),
+      },
+      {
+        header: 'N50',
+        enableSorting: false,
+        accessorKey: 'n_50',
+        cell: ({ cell }: { cell: { getValue: () => number } }) => (
+          <span>{cell.getValue().toLocaleString()}</span>
+        ),
+      },
+      {
+        header: 'GC%',
+        accessorKey: 'gc_content',
+        enableSorting: false,
+        cell: ({ cell }: { cell: { getValue: () => number } }) => (
+          <span>{cell.getValue().toFixed(2)}%</span>
+        ),
+      },
     ],
     [accession]
   );
@@ -128,7 +128,7 @@ const GenomesTable: React.FC = () => {
 
   return (
     <EMGTable<Genome>
-      Title="Species-level cluster representatives"
+      Title="Species representatives"
       cols={columns}
       data={data as PaginatedList<Genome>}
       initialPage={(genomesPage as number) - 1}

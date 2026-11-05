@@ -1,3 +1,4 @@
+import { publicImageUrl } from 'utils/assets';
 import React, {
   FormEvent,
   useContext,
@@ -9,11 +10,12 @@ import React, {
 import { useLocation, useNavigate } from 'react-router-dom';
 import OutterCard from 'components/UI/OutterCard';
 import UserContext from 'pages/Login/UserContext';
-import enaUserImg from 'public/images/ico_ena_user.jpg';
 import useAuthToken from 'hooks/authentication/useAuthToken';
 import axios from 'utils/protectedAxios';
 import Loading from 'components/UI/Loading';
 import { AxiosError } from 'axios';
+
+const enaUserImg = publicImageUrl('ico_ena_user.jpg');
 
 const Login: React.FC = () => {
   const [, setAuthToken] = useAuthToken();

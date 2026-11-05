@@ -1,13 +1,14 @@
 import React from 'react';
-import { useMeasure, useScroll } from 'react-use';
+import { useMeasure } from 'react-use';
 
-const FixedHeightScrollable: React.FC<{
-  heightPx: number;
-  className?: string;
-  wrapperClassName?: string;
-}> = ({ children, heightPx, className, wrapperClassName }) => {
-  const scrollRef = React.useRef(null);
-  const { y } = useScroll(scrollRef);
+const FixedHeightScrollable: React.FC<
+  React.PropsWithChildren<{
+    heightPx: number;
+    className?: string;
+    wrapperClassName?: string;
+  }>
+> = ({ children, heightPx, className, wrapperClassName }) => {
+  const [y, setY] = React.useState(0);
   const [innerRef, { height }] = useMeasure<HTMLDivElement>();
   const isScrolledFromTop = y > 5;
   const canScrollToBottom = y + heightPx < height - 5;
@@ -17,7 +18,7 @@ const FixedHeightScrollable: React.FC<{
       style={{ position: 'relative', maxHeight: `${heightPx}px` }}
     >
       <div
-        ref={scrollRef}
+        onScroll={(event) => setY(event.currentTarget.scrollTop)}
         className={`${className} fixed-height-scrollable__outer`}
         style={{
           maxHeight: `${heightPx}px`,

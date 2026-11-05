@@ -48,27 +48,29 @@ const AssociatedRuns: React.FC = () => {
   const columns = [
     {
       id: 'accession',
-      Header: 'Run ID',
-      accessor: 'accession',
-      Cell: ({ cell }) => <Link to={`/runs/${cell.value}`}>{cell.value}</Link>,
+      header: 'Run ID',
+      accessorKey: 'accession',
+      cell: ({ cell }) => (
+        <Link to={`/runs/${cell.getValue()}`}>{cell.getValue()}</Link>
+      ),
     },
     {
-      Header: 'Experiment type',
-      accessor: 'experiment_type',
-      Cell: ({ cell }) => <>{formatValue(cell.value)}</>,
-      disableSortBy: true,
+      header: 'Experiment type',
+      accessorKey: 'experiment_type',
+      cell: ({ cell }) => <>{formatValue(cell.getValue())}</>,
+      enableSorting: false,
     },
     {
-      Header: 'Instrument model',
-      accessor: 'instrument_model',
-      Cell: ({ cell }) => <>{formatValue(cell.value)}</>,
-      disableSortBy: true,
+      header: 'Instrument model',
+      accessorKey: 'instrument_model',
+      cell: ({ cell }) => <>{formatValue(cell.getValue())}</>,
+      enableSorting: false,
     },
     {
-      Header: 'Instrument platform',
-      accessor: 'instrument_platform',
-      Cell: ({ cell }) => <>{formatValue(cell.value)}</>,
-      disableSortBy: true,
+      header: 'Instrument platform',
+      accessorKey: 'instrument_platform',
+      cell: ({ cell }) => <>{formatValue(cell.getValue())}</>,
+      enableSorting: false,
     },
   ];
 

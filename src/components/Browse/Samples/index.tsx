@@ -38,28 +38,28 @@ const BrowseSamples: React.FC = () => {
     () => [
       {
         id: 'biome',
-        Header: 'Biome',
-        accessor: (sample) => sample.biome?.lineage,
-        Cell: ({ cell }) => (
+        header: 'Biome',
+        accessorFn: (sample) => sample.biome?.lineage,
+        cell: ({ cell }) => (
           <span
-            className={`biome_icon icon_xs ${getBiomeIcon(cell.value)}`}
+            className={`biome_icon icon_xs ${getBiomeIcon(cell.getValue())}`}
             style={{ float: 'initial' }}
           />
         ),
-        disableSortBy: true,
-        className: 'mg-biome',
+        enableSorting: false,
+        meta: { className: 'mg-biome' },
       },
       {
-        Header: 'Accession',
-        accessor: 'accession',
-        Cell: ({ cell }) => (
-          <Link to={`/samples/${cell.value}`}>{cell.value}</Link>
+        header: 'Accession',
+        accessorKey: 'accession',
+        cell: ({ cell }) => (
+          <Link to={`/samples/${cell.getValue()}`}>{cell.getValue()}</Link>
         ),
-        disableSortBy: true,
+        enableSorting: false,
       },
       {
-        Header: 'Sample name',
-        accessor: 'sample_title',
+        header: 'Sample name',
+        accessorKey: 'sample_title',
       },
       // {
       //   Header: 'Description',
@@ -69,9 +69,11 @@ const BrowseSamples: React.FC = () => {
       // TODO: consider enabling description again on API list
       {
         id: 'updated_at',
-        Header: 'Last Updated',
-        accessor: 'updated_at',
-        Cell: ({ cell }) => <>{new Date(cell.value).toLocaleDateString()}</>,
+        header: 'Last Updated',
+        accessorKey: 'updated_at',
+        cell: ({ cell }) => (
+          <>{new Date(cell.getValue()).toLocaleDateString()}</>
+        ),
       },
     ],
     []

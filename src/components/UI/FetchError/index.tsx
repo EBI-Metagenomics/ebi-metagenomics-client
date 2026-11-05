@@ -6,8 +6,8 @@ const refreshPage = (): void => {
 };
 
 const getHumanReadableErrorMessages = (error: ErrorFromFetch): string => {
-  // @ts-ignore
-  const errorStatusCode = error.error.response?.status || error.error.code;
+  const errorStatusCode =
+    error.error?.response?.status ?? error.status ?? error.error?.code;
   switch (errorStatusCode) {
     case 404:
       return '404: The requested resource could not be found.';
@@ -18,7 +18,7 @@ const getHumanReadableErrorMessages = (error: ErrorFromFetch): string => {
   }
 };
 
-const FetchError: React.FC<{ error: ErrorFromFetch }> = ({ error }) => {
+const FetchError: React.FC<{ error: ErrorFromFetch | null }> = ({ error }) => {
   if (!error || error.type === ErrorTypes.NullURL) return null;
   return (
     <div

@@ -60,6 +60,7 @@
   flex-direction: row-reverse;
   width: 100%;
   justify-content: space-between;
+  align-items: end;
 }
 .mg-table-toolbar__actions {
   display: flex;

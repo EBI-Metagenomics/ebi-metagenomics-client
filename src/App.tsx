@@ -12,7 +12,6 @@ import ErrorBoundary from 'components/ErrorBoundary';
 import MyData from 'pages/MyData';
 import UserContext, {
   UserContextType,
-  UserDetails,
   UserType,
 } from 'pages/Login/UserContext';
 
@@ -76,18 +75,15 @@ const App: React.FC = () => {
       token: null,
     };
   });
-  const [details, setDetails] = useState<UserDetails | null>([]);
   const value = useMemo<UserContextType>(
     () => ({
       username: user?.username || null,
       isAuthenticated: user?.isAuthenticated || false,
-      details,
       setUser,
-      setDetails,
       config,
       token: user?.token || null,
     }),
-    [details, user?.isAuthenticated, user?.username, user?.token]
+    [user?.isAuthenticated, user?.username, user?.token]
   );
 
   return (

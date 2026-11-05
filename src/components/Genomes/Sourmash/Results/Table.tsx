@@ -21,85 +21,90 @@ const SourmashResultsTable: React.FC<SourmashResultsTableProps> = ({
   const columns = useMemo(
     () => [
       {
-        Header: 'Filename',
-        accessor: 'filename',
+        header: 'Filename',
+        accessorKey: 'filename',
       },
       {
-        Header: 'Catalogue',
-        accessor: 'catalogue',
-        Cell: ({ cell }) => {
+        header: 'Catalogue',
+        accessorKey: 'catalogue',
+        cell: ({ cell }) => {
           return (
             <span style={{ whiteSpace: 'nowrap' }}>
-              <Link to={`/genome-catalogues/${cell.value}`}>{cell.value}</Link>
+              <Link to={`/genome-catalogues/${cell.getValue()}`}>
+                {cell.getValue()}
+              </Link>
             </span>
           );
         },
       },
       {
-        Header: 'Status',
-        accessor: (r) => ({
+        header: 'Status',
+        accessorFn: (r) => ({
           status: r.status,
           resultStatus: r.result?.status,
         }),
-        Cell: ({ cell }) => (
+        cell: ({ cell }) => (
           <span style={{ whiteSpace: 'nowrap' }}>
-            {emoji[cell.value.resultStatus || cell.value.status]}{' '}
-            {cell.value.resultStatus || cell.value.status}
+            {emoji[cell.getValue().resultStatus || cell.getValue().status]}{' '}
+            {cell.getValue().resultStatus || cell.getValue().status}
           </span>
         ),
       },
       {
         id: 'match',
-        Header: (
+        header: () => (
           <>
             Best Match
             <br />
             (% query covered)
           </>
         ),
-        accessor: (x) => x,
-        Cell: ({ cell }) => {
+        accessorFn: (x) => x,
+        cell: ({ cell }) => {
           if (
-            cell.value.status === 'SUCCESS' &&
-            cell.value.result?.status === 'NO_RESULTS'
+            cell.getValue().status === 'SUCCESS' &&
+            cell.getValue().result?.status === 'NO_RESULTS'
           )
             return "We couldn't find any matches with your query";
-          if (cell.value.status === 'IN_QUEUE')
-            return `Position: ${cell.value.position_in_queue}`;
+          if (cell.getValue().status === 'IN_QUEUE')
+            return `Position: ${cell.getValue().position_in_queue}`;
           if (
-            cell.value.status === 'SUCCESS' &&
-            cell.value.result?.status !== 'NO_RESULTS'
+            cell.getValue().status === 'SUCCESS' &&
+            cell.getValue().result?.status !== 'NO_RESULTS'
           )
             return (
               <span style={{ whiteSpace: 'nowrap' }}>
-                <Link to={`/genomes/${cell.value.result.match}`}>
-                  {cell.value.result.match}
+                <Link to={`/genomes/${cell.getValue().result.match}`}>
+                  {cell.getValue().result.match}
                 </Link>{' '}
-                ({cell.value.result.p_query})
+                ({cell.getValue().result.p_query})
               </span>
             );
 
-          return cell.value.reason || null;
+          return cell.getValue().reason || null;
         },
-        colspan: (cell) =>
-          cell.value.status === 'SUCCESS' &&
-          cell.value.result?.status !== 'NO_RESULTS'
-            ? 1
-            : 3,
+        meta: {
+          colspan: (cell) =>
+            cell.getValue().status === 'SUCCESS' &&
+            cell.getValue().result?.status !== 'NO_RESULTS'
+              ? 1
+              : 3,
+        },
       },
       {
-        Header: 'Total No. of matches',
-        accessor: 'result.matches',
+        header: 'Total No. of matches',
+        accessorKey: 'result.matches',
       },
       {
-        Header: 'Download',
-        accessor: (x) => x,
-        Cell: ({ cell }) =>
-          cell.value.status === 'SUCCESS' &&
-          cell.value.result?.status !== 'NO_RESULTS' ? (
+        id: 'download',
+        header: 'Download',
+        accessorFn: (x) => x,
+        cell: ({ cell }) =>
+          cell.getValue().status === 'SUCCESS' &&
+          cell.getValue().result?.status !== 'NO_RESULTS' ? (
             <a
-              download={`${cell.value.filename}.csv`}
-              href={cell.value.results_url}
+              download={`${cell.getValue().filename}.csv`}
+              href={cell.getValue().results_url}
             >
               <span className="icon icon-fileformats icon-CSV" />
             </a>

@@ -1,10 +1,12 @@
+import { publicImageUrl } from 'utils/assets';
 import React from 'react';
 import BranchwaterCard from 'pages/Branchwater/BranchwaterCard';
 import './style.css';
-import SourmashLogo from 'images/sourmash_logo.png';
-import BranchwaterLogo from 'images/branchwater_logo.png';
-import CobsLogo from 'images/cobs_logo.png';
 import { Link } from 'react-router-dom';
+
+const SourmashLogo = publicImageUrl('sourmash_logo.png');
+const BranchwaterLogo = publicImageUrl('branchwater_logo.png');
+const CobsLogo = publicImageUrl('cobs_logo.png');
 
 const LandingPage: React.FC = () => {
   return (

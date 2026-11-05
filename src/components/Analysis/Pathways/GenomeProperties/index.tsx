@@ -102,13 +102,13 @@ const GenomePropertiesTab: React.FC<GenomePropertiesProps> = ({
                     title: 'Genome Properties',
                     labelsCol: {
                       id: 'property_name',
-                      Header: 'Property name',
-                      accessor: (d) => d[1],
+                      header: 'Property name',
+                      accessorFn: (d) => d[1],
                     },
                     countsCol: {
                       id: 'result',
-                      Header: 'Result',
-                      accessor: (d) => d[2],
+                      header: 'Result',
+                      accessorFn: (d) => d[2],
                     },
                   }}
                 />

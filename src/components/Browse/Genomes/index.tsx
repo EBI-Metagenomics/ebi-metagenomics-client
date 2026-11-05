@@ -12,10 +12,10 @@ import { SharedTextQueryParam } from 'hooks/queryParamState/QueryParamStore/Quer
 const PARAMETER_NAME = 'browseBy';
 const PARAMETER_DEFAULT = 'biome';
 const tabs = [
-  { label: 'Catalogues list', to: 'biome' },
-  { label: 'All genomes', to: 'search-all' },
+  { label: 'Genomes catalogues', to: 'biome' },
+  { label: 'All representative genomes', to: 'search-all' },
   { label: 'Gene search', to: 'gene-search' },
-  { label: 'MAG search', to: 'mag-search' },
+  { label: 'Genome search', to: 'mag-search' },
 ];
 
 const { useBrowseBy, withQueryParamProvider } = createSharedQueryParamContext({

@@ -44,7 +44,7 @@ const GenomeAnnotationAnalysis = <T extends GenomeAnnotation>({
   labelAccessor,
   firstColumnHeaderOverride,
   dataCy,
-}: Props<T>): JSX.Element => {
+}: Props<T>): React.JSX.Element => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const { columns, options } = useDefaultGenomeConfig();
   const [pageParam] = useGenomeAnnotationPage<number>();
@@ -52,7 +52,7 @@ const GenomeAnnotationAnalysis = <T extends GenomeAnnotation>({
 
   if (firstColumnHeaderOverride) {
     // Mutate a copy-safe: columns comes from hook; but downstream only reads afterwards
-    columns[0].Header = firstColumnHeaderOverride;
+    columns[0].header = firstColumnHeaderOverride;
   }
 
   const input: T[] = Array.isArray(items) ? items : [];

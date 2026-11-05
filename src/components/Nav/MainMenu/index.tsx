@@ -1,3 +1,4 @@
+import { publicImageUrl } from 'utils/assets';
 import React, {
   useContext,
   useEffect,
@@ -8,14 +9,14 @@ import React, {
 import { Link, useLocation } from 'react-router-dom';
 import UserContext from 'pages/Login/UserContext';
 
-import MGnifyLogo from 'images/mgnify_logo_reverse.svg';
-
 import './style.css';
 import ExtLink from 'components/UI/ExtLink';
 import { useMedia } from 'react-use';
 import EMGModal from 'components/UI/EMGModal';
 import useAuthTokenVerifier from '@/hooks/authentication/useAuthTokenVerifier';
 import MegaMenu from 'components/Nav/MegaMenu';
+
+const MGnifyLogo = publicImageUrl('mgnify_logo_reverse.svg');
 
 const pages: Array<{ label: string; path?: string; href?: string }> = [
   { label: 'Overview', path: '/' },

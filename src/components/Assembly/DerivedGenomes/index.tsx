@@ -74,13 +74,13 @@ const DerivedGenomes: React.FC = () => {
   const columns = [
     {
       id: 'genome_accession',
-      Header: 'Genome accession',
-      accessor: (row: GenomeLink) => row.genome.accession,
+      header: 'Genome accession',
+      accessorFn: (row: GenomeLink) => row.genome.accession,
     },
     {
       id: 'ena',
-      Header: 'ENA',
-      accessor: (row: GenomeLink) =>
+      header: 'ENA',
+      accessorFn: (row: GenomeLink) =>
         row.mag_accession ? (
           <a
             href={`${ENA_VIEW_URL}${row.mag_accession}`}
@@ -95,8 +95,8 @@ const DerivedGenomes: React.FC = () => {
     },
     {
       id: 'species_representative',
-      Header: 'Species representative',
-      accessor: (row: GenomeLink) =>
+      header: 'Species representative',
+      accessorFn: (row: GenomeLink) =>
         row.genome.accession === row.species_rep ? (
           <>
             <Link to={`/genomes/${row.genome.accession}`}>
@@ -113,24 +113,24 @@ const DerivedGenomes: React.FC = () => {
         ),
     },
     {
-      Header: 'Taxonomy',
-      accessor: (row: GenomeLink) => row.genome.taxon_lineage,
-      Cell: ({ cell }) => (
+      header: 'Taxonomy',
+      accessorFn: (row: GenomeLink) => row.genome.taxon_lineage,
+      cell: ({ cell }) => (
         <>
-          {getSimpleTaxLineage(cell.value, true)}{' '}
-          <Tooltip content={cleanTaxLineage(cell.value, ' > ')}>
+          {getSimpleTaxLineage(cell.getValue(), true)}{' '}
+          <Tooltip content={cleanTaxLineage(cell.getValue(), ' > ')}>
             <sup>
               <span className="icon icon-common icon-info" />
             </sup>
           </Tooltip>
         </>
       ),
-      disableSortBy: true,
+      enableSorting: false,
     },
     {
       id: 'catalogue',
-      Header: 'Genome Catalogue',
-      accessor: (row: GenomeLink) =>
+      header: 'Genome Catalogue',
+      accessorFn: (row: GenomeLink) =>
         `${String(row.genome.catalogue_id).split('-v')[0]} v${
           row.genome.catalogue_version
         }`,

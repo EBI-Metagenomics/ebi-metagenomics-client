@@ -1,4 +1,4 @@
-import React, { ReactChild, ReactChildren } from 'react';
+import React, { ReactNode } from 'react';
 import type * as CSS from 'csstype';
 
 import Modal from 'react-modal';
@@ -30,7 +30,7 @@ type ModalProps = {
   isOpen: boolean;
   onRequestClose: () => void;
   contentLabel: string;
-  children: ReactChild | ReactChild[] | ReactChildren | ReactChildren[];
+  children: ReactNode;
 };
 const EMGModal: React.FC<ModalProps> = ({
   isOpen,

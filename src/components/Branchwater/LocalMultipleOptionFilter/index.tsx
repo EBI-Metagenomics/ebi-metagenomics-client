@@ -19,8 +19,7 @@ const LocalMultipleOptionFilter: React.FC<LocalMultipleOptionFilterProps> = ({
   filterValue,
   onFilterChange,
 }) => {
-  const [facet, setFacet] = useSharedQueryParamState<string[]>(facetName);
-  // const [facet, setFacet] = useQueryParamState(facetName, '');
+  const [facet, setFacet] = useSharedQueryParamState<string>(facetName);
   const selected = useMemo(() => {
     if (filterValue !== undefined) {
       return filterValue.split(',').filter(Boolean);

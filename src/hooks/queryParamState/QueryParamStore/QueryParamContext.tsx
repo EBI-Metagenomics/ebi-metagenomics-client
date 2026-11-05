@@ -84,10 +84,9 @@ export const SharedQueryParamContext =
   });
 SharedQueryParamContext.displayName = 'SharedQueryParams';
 
-const SharedQueryParamsProvider: React.FC<{ params: SharedQueryParamSet }> = ({
-  params,
-  children,
-}) => {
+const SharedQueryParamsProvider: React.FC<
+  React.PropsWithChildren<{ params: SharedQueryParamSet }>
+> = ({ params, children }) => {
   const [queryParams, setQueryParams] =
     React.useState<SharedQueryParamSet>(params);
   const [searchParams] = useSearchParams();
@@ -130,10 +129,7 @@ const SharedQueryParamsProvider: React.FC<{ params: SharedQueryParamSet }> = ({
     if (nextStr !== prev.toString()) {
       // Preserve hash — pages like Genome use the URL hash to drive tab routing
       // (see RouteForHash). react-router's setSearchParams strips it.
-      navigate(
-        { search: nextStr, hash: location.hash },
-        { replace: true }
-      );
+      navigate({ search: nextStr, hash: location.hash }, { replace: true });
     }
   }, [queryParams]);
 

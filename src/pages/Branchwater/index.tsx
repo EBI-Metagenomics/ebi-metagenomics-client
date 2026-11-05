@@ -1,3 +1,4 @@
+import { publicImageUrl } from 'utils/assets';
 import React, {
   useCallback,
   useEffect,
@@ -27,15 +28,15 @@ import {
   getContainmentHistogram,
   getCountryColor,
   getScatterData,
-  getTotalCountryCount,
   processBranchwaterResults,
 } from 'utils/branchwater';
 import { getPrefixedBranchwaterConfig } from 'components/Branchwater/common/queryParamConfig';
-import BranchwaterLogo from 'images/branchwater_logo.png';
 import InfoBanner from 'components/UI/InfoBanner';
 import normaliseSourmashSignature from 'utils/normaliseSourmashSignature';
 import validateBranchwaterSignature from 'utils/validateBranchwaterSignature';
 import './style.css';
+
+const BranchwaterLogo = publicImageUrl('branchwater_logo.png');
 
 type SourmashEventDetail = {
   signatures: Record<string, string>;
@@ -98,39 +99,28 @@ const Branchwater = () => {
     cani: '',
   });
 
-  const [textQuery, setTextQuery] = useQueryParamState(
-    'branchwaterDetailedQuery',
-    ''
+  const [textQuery, setTextQuery] = useQueryParamState<string>(
+    'branchwaterDetailedQuery'
   );
-  const [caniRange, setCaniRange] = useQueryParamState(
-    'branchwaterDetailedCani',
-    ''
+  const [caniRange, setCaniRange] = useQueryParamState<string>(
+    'branchwaterDetailedCani'
   );
-  const [containmentRange, setContainmentRange] = useQueryParamState(
-    'branchwaterDetailedContainment',
-    ''
+  const [containmentRange, setContainmentRange] = useQueryParamState<string>(
+    'branchwaterDetailedContainment'
   );
-  const [locationParam, setLocationParam] = useQueryParamState(
-    'branchwaterDetailedGeoLocNameCountryCalc',
-    ''
+  const [locationParam, setLocationParam] = useQueryParamState<string>(
+    'branchwaterDetailedGeoLocNameCountryCalc'
   );
-  const [organismParam, setOrganismParam] = useQueryParamState(
-    'branchwaterDetailedOrganism',
-    ''
+  const [organismParam, setOrganismParam] = useQueryParamState<string>(
+    'branchwaterDetailedOrganism'
   );
-  const [assayTypeParam, setAssayTypeParam] = useQueryParamState(
-    'branchwaterDetailedAssayType',
-    ''
+  const [assayTypeParam, setAssayTypeParam] = useQueryParamState<string>(
+    'branchwaterDetailedAssayType'
   );
 
-  const [, setPageQP] = useQueryParamState(
-    'branchwaterDetailedPage',
-    1,
-    Number
-  );
-  const [, setDetailedOrder] = useQueryParamState(
-    'branchwaterDetailedOrder',
-    ''
+  const [, setPageQP] = useQueryParamState<number>('branchwaterDetailedPage');
+  const [, setDetailedOrder] = useQueryParamState<string>(
+    'branchwaterDetailedOrder'
   );
 
   useEffect(() => {
@@ -192,11 +182,6 @@ const Branchwater = () => {
   const scatterData = useMemo(
     () => getScatterData(searchResults),
     [searchResults]
-  );
-
-  const totalCountryCount = useMemo(
-    () => getTotalCountryCount(countryCounts),
-    [countryCounts]
   );
 
   const [mapPinsLimit, setMapPinsLimit] = useState<number>(1000);
@@ -414,6 +399,11 @@ const Branchwater = () => {
     const selected = examples.find((example) => {
       return example.id === selectedExample;
     });
+    if (!selected) {
+      setIsLoading(false);
+      setSearchError('Select a valid example.');
+      return;
+    }
     axios
       .post(
         `${config.api_branchwater}/mags?accession=${selected.accession}&catalogue=${selected.catalogue}`
@@ -512,7 +502,7 @@ const Branchwater = () => {
               ref={sourmash}
               ksize={21}
               accept_sigs
-              aria-invalid={Boolean(signatureValidationError)}
+              aria-invalid={signatureValidationError ? 'true' : 'false'}
               aria-describedby={
                 signatureValidationError
                   ? 'branchwater-signature-error'
@@ -698,7 +688,6 @@ const Branchwater = () => {
           mapSamples={mapSamples}
           displayedMapSamples={displayedMapSamples}
           setMapPinsLimit={setMapPinsLimit}
-          totalCountryCount={totalCountryCount}
           getCountryColor={getCountryColor}
           downloadCSV={downloadCSV}
           queryParamPrefix="branchwaterDetailed"

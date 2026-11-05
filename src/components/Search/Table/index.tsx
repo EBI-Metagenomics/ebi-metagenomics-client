@@ -39,56 +39,57 @@ const dataFor = {
     columns: [
       {
         id: 'study_id',
-        Header: 'MGnify ID',
-        accessor: (study) => study.id,
-        Cell: ({ cell }) => (
-          <Link to={`/studies/${cell.value}`}>{cell.value}</Link>
+        header: 'MGnify ID',
+        accessorFn: (study) => study.id,
+        cell: ({ cell }) => (
+          <Link to={`/studies/${cell.getValue()}`}>{cell.getValue()}</Link>
         ),
       },
       {
         id: 'ena_id',
-        Header: 'ENA accession',
-        accessor: (study) => study?.fields?.ENA_PROJECT?.[0] || '',
-        Cell: ({ cell }) => {
-          return cell.value === 'None' ? null : (
+        header: 'ENA accession',
+        accessorFn: (study) => study?.fields?.ENA_PROJECT?.[0] || '',
+        cell: ({ cell }) => {
+          return cell.getValue() === 'None' ? null : (
             <span>
-              <ExtLink href={ENA_VIEW_URL + cell.value}>{cell.value}</ExtLink>
+              <ExtLink href={ENA_VIEW_URL + cell.getValue()}>
+                {cell.getValue()}
+              </ExtLink>
             </span>
           );
         },
       },
       {
         id: 'biome',
-        Header: 'Biome',
-        accessor: (study) => study?.fields?.biome_name?.join(':'),
+        header: 'Biome',
+        accessorFn: (study) => study?.fields?.biome_name?.join(':'),
       },
       {
         id: 'name',
-        Header: 'Name',
-        accessor: (study) => study?.fields?.name?.join(', '),
-        className: 'break-anywhere',
+        header: 'Name',
+        accessorFn: (study) => study?.fields?.name?.join(', '),
+        meta: { className: 'break-anywhere' },
       },
       {
         id: 'description',
-        Header: 'Description',
-        accessor: (study) => study?.fields?.description?.join('. '),
-        className: 'break-anywhere',
-        isFullWidth: true,
+        header: 'Description',
+        accessorFn: (study) => study?.fields?.description?.join('. '),
+        meta: { className: 'break-anywhere', isFullWidth: true },
       },
       {
         id: 'analyses',
-        Header: 'Analyses',
-        accessor: (study) => study?.fields?.METAGENOMICS_ANALYSES?.length,
-        Cell: ({ cell, row }) => (
+        header: 'Analyses',
+        accessorFn: (study) => study?.fields?.METAGENOMICS_ANALYSES?.length,
+        cell: ({ cell, row }) => (
           <Link to={`/search/analyses?query=${row.original.id}`}>
-            {cell.value}
+            {cell.getValue()}
           </Link>
         ),
       },
       {
         id: 'centre',
-        Header: 'Centre name',
-        accessor: (study) => study?.fields?.centre_name?.[0],
+        header: 'Centre name',
+        accessorFn: (study) => study?.fields?.centre_name?.[0],
       },
     ],
   },
@@ -97,76 +98,78 @@ const dataFor = {
     columns: [
       {
         id: 'analyses_id',
-        Header: 'Analysis',
-        accessor: (analysis) => (analysis.id || '').split('_'),
-        Cell: ({ cell }) => (
-          <Link to={`/analyses/${cell.value[0]}?version=${cell.value[1]}`}>
-            {cell.value[0]}
+        header: 'Analysis',
+        accessorFn: (analysis) => (analysis.id || '').split('_'),
+        cell: ({ cell }) => (
+          <Link
+            to={`/analyses/${cell.getValue()[0]}?version=${cell.getValue()[1]}`}
+          >
+            {cell.getValue()[0]}
           </Link>
         ),
       },
       {
         id: 'pipeline',
-        Header: 'Pipeline version',
-        accessor: (analysis) => analysis?.fields?.pipeline_version?.[0] || '',
-        Cell: ({ cell }) => (
+        header: 'Pipeline version',
+        accessorFn: (analysis) => analysis?.fields?.pipeline_version?.[0] || '',
+        cell: ({ cell }) => (
           <span>
-            <Link to={`/pipelines/${cell.value}`}>{cell.value}</Link>
+            <Link to={`/pipelines/${cell.getValue()}`}>{cell.getValue()}</Link>
           </span>
         ),
       },
       {
         id: 'sample_id',
-        Header: 'Sample',
-        accessor: (analysis) => analysis?.fields?.['SRA-SAMPLE']?.[0],
-        Cell: ({ cell }) => (
-          <Link to={`/samples/${cell.value}`}>{cell.value}</Link>
+        header: 'Sample',
+        accessorFn: (analysis) => analysis?.fields?.['SRA-SAMPLE']?.[0],
+        cell: ({ cell }) => (
+          <Link to={`/samples/${cell.getValue()}`}>{cell.getValue()}</Link>
         ),
       },
       {
         id: 'sample_name',
-        Header: 'Name',
-        accessor: (study) => study?.fields?.sample_name?.[0],
-        Cell: ({ cell }) => <span>{cell.value}</span>,
-        className: 'break-anywhere',
+        header: 'Name',
+        accessorFn: (study) => study?.fields?.sample_name?.[0],
+        cell: ({ cell }) => <span>{cell.getValue()}</span>,
+        meta: { className: 'break-anywhere' },
       },
       {
         id: 'mgnify_id',
-        Header: 'Study ID',
-        accessor: (analysis) =>
+        header: 'Study ID',
+        accessorFn: (analysis) =>
           analysis?.fields?.METAGENOMICS_PROJECTS?.[0] || '',
-        Cell: ({ cell }) => (
-          <Link to={`/studies/${cell.value}`}>{cell.value}</Link>
+        cell: ({ cell }) => (
+          <Link to={`/studies/${cell.getValue()}`}>{cell.getValue()}</Link>
         ),
       },
       {
         id: 'experiment',
-        Header: 'Experiment type',
-        accessor: (analysis) => analysis?.fields?.experiment_type?.[0],
+        header: 'Experiment type',
+        accessorFn: (analysis) => analysis?.fields?.experiment_type?.[0],
       },
       {
         id: 'assembly',
-        Header: 'Assembly',
-        accessor: (analysis) => analysis?.fields?.ANALYSIS?.[0],
-        Cell: ({ cell }) => (
-          <Link to={`/assemblies/${cell.value}`}>{cell.value}</Link>
+        header: 'Assembly',
+        accessorFn: (analysis) => analysis?.fields?.ANALYSIS?.[0],
+        cell: ({ cell }) => (
+          <Link to={`/assemblies/${cell.getValue()}`}>{cell.getValue()}</Link>
         ),
       },
       {
         id: 'ena_run',
-        Header: 'ENA run',
-        accessor: (analysis) => analysis?.fields?.ENA_RUN?.[0],
-        Cell: ({ cell }) => (
-          <Link to={`/runs/${cell.value}`}>{cell.value}</Link>
+        header: 'ENA run',
+        accessorFn: (analysis) => analysis?.fields?.ENA_RUN?.[0],
+        cell: ({ cell }) => (
+          <Link to={`/runs/${cell.getValue()}`}>{cell.getValue()}</Link>
         ),
       },
       {
         id: 'project_name',
-        Header: 'Study name',
-        accessor: (analysis) => analysis?.fields?.project_name,
-        Cell: ({ cell }) => (cell.value ? uniq(cell.value).join(', ') : null),
-        className: 'break-anywhere',
-        isFullWidth: true,
+        header: 'Study name',
+        accessorFn: (analysis) => analysis?.fields?.project_name,
+        cell: ({ cell }) =>
+          cell.getValue() ? uniq(cell.getValue()).join(', ') : null,
+        meta: { className: 'break-anywhere', isFullWidth: true },
       },
     ],
   },

@@ -1,4 +1,6 @@
-import MGnifyError from 'images/mgnify_error.svg';
+import { publicImageUrl } from 'utils/assets';
+
+const MGnifyError = publicImageUrl('mgnify_error.svg');
 
 const NotFoundError = () => {
   return (

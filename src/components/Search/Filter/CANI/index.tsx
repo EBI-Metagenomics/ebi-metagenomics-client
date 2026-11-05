@@ -11,7 +11,7 @@ interface CANIFilterProps {
 }
 
 const CANIFilter: React.FC<CANIFilterProps> = ({ queryParamKey = 'cani' }) => {
-  const [cani, setCani] = useQueryParamState(queryParamKey, '');
+  const [cani, setCani] = useQueryParamState<string>(queryParamKey);
 
   // Parse URL param into a stable range
   const range = useMemo(() => {

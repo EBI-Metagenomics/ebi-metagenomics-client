@@ -3,7 +3,7 @@ import {
   reactSelectStyles,
   reactSelectTheme,
 } from 'styles/react-select-styles';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import useQueryParamState from '@/hooks/queryParamState/useQueryParamState';
 import Switch from 'components/UI/Switch';
@@ -15,7 +15,7 @@ type FieldMultipleTextQueryProps = {
   example: string;
   queryMatcher: RegExp;
   queryMustInclude?: string;
-  explainer?: ReactElement | HTMLElement | string;
+  explainer?: React.ReactNode;
 };
 
 type SelectOptions = MultiValue<{ value: string; label: string }>;

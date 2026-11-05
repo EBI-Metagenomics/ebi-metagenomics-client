@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import axios from 'axios';
+import axios, { type AxiosResponse } from 'axios';
 import { countBy, filter, find, flatMap, groupBy, map, split } from 'lodash-es';
 import Select from 'react-select';
 import { getBiomeIcon } from '@/utils/biomes';
@@ -35,7 +35,7 @@ const OptionLabel: React.FC<OptionProps> = ({ value, label }) => (
         style={{ float: 'initial' }}
       />
     </div>
-    <div className="vf-flag__body">{label}</div>
+    <div className="vf-flag__body">{String(label)}</div>
   </div>
 );
 
@@ -52,16 +52,14 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
 
   useEffect(() => {
     if (!firstPage) return;
-    const totalPages = Math.ceil(
-      (firstPage.count || 0) / BIOMES_PAGE_SIZE
-    );
+    const totalPages = Math.ceil((firstPage.count || 0) / BIOMES_PAGE_SIZE);
     if (totalPages <= 1) {
       setAllBiomes(firstPage.items);
       return;
     }
     let cancelled = false;
     setPaginatingRemaining(true);
-    const remainingRequests = [];
+    const remainingRequests: Promise<AxiosResponse<BiomeList>>[] = [];
     for (let p = 2; p <= totalPages; p += 1) {
       remainingRequests.push(
         axios.get<BiomeList>(
@@ -147,7 +145,7 @@ const BiomeSelector: React.FC<BiomeSelectorProps> = ({
             setBiomeQP(biomeId);
           }
         }}
-        formatOptionLabel={OptionLabel}
+        formatOptionLabel={(option) => <OptionLabel {...option} />}
         isLoading={loading}
         isSearchable
         name="biome"
