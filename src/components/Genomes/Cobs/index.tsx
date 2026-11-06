@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import 'textarea-sequence/dist/textarea-sequence';
+import '@nightingale-elements/nightingale-textarea-sequence';
+import type TextareaSequence from '@nightingale-elements/nightingale-textarea-sequence';
+import 'quill/dist/quill.core.css';
 
 import Tooltip from 'components/UI/Tooltip';
 
@@ -10,6 +12,9 @@ import CataloguePicker from 'components/Genomes/CrossCatalogueSearchCataloguePic
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import UserContext from 'pages/Login/UserContext';
+import { GenomeApiResponse } from '@/interfaces';
+import { fetchFastaPreview } from '@/utils/fasta';
+import { findGenomeFasta } from 'components/Genomes/ContigViewer/downloads';
 import CobsResults from './Results';
 import './style.css';
 
@@ -24,30 +29,35 @@ type CobsProps = {
 const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
   const { config } = useContext(UserContext);
   const isSingleCatalogue = !!catalogueID;
-  const textareaSeq = useRef<TextareaSequenceElement>(null);
+  const textareaSeq = useRef<TextareaSequence>(null);
   const [shouldSearch, setShouldSearch] = useState(false);
   const [kmers, setKmers] = useState(KMERS_DEFAULT);
-  const [errors, setErrors] = useState<{
-    tooShort?: boolean;
-    multipleSequences?: boolean;
-    hasInvalidCharacters?: boolean;
-  }>({});
-  const [valid, setValid] = useState(false);
+  const [errors, setErrors] = useState<Partial<TextareaSequence['errors']>>({
+    tooShort: true,
+  });
+  const valid = !Object.values(errors).some(Boolean);
   useEffect(() => {
-    textareaSeq.current?.addEventListener('error-change', (e) => {
-      setErrors((e as any).detail.errors);
-      setValid((textareaSeq.current as any)?.quill.valid);
+    const element = textareaSeq.current;
+    if (!element) return;
+
+    const updateErrors = () => setErrors(element.errors);
+    element.addEventListener('error-change', updateErrors);
+    element.updateComplete.then(() => {
+      element.format(true);
+      updateErrors();
     });
+
+    return () => element.removeEventListener('error-change', updateErrors);
   }, []);
 
   const [selectedCatalogues, setSelectedCatalogues] = useState<string[]>([]);
 
   const setSequence = (seq: string): void => {
-    textareaSeq.current?.quill.setText(seq);
+    textareaSeq.current?.quill?.setText(seq);
   };
 
   const getAccessionFromCataloguesFirstGenome = async (): Promise<string> => {
-    const genomeCatalogueSlug = catalogueID || selectedCatalogues[1];
+    const genomeCatalogueSlug = catalogueID || selectedCatalogues[0];
     const url = `${config.api_v2}genomes/catalogues/${genomeCatalogueSlug}/genomes?page=1&ordering=accession&page_size=1`;
     try {
       const response = await axios.get(url);
@@ -57,31 +67,26 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
     }
   };
 
-  const getSequenceCharsFromFastaFile = async (
-    fastaUrl: string
-  ): Promise<string> => {
-    try {
-      const headersConfig = {
-        headers: {
-          Range: 'bytes=0-499',
-        },
-      };
-
-      const response = await axios.get(fastaUrl, headersConfig);
-      const { data } = response;
-      return data.substring(0, 500);
-    } catch {
-      return '';
-    }
-  };
-
   const buildExampleSequence = async () => {
-    const myAccession = await getAccessionFromCataloguesFirstGenome();
-    const fastaUrl = `${config.api}genomes/${myAccession}/downloads/${myAccession}.fna`;
-    const firstFiftySequenceChars = await getSequenceCharsFromFastaFile(
-      fastaUrl
-    );
-    textareaSeq.current?.quill.setText(firstFiftySequenceChars);
+    const firstAccession = await getAccessionFromCataloguesFirstGenome();
+    if (!firstAccession) return;
+
+    try {
+      const response = await axios.get<GenomeApiResponse>(
+        `${config.api_v2}genomes/${firstAccession}`,
+        { params: { catalogue_id: catalogueID || selectedCatalogues[0] } }
+      );
+      const fastaUrl = findGenomeFasta(
+        response.data.downloads || [],
+        firstAccession
+      )?.url;
+      if (!fastaUrl) return;
+
+      const exampleSequence = await fetchFastaPreview(fastaUrl);
+      setSequence(exampleSequence);
+    } catch {
+      setSequence('');
+    }
   };
 
   const handleExampleClick = (): void => {
@@ -200,15 +205,15 @@ const CobsSearch: React.FC<CobsProps> = ({ catalogueName, catalogueID }) => {
         <section className="vf-stack vf-stack--200">
           <div />
           <div>
-            <textarea-sequence
+            <nightingale-textarea-sequence
               id="textareaID"
               alphabet="dna"
-              height="10em"
-              min-sequence-length={MIN_BASES}
-              single="true"
+              inner-style="height: 10em"
+              minSequenceLength={MIN_BASES}
+              single={true}
               ref={textareaSeq}
               className="mg-sequence"
-              disable-header-check="true"
+              disableHeaderCheck={true}
             />
           </div>
           <div className="row">
