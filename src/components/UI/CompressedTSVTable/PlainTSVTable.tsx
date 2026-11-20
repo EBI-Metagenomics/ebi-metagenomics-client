@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ungzip } from 'pako';
+import Papa from 'papaparse';
 
 import type { PaginatedList } from '@/interfaces';
 import { searchRegExp } from 'utils/textSearch';
@@ -7,14 +8,6 @@ import TSVTableView from './TSVTableView';
 import type { TSVTableLoaderProps } from './types';
 
 const PAGE_SIZE = 100;
-
-const parseRows = (text: string, leadingCommentChars = '#'): string[][] =>
-  text
-    .split('\n')
-    .filter(
-      (line) => line.trim().length > 0 && !line.startsWith(leadingCommentChars)
-    )
-    .map((line) => line.split('\t'));
 
 const normalizePageNumber = (pageNum: number): number =>
   Math.max(1, Number(pageNum) || 1);
@@ -31,10 +24,13 @@ type SearchResults = {
 
 const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
   barChartSpec,
+  chartViews,
+  delimiter = '\t',
   columnHeaders,
   columns = [],
   download,
   emptyStateMessage,
+  initialView,
   pageNum,
   setPageNum,
 }) => {
@@ -42,6 +38,7 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
     rows: null,
     url: download.url,
   });
+  const [error, setError] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResults | null>(
     null
@@ -53,6 +50,7 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
 
     setRowsState({ rows: null, url });
     setSearchResults(null);
+    setError('');
     fetch(url)
       .then(async (response) => {
         if (!response.ok) {
@@ -65,19 +63,28 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
         // decompressed a .gz URL before fetch exposes the response.
         const isGzip = bytes[0] === 0x1f && bytes[1] === 0x8b;
         const text = new TextDecoder().decode(isGzip ? ungzip(bytes) : bytes);
-        return parseRows(text);
+        const parsed = Papa.parse<string[]>(text, {
+          delimiter,
+          comments: '#',
+          skipEmptyLines: 'greedy',
+        });
+        if (parsed.errors.length) throw new Error('Invalid delimited table');
+        return parsed.data;
       })
       .then((rows) => {
         if (!cancelled) setRowsState({ rows, url });
       })
-      .catch(() => {
-        if (!cancelled) setRowsState({ rows: [], url });
+      .catch((reason: Error) => {
+        if (!cancelled) {
+          setError(reason.message);
+          setRowsState({ rows: [], url });
+        }
       });
 
     return () => {
       cancelled = true;
     };
-  }, [download.url]);
+  }, [download.url, delimiter]);
 
   const rows = rowsState.url === download.url ? rowsState.rows : null;
   const firstRowIsHeader = columns.length === 0;
@@ -87,25 +94,6 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
     [firstRowIsHeader, rows]
   );
   const visibleRows = searchResults?.rows ?? dataRows;
-  const histogramColumnIndex =
-    headerRow?.findIndex(
-      (header) =>
-        header.trim().toLowerCase() ===
-        barChartSpec?.histogramColumn?.trim().toLowerCase()
-    ) ?? -1;
-  const chartData = useMemo<PaginatedList<string[]> | undefined>(() => {
-    if (!barChartSpec?.histogramColumn || histogramColumnIndex < 0)
-      return undefined;
-    const counts = new Map<string, number>();
-    visibleRows.forEach((row) => {
-      const label = row[histogramColumnIndex]?.trim() || 'Unclassified';
-      counts.set(label, (counts.get(label) ?? 0) + 1);
-    });
-    const items = [...counts]
-      .sort(([a, aCount], [b, bCount]) => bCount - aCount || a.localeCompare(b))
-      .map(([label, count]) => [label, String(count)]);
-    return { items, count: items.length };
-  }, [barChartSpec?.histogramColumn, histogramColumnIndex, visibleRows]);
   const totalPages = Math.max(1, Math.ceil(visibleRows.length / PAGE_SIZE));
   const currentPage = Math.min(normalizePageNumber(pageNum), totalPages);
 
@@ -140,12 +128,11 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
 
   return (
     <TSVTableView
-      barChartSpec={
-        barChartSpec?.histogramColumn && histogramColumnIndex < 0
-          ? undefined
-          : barChartSpec
-      }
-      chartData={chartData}
+      initialView={initialView}
+      barChartSpec={barChartSpec}
+      chartViews={chartViews}
+      chartData={{ items: visibleRows, count: visibleRows.length }}
+      error={error}
       columnHeaders={columnHeaders}
       columns={columns}
       data={pageData}
