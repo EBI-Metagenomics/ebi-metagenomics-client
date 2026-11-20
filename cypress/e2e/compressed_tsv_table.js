@@ -1,4 +1,3 @@
-import config from 'utils/config';
 import { gzip } from 'pako';
 import { openPage, waitForPageLoad } from '../util/util.js';
 
@@ -28,7 +27,7 @@ describe('TSV table loaders', () => {
 
       cy.fixture('apiv2/genomes/genomeDetail_MGYG000000001.json').then(
         (genome) => {
-          cy.intercept('GET', `${config.api_v2}genomes/${accession}`, {
+          cy.intercept('GET', `**/genomes/${accession}`, {
             ...genome,
             downloads: [
               ...genome.downloads,
@@ -46,7 +45,7 @@ describe('TSV table loaders', () => {
           });
         }
       );
-      cy.intercept('GET', `${config.api_v2}genomes/${accession}/annotations`, {
+      cy.intercept('GET', `**/genomes/${accession}/annotations`, {
         fixture: 'apiv2/genomes/genomeAnnotations_MGYG000000001.json',
       });
       cy.fixture('plain-tsv-table.tsv', 'utf8').then((tsv) => {
@@ -90,7 +89,7 @@ describe('TSV table loaders', () => {
 
       cy.get('@tsvIndex.all').should('have.length', 0);
       cy.get('@plainTsv.all').then((requests) => {
-        cy.contains('button', 'Switch to chart view').click();
+        cy.contains('button', 'Chart view').click();
         cy.get('.compressed-tsv-table .highcharts-container').should(
           'be.visible'
         );
@@ -106,7 +105,7 @@ describe('TSV table loaders', () => {
     )}/plain-tsv-table.tsv?assembly`;
 
     cy.fixture('apiv2/analyses/analysisMGYA00000002.json').then((analysis) => {
-      cy.intercept('GET', `${config.api_v2}analyses/${accession}`, {
+      cy.intercept('GET', `**/analyses/${accession}`, {
         ...analysis,
         accession,
         downloads: [
@@ -142,7 +141,7 @@ describe('DRAM reports', () => {
     const reportHtml = '<h1>DRAM Distill report</h1>';
 
     cy.fixture('apiv2/analyses/analysisMGYA00000002.json').then((analysis) => {
-      cy.intercept('GET', `${config.api_v2}analyses/${accession}`, {
+      cy.intercept('GET', `**/analyses/${accession}`, {
         ...analysis,
         downloads: [
           ...analysis.downloads,
