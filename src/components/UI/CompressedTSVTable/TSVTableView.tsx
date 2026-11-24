@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useId } from 'react';
+import Select from 'react-select';
 import { filesize } from 'filesize';
 import type { ColumnDef as Column } from '@tanstack/react-table';
 
@@ -11,7 +12,7 @@ import WildcardSearchInput from 'components/UI/WildcardSearchInput';
 import { getRemoteFileSize } from 'utils/fetch';
 import { getAnnotationLabel } from 'utils/annotationStringStore';
 import TSVCell from './TSVCell';
-import type { TSVTableViewProps } from './types';
+import type { BarChartSpec, TSVTableViewProps } from './types';
 
 const columnsFromHeader = (
   headerRow: string[],
@@ -28,12 +29,61 @@ const columnsFromHeader = (
     id: `col_${columnIndex}`,
   }));
 
+// Histogram views count the complete loaded rows, including active search results.
+const histogramData = (
+  data: TSVTableViewProps['data'],
+  headerRow: string[] | undefined,
+  spec: BarChartSpec
+) => {
+  if (!spec.histogramColumn) return data;
+  const index =
+    headerRow?.findIndex(
+      (header) =>
+        header.trim().toLowerCase() ===
+        spec.histogramColumn?.trim().toLowerCase()
+    ) ?? -1;
+  if (index < 0) return { items: [], count: 0 };
+  const counts = new Map<string, number>();
+  const bins = spec.histogramBins;
+  const binLabels = bins?.map((lower, i) =>
+    i + 1 < bins.length ? `${lower}–${bins[i + 1] - 1}` : `${lower}+`
+  );
+  binLabels?.forEach((label) => counts.set(label, 0));
+  data.items.forEach((row) => {
+    const value = row[index]?.trim() || 'Unclassified';
+    if (bins && binLabels) {
+      const number = Number(value);
+      const bin = bins.findIndex(
+        (lower, i) =>
+          number >= lower && (i + 1 === bins.length || number < bins[i + 1])
+      );
+      if (Number.isFinite(number) && bin >= 0)
+        counts.set(binLabels[bin], (counts.get(binLabels[bin]) ?? 0) + 1);
+    } else {
+      const labels = spec.histogramSplit
+        ? value.split(spec.histogramSplit)
+        : [value];
+      new Set(labels.map((label) => label.trim()).filter(Boolean)).forEach(
+        (label) => counts.set(label, (counts.get(label) ?? 0) + 1)
+      );
+    }
+  });
+  const items = (
+    bins
+      ? [...counts]
+      : [...counts].sort(([a, ac], [b, bc]) => bc - ac || a.localeCompare(b))
+  ).map(([label, count]) => [label, String(count)]);
+  return { items, count: items.length };
+};
+
 const TSVTableView: React.FC<TSVTableViewProps> = ({
   barChartSpec,
+  chartViews,
   columnHeaders,
   chartData,
   columns = [],
   data,
+  error,
   emptyStateMessage = 'The file has no content',
   expectedPageSize,
   fileUrl,
@@ -41,11 +91,29 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
   isLoading,
   isFileEmpty,
   isSearching,
+  initialView = 'table',
   onClearSearch,
   onSearch,
   searchTerm,
 }) => {
-  const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
+  const [viewMode, setViewMode] = useState<'table' | 'chart'>(initialView);
+  const [chartId, setChartId] = useState(chartViews?.[0]?.id);
+  const selectorId = useId();
+  const activeChart =
+    chartViews?.find((chart) => chart.id === chartId) ?? chartViews?.[0];
+  const [isChartSelectorOpen, setIsChartSelectorOpen] = useState(false);
+  const multipleCharts = (chartViews?.length ?? 0) > 1;
+  const hasCharts = !!chartViews?.length || !!barChartSpec;
+  const activeSpec =
+    activeChart?.barChartSpec ?? (!activeChart ? barChartSpec : undefined);
+  const sourceData = chartData ?? data;
+  const barData = useMemo(
+    () =>
+      activeSpec
+        ? histogramData(sourceData, headerRow, activeSpec)
+        : sourceData,
+    [sourceData, headerRow, activeSpec]
+  );
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [searchInput, setSearchInput] = useState(searchTerm);
   const [wholeWord, setWholeWord] = useState(false);
@@ -184,28 +252,6 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
           )}
         </div>
         <div className="compressed-tsv-table__toolbar-actions">
-          {barChartSpec && (
-            <button
-              type="button"
-              className="vf-search__button | vf-button vf-button--primary mg-text-search-button vf-button--sm"
-              onClick={() =>
-                setViewMode((currentMode) =>
-                  currentMode === 'table' ? 'chart' : 'table'
-                )
-              }
-              disabled={isBusy}
-            >
-              <span
-                className={`icon icon-common icon-${
-                  viewMode === 'table' ? 'chart-bar' : 'table'
-                }`}
-                style={{ color: '#dcfce7' }}
-              />
-              <span className="vf-button__text">
-                Switch to {viewMode === 'table' ? 'chart' : 'table'} view
-              </span>
-            </button>
-          )}
           <button
             type="button"
             className="vf-button vf-button--secondary vf-button--sm"
@@ -215,11 +261,87 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
             <span className="icon icon-common icon-search" />{' '}
             <span className="vf-button__text">Search...</span>
           </button>
+          <button
+            type="button"
+            className="vf-button vf-button--secondary vf-button--sm"
+            onClick={() => {
+              setViewMode('table');
+              setIsChartSelectorOpen(false);
+            }}
+            disabled={isBusy || viewMode === 'table'}
+          >
+            <span className="icon icon-common icon-table" /> Table view
+          </button>
+          <div style={{ position: 'relative' }}>
+            <button
+              type="button"
+              className="vf-button vf-button--secondary vf-button--sm"
+              aria-expanded={multipleCharts ? isChartSelectorOpen : undefined}
+              aria-controls={
+                multipleCharts && isChartSelectorOpen ? selectorId : undefined
+              }
+              onClick={() => {
+                if (multipleCharts) setIsChartSelectorOpen((open) => !open);
+                else setViewMode('chart');
+              }}
+              disabled={
+                isBusy ||
+                !hasCharts ||
+                (!multipleCharts && viewMode === 'chart')
+              }
+            >
+              <span className="icon icon-common icon-chart-bar" />{' '}
+              {multipleCharts ? 'Chart views' : 'Chart view'}
+              {multipleCharts && (
+                <>
+                  {' '}
+                  <span aria-hidden="true">▾</span>
+                </>
+              )}
+            </button>
+            {isChartSelectorOpen && multipleCharts && (
+              <div
+                style={{
+                  position: 'absolute',
+                  right: 0,
+                  top: '100%',
+                  width: 260,
+                  zIndex: 20,
+                }}
+              >
+                <Select
+                  inputId={selectorId}
+                  aria-label="Chart views"
+                  autoFocus
+                  menuIsOpen
+                  options={chartViews?.map((chart) => ({
+                    value: chart.id,
+                    label: chart.label,
+                  }))}
+                  value={
+                    activeChart
+                      ? { value: activeChart.id, label: activeChart.label }
+                      : null
+                  }
+                  onBlur={() => setIsChartSelectorOpen(false)}
+                  onMenuClose={() => setIsChartSelectorOpen(false)}
+                  onChange={(option) => {
+                    if (option) {
+                      setChartId(option.value);
+                      setViewMode('chart');
+                    }
+                    setIsChartSelectorOpen(false);
+                  }}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
+      {error && <p role="alert">{error}</p>}
       <FixedHeightScrollable heightPx={600} className="tsv-table__scroll">
         {isBusy && <Loading />}
-        {!isBusy && viewMode === 'table' && (
+        {!error && !isBusy && viewMode === 'table' && (
           <EMGTable
             cols={tableColumns}
             data={data}
@@ -228,9 +350,14 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
             expectedPageSize={expectedPageSize}
           />
         )}
-        {!isBusy && viewMode === 'chart' && barChartSpec && (
-          <BarChartForTable data={chartData ?? data} {...barChartSpec} />
-        )}
+        {!error &&
+          !isBusy &&
+          viewMode === 'chart' &&
+          (activeChart?.render
+            ? activeChart.render(sourceData, headerRow)
+            : activeSpec && (
+                <BarChartForTable data={barData} {...activeSpec} />
+              ))}
       </FixedHeightScrollable>
     </div>
   );

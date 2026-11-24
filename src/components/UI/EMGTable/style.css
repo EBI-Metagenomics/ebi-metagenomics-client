@@ -57,6 +57,7 @@
 
 .mg-table-toolbar {
   display: flex;
+  padding-bottom: 1rem;
   flex-direction: row-reverse;
   width: 100%;
   justify-content: space-between;
@@ -65,12 +66,18 @@
 .mg-table-toolbar__actions {
   display: flex;
   gap: 1em;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .mg-table-toolbar__actions .vf-button {
-  margin-bottom: 8px;
+  align-self: flex-end;
+  margin-bottom: 0;
   white-space: nowrap;
+}
+
+.mg-table-toolbar__actions .vf-button,
+.mg-table-toolbar__actions .vf-form__input {
+  height: 3rem;
 }
 
 .mg-table-scroll-x {

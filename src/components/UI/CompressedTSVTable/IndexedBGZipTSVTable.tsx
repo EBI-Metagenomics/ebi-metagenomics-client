@@ -23,6 +23,7 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
   columns = [],
   download,
   emptyStateMessage,
+  initialView,
   pageNum,
   setPageNum,
 }) => {
@@ -180,6 +181,7 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
 
   return (
     <TSVTableView
+      initialView={initialView}
       barChartSpec={barChartSpec}
       columnHeaders={columnHeaders}
       columns={columns}

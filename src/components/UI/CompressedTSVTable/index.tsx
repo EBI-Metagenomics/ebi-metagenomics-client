@@ -22,7 +22,10 @@ const CompressedTSVTable: React.FC<TSVTableProps> = (props) => {
   const loaderProps = { ...props, pageNum, setPageNum };
 
   // Histograms need all rows to count each category across the whole file.
-  return indexUrl && !props.barChartSpec?.histogramColumn ? (
+  return indexUrl &&
+    !props.chartViews?.length &&
+    !props.barChartSpec?.histogramColumn &&
+    (!props.delimiter || props.delimiter === '\t') ? (
     <IndexedBGZipTSVTable key={sourceKey} {...loaderProps} />
   ) : (
     <PlainTSVTable key={sourceKey} {...loaderProps} />

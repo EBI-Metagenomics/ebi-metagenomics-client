@@ -307,3 +307,37 @@ export type PublicationEuropePmcAnnotations = {
   other: AnnotationGroup[];
   sample_processing: AnnotationGroup[];
 };
+
+export interface ViralCatalogue {
+  catalogue_id: string;
+  name: string;
+  version: string;
+  description: string;
+  biome: string;
+  ftp_url: string;
+  pipeline_version: string;
+  updated_at: string;
+  fragment_count: number;
+  total_sequence_count?: number;
+  cluster_count: number;
+  virus_count: number;
+  provirus_count: number;
+  prophage_count: number;
+  plasmid_count: number | null;
+  downloads: Download[];
+  other_stats: Record<string, unknown>;
+}
+
+export interface ViralFragment {
+  accession: string;
+  catalogue_id: string;
+  length: number;
+  cluster_size: number;
+  source_types: ('genome' | 'analysis')[];
+  completeness: number | null;
+  contamination: number | null;
+  checkv_quality: string;
+  sequence_type: 'virus' | 'prophage' | 'plasmid';
+  metadata_rows?: Record<string, string>[];
+  metadata_url?: string;
+}

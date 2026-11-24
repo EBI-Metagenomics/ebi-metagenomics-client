@@ -41,6 +41,9 @@ const Study = lazy(() => import('./pages/Study'));
 const Sample = lazy(() => import('./pages/Sample'));
 const SuperStudy = lazy(() => import('./pages/SuperStudy'));
 const Publication = lazy(() => import('./pages/Publication'));
+const Viruses = lazy(() => import('pages/Viruses'));
+const ViralCatalogue = lazy(() => import('./pages/ViralCatalogue'));
+const ViralFragment = lazy(() => import('./pages/ViralFragment'));
 const GenomeCatalogue = lazy(() => import('./pages/GenomeCatalogue'));
 const Genome = lazy(() => import('./pages/Genome'));
 const Run = lazy(() => import('./pages/Run'));
@@ -117,6 +120,15 @@ const App: React.FC = () => {
                 <Route
                   path="/genome-catalogues/*"
                   element={<GenomeCatalogue />}
+                />
+                <Route path="/viruses" element={<Viruses />} />
+                <Route
+                  path="/viruses/:catalogueId/fragments/:accession"
+                  element={<ViralFragment />}
+                />
+                <Route
+                  path="/viruses/:catalogueId/*"
+                  element={<ViralCatalogue />}
                 />
                 <Route path="/genomes/*" element={<Genome />} />
                 <Route path="/runs/*" element={<Run />} />
