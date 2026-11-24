@@ -1,5 +1,7 @@
 export const ANNOTATION_LABELS: Record<string, string> = {
   amr: 'AMR gene',
+  'amr classes': 'AMR classes',
+  'amr elements': 'AMR elements',
   'amr-drug': 'AMR drug class',
   'amr-element': 'AMR element type',
   'amr-subelement': 'AMR element subtype',

@@ -158,6 +158,16 @@ const MegaMenu: React.FC = () => {
             </li>
             <li className="vf-navigation__item">
               <a
+                id="viruses-link"
+                className="vf-navigation__link vf-mega-menu__link"
+                href={`${config.basename}viruses`}
+                onClick={() => setMenuVisible(false)}
+              >
+                MGnify Viruses
+              </a>
+            </li>
+            <li className="vf-navigation__item">
+              <a
                 id="browse-section"
                 className={`vf-navigation__link vf-mega-menu__link vf-mega-menu__link--has-section ${
                   activeSection === 'browse-section' ? 'active' : ''
@@ -286,6 +296,15 @@ const MegaMenu: React.FC = () => {
                             className="vf-navigation__link rotating-link"
                           >
                             Genomes <ArrowForLink />
+                          </a>
+                        </li>
+                        <li className="vf-navigation__item">
+                          <a
+                            className="vf-navigation__link rotating-link"
+                            href={`${config.basename}viruses`}
+                            onClick={() => setMenuVisible(false)}
+                          >
+                            Viruses <ArrowForLink />
                           </a>
                         </li>
                         <li className="vf-navigation__item">

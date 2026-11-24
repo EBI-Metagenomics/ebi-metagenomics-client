@@ -3,6 +3,7 @@ import { PaginatedList } from '@/interfaces';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { capitalize, get, kebabCase, min, unzip } from 'lodash-es';
+import { getAnnotationLabel } from 'utils/annotationStringStore';
 
 type BarChartColSpec = {
   // Uses the same accessors as the table columns.
@@ -56,6 +57,7 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
   }, [data.items, dataAccessor, labelAccessor, maxLabels]);
 
   const total = data.count;
+  const chartTitle = getAnnotationLabel(capitalize(title));
 
   const options: Highcharts.Options = {
     chart: {
@@ -63,7 +65,7 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
       height: Math.max(400, (series?.length || 0) * 20 + 100),
       zoomType: 'xy',
     },
-    title: { text: capitalize(title) },
+    title: { text: chartTitle },
     subtitle: {
       text:
         subtitle ??
@@ -99,7 +101,7 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
     },
     series: [
       {
-        name: capitalize(title),
+        name: chartTitle,
         data: series as number[],
         type: 'bar',
       },

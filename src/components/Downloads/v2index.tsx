@@ -6,6 +6,7 @@ import AnalysisContext from 'pages/Analysis/V2AnalysisContext';
 
 interface DownloadsProps {
   downloads?: Array<Download>;
+  downloadName?: string;
 }
 
 function getFileFormat(file: Download): string {
@@ -19,12 +20,12 @@ function getFileFormat(file: Download): string {
 
 // TODO: move to a shared string store (also useful in contig browser feature panel)
 const nameOverrides: Record<string, string> = {
-  'amr': 'AMR',
+  amr: 'AMR',
   annotation_summary: 'Annotation Summary',
   antismash: 'antiSMASH',
-  'bgcs': 'BGCs',
+  bgcs: 'BGCs',
   coding_sequences: 'Coding Sequences',
-  'crispr': 'CRISPR',
+  crispr: 'CRISPR',
   dada2: 'DADA2',
   dada2_pr2: 'DADA2-PR2',
   dada2_silva: 'DADA2-SILVA',
@@ -43,7 +44,7 @@ const nameOverrides: Record<string, string> = {
   pr2: 'PR2',
   quality_control: 'Quality Control',
   rhea_reactions: 'Rhea Reactions',
-  'rrna': 'rRNA',
+  rrna: 'rRNA',
   silva_lsu: 'SILVA-LSU',
   silva_ssu: 'SILVA-SSU',
   taxonomy: 'Taxonomy',
@@ -56,8 +57,11 @@ function formatGroupLabel(group: string): string {
   // Normalise to lowercase underscored keys so overrides match regardless of
   // whether the API sends hyphens (DADA2-PR2) or underscores (dada2_pr2).
   const key = (lastPart || group).toLowerCase().replace(/-/g, '_');
-  if (nameOverrides[key]) return nameOverrides[key];
-  return startCase(key);
+  const label = nameOverrides[key] || startCase(key);
+  const catalogue = group.split('.')[0];
+  return ['viruses', 'plasmids'].includes(catalogue)
+    ? `${startCase(catalogue)} · ${label}`
+    : label;
 }
 
 type GroupedDownloads = {
@@ -75,7 +79,13 @@ const sayCopied = (message: string) =>
     draggable: true,
   });
 
-const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
+const shellQuote = (value: string): string =>
+  "'" + value.replaceAll("'", `'"'"'`) + "'";
+
+const Downloads: React.FC<DownloadsProps> = ({
+  downloads: propDownloads,
+  downloadName,
+}) => {
   const { overviewData } = useContext(AnalysisContext);
   const downloads = propDownloads ?? overviewData?.downloads;
 
@@ -99,15 +109,18 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
 
   const [showCurlScript, setShowCurlScript] = useState(false);
 
-  const accession = overviewData?.accession || 'analysis';
+  const accession = downloadName || overviewData?.accession || 'analysis';
 
   const curlScript = useMemo(() => {
     if (!downloads?.length) return '';
-    const lines = downloads.map((dl) => `curl -LO "${dl.url}"`);
+    const lines = downloads.map(
+      (dl) =>
+        `curl -L --create-dirs -o ${shellQuote(dl.alias)} ${shellQuote(dl.url)}`
+    );
     return [
       '#!/bin/bash',
       `# Download all files for ${accession}`,
-      `mkdir -p ${accession} && cd ${accession}`,
+      `mkdir -p ${shellQuote(accession)} && cd ${shellQuote(accession)}`,
       ...lines,
     ].join('\n');
   }, [downloads, accession]);
@@ -206,7 +219,7 @@ const Downloads: React.FC<DownloadsProps> = ({ downloads: propDownloads }) => {
                             <div className="vf-flag vf-flag--top vf-flag--200">
                               <div className="vf-flag__body">
                                 <h5 className="vf-card__heading">
-                                  {file.short_description}
+                                  {file.short_description || file.alias}
                                 </h5>
                               </div>
                               <div className="vf-flag__media">

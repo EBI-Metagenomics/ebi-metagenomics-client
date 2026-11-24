@@ -69,6 +69,12 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
           skipEmptyLines: 'greedy',
         });
         if (parsed.errors.length) throw new Error('Invalid delimited table');
+        // Some MOB-suite exports use spaces only in the header row.
+        if (delimiter === '\t' && parsed.data[0]?.length === 1) {
+          const headers = parsed.data[0][0].trim().split(/\s+/);
+          if (headers.length === parsed.data[1]?.length)
+            parsed.data[0] = headers;
+        }
         return parsed.data;
       })
       .then((rows) => {
