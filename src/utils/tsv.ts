@@ -1,3 +1,5 @@
+import config from 'utils/config';
+
 export const rowMatchesTSVSearch = (
   row: string[],
   rawSearchTerm: string
@@ -16,6 +18,21 @@ export type ReferenceDatabaseLookup = {
 };
 
 export const ReferenceDatabaseLookups: ReferenceDatabaseLookup[] = [
+  {
+    name: 'MGnify Genome',
+    pattern: /\bMGYG\d{9}(?!\d)/g,
+    href: (match) => `${config.basename}genomes/${match[0]}`,
+  },
+  {
+    name: 'MGnify Analysis',
+    pattern: /\bMGYA\d{8}(?!\d)/g,
+    href: (match) => `${config.basename}analyses/${match[0]}`,
+  },
+  {
+    name: 'ENA',
+    pattern: /\b(?:SAM[END][A-Z]?\d+|PRJ[EDN][AB]\d+|[EDS]R[PRSXZ]\d+)\b/g,
+    href: (match) => `https://www.ebi.ac.uk/ena/browser/view/${match[0]}`,
+  },
   {
     name: 'Rhea',
     pattern: /\bRHEA:(\d+)\b/gi,

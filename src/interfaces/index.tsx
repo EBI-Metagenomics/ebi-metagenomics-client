@@ -328,51 +328,16 @@ export interface ViralCatalogue {
   other_stats: Record<string, unknown>;
 }
 
-export interface ViralFragmentOccurrence {
-  fragment_accession: string;
-  nt_sequence_sha256: string;
-  original_id: string;
-  prediction_tool?: string;
-  source_type: 'genome' | 'analysis';
-  source_accession: string;
-  source_genome_accession: string | null;
-  catalogue_genome_id: number | null;
-  genome_catalogue_id: string | null;
-  analysis_id: number | null;
-  analysis_accession: string | null;
-  source_sample: string;
-  source_study: string;
-  source_lineage: string;
-}
-
 export interface ViralFragment {
   accession: string;
   catalogue_id: string;
-  original_id: string;
-  cluster_representative: string;
   length: number;
-  sequence_sha256: string;
-  nt_sequence_sha256?: string;
-  cluster_size?: number;
-  occurrence_count?: number;
-  cluster_member_occurrence_count?: number;
-  source_types?: ('genome' | 'analysis')[];
-  occurrences?: ViralFragmentOccurrence[];
-  cluster_member_occurrences?: ViralFragmentOccurrence[];
-  source_type: 'genome' | 'analysis';
-  source_accession: string;
-  source_genome_accession: string | null;
-  source_analysis_accession: string | null;
-  source_sample: string;
-  source_study: string;
-  source_lineage: string;
-  prediction_tool: string;
-  checkv_quality: string;
-  miuvig_quality: string;
+  cluster_size: number;
+  source_types: ('genome' | 'analysis')[];
   completeness: number | null;
   contamination: number | null;
-  is_provirus: boolean;
-  sequence_type: 'virus' | 'prophage';
-  taxonomy: Record<string, string>;
-  metadata?: Record<string, string>;
+  checkv_quality: string;
+  sequence_type: 'virus' | 'prophage' | 'plasmid';
+  metadata_rows?: Record<string, string>[];
+  metadata_url?: string;
 }

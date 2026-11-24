@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Download } from '@/interfaces';
 import CompressedTSVTable from 'components/UI/CompressedTSVTable';
 import {
@@ -6,6 +6,7 @@ import {
   TableChartView,
 } from 'components/UI/CompressedTSVTable/types';
 import TaxonomySankey from 'components/Viruses/TaxonomySankey';
+import KronaIframe from 'components/UI/KronaIframe';
 import DetailedVisualisationCard from 'components/Analysis/VisualisationCards/DetailedVisualisationCard';
 
 export const histogram = (
@@ -27,6 +28,19 @@ export const histogram = (
     accessorFn: (row) => Number(row[1]),
   },
 });
+
+export const amrChartViews: TableChartView[] = [
+  {
+    id: 'amr-classes',
+    label: 'AMR classes',
+    barChartSpec: histogram('drug_class', 'AMR classes', undefined, ';'),
+  },
+  {
+    id: 'amr-elements',
+    label: 'AMR elements',
+    barChartSpec: histogram('gene_symbol', 'AMR elements'),
+  },
+];
 
 type Panel = {
   title: string;
@@ -73,20 +87,13 @@ const panels: Panel[] = [
     suffix: 'viruses/viruses-all-metadata.tsv.gz',
     spec: histogram('Source_of_prediction', 'Prediction methods'),
   },
-  {
-    title: 'AMR classes',
+  ...amrChartViews.map((view) => ({
+    title: view.label,
     group: 'AMR',
     suffix:
       'viruses/cluster_representatives/functional_annotation/amr/viruses.tsv',
-    spec: histogram('drug_class', 'AMR classes', undefined, ';'),
-  },
-  {
-    title: 'AMR elements',
-    group: 'AMR',
-    suffix:
-      'viruses/cluster_representatives/functional_annotation/amr/viruses.tsv',
-    spec: histogram('gene_symbol', 'AMR elements'),
-  },
+    spec: view.barChartSpec,
+  })),
   ...['PFAM', 'COG', 'PHROG', 'VOG', 'PVOG', 'CAZy'].map((database) => ({
     title: `${database} annotations`,
     group: 'Protein annotations',
@@ -164,14 +171,18 @@ const panels: Panel[] = [
 
 const CatalogueCharts: React.FC<{
   downloads: Download[];
-  section?: 'overview' | 'viral-taxonomy' | 'host-taxonomy';
-}> = ({ downloads, section = 'overview' }) => {
+  section: 'qc' | 'viral-taxonomy' | 'host-taxonomy' | 'annotations';
+}> = ({ downloads, section }) => {
   const available = panels
     .filter((panel) => {
+      if (section === 'annotations')
+        return ['AMR', 'Protein annotations', 'Lifestyle'].includes(
+          panel.group
+        );
       if (section === 'viral-taxonomy') return panel.group === 'Taxonomy';
       if (section === 'host-taxonomy')
         return panel.group === 'Sources and hosts';
-      return !['Taxonomy', 'Sources and hosts'].includes(panel.group);
+      return panel.group === 'QC';
     })
     .flatMap((panel) => {
       const download = downloads.find((file) => file.alias === panel.suffix);
@@ -183,44 +194,15 @@ const CatalogueCharts: React.FC<{
       return { ...views[0], views };
     }
   );
-  const groups = [...new Set(available.map((panel) => panel.group))];
-  const [selected, setSelected] = useState('QC');
-  const group = groups.includes(selected) ? selected : groups[0];
-  if (!group) return <p>No annotation files are available.</p>;
   return (
     <div className="vf-stack vf-stack--400">
-      {section === 'overview' && (
-        <div className="vf-tabs mg-search-tabs">
-          <ul
-            className="vf-tabs__list"
-            role="tablist"
-            aria-label="Chart groups"
-          >
-            {groups.map((name) => (
-              <li className="vf-tabs__item" key={name}>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={group === name}
-                  className={`vf-tabs__link mg-button-as-tab ${
-                    group === name ? 'is-active' : ''
-                  }`}
-                  onClick={() => setSelected(name)}
-                >
-                  {name}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {group === 'QC' && (
+      {section === 'qc' && (
         <p>
           Sequence lengths and CheckV include all source fragments. Cluster
           sizes describe representative clusters.
         </p>
       )}
-      {group === 'Sources and hosts' && (
+      {section === 'host-taxonomy' && (
         <p>
           Source genome taxonomy includes only genome occurrences of cluster
           representatives. Predicted-host charts count prediction records.
@@ -228,82 +210,96 @@ const CatalogueCharts: React.FC<{
       )}
       <section
         role="tabpanel"
-        aria-label={group}
+        aria-label={section}
         className="vf-stack vf-stack--400"
       >
-        {files
-          .filter((file) => file.group === group)
-          .map((file) => {
-            const chartViews: TableChartView[] =
-              file.views.flatMap<TableChartView>((view) => {
-                const id = view.title.toLowerCase().replaceAll(' ', '-');
-                if (view.sankey)
-                  return [
+        {files.map((file) => {
+          const chartViews: TableChartView[] =
+            file.views.flatMap<TableChartView>((view) => {
+              const id = view.title.toLowerCase().replaceAll(' ', '-');
+              if (view.sankey)
+                return [
+                  {
+                    id,
+                    label: view.title,
+                    render: (data, headerRow) => (
+                      <TaxonomySankey
+                        data={data}
+                        headerRow={headerRow}
+                        title={view.title}
+                        {...view.sankey}
+                      />
+                    ),
+                  },
+                ];
+              return view.spec
+                ? [
                     {
                       id,
-                      label: view.title,
-                      render: (data, headerRow) => (
-                        <TaxonomySankey
-                          data={data}
-                          headerRow={headerRow}
-                          title={view.title}
-                          {...view.sankey}
-                        />
-                      ),
+                      label: view.spec.histogramBins
+                        ? `${view.title} histogram`
+                        : view.title,
+                      barChartSpec: view.spec,
                     },
-                  ];
-                return view.spec
-                  ? [
-                      {
-                        id,
-                        label: view.spec.histogramBins
-                          ? `${view.title} histogram`
-                          : view.title,
-                        barChartSpec: view.spec,
-                      },
-                    ]
-                  : [];
-              });
-            const countsFile = file.sankey && !file.sankey.lineageColumn;
-            return (
-              <div
-                key={file.suffix}
-                data-cy={`viral-chart-${file.title
-                  .toLowerCase()
-                  .replaceAll(' ', '-')}`}
+                  ]
+                : [];
+            });
+          const countsFile = file.sankey && !file.sankey.lineageColumn;
+          return (
+            <div
+              key={file.suffix}
+              data-cy={`viral-chart-${file.title
+                .toLowerCase()
+                .replaceAll(' ', '-')}`}
+            >
+              <DetailedVisualisationCard
+                title={file.download.short_description}
+                ftpLink={file.download.url}
+                subheading={file.download.long_description}
+                showZoomButton={false}
               >
-                <DetailedVisualisationCard
-                  title={file.download.short_description}
-                  ftpLink={file.download.url}
-                  subheading={file.download.long_description}
-                  showZoomButton={false}
-                >
-                  <CompressedTSVTable
-                    download={file.download}
-                    delimiter={file.sankey?.delimiter}
-                    columns={
-                      countsFile
-                        ? [
-                            {
-                              id: 'count',
-                              header: 'Sequences',
-                              accessorFn: (row) => row[0],
-                            },
-                            ...Array.from({ length: 8 }, (_, index) => ({
-                              id: `rank-${index}`,
-                              header: `Taxonomic rank ${index + 1}`,
-                              accessorFn: (row: string[]) => row[index + 1],
-                            })),
-                          ]
-                        : undefined
-                    }
-                    chartViews={chartViews}
-                    initialView={chartViews.length ? 'chart' : 'table'}
-                  />
-                </DetailedVisualisationCard>
-              </div>
-            );
-          })}
+                <CompressedTSVTable
+                  download={file.download}
+                  delimiter={file.sankey?.delimiter}
+                  columns={
+                    countsFile
+                      ? [
+                          {
+                            id: 'count',
+                            header: 'Sequences',
+                            accessorFn: (row) => row[0],
+                          },
+                          ...Array.from({ length: 8 }, (_, index) => ({
+                            id: `rank-${index}`,
+                            header: `Taxonomic rank ${index + 1}`,
+                            accessorFn: (row: string[]) => row[index + 1],
+                          })),
+                        ]
+                      : undefined
+                  }
+                  chartViews={chartViews}
+                  initialView={chartViews.length ? 'chart' : 'table'}
+                />
+              </DetailedVisualisationCard>
+            </div>
+          );
+        })}
+        {section === 'viral-taxonomy' &&
+          downloads
+            .filter(
+              (file) =>
+                file.file_type === 'html' && file.alias.includes('_krona')
+            )
+            .map((file) => (
+              <DetailedVisualisationCard
+                key={file.alias}
+                title={file.short_description}
+                ftpLink={file.url}
+                showZoomButton={false}
+              >
+                <KronaIframe url={file.url} title={file.short_description} />
+              </DetailedVisualisationCard>
+            ))}
       </section>
     </div>
   );

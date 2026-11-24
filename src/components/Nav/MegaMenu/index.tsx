@@ -160,7 +160,7 @@ const MegaMenu: React.FC = () => {
               <a
                 id="viruses-link"
                 className="vf-navigation__link vf-mega-menu__link"
-                href={`${config.basename}browse/viruses`}
+                href={`${config.basename}viruses`}
                 onClick={() => setMenuVisible(false)}
               >
                 MGnify Viruses
@@ -301,7 +301,7 @@ const MegaMenu: React.FC = () => {
                         <li className="vf-navigation__item">
                           <a
                             className="vf-navigation__link rotating-link"
-                            href={`${config.basename}browse/viruses`}
+                            href={`${config.basename}viruses`}
                             onClick={() => setMenuVisible(false)}
                           >
                             Viruses <ArrowForLink />
