@@ -4,6 +4,9 @@ import * as Sentry from '@sentry/react';
 import { MatomoProvider, createInstance } from '@jonkoops/matomo-tracker-react';
 import config from '@/utils/config';
 import App from './App';
+import consumeImpersonationToken from './utils/consumeImpersonationToken';
+
+consumeImpersonationToken();
 
 Sentry.init({
   dsn: config.sentryDsn,
