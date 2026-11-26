@@ -24,6 +24,7 @@ export type ConfigType = {
   };
   notebooksURL: string;
   magsPipelineRepo: string;
+  virusPipelineRepo: string;
   whenDownloadingListsFromApi?: {
     maxPages: number;
     cadenceMs: number;

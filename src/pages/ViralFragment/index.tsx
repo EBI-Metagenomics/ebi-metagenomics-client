@@ -32,7 +32,12 @@ const ViralFragmentPage: React.FC = () => {
         links={[
           { label: 'Home', url: '/' },
           { label: 'MGnify Viruses', url: '/viruses' },
-          { label: catalogueId, url: `/viruses/${catalogueId}/${kind}` },
+          {
+            label: catalogueId,
+            url: `/viruses/${catalogueId}/${kind}${
+              kind === 'viruses' ? '#clusters' : ''
+            }`,
+          },
           { label: accession },
         ]}
       />

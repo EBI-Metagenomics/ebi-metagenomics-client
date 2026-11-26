@@ -25,6 +25,7 @@ type SearchResults = {
 const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
   barChartSpec,
   chartViews,
+  chartButtons,
   delimiter = '\t',
   columnHeaders,
   columns = [],
@@ -137,6 +138,7 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
       initialView={initialView}
       barChartSpec={barChartSpec}
       chartViews={chartViews}
+      chartButtons={chartButtons}
       chartData={{ items: visibleRows, count: visibleRows.length }}
       error={error}
       columnHeaders={columnHeaders}

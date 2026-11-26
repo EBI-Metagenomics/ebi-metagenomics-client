@@ -20,6 +20,10 @@ export interface BarChartForTableProps {
   title: string;
   maxLabels?: number;
   subtitle?: string;
+  /** Draw vertical columns (histogram style) instead of horizontal bars. */
+  vertical?: boolean;
+  /** Draw a pie chart of the label counts instead of bars. */
+  pie?: boolean;
 }
 
 const BarChartForTable: React.FC<BarChartForTableProps> = ({
@@ -29,6 +33,8 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
   title = 'Annotations',
   maxLabels = 50,
   subtitle,
+  vertical = false,
+  pie = false,
 }) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const labelAccessor = (labelsCol.accessorFn ?? labelsCol.accessorKey) as
@@ -59,10 +65,14 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
   const total = data.count;
   const chartTitle = getAnnotationLabel(capitalize(title));
 
+  let chartType: 'pie' | 'column' | 'bar' = 'bar';
+  if (pie) chartType = 'pie';
+  else if (vertical) chartType = 'column';
   const options: Highcharts.Options = {
     chart: {
-      type: 'bar',
-      height: Math.max(400, (series?.length || 0) * 20 + 100),
+      type: chartType,
+      height:
+        pie || vertical ? 400 : Math.max(400, (series?.length || 0) * 20 + 100),
       zoomType: 'xy',
     },
     title: { text: chartTitle },
@@ -89,6 +99,27 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
         allowPointSelect: true,
         cursor: 'pointer',
       },
+      column: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        pointPadding: 0,
+        groupPadding: 0,
+        borderWidth: 1,
+      },
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: true,
+          format: '{point.name}: {point.percentage:.1f}%',
+          style: {
+            color: '#333333',
+            fontSize: '14px',
+            fontWeight: 'normal',
+            textOutline: 'none',
+          },
+        },
+      },
     },
     credits: { enabled: false },
     legend: { enabled: false },
@@ -96,14 +127,20 @@ const BarChartForTable: React.FC<BarChartForTableProps> = ({
       formatter() {
         const idx = this.point.index;
         const desc = (descriptions as string[])[idx];
-        return `<b>${desc}</b><br/>${this.series.name}: <b>${this.y}</b>`;
+        const share = pie ? ` (${this.point.percentage?.toFixed(1)}%)` : '';
+        return `<b>${desc}</b><br/>${this.series.name}: <b>${this.y}</b>${share}`;
       },
     },
     series: [
       {
         name: chartTitle,
-        data: series as number[],
-        type: 'bar',
+        data: pie
+          ? (series as number[]).map((y, index) => ({
+              name: (labels as string[])[index],
+              y,
+            }))
+          : (series as number[]),
+        type: chartType,
       },
     ],
   };
