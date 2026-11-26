@@ -52,14 +52,17 @@ describe('MGnify Viruses releases and raw cluster metadata', () => {
     }));
     cy.intercept('GET', `**/viruses/catalogues/${version}`, {
       ...catalogue, downloads: files,
-      other_stats: { total_sequences: 3, total_proteins_viruses: 10, total_proteins_plasmids: 2 },
+      other_stats: {
+        total_sequences: 3, unique_sequences: 3, viral_clusters: 2,
+        total_proteins_viruses: 10, total_proteins_viruses_reps: 7, total_proteins_plasmids: 2,
+      },
     });
     files.forEach(file => cy.intercept('GET', file.url, {
       body: 'ID\tSequence_length\tcheckv_quality\tSource_of_prediction\tdrug_class\tgene_symbol\nrep1\t1000\tComplete\tgeNomad\tbeta-lactam\tgeneA\n',
     }));
     openPage(`viruses/${version}`);
     cy.contains('a', 'catalogue.json').should('have.attr', 'href', `${catalogue.ftp_url}catalogue.json`);
-    cy.get('.stat_label').should('contain', 'Version').and('contain', 'Total sequences')
+    cy.get('.stat_label').should('contain', 'Total proteins').and('contain', 'Total sequences')
       .and('not.contain', 'Virus representatives').and('not.contain', 'Plasmid representatives');
     cy.get('.compressed-tsv-table').should('not.exist');
     cy.get('.vf-tabs').first().then($tabs => {
@@ -68,10 +71,21 @@ describe('MGnify Viruses releases and raw cluster metadata', () => {
       });
     });
     cy.contains('a.vf-tabs__link', 'Viruses').click();
-    cy.get('.stat_label').should('contain', 'Virus representatives').and('contain', 'Viral proteins')
+    cy.get('.stat_label').should('contain', 'Cluster representatives sequences').and('contain', 'Proteins of cluster representatives')
       .and('not.contain', 'Plasmid representatives').and('not.contain', 'Version');
-    cy.contains('a.vf-tabs__link', 'Metadata and QC').click();
-    cy.get('[data-cy=viral-chart-sequence-lengths]').should('contain', 'File 0');
+    cy.contains('a.vf-tabs__link', 'Summary').should('have.class', 'is-active');
+    cy.get('[data-cy=viral-chart-checkv-quality]').should('contain', 'File 0');
+    cy.get('[data-cy=viral-chart-checkv-quality]').within(() => {
+      cy.contains('button', 'CheckV quality').should('have.attr', 'aria-pressed', 'true');
+      cy.get('.highcharts-pie-series').should('exist');
+      cy.contains('button', 'Sequence lengths').click().should('have.attr', 'aria-pressed', 'true');
+      cy.get('.highcharts-column-series').should('exist');
+      cy.contains('button', 'Prediction methods').click();
+      cy.get('.highcharts-column-series').should('exist');
+      cy.contains('button', 'Chart views').click();
+      cy.contains('[role=option]', 'Pie chart').click();
+      cy.get('.highcharts-pie-series').should('exist');
+    });
     cy.get('.compressed-tsv-table').should('have.length', 1);
     cy.contains('a.vf-tabs__link', 'Functional annotations').click();
     cy.get('[data-cy=viral-chart-amr-classes]').should('contain', 'File 1');
@@ -87,7 +101,7 @@ describe('MGnify Viruses releases and raw cluster metadata', () => {
   });
 
   it('shows the exact cluster rows with accession enrichment and source link', () => {
-    openPage(`viruses/${version}/viruses`);
+    openPage(`viruses/${version}/viruses#clusters`);
     cy.wait('@representatives');
     cy.contains('.mg-table a', representative.accession).click();
     cy.wait('@detail');
@@ -113,7 +127,7 @@ describe('MGnify Viruses releases and raw cluster metadata', () => {
   });
 
   it('keeps numeric filters in the URL and resets pagination after source changes', () => {
-    openPage(`viruses/${version}/viruses?page=2&completeness_min=20&completeness_max=90&contamination_max=5`);
+    openPage(`viruses/${version}/viruses?page=2&completeness_min=20&completeness_max=90&contamination_max=5#clusters`);
     cy.wait('@representatives').its('request.url').should('contain', 'completeness_min=20');
     cy.get('#completeness-filter').should('be.checked');
     cy.get('#viral-source').select('analysis');

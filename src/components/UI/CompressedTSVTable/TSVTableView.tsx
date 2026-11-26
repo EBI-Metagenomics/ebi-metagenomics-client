@@ -76,9 +76,15 @@ const histogramData = (
   return { items, count: items.length };
 };
 
+const chartTypeOptions: { value: 'pie' | 'histogram'; label: string }[] = [
+  { value: 'pie', label: 'Pie chart' },
+  { value: 'histogram', label: 'Histogram' },
+];
+
 const TSVTableView: React.FC<TSVTableViewProps> = ({
   barChartSpec,
   chartViews,
+  chartButtons = false,
   columnHeaders,
   chartData,
   columns = [],
@@ -106,6 +112,21 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
   const hasCharts = !!chartViews?.length || !!barChartSpec;
   const activeSpec =
     activeChart?.barChartSpec ?? (!activeChart ? barChartSpec : undefined);
+  const [chartTypes, setChartTypes] = useState<
+    Record<string, 'pie' | 'histogram'>
+  >({});
+  const activeChartType =
+    activeChart &&
+    (chartTypes[activeChart.id] ??
+      (activeChart.barChartSpec?.pie ? 'pie' : 'histogram'));
+  const renderedSpec: BarChartSpec | undefined =
+    chartButtons && activeSpec
+      ? {
+          ...activeSpec,
+          pie: activeChartType === 'pie',
+          vertical: activeChartType === 'histogram',
+        }
+      : activeSpec;
   const sourceData = chartData ?? data;
   const barData = useMemo(
     () =>
@@ -234,6 +255,31 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
         </form>
       </EMGModal>
       <div className="compressed-tsv-table__toolbar tsv-table__toolbar">
+        {chartButtons && multipleCharts && (
+          <div className="compressed-tsv-table__toolbar-actions">
+            {chartViews?.map((chart) => {
+              const isActive =
+                viewMode === 'chart' && chart.id === activeChart?.id;
+              return (
+                <button
+                  key={chart.id}
+                  type="button"
+                  className={`vf-button vf-button--sm ${
+                    isActive ? 'vf-button--primary' : 'vf-button--secondary'
+                  }`}
+                  aria-pressed={isActive}
+                  onClick={() => {
+                    setChartId(chart.id);
+                    setViewMode('chart');
+                  }}
+                  disabled={isBusy}
+                >
+                  {chart.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
         <div className="compressed-tsv-table__search-status">
           {searchTerm && (
             <>
@@ -272,70 +318,121 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
           >
             <span className="icon icon-common icon-table" /> Table view
           </button>
-          <div style={{ position: 'relative' }}>
-            <button
-              type="button"
-              className="vf-button vf-button--secondary vf-button--sm"
-              aria-expanded={multipleCharts ? isChartSelectorOpen : undefined}
-              aria-controls={
-                multipleCharts && isChartSelectorOpen ? selectorId : undefined
-              }
-              onClick={() => {
-                if (multipleCharts) setIsChartSelectorOpen((open) => !open);
-                else setViewMode('chart');
-              }}
-              disabled={
-                isBusy ||
-                !hasCharts ||
-                (!multipleCharts && viewMode === 'chart')
-              }
-            >
-              <span className="icon icon-common icon-chart-bar" />{' '}
-              {multipleCharts ? 'Chart views' : 'Chart view'}
-              {multipleCharts && (
-                <>
-                  {' '}
-                  <span aria-hidden="true">▾</span>
-                </>
-              )}
-            </button>
-            {isChartSelectorOpen && multipleCharts && (
-              <div
-                style={{
-                  position: 'absolute',
-                  right: 0,
-                  top: '100%',
-                  width: 260,
-                  zIndex: 20,
-                }}
+          {chartButtons && multipleCharts && activeChart?.barChartSpec && (
+            <div style={{ position: 'relative' }}>
+              <button
+                type="button"
+                className="vf-button vf-button--secondary vf-button--sm"
+                aria-expanded={isChartSelectorOpen}
+                aria-controls={isChartSelectorOpen ? selectorId : undefined}
+                onClick={() => setIsChartSelectorOpen((open) => !open)}
+                disabled={isBusy || viewMode !== 'chart'}
               >
-                <Select
-                  inputId={selectorId}
-                  aria-label="Chart views"
-                  autoFocus
-                  menuIsOpen
-                  options={chartViews?.map((chart) => ({
-                    value: chart.id,
-                    label: chart.label,
-                  }))}
-                  value={
-                    activeChart
-                      ? { value: activeChart.id, label: activeChart.label }
-                      : null
-                  }
-                  onBlur={() => setIsChartSelectorOpen(false)}
-                  onMenuClose={() => setIsChartSelectorOpen(false)}
-                  onChange={(option) => {
-                    if (option) {
-                      setChartId(option.value);
-                      setViewMode('chart');
-                    }
-                    setIsChartSelectorOpen(false);
+                <span className="icon icon-common icon-chart-bar" /> Chart views{' '}
+                <span aria-hidden="true">▾</span>
+              </button>
+              {isChartSelectorOpen && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '100%',
+                    width: 200,
+                    zIndex: 20,
                   }}
-                />
-              </div>
-            )}
-          </div>
+                >
+                  <Select
+                    inputId={selectorId}
+                    aria-label="Chart views"
+                    autoFocus
+                    menuIsOpen
+                    isSearchable={false}
+                    options={chartTypeOptions}
+                    value={chartTypeOptions.find(
+                      (option) => option.value === activeChartType
+                    )}
+                    onBlur={() => setIsChartSelectorOpen(false)}
+                    onMenuClose={() => setIsChartSelectorOpen(false)}
+                    onChange={(option) => {
+                      if (option && activeChart) {
+                        setChartTypes((types) => ({
+                          ...types,
+                          [activeChart.id]: option.value,
+                        }));
+                      }
+                      setIsChartSelectorOpen(false);
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+          {!(chartButtons && multipleCharts) && (
+            <div style={{ position: 'relative' }}>
+              <button
+                type="button"
+                className="vf-button vf-button--secondary vf-button--sm"
+                aria-expanded={multipleCharts ? isChartSelectorOpen : undefined}
+                aria-controls={
+                  multipleCharts && isChartSelectorOpen ? selectorId : undefined
+                }
+                onClick={() => {
+                  if (multipleCharts) setIsChartSelectorOpen((open) => !open);
+                  else setViewMode('chart');
+                }}
+                disabled={
+                  isBusy ||
+                  !hasCharts ||
+                  (!multipleCharts && viewMode === 'chart')
+                }
+              >
+                <span className="icon icon-common icon-chart-bar" />{' '}
+                {multipleCharts ? 'Chart views' : 'Chart view'}
+                {multipleCharts && (
+                  <>
+                    {' '}
+                    <span aria-hidden="true">▾</span>
+                  </>
+                )}
+              </button>
+              {isChartSelectorOpen && multipleCharts && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '100%',
+                    width: 260,
+                    zIndex: 20,
+                  }}
+                >
+                  <Select
+                    inputId={selectorId}
+                    aria-label="Chart views"
+                    autoFocus
+                    menuIsOpen
+                    options={chartViews?.map((chart) => ({
+                      value: chart.id,
+                      label: chart.label,
+                    }))}
+                    value={
+                      activeChart
+                        ? { value: activeChart.id, label: activeChart.label }
+                        : null
+                    }
+                    onBlur={() => setIsChartSelectorOpen(false)}
+                    onMenuClose={() => setIsChartSelectorOpen(false)}
+                    onChange={(option) => {
+                      if (option) {
+                        setChartId(option.value);
+                        setViewMode('chart');
+                      }
+                      setIsChartSelectorOpen(false);
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
       {error && <p role="alert">{error}</p>}
@@ -355,8 +452,8 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
           viewMode === 'chart' &&
           (activeChart?.render
             ? activeChart.render(sourceData, headerRow)
-            : activeSpec && (
-                <BarChartForTable data={barData} {...activeSpec} />
+            : renderedSpec && (
+                <BarChartForTable data={barData} {...renderedSpec} />
               ))}
       </FixedHeightScrollable>
     </div>

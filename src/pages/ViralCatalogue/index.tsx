@@ -7,6 +7,7 @@ import Breadcrumbs from 'components/Nav/Breadcrumbs';
 import Loading from 'components/UI/Loading';
 import FetchError from 'components/UI/FetchError';
 import ExtLink from 'components/UI/ExtLink';
+import ArrowForLink from 'components/UI/ArrowForLink';
 import FragmentsTable from 'components/Viruses/FragmentsTable';
 import CatalogueCharts, {
   amrChartViews,
@@ -48,41 +49,47 @@ const ViralCataloguePage: React.FC = () => {
       const value = data.other_stats[key];
       return typeof value === 'number' ? [[label, value.toLocaleString()]] : [];
     });
+  const proteinCounts = [
+    'total_proteins_viruses',
+    'total_proteins_plasmids',
+  ].flatMap((key) => {
+    const value = data.other_stats[key];
+    return typeof value === 'number' ? [value] : [];
+  });
+  const totalProteins = proteinCounts.length
+    ? proteinCounts.reduce((sum, value) => sum + value, 0)
+    : undefined;
   const cards: Record<string, string[][]> = {
     overview: [
-      ['Biome', data.biome],
-      ['Version', data.version],
-      ['Last updated', formatDate(data.updated_at)],
-      ...(data.pipeline_version ? [['Pipeline', data.pipeline_version]] : []),
       ...summaryCards([
         ['Total sequences', 'total_sequences'],
-        ['Unique sequences', 'unique_sequences'],
-        ['QC excluded sequences', 'qc_excluded_sequences'],
+        ['Viral sequences', 'viral_sequences'],
+        ['Prophages', 'prophages'],
+        ['Plasmids', 'plasmids'],
         ['Biomes', 'number_of_biomes'],
       ]),
+      ...(totalProteins === undefined
+        ? []
+        : [['Total proteins', totalProteins.toLocaleString()]]),
+      ['Last updated', formatDate(data.updated_at)],
     ],
     viruses: [
+      ['Total sequences', 'unique_sequences'],
       [
-        'Virus representatives',
-        (data.virus_count ?? data.fragment_count).toLocaleString(),
-        `${base}/viruses?sequence_type=virus`,
+        'Cluster representatives sequences',
+        'viral_clusters',
+        `${base}/viruses#clusters`,
       ],
-      [
-        'Prophage representatives',
-        data.prophage_count?.toLocaleString() ?? 'Unknown',
-        `${base}/viruses?sequence_type=prophage`,
-      ],
-      [
-        'Viral clusters',
-        data.cluster_count.toLocaleString(),
-        `${base}/viruses`,
-      ],
-      [
-        'Viral sequences',
-        (data.total_sequence_count ?? data.fragment_count).toLocaleString(),
-      ],
-      ...summaryCards([['Viral proteins', 'total_proteins_viruses']]),
-    ],
+      ['Total proteins', 'total_proteins_viruses'],
+      ['Proteins of cluster representatives', 'total_proteins_viruses_reps'],
+    ].map(([label, key, to]) => {
+      const value = data.other_stats[key];
+      return [
+        label,
+        typeof value === 'number' ? value.toLocaleString() : '–',
+        ...(to ? [to] : []),
+      ];
+    }),
     plasmids: [
       [
         'Plasmid representatives',
@@ -119,6 +126,18 @@ const ViralCataloguePage: React.FC = () => {
             <ReactMarkdown>{data.description}</ReactMarkdown>
           </>
         )}
+        {section === 'viruses' && (
+          <p>
+            Viral sequences and prophages were deduplicated, quality filtered
+            and clustered at 95% ANI over 85% coverage (
+            <ExtLink href="https://github.com/EBI-Metagenomics/metaViraVerse/blob/dev/docs/methods.md">
+              methods
+            </ExtLink>
+            ). Taxonomy, functional annotations and the protein catalogue cover
+            cluster representatives only. All results are in Downloads, with
+            some also on the FTP site.
+          </p>
+        )}
         {cards[section] && (
           <section className="vf-card-container vf-card-container__col-4">
             <div className="vf-card-container__inner">
@@ -135,6 +154,73 @@ const ViralCataloguePage: React.FC = () => {
                   </div>
                 </article>
               ))}
+              {section === 'overview' && (
+                <article className="vf-card vf-card--brand vf-card--bordered">
+                  <div className="vf-card__content vf-stack vf-stack--200">
+                    <h3 className="vf-card__heading">
+                      <ExtLink
+                        href={
+                          data.pipeline_version
+                            ? `${config.virusPipelineRepo}/releases/tag/${data.pipeline_version}`
+                            : config.virusPipelineRepo
+                        }
+                      >
+                        Pipeline {data.pipeline_version}
+                      </ExtLink>
+                    </h3>
+                    <p className="vf-card__subheading">View workflow & tools</p>
+                  </div>
+                </article>
+              )}
+            </div>
+          </section>
+        )}
+        {section === 'overview' && (
+          <section className={'vf-section mg-bordered'}>
+            <h3 className={'vf-heading vf-heading--3'}>Downloads</h3>
+            <div className="vf-flag vf-flag--top vf-flag--200">
+              <div className="vf-flag__body">
+                <h5 className="vf-card__subheading">{data.name}</h5>
+                <p className={'vf-text'}>
+                  Viral and plasmid cluster representatives, sequences,
+                  taxonomic assignments, host predictions, functional
+                  annotations and metadata for the full catalogue.
+                </p>
+              </div>
+              <div className="vf-flag__media">
+                <a
+                  className={'vf-link'}
+                  style={{ textWrap: 'nowrap' }}
+                  href={data.ftp_url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  FTP site
+                  <ArrowForLink />
+                </a>
+              </div>
+            </div>
+            <hr className="vf-divider" />
+            <div className="vf-flag vf-flag--top vf-flag--200">
+              <div className="vf-flag__body">
+                <h5 className="vf-card__subheading">README</h5>
+                <p className={'vf-text'}>
+                  Description of the catalogue files and pipeline notes for this
+                  catalogue version.
+                </p>
+              </div>
+              <div className="vf-flag__media">
+                <a
+                  className={'vf-link'}
+                  style={{ textWrap: 'nowrap' }}
+                  href={`${data.ftp_url.replace(/\/+$/, '')}/README.md`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View
+                  <ArrowForLink />
+                </a>
+              </div>
             </div>
           </section>
         )}
@@ -142,14 +228,15 @@ const ViralCataloguePage: React.FC = () => {
           <>
             <Tabs
               tabs={[
-                { label: 'Cluster representatives', to: '#' },
-                {
-                  label:
-                    kind === 'viruses'
-                      ? 'Metadata and QC'
-                      : 'Metadata and charts',
-                  to: '#metadata',
-                },
+                ...(kind === 'viruses'
+                  ? [
+                      { label: 'Summary', to: '#' },
+                      { label: 'Cluster representatives', to: '#clusters' },
+                    ]
+                  : [
+                      { label: 'Cluster representatives', to: '#' },
+                      { label: 'Metadata and charts', to: '#metadata' },
+                    ]),
                 ...(kind === 'viruses'
                   ? [{ label: 'Viral taxonomy', to: '#viral-taxonomy' }]
                   : []),
@@ -158,9 +245,10 @@ const ViralCataloguePage: React.FC = () => {
                 ...(kind === 'viruses'
                   ? [{ label: 'Protein catalogue', to: '#protein-catalogue' }]
                   : []),
+                { label: 'Downloads', to: '#downloads' },
               ]}
             />
-            <RouteForHash hash="" isDefault>
+            <RouteForHash hash={kind === 'viruses' ? '#clusters' : ''}>
               <FragmentsTable
                 key={kind}
                 catalogueId={catalogueId}
@@ -173,7 +261,7 @@ const ViralCataloguePage: React.FC = () => {
                 section="viral-taxonomy"
               />
             </RouteForHash>
-            <RouteForHash hash="#metadata">
+            <RouteForHash hash={kind === 'viruses' ? '' : '#metadata'}>
               {kind === 'viruses' ? (
                 <CatalogueCharts
                   downloads={data.downloads ?? []}
@@ -281,18 +369,20 @@ const ViralCataloguePage: React.FC = () => {
                 <p>No protein catalogue file is available.</p>
               )}
             </RouteForHash>
+            <RouteForHash hash="#downloads">
+              <h3>{kind === 'viruses' ? 'Viral' : 'Plasmid'} downloads</h3>
+              <ExtLink href={data.ftp_url}>Catalogue FTP directory</ExtLink>
+              <Downloads
+                key={kind}
+                downloads={(data.downloads ?? []).filter((file) =>
+                  file.download_group?.startsWith(`${kind}.`)
+                )}
+                downloadName={`${catalogueId}-${kind}`}
+              />
+            </RouteForHash>
           </>
         )}
-        {section === 'downloads' && (
-          <>
-            <h3>Catalogue downloads</h3>
-            <ExtLink href={data.ftp_url}>Catalogue FTP directory</ExtLink>
-            <Downloads
-              downloads={data.downloads ?? []}
-              downloadName={catalogueId}
-            />
-          </>
-        )}
+        {/* Catalogue-level downloads: left empty for now; per-kind files live in each subpage's Downloads tab. */}
       </section>
     </section>
   );

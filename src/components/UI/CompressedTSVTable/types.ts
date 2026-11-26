@@ -5,7 +5,7 @@ import type { ColumnDef as Column } from '@tanstack/react-table';
 
 export type BarChartSpec = Pick<
   BarChartForTableProps,
-  'title' | 'labelsCol' | 'countsCol' | 'maxLabels' | 'subtitle'
+  'title' | 'labelsCol' | 'countsCol' | 'maxLabels' | 'subtitle' | 'vertical' | 'pie'
 > & {
   histogramColumn?: string;
   histogramBins?: number[];
@@ -35,6 +35,11 @@ export interface TSVTableProps {
   initialView?: 'table' | 'chart';
   /** Named charts receive all loaded rows, including current search results. */
   chartViews?: TableChartView[];
+  /**
+   * Show each chart view as a button at the left of the toolbar, with a
+   * "Chart views" menu to switch the active chart between pie and histogram.
+   */
+  chartButtons?: boolean;
   delimiter?: string;
 }
 

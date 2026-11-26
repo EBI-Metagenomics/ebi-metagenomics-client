@@ -20,6 +20,7 @@
   },
   "notebooksURL": "https://docs.mgnify.org/src/examples",
   "magsPipelineRepo": "https://github.com/EBI-Metagenomics/genomes-pipeline",
+  "virusPipelineRepo": "https://github.com/EBI-Metagenomics/metaViraVerse",
   "whenDownloadingListsFromApi": {
     "maxPages": 100,
     "cadenceMs": 1000

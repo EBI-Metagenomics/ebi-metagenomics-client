@@ -56,14 +56,23 @@ type Panel = {
 };
 const panels: Panel[] = [
   {
+    title: 'CheckV quality',
+    group: 'QC',
+    suffix: 'viruses/viruses-all-metadata.tsv.gz',
+    spec: { ...histogram('checkv_quality', 'CheckV quality'), pie: true },
+  },
+  {
     title: 'Sequence lengths',
     group: 'QC',
     suffix: 'viruses/viruses-all-metadata.tsv.gz',
-    spec: histogram(
-      'Sequence_length',
-      'Sequence lengths (bp)',
-      [0, 5000, 10000, 20000, 50000, 100000]
-    ),
+    spec: {
+      ...histogram(
+        'Sequence_length',
+        'Sequence lengths (bp)',
+        [0, 5000, 10000, 20000, 50000, 100000]
+      ),
+      vertical: true,
+    },
   },
   {
     title: 'Cluster sizes',
@@ -74,12 +83,6 @@ const panels: Panel[] = [
       'Viral cluster sizes',
       [1, 2, 3, 6, 11, 51, 101]
     ),
-  },
-  {
-    title: 'CheckV quality',
-    group: 'QC',
-    suffix: 'viruses/viruses-all-metadata.tsv.gz',
-    spec: histogram('checkv_quality', 'CheckV quality'),
   },
   {
     title: 'Prediction methods',
@@ -214,6 +217,7 @@ const CatalogueCharts: React.FC<{
         className="vf-stack vf-stack--400"
       >
         {files.map((file) => {
+          const chartButtons = file.group === 'QC' && file.views.length > 1;
           const chartViews: TableChartView[] =
             file.views.flatMap<TableChartView>((view) => {
               const id = view.title.toLowerCase().replaceAll(' ', '-');
@@ -236,9 +240,10 @@ const CatalogueCharts: React.FC<{
                 ? [
                     {
                       id,
-                      label: view.spec.histogramBins
-                        ? `${view.title} histogram`
-                        : view.title,
+                      label:
+                        view.spec.histogramBins && !chartButtons
+                          ? `${view.title} histogram`
+                          : view.title,
                       barChartSpec: view.spec,
                     },
                   ]
@@ -278,6 +283,7 @@ const CatalogueCharts: React.FC<{
                       : undefined
                   }
                   chartViews={chartViews}
+                  chartButtons={chartButtons}
                   initialView={chartViews.length ? 'chart' : 'table'}
                 />
               </DetailedVisualisationCard>
