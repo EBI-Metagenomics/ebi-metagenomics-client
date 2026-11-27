@@ -23,6 +23,8 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
   columns = [],
   download,
   emptyStateMessage,
+  initialSearchTerm,
+  isHeaderRow,
   pageNum,
   setPageNum,
 }) => {
@@ -40,7 +42,11 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
   const firstPagePromiseRef = useRef<Promise<string[][]> | undefined>(
     undefined
   );
-  const firstRowIsHeader = columns.length === 0;
+  const hasHeader = useCallback(
+    (rows: string[][]) =>
+      columns.length === 0 && (!isHeaderRow || isHeaderRow(rows[0] ?? [])),
+    [columns.length, isHeaderRow]
+  );
 
   const readFirstPage = useCallback(() => {
     if (!firstPagePromiseRef.current) {
@@ -86,6 +92,7 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
         // comments-only block before it maps logical page numbers.
         const firstPageRows = await readFirstPage();
         if (cancelled) return;
+        const firstRowIsHeader = hasHeader(firstPageRows);
 
         const totalPages = Math.max(1, reader.getPageCount() || 1);
         const currentPage = Math.min(normalizePageNumber(pageNum), totalPages);
@@ -110,7 +117,7 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
           setHeaderRow(firstPageRows[0]);
           if (currentPage === 1) items.shift();
         } else {
-          setHeaderRow(undefined);
+          setHeaderRow(columnHeaders);
         }
 
         const estimatedRowCount =
@@ -133,7 +140,8 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
       cancelled = true;
     };
   }, [
-    firstRowIsHeader,
+    hasHeader,
+    columnHeaders,
     pageNum,
     readFirstPage,
     reader,
@@ -151,7 +159,8 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
       if (!initialized) throw new Error('Could not initialize TSV reader');
 
       const firstPageRows = await readFirstPage();
-      setHeaderRow(firstRowIsHeader ? firstPageRows[0] : undefined);
+      const firstRowIsHeader = hasHeader(firstPageRows);
+      setHeaderRow(firstRowIsHeader ? firstPageRows[0] : columnHeaders);
       const totalPages = Math.max(1, reader.getPageCount() || 1);
       const remainingPages = await Promise.all(
         Array.from({ length: totalPages - 1 }, (_, pageIndex) =>
@@ -201,6 +210,7 @@ const IndexedBGZipTSVTable: React.FC<TSVTableLoaderProps> = ({
       }}
       onSearch={searchAllPages}
       searchTerm={searchResults?.term ?? ''}
+      initialSearchTerm={initialSearchTerm}
     />
   );
 };

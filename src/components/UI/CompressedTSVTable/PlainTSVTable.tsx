@@ -35,6 +35,8 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
   columns = [],
   download,
   emptyStateMessage,
+  initialSearchTerm,
+  isHeaderRow,
   pageNum,
   setPageNum,
 }) => {
@@ -80,8 +82,9 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
   }, [download.url]);
 
   const rows = rowsState.url === download.url ? rowsState.rows : null;
-  const firstRowIsHeader = columns.length === 0;
-  const headerRow = firstRowIsHeader ? rows?.[0] : undefined;
+  const firstRowIsHeader =
+    columns.length === 0 && (!isHeaderRow || isHeaderRow(rows?.[0] ?? []));
+  const headerRow = firstRowIsHeader ? rows?.[0] : columnHeaders;
   const dataRows = useMemo(
     () => (firstRowIsHeader ? rows?.slice(1) : rows) ?? [],
     [firstRowIsHeader, rows]
@@ -162,6 +165,7 @@ const PlainTSVTable: React.FC<TSVTableLoaderProps> = ({
       }}
       onSearch={searchAllRows}
       searchTerm={searchResults?.term ?? ''}
+      initialSearchTerm={initialSearchTerm}
     />
   );
 };

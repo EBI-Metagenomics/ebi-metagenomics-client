@@ -41,14 +41,21 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
   isLoading,
   isFileEmpty,
   isSearching,
+  initialSearchTerm = '',
   onClearSearch,
   onSearch,
   searchTerm,
 }) => {
   const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
-  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-  const [searchInput, setSearchInput] = useState(searchTerm);
-  const [wholeWord, setWholeWord] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(
+    Boolean(initialSearchTerm)
+  );
+  const [searchInput, setSearchInput] = useState(
+    initialSearchTerm || searchTerm
+  );
+  const [wholeWord, setWholeWord] = useState(
+    /^CHEBI:\d+$/i.test(initialSearchTerm)
+  );
   const [fileSize, setFileSize] = useState<number | null>();
   const tableColumns = useMemo(() => {
     if (!columns.length) {
@@ -67,6 +74,13 @@ const TSVTableView: React.FC<TSVTableViewProps> = ({
     );
   }, [columnHeaders, columns, headerRow, searchTerm]);
   const isBusy = isLoading || isSearching;
+
+  useEffect(() => {
+    if (!initialSearchTerm) return;
+    setSearchInput(initialSearchTerm);
+    setWholeWord(/^CHEBI:\d+$/i.test(initialSearchTerm));
+    setIsSearchModalOpen(true);
+  }, [initialSearchTerm]);
 
   useEffect(() => {
     setFileSize(undefined);

@@ -15,6 +15,8 @@ export interface TSVTableProps {
   download: Download;
   emptyStateMessage?: string;
   barChartSpec?: BarChartSpec;
+  initialSearchTerm?: string;
+  isHeaderRow?: (row: string[]) => boolean;
 }
 
 export interface TSVTableLoaderProps extends TSVTableProps {

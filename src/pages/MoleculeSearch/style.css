@@ -1,0 +1,42 @@
+.mg-molecule-search {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.mg-molecule-search .vf-form__label {
+  display: block;
+  margin-top: 1rem;
+}
+.mg-molecule-search .vf-button {
+  margin-top: 1rem;
+  margin-right: 0.5rem;
+}
+.mg-molecule-input-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+.mg-molecule-input-heading .vf-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.mg-molecule-input-heading .vf-form__label,
+.mg-molecule-input-heading .vf-button {
+  margin: 0;
+}
+.mg-molecule-editor {
+  height: min(55vh, 600px);
+  min-height: 320px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.mg-molecule-candidates {
+  margin: 1rem 0;
+}
+.mg-molecule-candidate-list {
+  overflow: auto;
+  max-height: 18rem;
+}

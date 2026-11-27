@@ -130,7 +130,7 @@ const MegaMenu: React.FC = () => {
                   handleMenuItemClick(event, 'text-search-section')
                 }
               >
-                Text search
+                Search
               </a>
             </li>
             <li className="vf-navigation__item">
@@ -377,6 +377,12 @@ const MegaMenu: React.FC = () => {
               <section className="vf-summary-container | embl-grid">
                 <div className="vf-section-header">
                   <h2 className="vf-section-header__heading">Search MGnify</h2>
+                  <p>
+                    <Link to="/search">Text search</Link>
+                  </p>
+                  <p>
+                    <Link to="/molecule-search">Search by molecule</Link>
+                  </p>
                   <p className="vf-section-header__text">
                     Search for studies and samples
                   </p>
